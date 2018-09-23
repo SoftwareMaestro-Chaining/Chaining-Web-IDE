@@ -1,3 +1,18 @@
+# remix-ide
+.vscode
+build
+node_modules
+reports
+soljson.js
+soljson.js.*
+npm-debug.log*
+package-lock.json
+remix
+.DS_Store
+contracts
+TODO
+.tern-port
+
 # Logs
 logs
 *.log
