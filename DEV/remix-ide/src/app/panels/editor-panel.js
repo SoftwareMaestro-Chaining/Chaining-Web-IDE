@@ -14,6 +14,10 @@ var styles = require('./styles/editor-panel-styles')
 var cssTabs = styles.cssTabs
 var css = styles.css
 
+// block editor 공간 확보 진행 중
+var BlockEditor = require('../block-editor/block-editor')
+
+
 class EditorPanel {
   constructor (localRegistry) {
     var self = this
