@@ -45,9 +45,14 @@ class EditorPanel {
     self._view = {}
     var editor = new Editor({})
     self._components.registry.put({api: editor, name: 'editor'})
+
+    var blockEditor = new BlockEditor({})
+    self._components.registry.put({api: blockEditor, name: 'blockEditor'})
+
     var contextualListener = new ContextualListener({editor: editor})
     self._components = {
       editor: editor,
+      blockEditor: blockEditor,
       contextualListener: contextualListener,
       contextView: new ContextView({contextualListener: contextualListener, editor: editor}),
       terminal: new Terminal({

@@ -90,6 +90,9 @@ function filepanel (localRegistry) {
                 </label>
               </span>
             ` : ''}
+            <span class="${css.block}" title="Change Block Editor">
+              <i class="fa fa-link"></i>
+            </span>
             <span class="${css.gist}" title="Publish all [browser] explorer files to a github gist" onclick=${() => publishToGist('browser')}>
               <i class="fa fa-github"></i>
             </span>
