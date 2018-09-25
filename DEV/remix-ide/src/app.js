@@ -566,4 +566,8 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
   } else {
     fileManager.switchFile()
   }
+
+  // blockly render
+  var blockly = registry.get('blockEditor').api
+  blockly.run()
 }

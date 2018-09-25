@@ -136,7 +136,9 @@ class EditorPanel {
   render () {
     var self = this
     if (self._view.el) return self._view.el
-    self._view.editor = self._components.editor.render()
+    // 여기다가 토글처럼 진행하면 될듯 (버튼 클릭 시 전환)
+    // self._view.editor = self._components.editor.render()
+    self._view.editor = self._components.blockEditor.render()
     self._view.terminal = self._components.terminal.render()
     self._view.content = yo`
       <div class=${css.content}>
@@ -153,8 +155,10 @@ class EditorPanel {
         ${self._view.content}
       </div>
     `
+//    self._components.blockEditor.run()
     // INIT
     self._adjustLayout('top', self.data._layout.top.offset)
+
     return self._view.el
   }
   registerCommand (name, command, opts) {
