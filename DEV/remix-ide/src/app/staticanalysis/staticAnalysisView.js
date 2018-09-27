@@ -1,5 +1,5 @@
 'use strict'
-var StaticAnalysisRunner = require('remix-solidity').CodeAnalysis
+var StaticAnalysisRunner = require('remix-analyzer').CodeAnalysis
 var yo = require('yo-yo')
 var $ = require('jquery')
 var remixLib = require('remix-lib')
@@ -97,7 +97,7 @@ staticAnalysisView.prototype.run = function () {
               start: parseInt(split[0]),
               length: parseInt(split[1])
             }
-            location = self._deps.offsetToLineColumnConverter.offsetToLineColumn(location, file, self.lastCompilationSource.sources)
+            location = self._deps.offsetToLineColumnConverter.offsetToLineColumn(location, parseInt(file), self._deps.compiler.lastCompilationResult.source.sources, self._deps.compiler.lastCompilationResult.data.sources)
             location = Object.keys(self.lastCompilationResult.contracts)[file] + ':' + (location.start.line + 1) + ':' + (location.start.column + 1) + ':'
           }
           warningCount++

@@ -137,7 +137,7 @@ class App {
     registry.put({api: self._components.filesProviders['browser'], name: 'fileproviders/browser'})
     registry.put({api: self._components.filesProviders['config'], name: 'fileproviders/config'})
 
-    var remixd = new Remixd()
+    var remixd = new Remixd(65520)
     registry.put({api: remixd, name: 'remixd'})
     remixd.event.register('system', (message) => {
       if (message.error) toolTip(message.error)
@@ -148,6 +148,8 @@ class App {
     self._components.filesProviders['github'] = new BasicReadOnlyExplorer('github')
     self._components.filesProviders['gist'] = new NotPersistedExplorer('gist')
     self._components.filesProviders['ipfs'] = new BasicReadOnlyExplorer('ipfs')
+    self._components.filesProviders['https'] = new BasicReadOnlyExplorer('https')
+    self._components.filesProviders['http'] = new BasicReadOnlyExplorer('http')
     registry.put({api: self._components.filesProviders['localhost'], name: 'fileproviders/localhost'})
     registry.put({api: self._components.filesProviders['swarm'], name: 'fileproviders/swarm'})
     registry.put({api: self._components.filesProviders['github'], name: 'fileproviders/github'})
@@ -321,6 +323,9 @@ class App {
     }
     var provider = self._components.fileManager.fileProviderOf(url)
     if (provider) {
+      if (provider.type === 'localhost' && !provider.isConnected()) {
+        return filecb(`file provider ${provider.type} not available while trying to resolve ${url}`)
+      }
       provider.exists(url, (error, exist) => {
         if (error) return filecb(error)
         if (exist) {
@@ -334,9 +339,9 @@ class App {
       var splitted = /([^/]+)\/(.*)$/g.exec(url)
       async.tryEach([
         (cb) => { self.importFileCb('localhost/installed_contracts/' + url, cb) },
-        (cb) => { if (!splitted) { cb('url not parseable' + url) } else { self.importFileCb('localhost/installed_contracts/' + splitted[1] + '/contracts/' + splitted[2], cb) } },
+        (cb) => { if (!splitted) { cb('URL not parseable: ' + url) } else { self.importFileCb('localhost/installed_contracts/' + splitted[1] + '/contracts/' + splitted[2], cb) } },
         (cb) => { self.importFileCb('localhost/node_modules/' + url, cb) },
-        (cb) => { if (!splitted) { cb('url not parseable' + url) } else { self.importFileCb('localhost/node_modules/' + splitted[1] + '/contracts/' + splitted[2], cb) } }],
+        (cb) => { if (!splitted) { cb('URL not parseable: ' + url) } else { self.importFileCb('localhost/node_modules/' + splitted[1] + '/contracts/' + splitted[2], cb) } }],
         (error, result) => { filecb(error, result) }
       )
     } else {
@@ -474,6 +479,7 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
   self._components.filePanel = new FilePanel()
   self._view.leftpanel.appendChild(self._components.filePanel.render())
   self._components.filePanel.event.register('resize', delta => self._adjustLayout('left', delta))
+  registry.put({api: self._components.filePanel, name: 'filepanel'})
 
   // ----------------- Renderer -----------------
   var renderer = new Renderer()
@@ -570,4 +576,5 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
   // blockly render
   var blockly = registry.get('blockEditor').api
   blockly.run()
+
 }

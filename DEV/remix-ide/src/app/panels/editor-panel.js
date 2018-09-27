@@ -7,7 +7,6 @@ var Terminal = require('./terminal')
 var Editor = require('../editor/editor')
 var globalRegistry = require('../../global/registry')
 
-var CommandInterpreter = require('../../lib/cmdInterpreter')
 var ContextualListener = require('../editor/contextualListener')
 var ContextView = require('../editor/contextView')
 var styles = require('./styles/editor-panel-styles')
@@ -16,7 +15,6 @@ var css = styles.css
 
 // block editor 공간 확보 진행 중
 var BlockEditor = require('../block-editor/block-editor')
-
 
 class EditorPanel {
   constructor (localRegistry) {
@@ -29,7 +27,7 @@ class EditorPanel {
     var self = this
     self._deps = {
       config: self._components.registry.get('config').api,
-      txlistener: self._components.registry.get('txlistener').api,
+      txListener: self._components.registry.get('txlistener').api,
       fileManager: self._components.registry.get('filemanager').api,
       udapp: self._components.registry.get('udapp').api
     }
@@ -56,8 +54,7 @@ class EditorPanel {
       contextualListener: contextualListener,
       contextView: new ContextView({contextualListener: contextualListener, editor: editor}),
       terminal: new Terminal({
-        udapp: self._deps.udapp,
-        cmdInterpreter: new CommandInterpreter()
+        udapp: self._deps.udapp
       },
         {
           getPosition: (event) => {
@@ -155,7 +152,6 @@ class EditorPanel {
         ${self._view.content}
       </div>
     `
-//    self._components.blockEditor.run()
     // INIT
     self._adjustLayout('top', self.data._layout.top.offset)
 

@@ -82,6 +82,7 @@ UniversalDApp.prototype.resetAPI = function (transactionContextAPI) {
 
 UniversalDApp.prototype.createVMAccount = function (privateKey, balance, cb) {
   this._addAccount(privateKey, balance)
+  executionContext.vm().stateManager.cache.flush(function () {})
   privateKey = new Buffer(privateKey, 'hex')
   cb(null, '0x' + ethJSUtil.privateToAddress(privateKey).toString('hex'))
 }
@@ -104,6 +105,7 @@ UniversalDApp.prototype.newAccount = function (password, cb) {
       privateKey = crypto.randomBytes(32)
     } while (!ethJSUtil.isValidPrivate(privateKey))
     this._addAccount(privateKey, '0x56BC75E2D63100000')
+    executionContext.vm().stateManager.cache.flush(function () {})
     cb(null, '0x' + ethJSUtil.privateToAddress(privateKey).toString('hex'))
   }
 }
@@ -391,7 +393,7 @@ UniversalDApp.prototype.runTx = function (args, cb) {
           modalDialog('Confirm transaction', content,
             { label: 'Confirm',
               fn: () => {
-                self._api.config.setUnpersistedProperty('doNotShowTransactionConfirmationAgain', content.querySelector('input#confirmsetting').checked)
+                self._deps.config.setUnpersistedProperty('doNotShowTransactionConfirmationAgain', content.querySelector('input#confirmsetting').checked)
                 // TODO: check if this is check is still valid given the refactor
                 if (!content.gasPriceStatus) {
                   cancelCb('Given gas price is not correct')
