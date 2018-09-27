@@ -32,6 +32,15 @@ var css = csjs`
   .newFile i:hover    {
     color             : ${styles.colors.orange};
   }
+  .blockly            {
+    padding           : 10px;
+  }
+  .blockly i          {
+    cursor            : pointer;
+  }
+  .blockly i:hover    {
+    color             : orange;
+  }  
   .gist            {
     padding           : 10px;
   }
