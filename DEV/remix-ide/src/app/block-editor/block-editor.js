@@ -9,23 +9,26 @@ var globalRegistry = require('../../global/registry')
 
 function BlockEditor (opts = {}, localRegistry) {
 	var self = this
+
+	var isHidden = false; /////n0xx1
+
 	self._view = {}
-
-
-	self._view.blocklyDiv = yo`
-	<div id="blocklyDiv" style="width:100%; height:100%;">
-	</div>`
 
 	self._view.textarea = yo`
 	<textarea id="textarea" style="width:calc(34% - 10px); height:100%; float:right;">
 	</textarea>`
 
-	self._view.el = yo`
-	<div id ="input">
-	${self._view.blocklyDiv}
-	${self._view.textarea}
+
+	self._view.blocklyDiv = yo`
+	<div id="blocklyDiv" style="width:100%; height:100%;">
+		${self._view.textarea}
 	</div>`
 
+	self._view.el = yo`
+		<div>
+			${self._view.blocklyDiv}
+			</div>
+	`
 
 	self.render = function () { return self._view.el }
 	self.run = function() {
@@ -117,6 +120,12 @@ function BlockEditor (opts = {}, localRegistry) {
 			document.getElementById('textarea').value = code
 		}
 		workspace.addChangeListener(myUpdateFunction)  
+
+		// function switchBlocklyEditor() {
+		// 	$( document ).click(function() {
+		// 	  $( "#btn_blocklyDiv" ).toggle( "fold" );
+		// 	});
+		// }
 	}
 }
 
