@@ -247,6 +247,9 @@ class App {
               console.log(error)
             } else {
               sources[target] = { content }
+
+              // console.log(content)/////n0xx1
+
               self._components.compiler.compile(sources, target)
             }
           })

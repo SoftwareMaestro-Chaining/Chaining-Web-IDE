@@ -16,18 +16,20 @@ function BlockEditor (opts = {}, localRegistry) {
 
 	self._view.textarea = yo`
 	<textarea id="textarea" style="width:calc(34% - 10px); height:100%; float:right;">
-	</textarea>`
+	</textarea>
+	`
 
 
 	self._view.blocklyDiv = yo`
 	<div id="blocklyDiv" style="width:100%; height:100%;">
 		${self._view.textarea}
-	</div>`
+	</div>
+	`
 
 	self._view.el = yo`
-		<div>
-			${self._view.blocklyDiv}
-			</div>
+	<div id="blockPanel">
+		${self._view.blocklyDiv}
+	</div>
 	`
 
 	self.render = function () { return self._view.el }
@@ -119,13 +121,15 @@ function BlockEditor (opts = {}, localRegistry) {
 
 			document.getElementById('textarea').value = code
 		}
-		workspace.addChangeListener(myUpdateFunction)  
 
 		// function switchBlocklyEditor() {
-		// 	$( document ).click(function() {
-		// 	  $( "#btn_blocklyDiv" ).toggle( "fold" );
-		// 	});
-		// }
+  //     // $( document ).click(function() {
+  //       	$(#blockPanel).toggle( "fold" );
+  //     // });
+  // 		}
+
+
+		workspace.addChangeListener(myUpdateFunction)  
 	}
 }
 
