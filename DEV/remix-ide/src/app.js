@@ -580,9 +580,6 @@ function run () {
   }
 
   // blockly render
-  var tag = 'block'
-  if(tag == 'block') {
-    var blockly = registry.get('editor').api
+    var blockly = registry.get('blockEditor').api
     blockly.run()
-  }
 }

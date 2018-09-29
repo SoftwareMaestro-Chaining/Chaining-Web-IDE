@@ -41,19 +41,13 @@ class EditorPanel {
       }
     }
     self._view = {}
-    var tag = 'block'
+    // var tag = 'block'
 
     var editor = new Editor({})
-    // self._components.registry.put({api: editor, name: 'editor'})
+    self._components.registry.put({api: editor, name: 'editor'})
 
     var blockEditor = new BlockEditor({})
-    // self._components.registry.put({api: blockEditor, name: 'blockEditor'})
-
-    if(tag == 'block') {
-      self._components.registry.put({api: blockEditor, name: 'editor'})
-    } else {
-      self._components.registry.put({api: editor, name:'editor'})
-    }
+    self._components.registry.put({api: blockEditor, name: 'blockEditor'})
 
 
     var contextualListener = new ContextualListener({editor: editor})
