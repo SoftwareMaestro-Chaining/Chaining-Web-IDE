@@ -304,10 +304,14 @@ function Editor (opts = {}, localRegistry) {
 
 function editorOnChange (self) {
   var currentFile = self._deps.config.get('currentFile')
+  console.log('editor on change')
+  console.log(currentFile)
   if (!currentFile) {
     return
   }
   var input = self.get(currentFile)
+  console.log('editor on change input')
+  console.log(input)
   if (!input) {
     return
   }

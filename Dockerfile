@@ -18,4 +18,6 @@ RUN npm run prepublish
 
 RUN npm run setupremix
 
+# ENTRYPOINY npm start
+
 EXPOSE 8080

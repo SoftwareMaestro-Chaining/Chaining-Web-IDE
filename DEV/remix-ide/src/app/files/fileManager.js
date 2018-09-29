@@ -183,6 +183,24 @@ class FileManager {
 
   saveCurrentFile () {
     var currentFile = this._deps.config.get('currentFile')
+    console.log('save current file')
+    console.log(currentFile)
+
+    if (currentFile && this._deps.editor.current()) {
+      var input = this._deps.editor.get(currentFile)
+      if (input) {
+        var provider = this.fileProviderOf(currentFile)
+        if (provider) {
+          provider.set(currentFile, input)
+        } else {
+          console.log('cannot save ' + currentFile + '. Does not belong to any explorer')
+        }
+      }
+    }
+  }
+
+  saveCurrentBlockFile() {
+    var currentFile = this._deps.config.get('currentFile')
     if (currentFile && this._deps.editor.current()) {
       var input = this._deps.editor.get(currentFile)
       if (input) {

@@ -46,65 +46,65 @@ var styleGuide = require('./app/ui/styles-guide/theme-chooser')
 var styles = styleGuide.chooser()
 
 var css = csjs`
-  html { box-sizing: border-box; }
-  *, *:before, *:after { box-sizing: inherit; }
-  body                 {
-    font: 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin             : 0;
-    padding            : 0;
-    font-size          : 12px;
-    color              : ${styles.leftPanel.text_Primary};
-    font-weight        : normal;
-  }
-  pre {
-    overflow-x: auto;
-  }
-  .browsersolidity     {
-    position           : relative;
-    width              : 100vw;
-    height             : 100vh;
-    overflow           : hidden;
-  }
-  .centerpanel         {
-    background-color  : ${styles.colors.transparent};
-    display            : flex;
-    flex-direction     : column;
-    position           : absolute;
-    top                : 0;
-    bottom             : 0;
-    overflow           : hidden;
-  }
-  .leftpanel           {
-    background-color  : ${styles.leftPanel.backgroundColor_Panel};
-    display            : flex;
-    flex-direction     : column;
-    position           : absolute;
-    top                : 0;
-    bottom             : 0;
-    left               : 0;
-    overflow           : hidden;
-  }
-  .rightpanel          {
-    background-color  : ${styles.rightPanel.backgroundColor_Panel};
-    display            : flex;
-    flex-direction     : column;
-    position           : absolute;
-    top                : 0;
-    right              : 0;
-    bottom             : 0;
-    overflow           : hidden;
-  }
-  .highlightcode {
-    position:absolute;
-    z-index:20;
-    background-color: ${styles.editor.backgroundColor_DebuggerMode};
-  }
-  .highlightcode_fullLine {
-    position:absolute;
-    z-index:20;
-    background-color: ${styles.editor.backgroundColor_DebuggerMode};
-    opacity: 0.5;
-  }
+html { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+body                 {
+  font: 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin             : 0;
+  padding            : 0;
+  font-size          : 12px;
+  color              : ${styles.leftPanel.text_Primary};
+  font-weight        : normal;
+}
+pre {
+  overflow-x: auto;
+}
+.browsersolidity     {
+  position           : relative;
+  width              : 100vw;
+  height             : 100vh;
+  overflow           : hidden;
+}
+.centerpanel         {
+  background-color  : ${styles.colors.transparent};
+  display            : flex;
+  flex-direction     : column;
+  position           : absolute;
+  top                : 0;
+  bottom             : 0;
+  overflow           : hidden;
+}
+.leftpanel           {
+  background-color  : ${styles.leftPanel.backgroundColor_Panel};
+  display            : flex;
+  flex-direction     : column;
+  position           : absolute;
+  top                : 0;
+  bottom             : 0;
+  left               : 0;
+  overflow           : hidden;
+}
+.rightpanel          {
+  background-color  : ${styles.rightPanel.backgroundColor_Panel};
+  display            : flex;
+  flex-direction     : column;
+  position           : absolute;
+  top                : 0;
+  right              : 0;
+  bottom             : 0;
+  overflow           : hidden;
+}
+.highlightcode {
+  position:absolute;
+  z-index:20;
+  background-color: ${styles.editor.backgroundColor_DebuggerMode};
+}
+.highlightcode_fullLine {
+  position:absolute;
+  z-index:20;
+  background-color: ${styles.editor.backgroundColor_DebuggerMode};
+  opacity: 0.5;
+}
 `
 
 class App {
@@ -179,50 +179,50 @@ class App {
       if (delta === undefined) {
         layout.show = !layout.show
         if (layout.show) delta = layout.offset
-        else delta = 0
-      } else {
-        self._components.config.set(`${direction}-offset`, delta)
-        layout.offset = delta
+          else delta = 0
+        } else {
+          self._components.config.set(`${direction}-offset`, delta)
+          layout.offset = delta
+        }
+      }
+      if (direction === 'left') {
+        self._view.leftpanel.style.width = delta + 'px'
+        self._view.centerpanel.style.left = delta + 'px'
+      }
+      if (direction === 'right') {
+        self._view.rightpanel.style.width = delta + 'px'
+        self._view.centerpanel.style.right = delta + 'px'
       }
     }
-    if (direction === 'left') {
-      self._view.leftpanel.style.width = delta + 'px'
-      self._view.centerpanel.style.left = delta + 'px'
+    init () {
+      var self = this
+      run.apply(self)
     }
-    if (direction === 'right') {
-      self._view.rightpanel.style.width = delta + 'px'
-      self._view.centerpanel.style.right = delta + 'px'
-    }
-  }
-  init () {
-    var self = this
-    run.apply(self)
-  }
-  render () {
-    var self = this
-    if (self._view.el) return self._view.el
-    self._view.leftpanel = yo`
+    render () {
+      var self = this
+      if (self._view.el) return self._view.el
+        self._view.leftpanel = yo`
       <div id="filepanel" class=${css.leftpanel}>
-        ${''}
+      ${''}
       </div>
-    `
-    self._view.centerpanel = yo`
+      `
+      self._view.centerpanel = yo`
       <div id="editor-container" class=${css.centerpanel}>
-        ${''}
+      ${''}
       </div>
-    `
-    self._view.rightpanel = yo`
+      `
+      self._view.rightpanel = yo`
       <div class=${css.rightpanel}>
-        ${''}
+      ${''}
       </div>
-    `
-    self._view.el = yo`
+      `
+      self._view.el = yo`
       <div class=${css.browsersolidity}>
-        ${self._view.leftpanel}
-        ${self._view.centerpanel}
-        ${self._view.rightpanel}
+      ${self._view.leftpanel}
+      ${self._view.centerpanel}
+      ${self._view.rightpanel}
       </div>
-    `
+      `
     // INIT
     self._adjustLayout('left', self.data._layout.left.offset)
     self._adjustLayout('right', self.data._layout.right.offset)
@@ -235,7 +235,10 @@ class App {
     self._components.fileManager.saveCurrentFile()
     self._components.editorpanel.getEditor().clearAnnotations()
     var currentFile = self._components.config.get('currentFile')
+    console.log('run compile')
+    console.log(currentFile)
     if (currentFile) {
+      console.log(self._components.fileManager.fileProviderOf(currentFile))
       if (/.(.sol)$/.exec(currentFile)) {
         // only compile *.sol file.
         var target = currentFile
@@ -282,22 +285,22 @@ class App {
     const self = this
     if (!fileProvider) fileProvider = 'browser'
 
-    async.each(Object.keys(filesSet), (file, callback) => {
-      helper.createNonClashingName(file, self._components.filesProviders[fileProvider],
-      (error, name) => {
-        if (error) {
-          modalDialogCustom.alert('Unexpected error loading the file ' + error)
-        } else if (helper.checkSpecialChars(name)) {
-          modalDialogCustom.alert('Special characters are not allowed')
-        } else {
-          self._components.filesProviders[fileProvider].set(name, filesSet[file].content)
-        }
-        callback()
-      })
-    }, (error) => {
-      if (!error) self._components.fileManager.switchFile()
-      if (callback) callback(error)
-    })
+      async.each(Object.keys(filesSet), (file, callback) => {
+        helper.createNonClashingName(file, self._components.filesProviders[fileProvider],
+          (error, name) => {
+            if (error) {
+              modalDialogCustom.alert('Unexpected error loading the file ' + error)
+            } else if (helper.checkSpecialChars(name)) {
+              modalDialogCustom.alert('Special characters are not allowed')
+            } else {
+              self._components.filesProviders[fileProvider].set(name, filesSet[file].content)
+            }
+            callback()
+          })
+      }, (error) => {
+        if (!error) self._components.fileManager.switchFile()
+          if (callback) callback(error)
+        })
   }
   importExternal (url, cb) {
     const self = this
@@ -328,12 +331,12 @@ class App {
       }
       provider.exists(url, (error, exist) => {
         if (error) return filecb(error)
-        if (exist) {
-          return provider.get(url, filecb)
-        } else {
-          self.importExternal(url, filecb)
-        }
-      })
+          if (exist) {
+            return provider.get(url, filecb)
+          } else {
+            self.importExternal(url, filecb)
+          }
+        })
     } else if (self._components.compilerImport.isRelativeImport(url)) {
       // try to resolve localhost modules (aka truffle imports)
       var splitted = /([^/]+)\/(.*)$/g.exec(url)
@@ -343,7 +346,7 @@ class App {
         (cb) => { self.importFileCb('localhost/node_modules/' + url, cb) },
         (cb) => { if (!splitted) { cb('URL not parseable: ' + url) } else { self.importFileCb('localhost/node_modules/' + splitted[1] + '/contracts/' + splitted[2], cb) } }],
         (error, result) => { filecb(error, result) }
-      )
+        )
     } else {
       self.importExternal(url, filecb)
     }
@@ -358,16 +361,16 @@ function run () {
   if (window.location.hostname === 'yann300.github.io') {
     modalDialogCustom.alert('This UNSTABLE ALPHA branch of Remix has been moved to http://ethereum.github.io/remix-live-alpha.')
   } else if (window.location.hostname === 'remix-alpha.ethereum.org' ||
-  (window.location.hostname === 'ethereum.github.io' && window.location.pathname.indexOf('/remix-live-alpha') === 0)) {
+    (window.location.hostname === 'ethereum.github.io' && window.location.pathname.indexOf('/remix-live-alpha') === 0)) {
     modalDialogCustom.alert(`This instance of the Remix IDE is an UNSTABLE ALPHA branch.\n
-Please only use it if you know what you are doing, otherwise visit the stable version at http://remix.ethereum.org.`)
+      Please only use it if you know what you are doing, otherwise visit the stable version at http://remix.ethereum.org.`)
   } else if (window.location.protocol.indexOf('http') === 0 &&
-  window.location.hostname !== 'remix.ethereum.org' &&
-  window.location.hostname !== 'localhost' &&
-  window.location.hostname !== '127.0.0.1') {
+    window.location.hostname !== 'remix.ethereum.org' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1') {
     modalDialogCustom.alert(`The Remix IDE has moved to http://remix.ethereum.org.\n
-This instance of Remix you are visiting WILL NOT BE UPDATED.\n
-Please make a backup of your contracts and start using http://remix.ethereum.org`)
+      This instance of Remix you are visiting WILL NOT BE UPDATED.\n
+      Please make a backup of your contracts and start using http://remix.ethereum.org`)
   }
 
   if (window.location.protocol.indexOf('https') === 0) {
@@ -512,19 +515,19 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
       let context = queryParams.get().context
       let endPointUrl = queryParams.get().endPointUrl
       executionContext.setContext(context, endPointUrl,
-      () => {
-        modalDialogCustom.confirm(null, 'Are you sure you want to connect to an ethereum node?', () => {
-          if (!endPointUrl) {
-            endPointUrl = 'http://localhost:8545'
-          }
-          modalDialogCustom.prompt(null, 'Web3 Provider Endpoint', endPointUrl, (target) => {
-            executionContext.setProviderFromEndpoint(target, context)
+        () => {
+          modalDialogCustom.confirm(null, 'Are you sure you want to connect to an ethereum node?', () => {
+            if (!endPointUrl) {
+              endPointUrl = 'http://localhost:8545'
+            }
+            modalDialogCustom.prompt(null, 'Web3 Provider Endpoint', endPointUrl, (target) => {
+              executionContext.setProviderFromEndpoint(target, context)
+            }, () => {})
           }, () => {})
-        }, () => {})
-      },
-      (alertMsg) => {
-        modalDialogCustom.alert(alertMsg)
-      })
+        },
+        (alertMsg) => {
+          modalDialogCustom.alert(alertMsg)
+        })
     }
 
     if (queryParams.get().debugtx) {
@@ -549,14 +552,14 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
     // insert ballot contract if there are no files to show
     self._components.filesProviders['browser'].resolveDirectory('browser', (error, filesList) => {
       if (error) console.error(error)
-      if (Object.keys(filesList).length === 0) {
-        if (!self._components.filesProviders['browser'].set(examples.ballot.name, examples.ballot.content)) {
-          modalDialogCustom.alert('Failed to store example contract in browser. Remix will not work properly. Please ensure Remix has access to LocalStorage. Safari in Private mode is known not to work.')
-        } else {
-          self._components.filesProviders['browser'].set(examples.ballot_test.name, examples.ballot_test.content)
+        if (Object.keys(filesList).length === 0) {
+          if (!self._components.filesProviders['browser'].set(examples.ballot.name, examples.ballot.content)) {
+            modalDialogCustom.alert('Failed to store example contract in browser. Remix will not work properly. Please ensure Remix has access to LocalStorage. Safari in Private mode is known not to work.')
+          } else {
+            self._components.filesProviders['browser'].set(examples.ballot_test.name, examples.ballot_test.content)
+          }
         }
-      }
-    })
+      })
   }
 
   // Open last opened file
@@ -574,7 +577,9 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
   }
 
   // blockly render
-  var blockly = registry.get('blockEditor').api
-  blockly.run()
-
+  var tag = 'block'
+  if(tag == 'block') {
+    var blockly = registry.get('editor').api
+    blockly.run()
+  }
 }

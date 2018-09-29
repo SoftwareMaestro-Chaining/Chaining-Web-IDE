@@ -38,6 +38,8 @@ class SourceHighlighter {
     this.statementMarker = null
     this.fullLineMarker = null
     this.source = null
+    console.log('current source location from file name')
+    console.log(this.source)
     if (lineColumnPos) {
       this.source = filePath
       if (this._deps.config.get('currentFile') !== this.source) {
