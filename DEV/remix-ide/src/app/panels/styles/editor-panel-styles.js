@@ -53,6 +53,11 @@ var css = csjs`
     flex-direction     : column;
     height             : 100%;
   }
+  .codepanel         {
+    display            : flex;
+    flex-direction     : row;
+    height             : 100%;
+  }
   .tabsbar             {
     background-color   : ${styles.editor.backgroundColor_Panel};
     display            : flex;

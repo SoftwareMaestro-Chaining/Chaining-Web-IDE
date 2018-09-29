@@ -113,8 +113,14 @@ class EditorPanel {
       var height = containerHeight - delta
       height = height < 0 ? 0 : height
       self._view.editor.style.height = `${delta}px`
+
+      self._view.blockEditor.style.height = `${delta}px` /////n0xx1
+
       self._view.terminal.style.height = `${height}px` // - menu bar height
       self._components.editor.resize((document.querySelector('#editorWrap') || {}).checked)
+
+      // self._components.blockEditor.resize((document.querySelector('#editorWrap') || {}).checked) /////n0xx1
+
       self._components.terminal.scroll2bottom()
     }
   }
@@ -143,8 +149,15 @@ class EditorPanel {
     var self = this
     if (self._view.el) return self._view.el
     // 여기다가 토글처럼 진행하면 될듯 (버튼 클릭 시 전환)
-    // self._view.editor = self._components.editor.render()
-    self._view.editor = self._components.blockEditor.render()
+    self._view.editor = self._components.editor.render()
+    self._view.blockEditor = self._components.blockEditor.render()
+    self._view.btnSwitchEditor = yo`
+      <span onclick=${switchBlocklyEditor} id="btnSwitchEditor" title="Toggle down hand panel" class="toggleRHP_2YXkXq">
+        <i class="fa fa-angle-double-down"></i> toggle block editor
+      </span>
+    `
+      // <div id="btnSwitchEditor" style="width:100px; height:100px;">
+
     self._view.terminal = self._components.terminal.render()
     self._view.content = yo`
       <div class=${css.content}>
@@ -152,7 +165,9 @@ class EditorPanel {
         <div class=${css.contextviewcontainer}>
           ${self._components.contextView.render()}
         </div>
-        ${self._view.editor}
+          ${self._view.btnSwitchEditor}
+          ${self._view.blockEditor}
+          ${self._view.editor}
         ${self._view.terminal}
       </div>
     `
@@ -165,6 +180,14 @@ class EditorPanel {
     self._adjustLayout('top', self.data._layout.top.offset)
 
     return self._view.el
+
+    function switchBlocklyEditor (event) {
+    // $( document ).click(function() {
+      // self._components.blockEditor.switchBlocklyEditor()
+      $('#blockPanel').toggle( "fold" );
+      console.log("fold! yapp!!")
+    // });
+    }
   }
   registerCommand (name, command, opts) {
     var self = this

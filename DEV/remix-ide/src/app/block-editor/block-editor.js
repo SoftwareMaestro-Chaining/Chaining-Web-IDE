@@ -8,7 +8,6 @@ var globalRegistry = require('../../global/registry')
 
 function BlockEditor (opts = {}, localRegistry) {
 	var self = this
-	self._view = {}
 
 	self._components = {}
 	self._components.registry = localRegistry || globalRegistry
@@ -17,20 +16,15 @@ function BlockEditor (opts = {}, localRegistry) {
 		fileManager: self._components.registry.get('filemanager').api,
 		config: self._components.registry.get('config').api
 	}
+	var isHidden = false; /////n0xx1
 
-	self._view.blocklyDiv = yo`
-	<div id="blocklyDiv" style="width:100%; height:100%;">
-	</div>`
+	self._view = {}
 
 	self._view.textarea = yo`
 	<textarea id="textarea" style="width:calc(34% - 10px); height:100%; float:right;">
-	</textarea>`
+	</textarea>
+	`
 
-	self._view.el = yo`
-	<div id ="input">
-	${self._view.blocklyDiv}
-	${self._view.textarea}
-	</div>`
 
 	this.previousInput = ''
 
@@ -82,6 +76,17 @@ function BlockEditor (opts = {}, localRegistry) {
 	this.setAnnotations = function (sourceAnnotations) {
 		// setAnnotations(sourceAnnotations)
 	}
+	self._view.blocklyDiv = yo`
+	<div id="blocklyDiv" style="width:100%; height:100%;">
+		${self._view.textarea}
+	</div>
+	`
+
+	self._view.el = yo`
+	<div id="blockPanel">
+		${self._view.blocklyDiv}
+	</div>
+	`
 
 	self.render = function () { return self._view.el }
 	self.run = function() {
@@ -193,6 +198,14 @@ function BlockEditor (opts = {}, localRegistry) {
 			document.getElementById('textarea').value = code
 			blockEditorOnChange(self)
 		}
+
+		// function switchBlocklyEditor() {
+  //     // $( document ).click(function() {
+  //       	$(#blockPanel).toggle( "fold" );
+  //     // });
+  // 		}
+
+
 		workspace.addChangeListener(myUpdateFunction)  
 	}
 }
