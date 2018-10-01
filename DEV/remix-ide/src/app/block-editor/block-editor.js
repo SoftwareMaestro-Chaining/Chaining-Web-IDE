@@ -91,11 +91,12 @@ function BlockEditor (opts = {}, localRegistry) {
 				},
 			})
 
-		// Blockly.Xml.domToWorkspace(
-		// 	Blockly.Xml.textToDom(
-		// 		),
-		// 	workspace
-		// 	)
+		Blockly.Xml.domToWorkspace(
+			Blockly.Xml.textToDom(
+				'<xml><block type="contract" deletable="false" movable="false"></block></xml>'
+				),
+			workspace
+			)
 
 
 
