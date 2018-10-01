@@ -10,8 +10,7 @@ Blockly.Solidity['contract'] = function(block) {
   var states = Blockly.Solidity.statementToCode(block, 'STATES');
   var ctor = Blockly.Solidity.statementToCode(block, 'CTOR');
   var methods = Blockly.Solidity.statementToCode(block, 'METHODS');
-  var code = 'pragma solidity ^0.4.24;\n\n'
-    + 'contract ' + block.getFieldValue('NAME') + ' {\n'
+  var code = 'contract ' + block.getFieldValue('NAME') + ' {\n'
     + states
     + ctor
     + methods
