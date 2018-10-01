@@ -527,3 +527,38 @@ Blockly.defineBlocksWithJsonArray([
   }
 ]);
 
+
+Blockly.Blocks['contract_msg'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('msg.')
+        .appendField(
+          new Blockly.FieldDropdown([
+            [ "gas", "GAS" ],
+            [ "sender", "SENDER"],
+            [ "data", "DATA" ],
+          ]),
+          "VAR_GLOBAL"
+        );
+
+    this.setColour(195);
+    // this.contextMenu = false;
+
+    // this._stateNameInitialized = false;
+
+    this.getVariableNameSelectField = function() { return this.getField('VAR_GLOBAL'); };
+    this.getVariableLabelGroup = function() { return this.getFieldValue('LABEL_GROUP_VARIABLE') };
+    // this.getVariableScope = function() {
+    //   var scope = this.getParent();
+    //   while (!!scope && scope.type != 'contract') {
+    //     scope = scope.getParent();
+    //   }
+    //   return scope;
+    // };
+
+    this.setOutput(true, null)
+
+    // Blockly.Extensions.apply('declare_typed_variable', this, false);
+  },
+};
+

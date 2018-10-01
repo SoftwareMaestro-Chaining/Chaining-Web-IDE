@@ -80,3 +80,17 @@ Blockly.Solidity['contract_state_set'] = function(block) {
 
   return Blockly.Solidity.getVariableName(variable) + ' = ' + argument0 + ';\n';
 };
+
+
+Blockly.Solidity['contract_msg'] = function(block) {
+  var variable = block.getFieldValue('VAR_GLOBAL');
+  var variables = {
+    'GAS' : 'gas',
+    'SENDER' : 'sender',
+    'DATA' : 'data'
+  };
+
+  var code = 'msg.' + variables[variable];
+
+  return  [code, Blockly.Solidity.ORDER_ATOMIC];
+}

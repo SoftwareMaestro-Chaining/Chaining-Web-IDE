@@ -71,6 +71,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			toolbox +=  '<block type="math_single"></block>'
 			toolbox +=  '<block type="math_number_property"></block>'
 			toolbox +=  '<block type="contract_struct"></block>'
+			toolbox +=  '<block type="contract_msg"></block>'
 		toolbox +=	'</category>'
 		toolbox +=  '</xml>'
 
