@@ -119,13 +119,19 @@ Blockly.Extensions.register(
 Blockly.defineBlocksWithJsonArray([
   {
     "type": "contract",
-    "message0": 'smart contract %1',
+    "message0": 'smart contract %1 is %2',
     "args0": [
       {
         "type": "field_input",
         "name": "NAME",
         "check": "String",
         "text": "MyContract",
+      },
+      {
+        "type": "field_input",
+        "name": "INHERITANCE",
+        "check": "String",
+        "text": ""
       }
     ],
     "message1": "states %1",

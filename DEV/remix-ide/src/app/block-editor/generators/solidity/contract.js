@@ -11,7 +11,16 @@ Blockly.Solidity['contract'] = function(block) {
   var ctor = Blockly.Solidity.statementToCode(block, 'CTOR');
   var methods = Blockly.Solidity.statementToCode(block, 'METHODS');
 
-  var code = 'contract ' + block.getFieldValue('NAME') + ' {\n'
+  var inheritance = block.getFieldValue('INHERITANCE')
+
+  var isIn = ''
+  if(inheritance == '') {
+    isIn = ''
+  } else {
+    isIn = ' is ' + inheritance
+  }
+
+  var code = 'contract ' + block.getFieldValue('NAME') +  isIn  + ' {\n'
     + states
     + ctor
     + methods
@@ -55,6 +64,7 @@ Blockly.Solidity['contract_state'] = function(block) {
 
   return types[type] + ' ' + name + ' = ' + value + ';\n';
 };
+
 
 Blockly.Solidity['contract_state_get'] = function(block) {
   var variableId = block.getFieldValue('STATE_NAME');
