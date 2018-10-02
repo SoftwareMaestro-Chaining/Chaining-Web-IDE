@@ -107,6 +107,15 @@ Blockly.Extensions.register(
   }
 );
 
+    //   "args5": [
+    //   {
+    //     "type": "field_input",
+    //     "name": "PAY",
+    //     "check": ["payable_state"],
+    //   }
+    // ],
+
+
 Blockly.defineBlocksWithJsonArray([
   {
     "type": "contract",
@@ -137,7 +146,7 @@ Blockly.defineBlocksWithJsonArray([
         "align": "RIGHT"
       }
     ],
-    "message3": "methods %1",
+    "message3": "methods %1 ",
     "args3": [
       {
         "type": "input_statement",
@@ -164,6 +173,7 @@ Blockly.Blocks['type_list'] = {
     });
   }
 };
+
 
 Blockly.Blocks['contract_state'] = {
   init: function() {
@@ -308,13 +318,18 @@ Blockly.Blocks['contract_method_parameter_get'] = {
 Blockly.Blocks['contract_method'] = {
   init: function() {
     this.jsonInit({
-      "message0": "method %1",
+      "message0": "method %1 payable %2",
       "args0": [
         {
           "type": "field_input",
           "name": "NAME",
           "text": "myMethod"
         },
+        { 
+          "type": "field_dropdown",
+          "name": "PAY",
+          "options": [["none","EMPTY"], ["view", "VIEW"], ["payable", "PAY"]]
+        }
       ],
       "message1": "parameters %1",
       "args1": [

@@ -120,11 +120,6 @@ function BlockEditor (opts = {}, localRegistry) {
 
 		function myUpdateFunction(event) {
 
-			console.log('workspace')
-			console.log(workspace)
-
-			console.log('top block')
-			console.log(workspace.getTopBlocks().length)
 
 			var contractBlockCount = workspace.getTopBlocks().length
 

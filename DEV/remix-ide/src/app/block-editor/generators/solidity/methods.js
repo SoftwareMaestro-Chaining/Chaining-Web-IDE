@@ -7,9 +7,17 @@
 goog.require('Blockly.Solidity');
 
 Blockly.Solidity['contract_method'] = function(block) {
+
+  var type = block.getFieldValue('PAY')
+  var types = {
+    'EMPTY': '',
+    'PAY' : 'payable',
+    'VIEW' : 'view'
+  }  
+
   var params = Blockly.Solidity.statementToCode(block, 'PARAMS').trim();
   var branch = Blockly.Solidity.statementToCode(block, 'STACK');
-  var code = 'function ' + block.getFieldValue('NAME') + '(' + params + ') {\n' + branch + '}\n';
+  var code = 'function ' + block.getFieldValue('NAME') + '(' + params + ') ' + types[type] + ' {\n' + branch + '}\n';
 
   return code;
 };
@@ -20,6 +28,8 @@ Blockly.Solidity['contract_ctor'] = function(block) {
   if (!parent) {
     return '';
   }
+
+
 
   var params = Blockly.Solidity.statementToCode(block, 'PARAMS').trim();
   var branch = Blockly.Solidity.statementToCode(block, 'STACK');
