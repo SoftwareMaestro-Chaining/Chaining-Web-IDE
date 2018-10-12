@@ -116,6 +116,7 @@ goog.addDependency("../../../" + dir + "/core/variable.js", ['Blockly.Variable']
 goog.addDependency("../../../" + dir + "/core/field_type.js", ['Blockly.FieldType'], ['Blockly.FieldDropdown', 'Blockly.Types']);
 goog.addDependency("../../../" + dir + "/core/field_fieldref.js", ['Blockly.FieldFieldref'], ['Blockly.FieldDropdown', 'Blockly.Types', 'goog.string']);
 goog.addDependency("../../../" + dir + "/core/types.js", ['Blockly.Types'], ['goog.string']);
+goog.addDependency("../../../" + dir + "/core/field_textarea.js", ['Blockly.FieldTextArea'], ['Blockly.Field','Blockly.Msg','goog.asserts','goog.dom','goog.userAgent']);
 
 goog.addDependency("../../alltests.js", [], []);
 goog.addDependency("../../browser_capabilities.js", [], []);
@@ -1774,10 +1775,13 @@ goog.require('Blockly.FieldCheckbox');
 goog.require('Blockly.FieldColour');
 goog.require('Blockly.FieldDate');
 goog.require('Blockly.FieldDropdown');
+goog.require('Blockly.FieldFieldref');
 goog.require('Blockly.FieldImage');
 goog.require('Blockly.FieldLabel');
 goog.require('Blockly.FieldNumber');
+goog.require('Blockly.FieldTextArea');
 goog.require('Blockly.FieldTextInput');
+goog.require('Blockly.FieldType');
 goog.require('Blockly.FieldVariable');
 goog.require('Blockly.Flyout');
 goog.require('Blockly.FlyoutButton');
@@ -1801,6 +1805,8 @@ goog.require('Blockly.Tooltip');
 goog.require('Blockly.Touch');
 goog.require('Blockly.TouchGesture');
 goog.require('Blockly.Trashcan');
+goog.require('Blockly.Types');
+goog.require('Blockly.Variable');
 goog.require('Blockly.VariableMap');
 goog.require('Blockly.VariableModel');
 goog.require('Blockly.Variables');
@@ -1822,6 +1828,7 @@ goog.require('Blockly.constants');
 goog.require('Blockly.inject');
 goog.require('Blockly.utils');
 goog.require('Blockly.utils.uiMenu');
+
 
 delete root.BLOCKLY_DIR;
 delete root.BLOCKLY_BOOT;

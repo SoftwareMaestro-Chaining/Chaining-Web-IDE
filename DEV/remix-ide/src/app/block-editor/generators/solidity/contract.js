@@ -91,3 +91,11 @@ Blockly.Solidity['contract_state_set'] = function(block) {
 
   return Blockly.Solidity.getVariableName(variable) + ' = ' + argument0 + ';\n';
 };
+
+
+Blockly.Solidity['expression_expr'] = function(block) {
+  var argument0 = block.getFieldValue('expr');
+
+  console.log("###: "+argument0);
+  return argument0 + '\n';
+};

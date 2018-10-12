@@ -548,3 +548,15 @@ Blockly.defineBlocksWithJsonArray([
   }
 ]);
 
+
+Blockly.Blocks['expression_expr'] = {
+    init: function () {
+        this.appendDummyInput()
+                .appendField("code")
+                .appendField(new Blockly.FieldTextArea(".......\n.......\n.......\n"), "expr");
+        this.setPreviousStatement(true);
+        this.setColour(210);
+    }
+};
+
+

@@ -71,6 +71,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			toolbox +=  '<block type="math_single"></block>'
 			toolbox +=  '<block type="math_number_property"></block>'
 			toolbox +=  '<block type="contract_struct"></block>'
+			toolbox +=  '<block type="expression_expr"></block>'
 		toolbox +=	'</category>'
 		toolbox +=  '</xml>'
 
@@ -102,7 +103,7 @@ function BlockEditor (opts = {}, localRegistry) {
 
 		// var contractBlock = workspace.getTopBlocks()[0];
 
-		console.log('work space top blocks')
+		// console.log('work space top blocks')
 		// console.log(workspace.getTopBlocks())
 
 		function setDisabledRec(block, disabled) {
@@ -113,7 +114,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			for (var i = 0; i < children.length; i++) {
 				setDisabledRec(children[i], disabled)
 			}
-			console.log('set disabled rec')
+			// console.log('set disabled rec')
 		}
 
 		document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'

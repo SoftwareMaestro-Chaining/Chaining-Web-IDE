@@ -1365,6 +1365,9 @@ Blockly.Block.prototype.interpolate_ = function(message, args, lastDummyAlign) {
             case 'input_dummy':
               input = this.appendDummyInput(element['name']);
               break;
+            case 'field_textarea':
+              field = new Blockly.FieldTextArea(element['text']);
+              break;
             default:
               field = Blockly.Field.fromJson(element);
 
