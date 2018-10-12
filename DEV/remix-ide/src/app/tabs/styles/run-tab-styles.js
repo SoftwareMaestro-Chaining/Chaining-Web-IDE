@@ -35,6 +35,7 @@ var css = csjs`
     margin-top: .5em;
     display: flex;
     align-items: center;
+    width: 500px;
   }
   .col1 {
     width: 30%;
@@ -52,14 +53,21 @@ var css = csjs`
     display: flex;
     align-items: center;
     position: relative;
+    width: 259px;
+  }
+  .account {
+    display: flex;
+    align-items: center;
+    width: 266px;
   }
   .col2 {
     ${styles.rightPanel.runTab.input_RunTab}
+    border-radius: 3px;
   }
   .col2_1 {
     ${styles.rightPanel.runTab.input_RunTab}
-    width: 165px;
-    min-width: 165px;
+    width: 164px;
+    min-width: 164px;
   }
   .col2_2 {
     ${styles.rightPanel.runTab.dropdown_RunTab}
@@ -116,19 +124,35 @@ var css = csjs`
   .button {
     display: flex;
     align-items: center;
-    margin-top: 2%;
+    margin-top: 13px;
   }
   .transaction {
     ${styles.rightPanel.runTab.button_transaction}
   }
   .atAddress {
     ${styles.rightPanel.runTab.button_atAddress}
+    min-width: 100px;
+    width: 100px;
+    font-size: 10px;
+    margin: 0;
+    word-break: inherit;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+  }
+  .atAddressSect {
+    margin-top: 6px;
+  }
+  .atAddressSect input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
   .create {
     ${styles.rightPanel.runTab.button_Create}
   }
   .input {
-    ${styles.rightPanel.runTab.input_RunTab}
+    ${styles.rightPanel.runTab.input_RunTab};
+    font-size: 10px;
   }
   .noInstancesText {
     ${styles.rightPanel.runTab.box_Instance}
@@ -213,7 +237,14 @@ var css = csjs`
     justify-content: space-evenly;
     ${styles.rightPanel.runTab.box_Info_RunTab};
     width: 145px;
-}
+  }
+  .orLabel {
+    margin-left: 44px;
+  }
+  .infoDeployAction {
+    margin-left: 5px;
+    font-size: 13px;
+  }
 `
 
 module.exports = css

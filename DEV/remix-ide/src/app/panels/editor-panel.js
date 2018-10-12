@@ -7,12 +7,14 @@ var Terminal = require('./terminal')
 var Editor = require('../editor/editor')
 var globalRegistry = require('../../global/registry')
 
-var CommandInterpreter = require('../../lib/cmdInterpreter')
 var ContextualListener = require('../editor/contextualListener')
 var ContextView = require('../editor/contextView')
 var styles = require('./styles/editor-panel-styles')
 var cssTabs = styles.cssTabs
 var css = styles.css
+
+// block editor 공간 확보 진행 중
+var BlockEditor = require('../block-editor/block-editor')
 
 class EditorPanel {
   constructor (localRegistry) {
@@ -25,7 +27,7 @@ class EditorPanel {
     var self = this
     self._deps = {
       config: self._components.registry.get('config').api,
-      txlistener: self._components.registry.get('txlistener').api,
+      txListener: self._components.registry.get('txlistener').api,
       fileManager: self._components.registry.get('filemanager').api,
       udapp: self._components.registry.get('udapp').api
     }
@@ -39,16 +41,23 @@ class EditorPanel {
       }
     }
     self._view = {}
+    // var tag = 'block'
+
     var editor = new Editor({})
     self._components.registry.put({api: editor, name: 'editor'})
+
+    var blockEditor = new BlockEditor({})
+    self._components.registry.put({api: blockEditor, name: 'blockEditor'})
+
+
     var contextualListener = new ContextualListener({editor: editor})
     self._components = {
       editor: editor,
+      blockEditor: blockEditor,
       contextualListener: contextualListener,
       contextView: new ContextView({contextualListener: contextualListener, editor: editor}),
       terminal: new Terminal({
-        udapp: self._deps.udapp,
-        cmdInterpreter: new CommandInterpreter()
+        udapp: self._deps.udapp
       },
         {
           getPosition: (event) => {
@@ -98,8 +107,14 @@ class EditorPanel {
       var height = containerHeight - delta
       height = height < 0 ? 0 : height
       self._view.editor.style.height = `${delta}px`
+
+      self._view.blockEditor.style.height = `${delta}px` /////n0xx1
+
       self._view.terminal.style.height = `${height}px` // - menu bar height
       self._components.editor.resize((document.querySelector('#editorWrap') || {}).checked)
+
+      // self._components.blockEditor.resize((document.querySelector('#editorWrap') || {}).checked) /////n0xx1
+
       self._components.terminal.scroll2bottom()
     }
   }
@@ -127,7 +142,16 @@ class EditorPanel {
   render () {
     var self = this
     if (self._view.el) return self._view.el
+    // 여기다가 토글처럼 진행하면 될듯 (버튼 클릭 시 전환)
     self._view.editor = self._components.editor.render()
+    self._view.blockEditor = self._components.blockEditor.render()
+    self._view.btnSwitchEditor = yo`
+      <span onclick=${switchBlocklyEditor} id="btnSwitchEditor" title="Toggle down hand panel" class="toggleRHP_2YXkXq">
+        <i class="fa fa-angle-double-down"></i> toggle block editor
+      </span>
+    `
+      // <div id="btnSwitchEditor" style="width:100px; height:100px;">
+
     self._view.terminal = self._components.terminal.render()
     self._view.content = yo`
       <div class=${css.content}>
@@ -135,7 +159,9 @@ class EditorPanel {
         <div class=${css.contextviewcontainer}>
           ${self._components.contextView.render()}
         </div>
-        ${self._view.editor}
+          ${self._view.btnSwitchEditor}
+          ${self._view.blockEditor}
+          ${self._view.editor}
         ${self._view.terminal}
       </div>
     `
@@ -146,7 +172,16 @@ class EditorPanel {
     `
     // INIT
     self._adjustLayout('top', self.data._layout.top.offset)
+
     return self._view.el
+
+    function switchBlocklyEditor (event) {
+    // $( document ).click(function() {
+      // self._components.blockEditor.switchBlocklyEditor()
+      $('#blockPanel').toggle( "fold" );
+      console.log("fold! yapp!!")
+    // });
+    }
   }
   registerCommand (name, command, opts) {
     var self = this
