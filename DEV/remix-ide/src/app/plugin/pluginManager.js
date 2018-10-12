@@ -1,5 +1,6 @@
 'use strict'
 var executionContext = require('../../execution-context')
+const PluginAPI = require('./pluginAPI')
 /**
  * Register and Manage plugin:
  *
@@ -77,22 +78,25 @@ var executionContext = require('../../execution-context')
  *
  */
 module.exports = class PluginManager {
-  constructor (pluginAPI, app, compiler, txlistener) {
+  constructor (app, compiler, txlistener, fileProviders, fileManager, udapp) {
     const self = this
+    var pluginAPI = new PluginAPI(
+      this,
+      fileProviders,
+      fileManager,
+      compiler,
+      udapp
+    )
     self.plugins = {}
     self.origins = {}
     self.inFocus
-    self.allowedapi = {'setConfig': 1, 'getConfig': 1, 'removeConfig': 1}
     compiler.event.register('compilationFinished', (success, data, source) => {
-      if (self.inFocus) {
-        // trigger to the current focus
-        self.post(self.inFocus, JSON.stringify({
-          action: 'notification',
-          key: 'compiler',
-          type: 'compilationFinished',
-          value: [ success, data, source ]
-        }))
-      }
+      self.broadcast(JSON.stringify({
+        action: 'notification',
+        key: 'compiler',
+        type: 'compilationFinished',
+        value: [ success, data, source ]
+      }))
     })
 
     txlistener.event.register('newTransaction', (tx) => {
@@ -106,6 +110,7 @@ module.exports = class PluginManager {
     })
 
     app.event.register('tabChanged', (tabName) => {
+      // TODO Fix this cause this event is no longer triggered
       if (self.inFocus && self.inFocus !== tabName) {
         // trigger unfocus
         self.post(self.inFocus, JSON.stringify({
@@ -153,12 +158,10 @@ module.exports = class PluginManager {
       }
       var data = JSON.parse(event.data)
       data.value.unshift(extension)
-      // if (self.allowedapi[data.type]) {
       data.value.push((error, result) => {
         response(data.key, data.type, data.id, error, result)
       })
       pluginAPI[data.key][data.type].apply({}, data.value)
-      // }
     }, false)
   }
   unregister (desc) {
@@ -166,9 +169,9 @@ module.exports = class PluginManager {
     delete self.plugins[desc.title]
     delete self.origins[desc.url]
   }
-  register (desc, content) {
+  register (desc, modal, content) {
     const self = this
-    self.plugins[desc.title] = {content, origin: desc.url}
+    self.plugins[desc.title] = { content, modal, origin: desc.url }
     self.origins[desc.url] = desc.title
   }
   broadcast (value) {

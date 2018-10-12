@@ -71,6 +71,19 @@ class FileManager {
     this.refreshTabs()
   }
 
+  currentFileProvider () {
+    var path = this.currentPath()
+    if (path) {
+      return this.fileProviderOf(path)
+    }
+    return null
+  }
+
+  currentFile () {
+    var self = this
+    return self._deps.config.get('currentFile')
+  }
+
   currentPath () {
     var self = this
     var currentFile = self._deps.config.get('currentFile')
@@ -154,6 +167,7 @@ class FileManager {
   }
 
   fileProviderOf (file) {
+    if (!file) return null
     var provider = file.match(/[^/]*/)
     if (provider !== null && this._deps.filesProviders[provider[0]]) {
       return this._deps.filesProviders[provider[0]]
@@ -169,6 +183,9 @@ class FileManager {
 
   saveCurrentFile () {
     var currentFile = this._deps.config.get('currentFile')
+    console.log('save current file')
+    console.log(currentFile)
+
     if (currentFile && this._deps.editor.current()) {
       var input = this._deps.editor.get(currentFile)
       if (input) {
@@ -179,6 +196,37 @@ class FileManager {
           console.log('cannot save ' + currentFile + '. Does not belong to any explorer')
         }
       }
+    }
+  }
+
+  saveCurrentBlockFile() {
+    var currentFile = this._deps.config.get('currentFile')
+    if (currentFile && this._deps.editor.current()) {
+      var input = this._deps.editor.get(currentFile)
+      if (input) {
+        var provider = this.fileProviderOf(currentFile)
+        if (provider) {
+          provider.set(currentFile, input)
+        } else {
+          console.log('cannot save ' + currentFile + '. Does not belong to any explorer')
+        }
+      }
+    }
+  }
+
+  syncEditor (path) {
+    var self = this
+    var currentFile = this._deps.config.get('currentFile')
+    if (path !== currentFile) return
+
+    var provider = this.fileProviderOf(currentFile)
+    if (provider) {
+      provider.get(currentFile, (error, content) => {
+        if (error) console.log(error)
+        self._deps.editor.setText(content)
+      })
+    } else {
+      console.log('cannot save ' + currentFile + '. Does not belong to any explorer')
     }
   }
 }

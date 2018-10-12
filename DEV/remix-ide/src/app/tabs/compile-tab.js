@@ -1,7 +1,10 @@
+/* global Worker */
 const yo = require('yo-yo')
 const csjs = require('csjs-inject')
 const copy = require('clipboard-copy')
-
+var minixhr = require('minixhr')
+var tooltip = require('../ui/tooltip')
+var QueryParams = require('../../lib/query-params')
 var globalRegistry = require('../../global/registry')
 const TreeView = require('../ui/TreeView')
 const modalDialog = require('../ui/modaldialog')
@@ -11,6 +14,7 @@ const styleGuide = require('../ui/styles-guide/theme-chooser')
 const parseContracts = require('../contract/contractParser')
 const publishOnSwarm = require('../contract/publishOnSwarm')
 const addTooltip = require('../ui/tooltip')
+var helper = require('../../lib/helper')
 
 const styles = styleGuide.chooser()
 
@@ -27,10 +31,15 @@ module.exports = class CompileTab {
       errorContainer: null,
       errorContainerHead: null,
       contractNames: null,
-      contractEl: null
+      contractEl: null,
+      config: {
+        solidity: null
+      },
+      optimize: null
     }
     self._components = {}
     self._components.registry = localRegistry || globalRegistry
+    self._components.queryParams = new QueryParams()
     // dependencies
     self._deps = {
       app: self._components.registry.get('app').api,
@@ -47,8 +56,15 @@ module.exports = class CompileTab {
       compileTimeout: null,
       contractsDetails: {},
       maxTime: 1000,
-      timeout: 300
+      timeout: 300,
+      allversions: null,
+      selectedVersion: null,
+      baseurl: 'https://solc-bin.ethereum.org/bin'
     }
+    self.data.optimize = !!self._components.queryParams.get().optimize
+    self._components.queryParams.update({ optimize: self.data.optimize })
+    self._deps.compiler.setOptimize(self.data.optimize)
+
     self._deps.editor.event.register('contentChanged', scheduleCompilation)
     self._deps.editor.event.register('sessionSwitched', scheduleCompilation)
     function scheduleCompilation () {
@@ -61,9 +77,9 @@ module.exports = class CompileTab {
       if (speed > self.data.maxTime) {
         const msg = `Last compilation took ${speed}ms. We suggest to turn off autocompilation.`
         self._view.warnCompilationSlow.setAttribute('title', msg)
-        self._view.warnCompilationSlow.style.display = 'inline-block'
+        self._view.warnCompilationSlow.style.visibility = 'visible'
       } else {
-        self._view.warnCompilationSlow.style.display = 'none'
+        self._view.warnCompilationSlow.style.visibility = 'hidden'
       }
     })
     self._deps.editor.event.register('contentChanged', function changedFile () {
@@ -75,7 +91,7 @@ module.exports = class CompileTab {
     self._deps.compiler.event.register('loadingCompiler', function start () {
       if (!self._view.compileIcon) return
       self._view.compileIcon.classList.add(`${css.spinningIcon}`)
-      self._view.warnCompilationSlow.style.display = 'none'
+      self._view.warnCompilationSlow.style.visibility = 'hidden'
       self._view.compileIcon.setAttribute('title', 'compiler is loading, please wait a few moments.')
     })
     self._deps.compiler.event.register('compilationStarted', function start () {
@@ -122,6 +138,13 @@ module.exports = class CompileTab {
       if (data['error']) {
         error = true
         self._deps.renderer.error(data['error'].formattedMessage, self._view.errorContainer, {type: data['error'].severity || 'error'})
+        if (data['error'].mode === 'panic') {
+          return modalDialogCustom.alert(yo`<div><i class="fa fa-exclamation-circle ${css.panicError}" aria-hidden="true"></i>
+                                            The compiler returned with the following internal error: <br> <b>${data['error'].formattedMessage}.<br> 
+                                            The compiler might be in a non-sane state, please be careful and do not use further compilation data to deploy to mainnet. 
+                                            It is heavily recommended to use another browser not affected by this issue (Firefox is known to not be affected).</b><br>
+                                            Please join <a href="https://gitter.im/ethereum/remix" target="blank" >remix gitter channel</a> for more information.</div>`)
+        }
       }
       if (data.errors && data.errors.length) {
         error = true
@@ -149,7 +172,37 @@ module.exports = class CompileTab {
   render () {
     const self = this
     if (self._view.el) return self._view.el
-    self._view.warnCompilationSlow = yo`<i title="Copy Address" style="display:none" class="${css.warnCompilationSlow} fa fa-exclamation-triangle" aria-hidden="true"></i>`
+
+    function onchangeLoadVersion (event) {
+      self.data.selectedVersion = self._view.versionSelector.value
+      self._updateVersionSelector()
+    }
+
+    function onchangeOptimize (event) {
+      self.data.optimize = !!self._view.optimize.checked
+      self._components.queryParams.update({ optimize: self.data.optimize })
+      self._deps.compiler.setOptimize(self.data.optimize)
+      self._deps.app.runCompiler()
+    }
+
+    self._deps.compiler.event.register('compilerLoaded', (version) => self.setVersionText(version))
+    self.fetchAllVersion((allversions, selectedVersion) => {
+      self.data.allversions = allversions
+      self.data.selectedVersion = selectedVersion
+      if (self._view.versionSelector) self._updateVersionSelector()
+    })
+
+    self._view.optimize = yo`<input onchange=${onchangeOptimize} id="optimize" type="checkbox">`
+    if (self.data.optimize) self._view.optimize.setAttribute('checked', '')
+
+    self._view.versionSelector = yo`
+      <select onchange=${onchangeLoadVersion} class="${css.select}" id="versionSelector" disabled>
+        <option disabled selected>Select new compiler version</option>
+      </select>`
+    if (self.data.allversions && self.data.selectedVersion) self._updateVersionSelector()
+    self._view.version = yo`<span id="version"></span>`
+
+    self._view.warnCompilationSlow = yo`<i title="Compilation Slow" style="visibility:hidden" class="${css.warnCompilationSlow} fa fa-exclamation-triangle" aria-hidden="true"></i>`
     self._view.compileIcon = yo`<i class="fa fa-refresh ${css.icon}" aria-hidden="true"></i>`
     self._view.compileButton = yo`<div class="${css.compileButton}" onclick=${compile} id="compile" title="Compile source code">${self._view.compileIcon} Start to compile</div>`
     self._view.autoCompile = yo`<input class="${css.autocompile}" onchange=${updateAutoCompile} id="autoCompile" type="checkbox" title="Auto compile">`
@@ -158,16 +211,27 @@ module.exports = class CompileTab {
     if (self.data.hideWarnings) self._view.hideWarningsBox.setAttribute('checked', '')
     self._view.compileContainer = yo`
       <div class="${css.compileContainer}">
-        <div class="${css.compileButtons}">
-          ${self._view.compileButton}
-          <div class="${css.autocompileContainer}">
-            ${self._view.autoCompile}
-            <span class="${css.autocompileText}">Auto compile</span>
+        <div class="${css.info}">
+          <span>Current version:</span> ${self._view.version}
+          <div class="${css.crow}">
+            ${self._view.versionSelector}
           </div>
-          ${self._view.warnCompilationSlow}
-          <div class=${css.hideWarningsContainer}>
-            ${self._view.hideWarningsBox}
-            <span class="${css.autocompileText}">Hide warnings</span>
+          <div class="${css.compileButtons}">
+            <div class=${css.checkboxes}>
+              <div class="${css.autocompileContainer}">
+                ${self._view.autoCompile}
+                <span class="${css.autocompileText}">Auto compile</span>
+              </div>
+              <div class="${css.optimizeContainer}">
+                <div>${self._view.optimize}</div>
+                <span class="${css.checkboxText}">Enable Optimization</span>
+              </div>
+              <div class=${css.hideWarningsContainer}>
+                ${self._view.hideWarningsBox}
+                <span class="${css.autocompileText}">Hide warnings</span>
+              </div>
+            </div>
+            ${self._view.compileButton}
           </div>
         </div>
       </div>`
@@ -178,10 +242,12 @@ module.exports = class CompileTab {
       <div class="${css.container}">
         <div class="${css.contractContainer}">
           ${self._view.contractNames}
+          <div title="Publish on Swarm" class="${css.publish}" onclick=${publish}>
+            <i class="${css.copyIcon} fa fa-upload" aria-hidden="true"></i><span>Swarm</span>
+          </div>
         </div>
         <div class="${css.contractHelperButtons}">
           <div title="Display Contract Details" class="${css.details}" onclick=${details}>Details</div>
-          <div title="Publish on Swarm" class="${css.publish}" onclick=${publish}>Publish on Swarm</div>
           <div title="Copy ABI to clipboard" class="${css.copyButton}" onclick=${copyABI}>
             <i class="${css.copyIcon} fa fa-clipboard" aria-hidden="true"></i> ABI
           </div>
@@ -306,7 +372,7 @@ module.exports = class CompileTab {
         if (contract.metadata === undefined || contract.metadata.length === 0) {
           modalDialogCustom.alert('This contract does not implement all functions and thus cannot be published.')
         } else {
-          publishOnSwarm(contract, self._deps.fileManager, function (err) {
+          publishOnSwarm(contract, self._deps.fileManager, function (err, uploaded) {
             if (err) {
               try {
                 err = JSON.stringify(err)
@@ -314,7 +380,10 @@ module.exports = class CompileTab {
               modalDialogCustom.alert(yo`<span>Failed to publish metadata file to swarm, please check the Swarm gateways is available ( swarm-gateways.net ).<br />
               ${err}</span>`)
             } else {
-              modalDialogCustom.alert(yo`<span>Metadata published successfully.<br />The Swarm address of the metadata file is available in the contract details.</span>`)
+              var result = yo`<div>${uploaded.map((value) => {
+                return yo`<div><b>${value.filename}</b> : <pre>${value.output.url}</pre></div>`
+              })}</div>`
+              modalDialogCustom.alert(yo`<span>Metadata published successfully.<br> <pre>${result}</pre> </span>`)
             }
           }, function (item) { // triggered each time there's a new verified publish (means hash correspond)
             self._deps.swarmfileProvider.addReadOnly(item.hash, item.content)
@@ -324,9 +393,97 @@ module.exports = class CompileTab {
     }
     return self._view.el
   }
+  setVersionText (text) {
+    const self = this
+    self.data.version = text
+    if (self._view.version) self._view.version.innerText = text
+  }
+  _updateVersionSelector () {
+    const self = this
+    self._view.versionSelector.innerHTML = ''
+    self._view.versionSelector.appendChild(yo`<option disabled selected>Select new compiler version</option>`)
+    self.data.allversions.forEach(build => self._view.versionSelector.appendChild(yo`<option value=${build.path}>${build.longVersion}</option>`))
+    self._view.versionSelector.removeAttribute('disabled')
+    self._components.queryParams.update({ version: self.data.selectedVersion })
+    var url
+    if (self.data.selectedVersion === 'builtin') {
+      var location = window.document.location
+      location = location.protocol + '//' + location.host + '/' + location.pathname
+      if (location.endsWith('index.html')) location = location.substring(0, location.length - 10)
+      if (!location.endsWith('/')) location += '/'
+      url = location + 'soljson.js'
+    } else {
+      if (self.data.selectedVersion.indexOf('soljson') !== 0 || helper.checkSpecialChars(self.data.selectedVersion)) {
+        return console.log('loading ' + self.data.selectedVersion + ' not allowed')
+      }
+      url = `${self.data.baseurl}/${self.data.selectedVersion}`
+    }
+    var isFirefox = typeof InstallTrigger !== 'undefined'
+    if (document.location.protocol !== 'file:' && Worker !== undefined && isFirefox) {
+      // Workers cannot load js on "file:"-URLs and we get a
+      // "Uncaught RangeError: Maximum call stack size exceeded" error on Chromium,
+      // resort to non-worker version in that case.
+      self._deps.compiler.loadVersion(true, url)
+      self.setVersionText('(loading using worker)')
+    } else {
+      self._deps.compiler.loadVersion(false, url)
+      self.setVersionText('(loading)')
+    }
+  }
+  fetchAllVersion (callback) {
+    var self = this
+    minixhr(`${self.data.baseurl}/list.json`, function (json, event) {
+      // @TODO: optimise and cache results to improve app loading times
+      var allversions, selectedVersion
+      if (event.type !== 'error') {
+        try {
+          const data = JSON.parse(json)
+          allversions = data.builds.slice().reverse()
+          selectedVersion = data.releases[data.latestRelease]
+          if (self._components.queryParams.get().version) selectedVersion = self._components.queryParams.get().version
+        } catch (e) {
+          tooltip('Cannot load compiler version list. It might have been blocked by an advertisement blocker. Please try deactivating any of them from this page and reload.')
+        }
+      } else {
+        allversions = [{ path: 'builtin', longVersion: 'latest local version' }]
+        selectedVersion = 'builtin'
+      }
+      callback(allversions, selectedVersion)
+    })
+  }
 }
 
 const css = csjs`
+  .panicError {
+    color: red;
+    font-size: 20px;
+  }
+  .crow {
+    display: flex;
+    overflow: auto;
+    clear: both;
+    padding: .2em;
+  }
+  .checkboxText {
+    font-weight: normal;
+  }
+  .crow label {
+    cursor:pointer;
+  }
+  .crowNoFlex {
+    overflow: auto;
+    clear: both;
+  }
+  .select {
+    font-weight: bold;
+    margin: 10px 0px;
+    ${styles.rightPanel.settingsTab.dropdown_SelectCompiler};
+  }
+  .info {
+    ${styles.rightPanel.settingsTab.box_SolidityVersionInfo}
+    margin-bottom: 1em;
+    word-break: break-word;
+  }
   .compileTabView {
     padding: 2%;
   }
@@ -339,7 +496,10 @@ const css = csjs`
     margin-bottom: 2%;
   }
   .autocompileContainer {
-    width: 90px;
+    display: flex;
+    align-items: center;
+  }
+  .hideWarningsContainer {
     display: flex;
     align-items: center;
   }
@@ -363,6 +523,7 @@ const css = csjs`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .name {
     display: flex;
@@ -370,11 +531,16 @@ const css = csjs`
   .size {
     display: flex;
   }
+  .checkboxes {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
   .compileButton {
     ${styles.rightPanel.compileTab.button_Compile};
-    width: 120px;
-    min-width: 110px;
-    margin-right: 1%;
+    width: 100%;
+    margin: 15px 0 10px 0;
     font-size: 12px;
   }
   .container {
@@ -387,13 +553,19 @@ const css = csjs`
     align-items: center;
     margin-bottom: 2%;
   }
+  .optimizeContainer {
+    display: flex;
+  }
   .contractNames {
     ${styles.rightPanel.compileTab.dropdown_CompileContract};
+    width:78%;
   }
   .contractHelperButtons {
     display: flex;
     cursor: pointer;
     text-align: center;
+    justify-content: flex-end;
+    margin: 15px 15px 10px 0;
   }
   .copyButton {
     ${styles.rightPanel.compileTab.button_Details};
@@ -401,6 +573,8 @@ const css = csjs`
     min-width: 50px;
     width: auto;
     margin-left: 5px;
+    background-color: inherit;
+    border: inherit;
   }
   .bytecodeButton {
     min-width: 80px;
@@ -410,12 +584,14 @@ const css = csjs`
   }
   .details {
     ${styles.rightPanel.compileTab.button_Details};
+    min-width: 70px;
+    width: 80px;
   }
   .publish {
-    ${styles.rightPanel.compileTab.button_Publish};
-    margin-left: 5px;
-    margin-right: 5px;
-    width: 120px;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
   }
   .log {
     ${styles.rightPanel.compileTab.box_CompileContainer};
@@ -450,7 +626,7 @@ const css = csjs`
     color: ${styles.rightPanel.modalDialog_text_Secondary};
   }
   .icon {
-    margin-right: 3%;
+    margin-right: 0.3em;
   }
   .spinningIcon {
     margin-right: .3em;
