@@ -33,9 +33,9 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
 
   var shortAddress = helper.shortenAddress(address)
   var title = yo`
-    <div class="${css.title}" onclick=${toggleClass}>
-    <div class="${css.titleText}"> ${contractName} at ${shortAddress} (${context}) </div>
-    ${copyToClipboard(() => address)}
+  <div class="${css.title}" onclick=${toggleClass}>
+  <div class="${css.titleText}"> ${contractName} at ${shortAddress} (${context}) </div>
+  ${copyToClipboard(() => address)}
   </div>`
 
   if (self.udapp.removable_instances) {
@@ -65,10 +65,15 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
     }))
   }
 
+  var methods = ""
+  var index = 0
   $.each(contractABI, (i, funABI) => {
     if (funABI.type !== 'function') {
       return
     }
+
+    methods += "contractInstance.methods."+funABI.name +"(args["+index+"])\n"
+
     // @todo getData cannot be used with overloaded functions
     instance.appendChild(this.getCallButton({
       funABI: funABI,
@@ -76,7 +81,32 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
       contractAbi: contractABI,
       contractName: contractName
     }))
+    index++
   })
+
+  var content = JSON.stringify(contractABI)
+
+  var tag = 'javascript'
+
+  if(tag == 'javascript') {
+    var totalCode = "// npm install --save web3\n" 
+    totalCode += "// setting web3 and connect\n"
+    totalCode += "var abi = '" + content +"'\n"
+    totalCode += "var contractAddress = '" + address + "'\n"
+    totalCode += "var Web3 = require('web3') \n"
+    totalCode += "var web3 = new Web3()\n"
+    totalCode += "web3.setProvider(new web3.providers.HttpProvider('http://192.168.99.20:8545'))\n" 
+    totalCode += "var contractInstance = web3.eth.contract(abi).at(contractAddress)\n"
+    totalCode += "\n"
+    totalCode += "// input your arguments\n"
+    totalCode += "var args = []\n"    
+    totalCode += "\n"
+    totalCode += "// How to use it\n"    
+  } 
+
+  totalCode += methods
+
+  document.getElementById('textarea').value = totalCode
 
   return instance
 }

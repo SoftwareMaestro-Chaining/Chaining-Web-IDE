@@ -163,7 +163,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			// 	}
 			// }
 
-			document.getElementById('textarea').value = code
+			// document.getElementById('textarea').value = code
 			editor.setText(code)
 		}
 
