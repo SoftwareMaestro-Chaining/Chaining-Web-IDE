@@ -549,7 +549,6 @@ Blockly.defineBlocksWithJsonArray([
 ]);
 
 
-<<<<<<< HEAD
 Blockly.Blocks['contract_msg'] = {
   init: function() {
     this.appendDummyInput()
@@ -584,7 +583,6 @@ Blockly.Blocks['contract_msg'] = {
   },
 };
 
-=======
 Blockly.Blocks['expression_expr'] = {
     init: function () {
         this.appendDummyInput()
@@ -594,6 +592,3 @@ Blockly.Blocks['expression_expr'] = {
         this.setColour(210);
     }
 };
-
-
->>>>>>> 4c265935f5add36ff0ca91a859c5be1ea5162302

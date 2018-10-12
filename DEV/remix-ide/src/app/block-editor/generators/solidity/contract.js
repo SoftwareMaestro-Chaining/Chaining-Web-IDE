@@ -93,7 +93,6 @@ Blockly.Solidity['contract_state_set'] = function(block) {
 };
 
 
-<<<<<<< HEAD
 Blockly.Solidity['contract_msg'] = function(block) {
   var variable = block.getFieldValue('VAR_GLOBAL');
   var variables = {
@@ -106,11 +105,10 @@ Blockly.Solidity['contract_msg'] = function(block) {
 
   return  [code, Blockly.Solidity.ORDER_ATOMIC];
 }
-=======
+
 Blockly.Solidity['expression_expr'] = function(block) {
   var argument0 = block.getFieldValue('expr');
 
   console.log("###: "+argument0);
   return argument0 + '\n';
 };
->>>>>>> 4c265935f5add36ff0ca91a859c5be1ea5162302
