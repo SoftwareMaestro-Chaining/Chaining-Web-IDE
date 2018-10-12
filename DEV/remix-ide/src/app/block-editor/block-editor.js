@@ -71,6 +71,8 @@ function BlockEditor (opts = {}, localRegistry) {
 			toolbox +=  '<block type="math_single"></block>'
 			toolbox +=  '<block type="math_number_property"></block>'
 			toolbox +=  '<block type="contract_struct"></block>'
+			toolbox +=  '<block type="contract_msg"></block>'
+			toolbox +=  '<block type="expression_expr"></block>'
 		toolbox +=	'</category>'
 		toolbox +=  '</xml>'
 
@@ -100,10 +102,10 @@ function BlockEditor (opts = {}, localRegistry) {
 
 
 
-		var contractBlock = workspace.getTopBlocks()[0];
+		// var contractBlock = workspace.getTopBlocks()[0];
 
-		console.log('work space top blocks')
-		console.log(workspace.getTopBlocks())
+		// console.log('work space top blocks')
+		// console.log(workspace.getTopBlocks())
 
 		function setDisabledRec(block, disabled) {
 			block.setDisabled(disabled)
@@ -113,29 +115,57 @@ function BlockEditor (opts = {}, localRegistry) {
 			for (var i = 0; i < children.length; i++) {
 				setDisabledRec(children[i], disabled)
 			}
-			console.log('set disabled rec')
+			// console.log('set disabled rec')
 		}
+
+		document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'
 
 		function myUpdateFunction(event) {
 
-			var code = Blockly.Solidity.blockToCode(contractBlock)
-			var topBlocks = workspace.getAllBlocks()
-			for (var i = 0; i < topBlocks.length; i++) {
-				var block = topBlocks[i]
 
-				if (contractBlock == block) {
-					continue
-				}
+			var contractBlockCount = workspace.getTopBlocks().length
 
-				if (!block.getParent()) {
-					setDisabledRec(block, true)
-				} else if (block.getParent() == contractBlock) {
-					setDisabledRec(block, false)
+			var code = 'pragma solidity ^0.4.24;\n\n'
 
-				}
+			for(var i = 0; i< contractBlockCount ; i ++) {
+				var contractBlock = workspace.getTopBlocks()[i]
+				code += Blockly.Solidity.blockToCode(contractBlock)
+				var topBlocks = workspace.getAllBlocks()
+				for (var j = 0; j < topBlocks.length; j++) {
+					var block = topBlocks[j]
+
+					if (contractBlock == block) {
+						continue
+					}
+
+					if (!block.getParent()) {
+						// setDisabledRec(block, true)
+					}  else if (block.getParent() == contractBlock) {
+						// setDisabledRec(block, false)
+					}
+				}				
 			}
 
-			document.getElementById('textarea').value = code
+			// var contractBlock = workspace.getTopBlocks()[0]
+
+			// var code = Blockly.Solidity.blockToCode(contractBlock)
+			// var topBlocks = workspace.getAllBlocks()
+			// for (var i = 0; i < topBlocks.length; i++) {
+			// 	var block = topBlocks[i]
+
+			// 	if (contractBlock == block) {
+			// 		continue
+			// 	}
+
+			// 	if (!block.getParent()) {
+			// 		setDisabledRec(block, true)
+			// 	}  else if (block.getParent() == contractBlock) {
+			// 		setDisabledRec(block, false)
+
+			// 	}
+			// }
+
+			// document.getElementById('textarea').value = code
 			editor.setText(code)
 		}
 

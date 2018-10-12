@@ -107,16 +107,31 @@ Blockly.Extensions.register(
   }
 );
 
+    //   "args5": [
+    //   {
+    //     "type": "field_input",
+    //     "name": "PAY",
+    //     "check": ["payable_state"],
+    //   }
+    // ],
+
+
 Blockly.defineBlocksWithJsonArray([
   {
     "type": "contract",
-    "message0": 'smart contract %1',
+    "message0": 'smart contract %1 is %2',
     "args0": [
       {
         "type": "field_input",
         "name": "NAME",
         "check": "String",
         "text": "MyContract",
+      },
+      {
+        "type": "field_input",
+        "name": "INHERITANCE",
+        "check": "String",
+        "text": ""
       }
     ],
     "message1": "states %1",
@@ -137,7 +152,7 @@ Blockly.defineBlocksWithJsonArray([
         "align": "RIGHT"
       }
     ],
-    "message3": "methods %1",
+    "message3": "methods %1 ",
     "args3": [
       {
         "type": "input_statement",
@@ -164,6 +179,7 @@ Blockly.Blocks['type_list'] = {
     });
   }
 };
+
 
 Blockly.Blocks['contract_state'] = {
   init: function() {
@@ -308,13 +324,18 @@ Blockly.Blocks['contract_method_parameter_get'] = {
 Blockly.Blocks['contract_method'] = {
   init: function() {
     this.jsonInit({
-      "message0": "method %1",
+      "message0": "method %1 payable %2",
       "args0": [
         {
           "type": "field_input",
           "name": "NAME",
           "text": "myMethod"
         },
+        { 
+          "type": "field_dropdown",
+          "name": "PAY",
+          "options": [["none","EMPTY"], ["view", "VIEW"], ["payable", "PAY"]]
+        }
       ],
       "message1": "parameters %1",
       "args1": [
@@ -527,3 +548,47 @@ Blockly.defineBlocksWithJsonArray([
   }
 ]);
 
+
+Blockly.Blocks['contract_msg'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('msg.')
+        .appendField(
+          new Blockly.FieldDropdown([
+            [ "gas", "GAS" ],
+            [ "sender", "SENDER"],
+            [ "data", "DATA" ],
+          ]),
+          "VAR_GLOBAL"
+        );
+
+    this.setColour(195);
+    // this.contextMenu = false;
+
+    // this._stateNameInitialized = false;
+
+    this.getVariableNameSelectField = function() { return this.getField('VAR_GLOBAL'); };
+    this.getVariableLabelGroup = function() { return this.getFieldValue('LABEL_GROUP_VARIABLE') };
+    // this.getVariableScope = function() {
+    //   var scope = this.getParent();
+    //   while (!!scope && scope.type != 'contract') {
+    //     scope = scope.getParent();
+    //   }
+    //   return scope;
+    // };
+
+    this.setOutput(true, null)
+
+    // Blockly.Extensions.apply('declare_typed_variable', this, false);
+  },
+};
+
+Blockly.Blocks['expression_expr'] = {
+    init: function () {
+        this.appendDummyInput()
+                .appendField("code")
+                .appendField(new Blockly.FieldTextArea(".......\n.......\n.......\n"), "expr");
+        this.setPreviousStatement(true);
+        this.setColour(210);
+    }
+};

@@ -10,8 +10,17 @@ Blockly.Solidity['contract'] = function(block) {
   var states = Blockly.Solidity.statementToCode(block, 'STATES');
   var ctor = Blockly.Solidity.statementToCode(block, 'CTOR');
   var methods = Blockly.Solidity.statementToCode(block, 'METHODS');
-  var code = 'pragma solidity ^0.4.24;\n\n'
-    + 'contract ' + block.getFieldValue('NAME') + ' {\n'
+
+  var inheritance = block.getFieldValue('INHERITANCE')
+
+  var isIn = ''
+  if(inheritance == '') {
+    isIn = ''
+  } else {
+    isIn = ' is ' + inheritance
+  }
+
+  var code = 'contract ' + block.getFieldValue('NAME') +  isIn  + ' {\n'
     + states
     + ctor
     + methods
@@ -56,6 +65,7 @@ Blockly.Solidity['contract_state'] = function(block) {
   return types[type] + ' ' + name + ' = ' + value + ';\n';
 };
 
+
 Blockly.Solidity['contract_state_get'] = function(block) {
   var variableId = block.getFieldValue('STATE_NAME');
   var variable = block.workspace.getVariableById(variableId);
@@ -80,4 +90,25 @@ Blockly.Solidity['contract_state_set'] = function(block) {
   }
 
   return Blockly.Solidity.getVariableName(variable) + ' = ' + argument0 + ';\n';
+};
+
+
+Blockly.Solidity['contract_msg'] = function(block) {
+  var variable = block.getFieldValue('VAR_GLOBAL');
+  var variables = {
+    'GAS' : 'gas',
+    'SENDER' : 'sender',
+    'DATA' : 'data'
+  };
+
+  var code = 'msg.' + variables[variable];
+
+  return  [code, Blockly.Solidity.ORDER_ATOMIC];
+}
+
+Blockly.Solidity['expression_expr'] = function(block) {
+  var argument0 = block.getFieldValue('expr');
+
+  console.log("###: "+argument0);
+  return argument0 + '\n';
 };
