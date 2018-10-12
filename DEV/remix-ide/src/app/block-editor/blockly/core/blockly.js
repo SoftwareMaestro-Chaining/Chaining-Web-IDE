@@ -54,6 +54,8 @@ goog.require('Blockly.constants');
 goog.require('Blockly.inject');
 goog.require('Blockly.utils');
 
+goog.require('Blockly.FieldTextArea');
+
 goog.require('goog.color');
 
 

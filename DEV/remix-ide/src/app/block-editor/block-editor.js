@@ -71,7 +71,11 @@ function BlockEditor (opts = {}, localRegistry) {
 			toolbox +=  '<block type="math_single"></block>'
 			toolbox +=  '<block type="math_number_property"></block>'
 			toolbox +=  '<block type="contract_struct"></block>'
+<<<<<<< HEAD
 			toolbox +=  '<block type="contract_msg"></block>'
+=======
+			toolbox +=  '<block type="expression_expr"></block>'
+>>>>>>> 4c265935f5add36ff0ca91a859c5be1ea5162302
 		toolbox +=	'</category>'
 		toolbox +=  '</xml>'
 
@@ -103,7 +107,7 @@ function BlockEditor (opts = {}, localRegistry) {
 
 		// var contractBlock = workspace.getTopBlocks()[0];
 
-		console.log('work space top blocks')
+		// console.log('work space top blocks')
 		// console.log(workspace.getTopBlocks())
 
 		function setDisabledRec(block, disabled) {
@@ -114,7 +118,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			for (var i = 0; i < children.length; i++) {
 				setDisabledRec(children[i], disabled)
 			}
-			console.log('set disabled rec')
+			// console.log('set disabled rec')
 		}
 
 		document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'
