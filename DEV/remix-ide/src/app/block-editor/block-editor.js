@@ -21,9 +21,22 @@ function BlockEditor (opts = {}, localRegistry) {
 	self._view = {}
 
 	self._view.textarea = yo`
-	<textarea id="textarea" style="width:calc(34% - 10px); height:100%; float:right;">
-	</textarea>
-	`
+	<div style="width:calc(34%-10px); height:100%; float:right;">
+		<ul class="tabs">
+			<li class="tab-link current" data-tab="tab-1">메뉴_하나</li>
+    		<li class="tab-link" data-tab="tab-2">메뉴_둘</li>
+		    <li class="tab-link" data-tab="tab-3">메뉴_셋</li>
+		</ul>
+		 <div id="tab-1" class="tab-content current">
+		</div>
+		<div id="tab-2" class="tab-content">		
+			<textarea id="textarea">
+			</textarea>		
+		</div>
+		<div id="tab-2" class="tab-content">
+		</div>
+
+	</div>`
 
 	self._view.blocklyDiv = yo`
 	<div id="blocklyDiv" style="width:100%; height:100%;">
@@ -118,7 +131,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			// console.log('set disabled rec')
 		}
 
-		document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'
+		// document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'
 
 		function myUpdateFunction(event) {
 

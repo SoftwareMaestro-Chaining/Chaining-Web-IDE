@@ -10,7 +10,7 @@ RUN 	git clone https://github.com/SoftwareMaestro-Chaining/Chaining-Web-IDE
 
 WORKDIR /home/Chaining-Web-IDE/DEV/remix-ide 	
 
-RUN git checkout block-ide-space
+# RUN git checkout block-ide-space
 
 RUN npm install
 
