@@ -6,6 +6,15 @@ var csjs = require('csjs-inject')
 
 var globalRegistry = require('../../global/registry')
 
+function changeTutorialTab(tabName) {
+	var i
+	var x = document.getElementById(tabName)
+	for(i=0;i<x.length;i++) {
+		x[i].style.display = "none"		
+	}
+	document.getElementById(tabName).style.display = "block"
+}
+
 function BlockEditor (opts = {}, localRegistry) {
 	var self = this
 
@@ -22,18 +31,21 @@ function BlockEditor (opts = {}, localRegistry) {
 
 	self._view.textarea = yo`
 	<div style="width:calc(34%-10px); height:100%; float:right;">
-		<ul class="tabs">
-			<li class="tab-link current" data-tab="tab-1">메뉴_하나</li>
-    		<li class="tab-link" data-tab="tab-2">메뉴_둘</li>
-		    <li class="tab-link" data-tab="tab-3">메뉴_셋</li>
-		</ul>
-		 <div id="tab-1" class="tab-content current">
+		<div class="block-editor-tabs-bar block-editor-tabs-black">
+			<li class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="changeTutorialTab('block-editor-tab-first')">1단계</li>
+    		<li class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="changeTutorialTab('block-editor-tab-second')">2단계</li>
+		    <li class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="changeTutorialTab('block-editor-tab-third')">3단계</li>
 		</div>
-		<div id="tab-2" class="tab-content">		
+		 <div id="block-editor-tab-first" class="tab-content current">
+			<h3> 환경설정 </h3>
+		</div>
+		<div id="block-editor-tab-second" class="tab-content">		
 			<textarea id="textarea">
+
 			</textarea>		
 		</div>
-		<div id="tab-2" class="tab-content">
+		<div id="block-editor-tab-third" class="tab-content">
+
 		</div>
 
 	</div>`
