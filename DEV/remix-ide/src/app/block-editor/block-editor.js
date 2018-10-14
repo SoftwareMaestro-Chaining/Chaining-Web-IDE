@@ -6,6 +6,15 @@ var csjs = require('csjs-inject')
 
 var globalRegistry = require('../../global/registry')
 
+function changeTutorialTab(tabName) {
+	var i
+	var x = document.getElementById(tabName)
+	for(i=0;i<x.length;i++) {
+		x[i].style.display = "none"		
+	}
+	document.getElementById(tabName).style.display = "block"
+}
+
 function BlockEditor (opts = {}, localRegistry) {
 	var self = this
 
@@ -21,9 +30,25 @@ function BlockEditor (opts = {}, localRegistry) {
 	self._view = {}
 
 	self._view.textarea = yo`
-	<textarea id="textarea" style="width:calc(34% - 10px); height:100%; float:right;">
-	</textarea>
-	`
+	<div style="width:calc(34%-10px); height:100%; float:right;">
+		<div class="block-editor-tabs-bar block-editor-tabs-black">
+			<li class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="changeTutorialTab('block-editor-tab-first')">1단계</li>
+    		<li class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="changeTutorialTab('block-editor-tab-second')">2단계</li>
+		    <li class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="changeTutorialTab('block-editor-tab-third')">3단계</li>
+		</div>
+		 <div id="block-editor-tab-first" class="tab-content current">
+			<h3> 환경설정 </h3>
+		</div>
+		<div id="block-editor-tab-second" class="tab-content">		
+			<textarea id="textarea">
+
+			</textarea>		
+		</div>
+		<div id="block-editor-tab-third" class="tab-content">
+
+		</div>
+
+	</div>`
 
 	self._view.blocklyDiv = yo`
 	<div id="blocklyDiv" style="width:100%; height:100%;">
@@ -118,7 +143,7 @@ function BlockEditor (opts = {}, localRegistry) {
 			// console.log('set disabled rec')
 		}
 
-		document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'
+		// document.getElementById('textarea').value = 'pragma solidity ^0.4.24;\n\n'
 
 		function myUpdateFunction(event) {
 
