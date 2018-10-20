@@ -181,7 +181,7 @@ UniversalDApp.prototype.getBalanceInEther = function (address, callback) {
     if (error) {
       callback(error)
     } else {
-      callback(null, executionContext.web3().utils.fromWei(balance, 'ether'))
+      callback(null, executionContext.web3().fromWei(balance, 'ether'))
     }
   })
 }
@@ -398,7 +398,7 @@ UniversalDApp.prototype.runTx = function (args, cb) {
                 if (!content.gasPriceStatus) {
                   cancelCb('Given gas price is not correct')
                 } else {
-                  var gasPrice = executionContext.web3().toWei(content.querySelector('#gasprice').value, 'gwei')
+                  var gasPrice = executionContext.web3().utils.toWei(content.querySelector('#gasprice').value, 'gwei')
                   continueTxExecution(gasPrice)
                 }
               }}, {

@@ -58,7 +58,7 @@ function runTab (opts, localRegistry) {
         } else if (selectedUnit === 'wei') {
           unit = 'wei'
         }
-        cb(null, executionContext.web3().toWei(number, unit))
+        cb(null, executionContext.web3().utils.toWei(number, unit))
       } catch (e) {
         cb(e)
       }
