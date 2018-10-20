@@ -6,9 +6,10 @@ RUN apt-get install -y git nodejs npm wget
 
 WORKDIR /home
 
-RUN 	git clone https://github.com/SoftwareMaestro-Chaining/Chaining-Web-IDE
+ADD DEV /home/DEV
+# RUN 	git clone https://github.com/SoftwareMaestro-Chaining/Chaining-Web-IDE
 
-WORKDIR /home/Chaining-Web-IDE/DEV/remix-ide 	
+WORKDIR /home/DEV/remix-ide 	
 
 # RUN git checkout block-ide-space
 

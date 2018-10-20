@@ -89,24 +89,22 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
   var tag = 'javascript'
 
   if(tag == 'javascript') {
-    var totalCode = "// npm install --save web3\n" 
-    totalCode += "// setting web3 and connect\n"
-    totalCode += "var abi = '" + content +"'\n"
+    var totalCode = "var abi = '" + content +"'\n"
     totalCode += "var contractAddress = '" + address + "'\n"
     totalCode += "var Web3 = require('web3') \n"
     totalCode += "var web3 = new Web3()\n"
     totalCode += "web3.setProvider(new web3.providers.HttpProvider('http://192.168.99.20:8545'))\n" 
     totalCode += "var contractInstance = web3.eth.contract(abi).at(contractAddress)\n"
-    totalCode += "\n"
-    totalCode += "// input your arguments\n"
-    totalCode += "var args = []\n"    
-    totalCode += "\n"
-    totalCode += "// How to use it\n"    
+
+    var howToUse = "/ input your arguments\n"
+    howToUse += "var args = []\n"
+    howToUse += "\n"
+    howToUse += "// How to use it\n"
+    howToUse += methods
   } 
 
-  totalCode += methods
-
   document.getElementById('textarea').value = totalCode
+  document.getElementById('third-tab-area').value = howToUse
 
   return instance
 }
