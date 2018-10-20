@@ -241,7 +241,7 @@ function ExecutionContext () {
     } else {
       web3.setProvider(new web3.providers.HttpProvider(endpoint))
     }
-    if (web3.isConnected()) {
+    if (web3.eth.net.isListening()) {
       executionContext = context
       self._updateBlockGasLimit()
       self.event.trigger('contextChanged', ['web3'])
