@@ -111,7 +111,7 @@ function ExecutionContext () {
     if (this.isVM()) {
       callback(null, { id: '-', name: 'VM' })
     } else {
-      this.web3().version.getNetwork((err, id) => {
+      this.web3().eth.net.getId((err, id) => {
         var name = null
         if (err) name = 'Unknown'
         // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
