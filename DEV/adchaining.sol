@@ -37,6 +37,7 @@ contract Advertiser is auth {
         uint views;
     }
     
+    // add advertise
     function addAdvertise(string _url, string _name, uint _length, uint _minViews, uint _funds) onlyOwner{
         if(msg.sender != owner) revert();
         
@@ -61,8 +62,9 @@ contract Advertiser is auth {
         }
         return false;
     }
-    
-    function checkUserIndex(address user, uint advertiseIndex) view returns(uint) {
+
+    // get user pk    
+    function getUserIndex(address user, uint advertiseIndex) view returns(uint) {
         uint length = addressRegisterMember[advertiseIndex].length;
         for(uint i=0; i<length; i++) {
             if(addressRegisterMember[advertiseIndex][i].userAddress == user) {
@@ -72,28 +74,42 @@ contract Advertiser is auth {
         revert();
     }
     
+    // after earned views
     function checkViews(uint advertiseIndex, uint views) view returns(uint){
         require(isMember(advertiseIndex));
-        uint memberIndex = checkUserIndex(msg.sender, advertiseIndex);
+        uint memberIndex = getUserIndex(msg.sender, advertiseIndex);
         uint accumulateViews = addressRegisterMember[advertiseIndex][memberIndex].views;
         return views - accumulateViews;
     }
     
+    // ad rewards
     function refunds(uint advertiseIndex, uint views) {
         require(isRefundable(advertiseIndex, views));
         require(isMember(advertiseIndex));
-        
+        uint currentViews = checkViews(advertiseIndex, views);
+        addViews(advertiseIndex, currentViews);
+        uint refundValue = currentViews / advertises[owner][advertiseIndex].minViews;
+        refundValue = refundValue * 500000000000000; // 1$ per 1000 views
+        msg.sender.send(refundValue);
+    }
+    
+    function addViews(uint advertiseIndex, uint views) {
+        require(isMember(advertiseIndex));
+        uint memberIndex = getUserIndex(msg.sender, advertiseIndex);
+        addressRegisterMember[advertiseIndex][memberIndex].views += views;
     }
     
     function isRefundable (uint advertiseIndex, uint views) view returns(bool){
-        if(checkViews(advertiseIndex, views) > advertises[owner][advertiseIndex].minViews) {
+        if(checkViews(advertiseIndex, views) >= advertises[owner][advertiseIndex].minViews) {
             return true;
         } else {
             return false;
         }
     }
     
-    function addBalance() payable onlyOwner {}
+    function addBalance() payable onlyOwner {
+        if(msg.sender != owner) revert();
+    }
     
     // register user address in advertise
     function registerMember(uint advertiseIndex) public {
