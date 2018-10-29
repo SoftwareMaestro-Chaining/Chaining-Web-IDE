@@ -68,6 +68,8 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
   var methods = ""
   var index = 0
   $.each(contractABI, (i, funABI) => {
+
+    console.log('udapp ui for each')
     if (funABI.type !== 'function') {
       return
     }
