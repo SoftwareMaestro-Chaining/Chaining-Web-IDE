@@ -132,9 +132,12 @@ class MultiParamManager {
 
     var multiOnClick = () => {
       var valsString = this.getMultiValsString()
+      console.log('on click')
       if (valsString) {
+        console.log('true')
         this.clickCallBack(this.funABI.inputs, valsString)
       } else {
+        console.log('false')
         this.clickCallBack(this.funABI.inputs, '')
       }
     }

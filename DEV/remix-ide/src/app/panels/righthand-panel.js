@@ -17,6 +17,9 @@ const TestTab = require('../tabs/test-tab')
 const RunTab = require('../tabs/run-tab')
 const DraggableContent = require('../ui/draggableContent')
 
+// tutorial
+const TutorialTab = require('../tabs/tutorial-tab')
+
 const EventManager = remixLib.EventManager
 const styles = styleguide.chooser()
 
@@ -33,6 +36,10 @@ module.exports = class RighthandPanel {
       tabbedMenuViewport: null,
       dragbar: null
     }
+
+    var tutorialTab = new TutorialTab(self._components.registry) 
+
+    self._components.registry.put({api: tutorialTab, name:'tutorialtab'})
 
     self._deps = {
       fileProviders: self._components.registry.get('fileproviders').api,
@@ -68,7 +75,9 @@ module.exports = class RighthandPanel {
       analysis: analysisTab,
       debug: self._components.debuggerTab,
       support: new SupportTab(self._components.registry),
-      test: new TestTab(self._components.registry)
+      test: new TestTab(self._components.registry),
+      // tutorial
+      tutorial: self._components.registry.get('tutorialtab').api
     }
 
     self._components.settings.event.register('plugin-loadRequest', json => {
@@ -95,7 +104,7 @@ module.exports = class RighthandPanel {
         </div>
       </div>`
 
-    const { compile, run, settings, analysis, debug, support, test } = self._components
+    const { compile, run, settings, analysis, debug, support, test, tutorial } = self._components
     self._components.tabbedMenu.addTab('Compile', 'compileView', compile.render())
     self._components.tabbedMenu.addTab('Run', 'runView', run.render())
     self._components.tabbedMenu.addTab('Analysis', 'staticanalysisView', analysis.render())
@@ -103,6 +112,7 @@ module.exports = class RighthandPanel {
     self._components.tabbedMenu.addTab('Debugger', 'debugView', debug.render())
     self._components.tabbedMenu.addTab('Settings', 'settingsView', settings.render())
     self._components.tabbedMenu.addTab('Support', 'supportView', support.render())
+    self._components.tabbedMenu.addTab('Tutorial', 'tutorialView', tutorial.render())
     self._components.tabbedMenu.selectTabByTitle('Compile')
   }
   // showDebugger () {

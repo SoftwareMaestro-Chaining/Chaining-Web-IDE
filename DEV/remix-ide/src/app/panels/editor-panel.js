@@ -108,8 +108,7 @@ class EditorPanel {
       height = height < 0 ? 0 : height
       self._view.editor.style.height = `${delta}px`
 
-      self._view.blockEditor.style.height = `${delta}px` /////n0xx1
-
+      self._view.blockEditor.style.height = `${delta}px` 
       self._view.terminal.style.height = `${height}px` // - menu bar height
       self._components.editor.resize((document.querySelector('#editorWrap') || {}).checked)
 
@@ -178,7 +177,7 @@ class EditorPanel {
     function switchBlocklyEditor (event) {
     // $( document ).click(function() {
       // self._components.blockEditor.switchBlocklyEditor()
-      $('#blockPanel').toggle( "fold" );
+      $('#blockPanel').toggle( "fold" )
       console.log("fold! yapp!!")
     // });
     }

@@ -35,51 +35,50 @@ function BlockEditor (opts = {}, localRegistry) {
 		document.getElementById(tabName).style.display = "block"
 	}
 
-	var firstTabButton = yo `
-		<button class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="${function() {
-			changeTutorialTab('block-editor-tab-first')
-		}}">1단계</button>	
-	`
-	var secondTabButton = yo `
-		<button class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="${function() {
-			changeTutorialTab('block-editor-tab-second')
-		}}">2단계</button>
-	`
+	// var firstTabButton = yo `
+	// 	<button class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="${function() {
+	// 		changeTutorialTab('block-editor-tab-first')
+	// 	}}">1단계</button>	
+	// `
+	// var secondTabButton = yo `
+	// 	<button class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="${function() {
+	// 		changeTutorialTab('block-editor-tab-second')
+	// 	}}">2단계</button>
+	// `
 
-	var thirdTabButton = yo `
-		<button class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="${function() {
-			changeTutorialTab('block-editor-tab-third')
-		}}">3단계</button>
-	`
+	// var thirdTabButton = yo `
+	// 	<button class="block-editor-tabs-bar-item block-editor-tabs-button" onclick="${function() {
+	// 		changeTutorialTab('block-editor-tab-third')
+	// 	}}">3단계</button>
+	// `
 
-	self._view.textarea = yo`
-	<div style="width:calc(46%-10px); height:100%; float:right;">
-		<div class="block-editor-tabs-bar block-editor-tabs-black">
-			${firstTabButton}
-			${secondTabButton}
-			${thirdTabButton}
-		</div>
-		<div id="block-editor-tab-first" class="block-editor-tabs">
-			<h3> 환경설정 </h3>
-			<p> web3 라이브러리를 설치합니다. <br/></p>
-			<p> npm install --save web3 </p>
-		</div>
-		<div id="block-editor-tab-second" class="block-editor-tabs" style="display:none">		
-			<h3> web3 모듈 설정 </h3>
-			<textarea id="textarea">
+	// self._view.textarea = yo`
+	// <div style="width:calc(46%-10px); height:100%; float:right;">
+	// 	<div class="block-editor-tabs-bar block-editor-tabs-black">
+	// 		${firstTabButton}
+	// 		${secondTabButton}
+	// 		${thirdTabButton}
+	// 	</div>
+	// 	<div id="block-editor-tab-first" class="block-editor-tabs">
+	// 		<h3> 환경설정 </h3>
+	// 		<p> web3 라이브러리를 설치합니다. <br/></p>
+	// 		<p> npm install --save web3 </p>
+	// 	</div>
+	// 	<div id="block-editor-tab-second" class="block-editor-tabs" style="display:none">		
+	// 		<h3> web3 모듈 설정 </h3>
+	// 		<textarea id="textarea">
 
-			</textarea>		
-		</div>
-		<div id="block-editor-tab-third" class="block-editor-tabs" style="display:none">		
-			<h3> dApp 사용 </h3>
-			<textarea id="third-tab-area">
-			</textarea>
-		</div>
-	</div>`
+	// 		</textarea>		
+	// 	</div>
+	// 	<div id="block-editor-tab-third" class="block-editor-tabs" style="display:none">		
+	// 		<h3> dApp 사용 </h3>
+	// 		<textarea id="third-tab-area">
+	// 		</textarea>
+	// 	</div>
+	// </div>`
 
 	self._view.blocklyDiv = yo`
 	<div id="blocklyDiv" style="width:100%; height:100%;">
-	${self._view.textarea}
 	</div>
 	`
 

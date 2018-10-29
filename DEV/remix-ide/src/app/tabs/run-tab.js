@@ -22,6 +22,8 @@ var css = require('./styles/run-tab-styles')
 var MultiParamManager = require('../../multiParamManager')
 var modalDialog = require('../ui/modaldialog')
 
+// tutorial
+
 function runTab (opts, localRegistry) {
   /* -------------------------
             VARIABLES
@@ -76,7 +78,8 @@ function runTab (opts, localRegistry) {
     fileManager: self._components.registry.get('filemanager').api,
     editor: self._components.registry.get('editor').api,
     logCallback: self._components.registry.get('logCallback').api,
-    filePanel: self._components.registry.get('filepanel').api
+    filePanel: self._components.registry.get('filepanel').api,
+    tutorialTab: self._components.registry.get('tutorialtab').api
   }
   self._deps.udapp.resetAPI(self._components.transactionContextAPI)
   self._view.recorderCount = yo`<span>0</span>`
@@ -393,6 +396,7 @@ function contractDropdown (events, self) {
         if (noInstancesText.parentNode) { noInstancesText.parentNode.removeChild(noInstancesText) }
         var address = isVM ? txResult.result.createdAddress : txResult.result.contractAddress
         instanceContainer.appendChild(self._deps.udappUI.renderInstance(selectedContract.contract.object, address, selectContractNames.value))
+        self._deps.tutorialTab.addInstance(selectedContract.contract.object, address, selectContractNames.value)
       } else {
         self._deps.logCallback(`creation of ${selectedContract.name} errored: ${error}`)
       }
@@ -471,10 +475,12 @@ function contractDropdown (events, self) {
           return modalDialogCustom.alert('Failed to parse the current file as JSON ABI.')
         }
         instanceContainer.appendChild(self._deps.udappUI.renderInstanceFromABI(abi, address, address))
+        self._deps.tutorialTab.addInstance(abi, address, address)
       })
     } else {
       var contract = self._deps.compiler.getContract(contractNames.children[contractNames.selectedIndex].innerHTML)
       instanceContainer.appendChild(self._deps.udappUI.renderInstance(contract.object, address, selectContractNames.value))
+      self._deps.tutorialTab.addInstance(contract.object, address, selectContractNames.value)      
     }
   }
 

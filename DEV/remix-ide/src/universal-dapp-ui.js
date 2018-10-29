@@ -103,8 +103,8 @@ UniversalDAppUI.prototype.renderInstanceFromABI = function (contractABI, address
     howToUse += methods
   } 
 
-  document.getElementById('textarea').value = totalCode
-  document.getElementById('third-tab-area').value = howToUse
+//  document.getElementById('textarea').value = totalCode
+//  document.getElementById('third-tab-area').value = howToUse
 
   return instance
 }

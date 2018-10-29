@@ -372,15 +372,15 @@ Blockly.Solidity['math_random_int'] = function(block) {
   var functionName = Blockly.Solidity.provideFunction_(
       'mathRandomInt',
       ['function ' + Blockly.Solidity.FUNCTION_NAME_PLACEHOLDER_ +
-          '(a, b) {',
-       '  if (a > b) {',
-       '    // Swap a and b to ensure a is smaller.',
-       '    var c = a;',
-       '    a = b;',
-       '    b = c;',
-       '  }',
-       '  return Math.floor(Math.random() * (b - a + 1) + a);',
-       '}']);
+         '(a, b) {',
+      '  if (a > b) {',
+      '    // Swap a and b to ensure a is smaller.',
+      '    var c = a;',
+      '    a = b;',
+      '    b = c;',
+      '  }',
+      '  return Math.floor(Math.random() * (b - a + 1) + a);',
+      '}']);
   var code = functionName + '(' + argument0 + ', ' + argument1 + ')';
   return [code, Blockly.Solidity.ORDER_FUNCTION_CALL];
 };
