@@ -396,7 +396,6 @@ function contractDropdown (events, self) {
         if (noInstancesText.parentNode) { noInstancesText.parentNode.removeChild(noInstancesText) }
         var address = isVM ? txResult.result.createdAddress : txResult.result.contractAddress
         instanceContainer.appendChild(self._deps.udappUI.renderInstance(selectedContract.contract.object, address, selectContractNames.value))
-        self._deps.tutorialTab.addInstance(selectedContract.contract.object, address, selectContractNames.value)
       } else {
         self._deps.logCallback(`creation of ${selectedContract.name} errored: ${error}`)
       }
@@ -475,12 +474,10 @@ function contractDropdown (events, self) {
           return modalDialogCustom.alert('Failed to parse the current file as JSON ABI.')
         }
         instanceContainer.appendChild(self._deps.udappUI.renderInstanceFromABI(abi, address, address))
-        self._deps.tutorialTab.addInstance(abi, address, address)
       })
     } else {
       var contract = self._deps.compiler.getContract(contractNames.children[contractNames.selectedIndex].innerHTML)
       instanceContainer.appendChild(self._deps.udappUI.renderInstance(contract.object, address, selectContractNames.value))
-      self._deps.tutorialTab.addInstance(contract.object, address, selectContractNames.value)      
     }
   }
 

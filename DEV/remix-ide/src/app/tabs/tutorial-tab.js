@@ -3,7 +3,10 @@
 const yo = require('yo-yo')
 const csjs = require('csjs-inject')
 const css = require('./styles/tutorial-tab-styles')
-const helper = require('../../lib/helper')
+const helper = require('../../lib/helper') 
+
+const modalDialog = require('../ui/modaldialog')
+const modalDialogCustom = require('../ui/modal-dialog-custom')
 
 const globalRegistry = require('../../global/registry');
 
@@ -17,129 +20,99 @@ function TutorialTab(opts, localRegistry) {
     self._components.registry = localRegistry || globalRegistry
 
     self._deps = {
-        
+        udapp: self._components.registry.get('udapp').api,
+        compiler : self._components.registry.get('compiler').api
     }
-
-    self._view.instanceContainer = yo`<div class="${css.instanceContainer}"></div>`
-
     const container = yo `
         <div class="${css.tutorialTabView}" id="tutorialTabView"></div>
-    `
+        `
+
+    self._view.instanceContainer = yo`<div class="${css.instanceContainer}"></div>`
+   
+
+    self._deps.compiler.event.register('compilationFinished', function (success, data, source) { 
+      getContractNames(success, data)
+      if (success) {
+        console.log('success in tutorial tab')
+        console.log(data)
+      } else {
+        console.log('fail in tutorial')
+        console.log(data)
+      }
+    }) 
+    
+  
+
+    function getContractNames (success, data) {
+      // var contractNames = document.querySelector('')
+      // contractNames.innerHTML = ''
+      let instanceContainer = yo`<div></div>`
+
+      let message = ''
+      let defaultButton = yo `
+        <button class="${css.instanceButton}" id="instanceButton" onclick=${() => popup(message)}>
+          get Balance
+        </button>
+      `
+      instanceContainer.appendChild(defaultButton)      
+
+      if (success) {
+        console.log('success in get contract name')
+        selectContractNames.removeAttribute('disabled')
+        console.log('visit contract')
+        
+        self._deps.compiler.visitContracts((contract) => {
+          let instanceABI = contract.object.abi
+          console.log('instance ABI')
+          console.log(instanceABI)          
+
+          for(let i=0; i<instanceABI.length; i++) {
+            let abiName = instanceABI[i].name
+            let isPayable = instanceABI[i].constant // false ; payable / true ; non payable
+            let input = instanceABI[i].inputs
+            let inputLength = input.length
+            let output = instanceABI[i].outputs
+            let outputLength = output.length
+
+            let message= abiName + " " + inputLength + " " + outputLength
+
+            let abis = yo`
+            <button class="${css.instanceButton}" id="instanceButton" onclick=${() => popup(message)}>
+              ${abiName}
+            </button>`
+            instanceContainer.appendChild(abis)
+          }
+
+
+
+          function popup(message) {
+            modalDialogCustom.alert(message)
+          }
+
+
+
+
+          // self._view.instanceContainer.appendChild(instanceContainer)
+          // contractNames.appendChild(yo`<option value="${contract.name}">${contract.name}</option>`)
+        })
+      } else {
+        console.log('fail in get contract name')
+        // selectContractNames.setAttribute('disabled', true)
+      }
+      yo.update(self._view.instanceContainer, instanceContainer)
+    }
+
+    var selectContractNames = yo`<select class="${css.contractNames}" disabled></select>`
+
+//    let instance = makeInstance(self._components.registry, self)
 
     const el = yo `
     <div>
-
+      ${self._view.instanceContainer}
     </div>`
 
     container.appendChild(el)
-    return { render() { return container}}
-}
-
-TutorialTab.prototype.addInstance = function(abi, address, name){
-
-    self._view.instanceContainer.appendChild(renderInstanceFromABI(abi, address, name))
-}
-
-TutorialTab.prototype.renderInstanceFromABI = function (contractABI, address, contractName) {
-    var self = this
-    address = (address.slice(0, 2) === '0x' ? '' : '0x') + address.toString('hex')
-    var instance = yo`<div class="instance ${css.instance} ${css.hidesub}" id="instance${address}"></div>`
-    var context = self.udapp.context()
-  
-    var shortAddress = helper.shortenAddress(address)
-    var title = yo`
-    <div class="${css.title}" onclick=${toggleClass}>
-    <div class="${css.titleText}"> ${contractName} at ${shortAddress} (${context}) </div>
-    ${copyToClipboard(() => address)}
-    </div>`
-  
-    if (self.udapp.removable_instances) {
-      var close = yo`<div class="${css.udappClose}" onclick=${remove}><i class="${css.closeIcon} fa fa-close" aria-hidden="true"></i></div>`
-      title.appendChild(close)
-    }
-  
-    function remove () {
-      instance.remove()
-      // @TODO perhaps add a callack here to warn the caller that the instance has been removed
-    }
-  
-    function toggleClass () {
-      $(instance).toggleClass(`${css.hidesub}`)
-    }
-  
-    instance.appendChild(title)
-  
-    // Add the fallback function
-    var fallback = self.udapp.getFallbackInterface(contractABI)
-    if (fallback) {
-      instance.appendChild(this.getCallButton({
-        funABI: fallback,
-        address: address,
-        contractAbi: contractABI,
-        contractName: contractName
-      }))
-    }
-  
-    var methods = ""
-    var index = 0
-    $.each(contractABI, (i, funABI) => {
-      if (funABI.type !== 'function') {
-        return
-      }
-  
-      methods += "contractInstance.methods."+funABI.name +"(args["+index+"])\n"
-  
-      // @todo getData cannot be used with overloaded functions
-      instance.appendChild(this.getCallButton({
-        funABI: funABI,
-        address: address,
-        contractAbi: contractABI,
-        contractName: contractName
-      }))
-      index++
-    })
-  
-    var content = JSON.stringify(contractABI)
-  
-    var tag = 'javascript'
-  
-    if(tag == 'javascript') {
-      var totalCode = "var abi = '" + content +"'\n"
-      totalCode += "var contractAddress = '" + address + "'\n"
-      totalCode += "var Web3 = require('web3') \n"
-      totalCode += "var web3 = new Web3()\n"
-      totalCode += "web3.setProvider(new web3.providers.HttpProvider('http://192.168.99.20:8545'))\n" 
-      totalCode += "var contractInstance = web3.eth.contract(abi).at(contractAddress)\n"
-  
-      var howToUse = "/ input your arguments\n"
-      howToUse += "var args = []\n"
-      howToUse += "\n"
-      howToUse += "// How to use it\n"
-      howToUse += methods
-    } 
-  
-  //  document.getElementById('textarea').value = totalCode
-  //  document.getElementById('third-tab-area').value = howToUse
-  
-    return instance
-}
-  
-
-  // TODO this is used by renderInstance when a new instance is displayed.
-// this returns a DOM element.
-TutorialTab.prototype.getCallButton = function (args) {
-    var self = this
-    // args.funABI, args.address [fun only]
-    // args.contractName [constr only]
-    var lookupOnly = args.funABI.constant
-  
-    var outputOverride = yo`<div class=${css.value}></div>` // show return value
-  
-    
-    var contractActionsContainer = yo`<div class="${css.contractActionsContainer}" >${multiParamManager.render()}</div>`
-    contractActionsContainer.appendChild(outputOverride)
-  
-    return contractActionsContainer
+    return { render() { return container } }
 }
 
 module.exports = TutorialTab
