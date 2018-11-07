@@ -8,7 +8,9 @@ const helper = require('../../lib/helper')
 const modalDialog = require('../ui/modaldialog')
 const modalDialogCustom = require('../ui/modal-dialog-custom')
 
-const globalRegistry = require('../../global/registry');
+const globalRegistry = require('../../global/registry')
+
+const code = require('./tutorial-code/tutorial-code.js')
 
 function TutorialTab(opts, localRegistry) {
 
@@ -48,12 +50,25 @@ function TutorialTab(opts, localRegistry) {
       // contractNames.innerHTML = ''
       let instanceContainer = yo`<div></div>`
 
-      let message = ''
+
+      let message = `instance._eth.getBalance(instance._eth.accounts[0], function(err, result) {` +
+                `\n myBalance = result.c[0];` +
+                `\n myBalance = web3.toWei(myBalance, 'ether');` +
+                `\n var userBalance = document.createElement("div");` +
+                `\n userBalance.id = "user_balance";` +
+                `\n userBalance.innerHTML = "My Balance : " + myBalance;` +
+                `\n document.body.appendChild(userBalance);` +
+                `\n });`
+
       let defaultButton = yo `
         <button class="${css.instanceButton}" id="instanceButton" onclick=${() => popup(message)}>
           get Balance
         </button>
       `
+      function popup(message) {
+        modalDialogCustom.alertCustom(message)
+      }
+      
       instanceContainer.appendChild(defaultButton)      
 
       if (success) {
@@ -82,15 +97,6 @@ function TutorialTab(opts, localRegistry) {
             </button>`
             instanceContainer.appendChild(abis)
           }
-
-
-
-          function popup(message) {
-            modalDialogCustom.alert(message)
-          }
-
-
-
 
           // self._view.instanceContainer.appendChild(instanceContainer)
           // contractNames.appendChild(yo`<option value="${contract.name}">${contract.name}</option>`)
