@@ -14,5 +14,11 @@
 
 /** @nocompile */
 
-['Big Table', 'Googlebot', 'Instant Indexing', 'Mustang', 'Page Rank',
- 'Proto Buffer']
+;[
+  "Big Table",
+  "Googlebot",
+  "Instant Indexing",
+  "Mustang",
+  "Page Rank",
+  "Proto Buffer"
+]

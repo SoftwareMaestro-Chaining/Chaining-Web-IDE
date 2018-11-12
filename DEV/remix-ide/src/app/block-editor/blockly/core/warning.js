@@ -22,15 +22,14 @@
  * @fileoverview Object representing a warning.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Warning');
+goog.provide("Blockly.Warning")
 
-goog.require('Blockly.Bubble');
-goog.require('Blockly.Events.Ui');
-goog.require('Blockly.Icon');
-goog.require('Blockly.utils');
-
+goog.require("Blockly.Bubble")
+goog.require("Blockly.Events.Ui")
+goog.require("Blockly.Icon")
+goog.require("Blockly.utils")
 
 /**
  * Class for a warning.
@@ -39,17 +38,17 @@ goog.require('Blockly.utils');
  * @constructor
  */
 Blockly.Warning = function(block) {
-  Blockly.Warning.superClass_.constructor.call(this, block);
-  this.createIcon();
+  Blockly.Warning.superClass_.constructor.call(this, block)
+  this.createIcon()
   // The text_ object can contain multiple warnings.
-  this.text_ = {};
-};
-goog.inherits(Blockly.Warning, Blockly.Icon);
+  this.text_ = {}
+}
+goog.inherits(Blockly.Warning, Blockly.Icon)
 
 /**
  * Does this icon get hidden when the block is collapsed.
  */
-Blockly.Warning.prototype.collapseHidden = false;
+Blockly.Warning.prototype.collapseHidden = false
 
 /**
  * Draw the warning icon.
@@ -58,29 +57,38 @@ Blockly.Warning.prototype.collapseHidden = false;
  */
 Blockly.Warning.prototype.drawIcon_ = function(group) {
   // Triangle with rounded corners.
-  Blockly.utils.createSvgElement('path',
-      {
-        'class': 'blocklyIconShape',
-        'd': 'M2,15Q-1,15 0.5,12L6.5,1.7Q8,-1 9.5,1.7L15.5,12Q17,15 14,15z'
-      },
-      group);
+  Blockly.utils.createSvgElement(
+    "path",
+    {
+      class: "blocklyIconShape",
+      d: "M2,15Q-1,15 0.5,12L6.5,1.7Q8,-1 9.5,1.7L15.5,12Q17,15 14,15z"
+    },
+    group
+  )
   // Can't use a real '!' text character since different browsers and operating
   // systems render it differently.
   // Body of exclamation point.
-  Blockly.utils.createSvgElement('path',
-      {
-        'class': 'blocklyIconSymbol',
-        'd': 'm7,4.8v3.16l0.27,2.27h1.46l0.27,-2.27v-3.16z'
-      },
-      group);
+  Blockly.utils.createSvgElement(
+    "path",
+    {
+      class: "blocklyIconSymbol",
+      d: "m7,4.8v3.16l0.27,2.27h1.46l0.27,-2.27v-3.16z"
+    },
+    group
+  )
   // Dot of exclamation point.
-  Blockly.utils.createSvgElement('rect',
-      {
-        'class': 'blocklyIconSymbol',
-        'x': '7', 'y': '11', 'height': '2', 'width': '2'
-      },
-      group);
-};
+  Blockly.utils.createSvgElement(
+    "rect",
+    {
+      class: "blocklyIconSymbol",
+      x: "7",
+      y: "11",
+      height: "2",
+      width: "2"
+    },
+    group
+  )
+}
 
 /**
  * Create the text for the warning's bubble.
@@ -89,24 +97,26 @@ Blockly.Warning.prototype.drawIcon_ = function(group) {
  * @private
  */
 Blockly.Warning.textToDom_ = function(text) {
-  var paragraph = /** @type {!SVGTextElement} */
-      (Blockly.utils.createSvgElement(
-          'text',
-          {
-            'class': 'blocklyText blocklyBubbleText',
-            'y': Blockly.Bubble.BORDER_WIDTH
-          },
-          null)
-      );
-  var lines = text.split('\n');
+  var paragraph /** @type {!SVGTextElement} */ = Blockly.utils.createSvgElement(
+    "text",
+    {
+      class: "blocklyText blocklyBubbleText",
+      y: Blockly.Bubble.BORDER_WIDTH
+    },
+    null
+  )
+  var lines = text.split("\n")
   for (var i = 0; i < lines.length; i++) {
-    var tspanElement = Blockly.utils.createSvgElement('tspan',
-        {'dy': '1em', 'x': Blockly.Bubble.BORDER_WIDTH}, paragraph);
-    var textNode = document.createTextNode(lines[i]);
-    tspanElement.appendChild(textNode);
+    var tspanElement = Blockly.utils.createSvgElement(
+      "tspan",
+      { dy: "1em", x: Blockly.Bubble.BORDER_WIDTH },
+      paragraph
+    )
+    var textNode = document.createTextNode(lines[i])
+    tspanElement.appendChild(textNode)
   }
-  return paragraph;
-};
+  return paragraph
+}
 
 /**
  * Show or hide the warning bubble.
@@ -115,38 +125,48 @@ Blockly.Warning.textToDom_ = function(text) {
 Blockly.Warning.prototype.setVisible = function(visible) {
   if (visible == this.isVisible()) {
     // No change.
-    return;
+    return
   }
   Blockly.Events.fire(
-      new Blockly.Events.Ui(this.block_, 'warningOpen', !visible, visible));
+    new Blockly.Events.Ui(this.block_, "warningOpen", !visible, visible)
+  )
   if (visible) {
     // Create the bubble to display all warnings.
-    var paragraph = Blockly.Warning.textToDom_(this.getText());
+    var paragraph = Blockly.Warning.textToDom_(this.getText())
     this.bubble_ = new Blockly.Bubble(
-        /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
-        paragraph, this.block_.svgPath_, this.iconXY_, null, null);
+      /** @type {!Blockly.WorkspaceSvg} */ (this.block_.workspace),
+      paragraph,
+      this.block_.svgPath_,
+      this.iconXY_,
+      null,
+      null
+    )
     // Expose this warning's block's ID on its top-level SVG group.
-    this.bubble_.setSvgId(this.block_.id);
+    this.bubble_.setSvgId(this.block_.id)
     if (this.block_.RTL) {
       // Right-align the paragraph.
       // This cannot be done until the bubble is rendered on screen.
-      var maxWidth = paragraph.getBBox().width;
-      for (var i = 0, textElement; textElement = paragraph.childNodes[i]; i++) {
-        textElement.setAttribute('text-anchor', 'end');
-        textElement.setAttribute('x', maxWidth + Blockly.Bubble.BORDER_WIDTH);
+      var maxWidth = paragraph.getBBox().width
+      for (
+        var i = 0, textElement;
+        (textElement = paragraph.childNodes[i]);
+        i++
+      ) {
+        textElement.setAttribute("text-anchor", "end")
+        textElement.setAttribute("x", maxWidth + Blockly.Bubble.BORDER_WIDTH)
       }
     }
-    this.updateColour();
+    this.updateColour()
     // Bump the warning into the right location.
-    var size = this.bubble_.getBubbleSize();
-    this.bubble_.setBubbleSize(size.width, size.height);
+    var size = this.bubble_.getBubbleSize()
+    this.bubble_.setBubbleSize(size.width, size.height)
   } else {
     // Dispose of the bubble.
-    this.bubble_.dispose();
-    this.bubble_ = null;
-    this.body_ = null;
+    this.bubble_.dispose()
+    this.bubble_ = null
+    this.body_ = null
   }
-};
+}
 
 /**
  * Bring the warning to the top of the stack when clicked on.
@@ -155,8 +175,8 @@ Blockly.Warning.prototype.setVisible = function(visible) {
  */
 
 Blockly.Warning.prototype.bodyFocus_ = function(_e) {
-  this.bubble_.promote_();
-};
+  this.bubble_.promote_()
+}
 
 /**
  * Set this warning's text.
@@ -166,35 +186,35 @@ Blockly.Warning.prototype.bodyFocus_ = function(_e) {
  */
 Blockly.Warning.prototype.setText = function(text, id) {
   if (this.text_[id] == text) {
-    return;
+    return
   }
   if (text) {
-    this.text_[id] = text;
+    this.text_[id] = text
   } else {
-    delete this.text_[id];
+    delete this.text_[id]
   }
   if (this.isVisible()) {
-    this.setVisible(false);
-    this.setVisible(true);
+    this.setVisible(false)
+    this.setVisible(true)
   }
-};
+}
 
 /**
  * Get this warning's texts.
  * @return {string} All texts concatenated into one string.
  */
 Blockly.Warning.prototype.getText = function() {
-  var allWarnings = [];
+  var allWarnings = []
   for (var id in this.text_) {
-    allWarnings.push(this.text_[id]);
+    allWarnings.push(this.text_[id])
   }
-  return allWarnings.join('\n');
-};
+  return allWarnings.join("\n")
+}
 
 /**
  * Dispose of this warning.
  */
 Blockly.Warning.prototype.dispose = function() {
-  this.block_.warning = null;
-  Blockly.Icon.prototype.dispose.call(this);
-};
+  this.block_.warning = null
+  Blockly.Icon.prototype.dispose.call(this)
+}

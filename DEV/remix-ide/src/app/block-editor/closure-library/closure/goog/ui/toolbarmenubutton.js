@@ -18,13 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarMenuButton');
+goog.provide("goog.ui.ToolbarMenuButton")
 
-goog.require('goog.ui.MenuButton');
-goog.require('goog.ui.ToolbarMenuButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.MenuButton")
+goog.require("goog.ui.ToolbarMenuButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A menu button control for a toolbar.
@@ -41,16 +39,25 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.MenuButton}
  */
 goog.ui.ToolbarMenuButton = function(
-    content, opt_menu, opt_renderer, opt_domHelper) {
+  content,
+  opt_menu,
+  opt_renderer,
+  opt_domHelper
+) {
   goog.ui.MenuButton.call(
-      this, content, opt_menu,
-      opt_renderer || goog.ui.ToolbarMenuButtonRenderer.getInstance(),
-      opt_domHelper);
-};
-goog.inherits(goog.ui.ToolbarMenuButton, goog.ui.MenuButton);
-
+    this,
+    content,
+    opt_menu,
+    opt_renderer || goog.ui.ToolbarMenuButtonRenderer.getInstance(),
+    opt_domHelper
+  )
+}
+goog.inherits(goog.ui.ToolbarMenuButton, goog.ui.MenuButton)
 
 // Registers a decorator factory function for toolbar menu buttons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS,
-    function() { return new goog.ui.ToolbarMenuButton(null); });
+  goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS,
+  function() {
+    return new goog.ui.ToolbarMenuButton(null)
+  }
+)

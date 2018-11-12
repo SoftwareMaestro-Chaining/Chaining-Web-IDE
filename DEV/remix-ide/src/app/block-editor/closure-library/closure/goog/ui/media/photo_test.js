@@ -12,41 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.media.PhotoTest');
-goog.setTestOnly('goog.ui.media.PhotoTest');
+goog.provide("goog.ui.media.PhotoTest")
+goog.setTestOnly("goog.ui.media.PhotoTest")
 
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.html.testing');
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.media.MediaModel');
-goog.require('goog.ui.media.Photo');
-var control;
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.html.testing")
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.media.MediaModel")
+goog.require("goog.ui.media.Photo")
+var control
 var PHOTO_URL = goog.html.testing.newTrustedResourceUrlForTest(
-    'http://foo/bar.jpg');
+  "http://foo/bar.jpg"
+)
 
 function setUp() {
-  var photo = new goog.ui.media.MediaModel(PHOTO_URL, 'title', 'description');
-  photo.setPlayer(new goog.ui.media.MediaModel.Player(PHOTO_URL));
-  control = goog.ui.media.Photo.newControl(photo);
+  var photo = new goog.ui.media.MediaModel(PHOTO_URL, "title", "description")
+  photo.setPlayer(new goog.ui.media.MediaModel.Player(PHOTO_URL))
+  control = goog.ui.media.Photo.newControl(photo)
 }
 
 function tearDown() {
-  control.dispose();
+  control.dispose()
 }
 
 function testBasicRendering() {
-  control.render();
+  control.render()
   var el = goog.dom.getElementsByTagNameAndClass(
-      goog.dom.TagName.DIV, goog.ui.media.Photo.CSS_CLASS);
-  assertEquals(1, el.length);
+    goog.dom.TagName.DIV,
+    goog.ui.media.Photo.CSS_CLASS
+  )
+  assertEquals(1, el.length)
   var img = goog.dom.getElementsByTagNameAndClass(
-      goog.dom.TagName.IMG, goog.ui.media.Photo.CSS_CLASS + '-image');
-  assertEquals(1, img.length);
+    goog.dom.TagName.IMG,
+    goog.ui.media.Photo.CSS_CLASS + "-image"
+  )
+  assertEquals(1, img.length)
   var caption = goog.dom.getElementsByTagNameAndClass(
-      goog.dom.TagName.DIV, goog.ui.media.Photo.CSS_CLASS + '-caption');
-  assertEquals(1, caption.length);
+    goog.dom.TagName.DIV,
+    goog.ui.media.Photo.CSS_CLASS + "-caption"
+  )
+  assertEquals(1, caption.length)
   var content = goog.dom.getElementsByTagNameAndClass(
-      goog.dom.TagName.DIV, goog.ui.media.Photo.CSS_CLASS + '-description');
-  assertEquals(1, content.length);
+    goog.dom.TagName.DIV,
+    goog.ui.media.Photo.CSS_CLASS + "-description"
+  )
+  assertEquals(1, content.length)
 }

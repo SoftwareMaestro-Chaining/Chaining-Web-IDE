@@ -22,56 +22,59 @@
  * @fileoverview Utility functions for handling types.
  * @author fdohrendorf@outlook.com (Florian Dohrendorf)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Types');
+goog.provide("Blockly.Types")
 
-goog.require('goog.string');
+goog.require("goog.string")
 
 /**
  * Field whose value can be replaced to add custom types
  */
-Blockly.Types.types = [];
+Blockly.Types.types = []
 
 /**
  * Find all user-created type definitions in a workspace.
  * TODO @param {!Blockly.Workspace} root Root workspace.
  * @return {!Array.<string>} List of types
  */
-Blockly.Types.allTypes = function (/*root*/) {
+Blockly.Types.allTypes = function(/*root*/) {
+  var builtInTypes = [
+    {
+      name: "Boolean"
+    },
+    {
+      name: "Number"
+    },
+    {
+      name: "String"
+    }
+  ]
 
-    var builtInTypes = [
-        {
-            name: "Boolean"
-        }, {
-            name: "Number"
-        }, {
-            name: "String"
-        }
-    ];
-
-    return builtInTypes.concat(Blockly.Types.types);
-};
+  return builtInTypes.concat(Blockly.Types.types)
+}
 
 /**
  * Get the type definition by type name
  * @param {!string} typeName The type name
  * @returns {?{
- *     name:string, 
+ *     name:string,
  *     parent:(string|undefined),
  *     fields:!Array.<{
  *         name: string,
  *         type: (string|undefined)
  *     }
- * }} The definition of the given type name or null if the type does not 
+ * }} The definition of the given type name or null if the type does not
  *     exist.
  */
-Blockly.Types.getType = function (typeName) {
-    var typeList = Blockly.Types.allTypes();
-    var types = typeList.filter(function (e) { return e.name === typeName; });
-    if (types.length < 1) return null;
-    return types[0];
-};
+Blockly.Types.getType = function(typeName) {
+  var typeList = Blockly.Types.allTypes()
+  var types = typeList.filter(function(e) {
+    return e.name === typeName
+  })
+  if (types.length < 1) return null
+  return types[0]
+}
 
 /**
  * Get the fields by type name.
@@ -79,13 +82,12 @@ Blockly.Types.getType = function (typeName) {
  * @returns {!Array.<string>} Fields of the given type and base types, or an
  *     empty array if not found.
  */
-Blockly.Types.getFields = function (typeName) {
-    var type = Blockly.Types.getType(typeName);
-    if (!type) return [];
-    if (type.base)
-        return Blockly.Types.getFields(type.base).concat(type.fields);
-    return type.fields;
-};
+Blockly.Types.getFields = function(typeName) {
+  var type = Blockly.Types.getType(typeName)
+  if (!type) return []
+  if (type.base) return Blockly.Types.getFields(type.base).concat(type.fields)
+  return type.fields
+}
 
 /**
  * Gets the names of the supplied type and all base types. Including 'Object'
@@ -94,18 +96,18 @@ Blockly.Types.getFields = function (typeName) {
  * @returns {!Array.<string>} The given type and its base types or an empty
  *     array if not found.
  */
-Blockly.Types.getSelfAndBase = function (typeName) {
-    if (Blockly.Types.isPrimitive(typeName))
-        // if we slightly change the check in the next line we could remove
-        // this, but only if we say that every type that isn't found is by
-        // default primitive, this could be the better backwards compatiblity
-        // anyway.
-        return [typeName]; 
-    var type = Blockly.Types.getType(typeName);
-    if (!type) return [];
-    if (type.base)
-        return Blockly.Types.getSelfAndBase(type.base).concat([typeName]);
-    return ["Object", typeName];
+Blockly.Types.getSelfAndBase = function(typeName) {
+  if (Blockly.Types.isPrimitive(typeName))
+    // if we slightly change the check in the next line we could remove
+    // this, but only if we say that every type that isn't found is by
+    // default primitive, this could be the better backwards compatiblity
+    // anyway.
+    return [typeName]
+  var type = Blockly.Types.getType(typeName)
+  if (!type) return []
+  if (type.base)
+    return Blockly.Types.getSelfAndBase(type.base).concat([typeName])
+  return ["Object", typeName]
 }
 
 /**
@@ -114,9 +116,9 @@ Blockly.Types.getSelfAndBase = function (typeName) {
  * @param {!string} type The type name
  * @returns {boolean} True when the given type is primitive, otherwise false.
  */
-Blockly.Types.isPrimitive = function (type) {
-    return ["boolean", "string", "number"].indexOf(type.toLowerCase()) !== -1;
-};
+Blockly.Types.isPrimitive = function(type) {
+  return ["boolean", "string", "number"].indexOf(type.toLowerCase()) !== -1
+}
 
 /**
  * Returns true or false indicating whether the supplied type is assignable to
@@ -125,10 +127,10 @@ Blockly.Types.isPrimitive = function (type) {
  * @param {!string} type The type name
  * @returns {boolean} True when the given type is assignable to base, otherwise false.
  */
-Blockly.Types.isAssignableFrom = function (base, type) {
-    var types = Blockly.Types.getSelfAndBase(type);
-    return types.indexOf(base) !== -1;
-};
+Blockly.Types.isAssignableFrom = function(base, type) {
+  var types = Blockly.Types.getSelfAndBase(type)
+  return types.indexOf(base) !== -1
+}
 
 /**
  * Returns true or false whether the supplied type is a valid type. Valid
@@ -137,6 +139,6 @@ Blockly.Types.isAssignableFrom = function (base, type) {
  * @param {!string} typeName The type name
  * @returns {boolean} True when the given type does exist otherwise false.
  */
-Blockly.Types.isValidType = function (typeName) {
-    return isPrimitive(type) || getType(typeName); // TODO or complex
-};
+Blockly.Types.isValidType = function(typeName) {
+  return isPrimitive(type) || getType(typeName) // TODO or complex
+}

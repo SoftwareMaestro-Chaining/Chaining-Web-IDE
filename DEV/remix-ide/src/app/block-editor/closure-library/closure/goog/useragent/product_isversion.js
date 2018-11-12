@@ -22,15 +22,12 @@
  *
  */
 
+goog.provide("goog.userAgent.product.isVersion")
 
-goog.provide('goog.userAgent.product.isVersion');
-
-
-goog.require('goog.labs.userAgent.platform');
-goog.require('goog.string');
-goog.require('goog.userAgent');
-goog.require('goog.userAgent.product');
-
+goog.require("goog.labs.userAgent.platform")
+goog.require("goog.string")
+goog.require("goog.userAgent")
+goog.require("goog.userAgent.product")
 
 /**
  * @return {string} The string that describes the version number of the user
@@ -44,21 +41,24 @@ goog.userAgent.product.determineVersion_ = function() {
 
   if (goog.userAgent.product.FIREFOX) {
     // Firefox/2.0.0.1 or Firefox/3.5.3
-    return goog.userAgent.product.getFirstRegExpGroup_(/Firefox\/([0-9.]+)/);
+    return goog.userAgent.product.getFirstRegExpGroup_(/Firefox\/([0-9.]+)/)
   }
 
-  if (goog.userAgent.product.IE || goog.userAgent.product.EDGE ||
-      goog.userAgent.product.OPERA) {
-    return goog.userAgent.VERSION;
+  if (
+    goog.userAgent.product.IE ||
+    goog.userAgent.product.EDGE ||
+    goog.userAgent.product.OPERA
+  ) {
+    return goog.userAgent.VERSION
   }
 
   if (goog.userAgent.product.CHROME) {
     if (goog.labs.userAgent.platform.isIos()) {
       // CriOS/56.0.2924.79
-      return goog.userAgent.product.getFirstRegExpGroup_(/CriOS\/([0-9.]+)/);
+      return goog.userAgent.product.getFirstRegExpGroup_(/CriOS\/([0-9.]+)/)
     }
     // Chrome/4.0.223.1
-    return goog.userAgent.product.getFirstRegExpGroup_(/Chrome\/([0-9.]+)/);
+    return goog.userAgent.product.getFirstRegExpGroup_(/Chrome\/([0-9.]+)/)
   }
 
   // This replicates legacy logic, which considered Safari and iOS to be
@@ -69,7 +69,7 @@ goog.userAgent.product.determineVersion_ = function() {
     // NOTE: Before version 3, Safari did not report a product version number.
     // The product version number for these browsers will be the empty string.
     // They may be differentiated by WebKit version number in goog.userAgent.
-    return goog.userAgent.product.getFirstRegExpGroup_(/Version\/([0-9.]+)/);
+    return goog.userAgent.product.getFirstRegExpGroup_(/Version\/([0-9.]+)/)
   }
 
   if (goog.userAgent.product.IPHONE || goog.userAgent.product.IPAD) {
@@ -77,10 +77,11 @@ goog.userAgent.product.determineVersion_ = function() {
     // (KHTML, like Gecko) Version/3.0 Mobile/3A100a Safari/419.3
     // Version is the browser version, Mobile is the build number. We combine
     // the version string with the build number: 3.0.3A100a for the example.
-    var arr =
-        goog.userAgent.product.execRegExp_(/Version\/(\S+).*Mobile\/(\S+)/);
+    var arr = goog.userAgent.product.execRegExp_(
+      /Version\/(\S+).*Mobile\/(\S+)/
+    )
     if (arr) {
-      return arr[1] + '.' + arr[2];
+      return arr[1] + "." + arr[2]
     }
   } else if (goog.userAgent.product.ANDROID) {
     // Mozilla/5.0 (Linux; U; Android 0.5; en-us) AppleWebKit/522+
@@ -90,18 +91,18 @@ goog.userAgent.product.determineVersion_ = function() {
     // (KHTML, like Gecko) Version/3.0.4 Mobile Safari/523.12.2
     //
     // Prefer Version number if present, else make do with the OS number
-    var version =
-        goog.userAgent.product.getFirstRegExpGroup_(/Android\s+([0-9.]+)/);
+    var version = goog.userAgent.product.getFirstRegExpGroup_(
+      /Android\s+([0-9.]+)/
+    )
     if (version) {
-      return version;
+      return version
     }
 
-    return goog.userAgent.product.getFirstRegExpGroup_(/Version\/([0-9.]+)/);
+    return goog.userAgent.product.getFirstRegExpGroup_(/Version\/([0-9.]+)/)
   }
 
-  return '';
-};
-
+  return ""
+}
 
 /**
  * Return the first group of the given regex.
@@ -110,10 +111,9 @@ goog.userAgent.product.determineVersion_ = function() {
  * @private
  */
 goog.userAgent.product.getFirstRegExpGroup_ = function(re) {
-  var arr = goog.userAgent.product.execRegExp_(re);
-  return arr ? arr[1] : '';
-};
-
+  var arr = goog.userAgent.product.execRegExp_(re)
+  return arr ? arr[1] : ""
+}
 
 /**
  * Run regexp's exec() on the userAgent string.
@@ -122,17 +122,15 @@ goog.userAgent.product.getFirstRegExpGroup_ = function(re) {
  * @private
  */
 goog.userAgent.product.execRegExp_ = function(re) {
-  return re.exec(goog.userAgent.getUserAgentString());
-};
-
+  return re.exec(goog.userAgent.getUserAgentString())
+}
 
 /**
  * The version of the user agent. This is a string because it might contain
  * 'b' (as in beta) as well as multiple dots.
  * @type {string}
  */
-goog.userAgent.product.VERSION = goog.userAgent.product.determineVersion_();
-
+goog.userAgent.product.VERSION = goog.userAgent.product.determineVersion_()
 
 /**
  * Whether the user agent product version is higher or the same as the given
@@ -143,6 +141,7 @@ goog.userAgent.product.VERSION = goog.userAgent.product.determineVersion_();
  *     same as the given version.
  */
 goog.userAgent.product.isVersion = function(version) {
-  return goog.string.compareVersions(goog.userAgent.product.VERSION, version) >=
-      0;
-};
+  return (
+    goog.string.compareVersions(goog.userAgent.product.VERSION, version) >= 0
+  )
+}

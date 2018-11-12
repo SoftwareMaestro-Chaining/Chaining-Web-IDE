@@ -11,172 +11,177 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-goog.provide('goog.async.nextTickTest');
-goog.setTestOnly('goog.async.nextTickTest');
+goog.provide("goog.async.nextTickTest")
+goog.setTestOnly("goog.async.nextTickTest")
 
-goog.require('goog.Promise');
-goog.require('goog.Timer');
-goog.require('goog.async.nextTick');
-goog.require('goog.debug.ErrorHandler');
-goog.require('goog.debug.entryPointRegistry');
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.labs.userAgent.browser');
-goog.require('goog.testing.MockClock');
-goog.require('goog.testing.PropertyReplacer');
-goog.require('goog.testing.jsunit');
+goog.require("goog.Promise")
+goog.require("goog.Timer")
+goog.require("goog.async.nextTick")
+goog.require("goog.debug.ErrorHandler")
+goog.require("goog.debug.entryPointRegistry")
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.labs.userAgent.browser")
+goog.require("goog.testing.MockClock")
+goog.require("goog.testing.PropertyReplacer")
+goog.require("goog.testing.jsunit")
 
-var clock;
-var propertyReplacer = new goog.testing.PropertyReplacer();
+var clock
+var propertyReplacer = new goog.testing.PropertyReplacer()
 
 function setUp() {
-  clock = null;
+  clock = null
 }
 
 function tearDown() {
   if (clock) {
-    clock.uninstall();
+    clock.uninstall()
   }
   // Unset the cached setImmediate_ behavior so it's re-evaluated for each test.
-  goog.async.nextTick.setImmediate_ = undefined;
-  propertyReplacer.reset();
+  goog.async.nextTick.setImmediate_ = undefined
+  propertyReplacer.reset()
 }
-
 
 function testNextTick() {
   return new goog.Promise(function(resolve, reject) {
-    var c = 0;
-    var max = 100;
-    var async = true;
+    var c = 0
+    var max = 100
+    var async = true
     var counterStep = function(i) {
-      async = false;
-      assertEquals('Order correct', i, c);
-      c++;
+      async = false
+      assertEquals("Order correct", i, c)
+      c++
       if (c === max) {
-        resolve();
+        resolve()
       }
-    };
-    for (var i = 0; i < max; i++) {
-      goog.async.nextTick(goog.partial(counterStep, i));
     }
-    assertTrue(async);
-  });
+    for (var i = 0; i < max; i++) {
+      goog.async.nextTick(goog.partial(counterStep, i))
+    }
+    assertTrue(async)
+  })
 }
-
 
 function testNextTickSetImmediate() {
   return new goog.Promise(function(resolve, reject) {
-    var c = 0;
-    var max = 100;
-    var async = true;
+    var c = 0
+    var max = 100
+    var async = true
     var counterStep = function(i) {
-      async = false;
-      assertEquals('Order correct', i, c);
-      c++;
+      async = false
+      assertEquals("Order correct", i, c)
+      c++
       if (c === max) {
-        resolve();
+        resolve()
       }
-    };
+    }
     for (var i = 0; i < max; i++) {
       goog.async.nextTick(
-          goog.partial(counterStep, i), undefined,
-          /* opt_useSetImmediate */ true);
+        goog.partial(counterStep, i),
+        undefined,
+        /* opt_useSetImmediate */ true
+      )
     }
-    assertTrue(async);
-  });
+    assertTrue(async)
+  })
 }
 
 function testNextTickContext() {
   return new goog.Promise(function(resolve, reject) {
-    var context = {};
-    var c = 0;
-    var max = 10;
-    var async = true;
+    var context = {}
+    var c = 0
+    var max = 10
+    var async = true
     var counterStep = function(i) {
-      async = false;
-      assertEquals('Order correct', i, c);
-      assertEquals(context, this);
-      c++;
+      async = false
+      assertEquals("Order correct", i, c)
+      assertEquals(context, this)
+      c++
       if (c === max) {
-        resolve();
+        resolve()
       }
-    };
-    for (var i = 0; i < max; i++) {
-      goog.async.nextTick(goog.partial(counterStep, i), context);
     }
-    assertTrue(async);
-  });
+    for (var i = 0; i < max; i++) {
+      goog.async.nextTick(goog.partial(counterStep, i), context)
+    }
+    assertTrue(async)
+  })
 }
-
 
 function testNextTickMockClock() {
-  clock = new goog.testing.MockClock(true);
-  var result = '';
-  goog.async.nextTick(function() { result += 'a'; });
-  goog.async.nextTick(function() { result += 'b'; });
-  goog.async.nextTick(function() { result += 'c'; });
-  assertEquals('', result);
-  clock.tick(0);
-  assertEquals('abc', result);
+  clock = new goog.testing.MockClock(true)
+  var result = ""
+  goog.async.nextTick(function() {
+    result += "a"
+  })
+  goog.async.nextTick(function() {
+    result += "b"
+  })
+  goog.async.nextTick(function() {
+    result += "c"
+  })
+  assertEquals("", result)
+  clock.tick(0)
+  assertEquals("abc", result)
 }
-
 
 function testNextTickDoesntSwallowError() {
   return new goog.Promise(function(resolve, reject) {
-    var sentinel = 'sentinel';
+    var sentinel = "sentinel"
 
-    propertyReplacer.replace(window, 'onerror', function(e) {
-      e = '' + e;
+    propertyReplacer.replace(window, "onerror", function(e) {
+      e = "" + e
       // Don't test for contents in IE7, which does not preserve the exception
       // message.
-      if (e.indexOf('Exception thrown and not caught') == -1) {
-        assertContains(sentinel, e);
+      if (e.indexOf("Exception thrown and not caught") == -1) {
+        assertContains(sentinel, e)
       }
-      resolve();
-      return false;
-    });
+      resolve()
+      return false
+    })
 
-    goog.async.nextTick(function() { throw sentinel; });
-  });
+    goog.async.nextTick(function() {
+      throw sentinel
+    })
+  })
 }
-
 
 function testNextTickProtectEntryPoint() {
   return new goog.Promise(function(resolve, reject) {
-    var errorHandlerCallbackCalled = false;
+    var errorHandlerCallbackCalled = false
     var errorHandler = new goog.debug.ErrorHandler(function() {
-      errorHandlerCallbackCalled = true;
-    });
+      errorHandlerCallbackCalled = true
+    })
 
     // MS Edge will always use goog.global.setImmediate, so ensure we get
     // to setImmediate_ here. See useSetImmediate_ implementation for details on
     // Edge special casing.
-    propertyReplacer.set(
-        goog.async.nextTick, 'useSetImmediate_', function() { return false; });
+    propertyReplacer.set(goog.async.nextTick, "useSetImmediate_", function() {
+      return false
+    })
 
     // This is only testing wrapping the callback with the protected entry
     // point, so it's okay to replace this function with a fake.
-    propertyReplacer.set(goog.async.nextTick, 'setImmediate_', function(cb) {
+    propertyReplacer.set(goog.async.nextTick, "setImmediate_", function(cb) {
       try {
-        cb();
-        fail('The callback should have thrown an error.');
+        cb()
+        fail("The callback should have thrown an error.")
       } catch (e) {
-        assertTrue(errorHandlerCallbackCalled);
-        assertTrue(e instanceof goog.debug.ErrorHandler.ProtectedFunctionError);
+        assertTrue(errorHandlerCallbackCalled)
+        assertTrue(e instanceof goog.debug.ErrorHandler.ProtectedFunctionError)
       } finally {
         // Restore setImmediate so it doesn't interfere with Promise behavior.
-        propertyReplacer.reset();
+        propertyReplacer.reset()
       }
-      resolve();
-    });
+      resolve()
+    })
 
-    goog.debug.entryPointRegistry.monitorAll(errorHandler);
+    goog.debug.entryPointRegistry.monitorAll(errorHandler)
     goog.async.nextTick(function() {
-      throw new Error('This should be caught by the protected function.');
-    });
-  });
+      throw new Error("This should be caught by the protected function.")
+    })
+  })
 }
-
 
 function testNextTick_notStarvedBySetTimeout() {
   // This test will timeout when affected by
@@ -184,22 +189,23 @@ function testNextTick_notStarvedBySetTimeout() {
   // This test would fail without the fix introduced in cl/72472221
   // It keeps scheduling 0 timeouts and a single nextTick. If the nextTick
   // ever fires, the IE specific problem does not occur.
-  var timeout;
+  var timeout
   function busy() {
-    timeout = setTimeout(function() { busy(); }, 0);
+    timeout = setTimeout(function() {
+      busy()
+    }, 0)
   }
-  busy();
+  busy()
 
   return new goog.Promise(function(resolve, reject) {
     goog.async.nextTick(function() {
       if (timeout) {
-        clearTimeout(timeout);
+        clearTimeout(timeout)
       }
-      resolve();
-    });
-  });
+      resolve()
+    })
+  })
 }
-
 
 /**
  * Test a scenario in which the iframe used by the postMessage polyfill gets a
@@ -209,36 +215,45 @@ function testNextTick_notStarvedBySetTimeout() {
  */
 function testPostMessagePolyfillDoesNotPumpCallbackQueueIfMessageIsIncorrect() {
   // EDGE/IE does not use the postMessage polyfill.
-  if (goog.labs.userAgent.browser.isIE() ||
-      goog.labs.userAgent.browser.isEdge()) {
-    return;
+  if (
+    goog.labs.userAgent.browser.isIE() ||
+    goog.labs.userAgent.browser.isEdge()
+  ) {
+    return
   }
 
   // Force postMessage polyfill for setImmediate.
-  propertyReplacer.set(window, 'setImmediate', undefined);
-  propertyReplacer.set(window, 'MessageChannel', undefined);
+  propertyReplacer.set(window, "setImmediate", undefined)
+  propertyReplacer.set(window, "MessageChannel", undefined)
 
-  var callbackCalled = false;
-  goog.async.nextTick(function() { callbackCalled = true; });
+  var callbackCalled = false
+  goog.async.nextTick(function() {
+    callbackCalled = true
+  })
 
-  var frame = goog.dom.getElementsByTagName(goog.dom.TagName.IFRAME)[0];
+  var frame = goog.dom.getElementsByTagName(goog.dom.TagName.IFRAME)[0]
   frame.contentWindow.postMessage(
-      'bogus message', window.location.protocol + '//' + window.location.host);
+    "bogus message",
+    window.location.protocol + "//" + window.location.host
+  )
 
-  var error = null;
-  frame.contentWindow.onerror = function(e) { error = e; };
+  var error = null
+  frame.contentWindow.onerror = function(e) {
+    error = e
+  }
   return goog.Timer.promise(3)
-      .then(function() {
-        assert('Callback should have been called.', callbackCalled);
-        assertNull('An unexpected error was thrown.', error);
-      })
-      .thenAlways(function() { goog.dom.removeNode(frame); });
+    .then(function() {
+      assert("Callback should have been called.", callbackCalled)
+      assertNull("An unexpected error was thrown.", error)
+    })
+    .thenAlways(function() {
+      goog.dom.removeNode(frame)
+    })
 }
 
-
 function testBehaviorOnPagesWithOverriddenWindowConstructor() {
-  propertyReplacer.set(goog.global, 'Window', {});
-  testNextTick();
-  testNextTickSetImmediate();
-  testNextTickMockClock();
+  propertyReplacer.set(goog.global, "Window", {})
+  testNextTick()
+  testNextTickSetImmediate()
+  testNextTickMockClock()
 }

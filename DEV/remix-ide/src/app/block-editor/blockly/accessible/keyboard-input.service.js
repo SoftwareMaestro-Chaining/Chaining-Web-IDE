@@ -23,36 +23,37 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.KeyboardInputService');
-
+goog.provide("blocklyApp.KeyboardInputService")
 
 blocklyApp.KeyboardInputService = ng.core.Class({
-  constructor: [function() {
-    // Default custom actions for global keystrokes. The keys of this object
-    // are string representations of the key codes.
-    this.keysToActions = {};
-    // Override for the default keysToActions mapping (e.g. in a modal
-    // context).
-    this.keysToActionsOverride = null;
+  constructor: [
+    function() {
+      // Default custom actions for global keystrokes. The keys of this object
+      // are string representations of the key codes.
+      this.keysToActions = {}
+      // Override for the default keysToActions mapping (e.g. in a modal
+      // context).
+      this.keysToActionsOverride = null
 
-    // Attach a keydown handler to the entire window.
-    var that = this;
-    document.addEventListener('keydown', function(evt) {
-      var stringifiedKeycode = String(evt.keyCode);
-      var actionsObject = that.keysToActionsOverride || that.keysToActions;
+      // Attach a keydown handler to the entire window.
+      var that = this
+      document.addEventListener("keydown", function(evt) {
+        var stringifiedKeycode = String(evt.keyCode)
+        var actionsObject = that.keysToActionsOverride || that.keysToActions
 
-      if (actionsObject.hasOwnProperty(stringifiedKeycode)) {
-        actionsObject[stringifiedKeycode](evt);
-      }
-    });
-  }],
+        if (actionsObject.hasOwnProperty(stringifiedKeycode)) {
+          actionsObject[stringifiedKeycode](evt)
+        }
+      })
+    }
+  ],
   setOverride: function(newKeysToActions) {
-    this.keysToActionsOverride = newKeysToActions;
+    this.keysToActionsOverride = newKeysToActions
   },
   addOverride: function(keyCode, action) {
-    this.keysToActionsOverride[keyCode] = action;
+    this.keysToActionsOverride[keyCode] = action
   },
   clearOverride: function() {
-    this.keysToActionsOverride = null;
+    this.keysToActionsOverride = null
   }
-});
+})

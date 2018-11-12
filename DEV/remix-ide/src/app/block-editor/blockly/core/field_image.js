@@ -22,15 +22,14 @@
  * @fileoverview Image field.  Used for pictures, icons, etc.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.FieldImage');
+goog.provide("Blockly.FieldImage")
 
-goog.require('Blockly.Field');
-goog.require('Blockly.utils');
+goog.require("Blockly.Field")
+goog.require("Blockly.utils")
 
-goog.require('goog.math.Size');
-
+goog.require("goog.math.Size")
 
 /**
  * Class for an image on a block.
@@ -44,21 +43,23 @@ goog.require('goog.math.Size');
  * @constructor
  */
 Blockly.FieldImage = function(src, width, height, opt_alt, opt_onClick) {
-  this.sourceBlock_ = null;
+  this.sourceBlock_ = null
 
   // Ensure height and width are numbers.  Strings are bad at math.
-  this.height_ = Number(height);
-  this.width_ = Number(width);
-  this.size_ = new goog.math.Size(this.width_,
-      this.height_ + 2 * Blockly.BlockSvg.INLINE_PADDING_Y);
-  this.text_ = opt_alt || '';
-  this.setValue(src);
+  this.height_ = Number(height)
+  this.width_ = Number(width)
+  this.size_ = new goog.math.Size(
+    this.width_,
+    this.height_ + 2 * Blockly.BlockSvg.INLINE_PADDING_Y
+  )
+  this.text_ = opt_alt || ""
+  this.setValue(src)
 
-  if (typeof opt_onClick == 'function') {
-    this.clickHandler_ = opt_onClick;
+  if (typeof opt_onClick == "function") {
+    this.clickHandler_ = opt_onClick
   }
-};
-goog.inherits(Blockly.FieldImage, Blockly.Field);
+}
+goog.inherits(Blockly.FieldImage, Blockly.Field)
 
 /**
  * Construct a FieldImage from a JSON arg object,
@@ -70,18 +71,17 @@ goog.inherits(Blockly.FieldImage, Blockly.Field);
  * @nocollapse
  */
 Blockly.FieldImage.fromJson = function(options) {
-  var src = Blockly.utils.replaceMessageReferences(options['src']);
-  var width = Number(Blockly.utils.replaceMessageReferences(options['width']));
-  var height =
-      Number(Blockly.utils.replaceMessageReferences(options['height']));
-  var alt = Blockly.utils.replaceMessageReferences(options['alt']);
-  return new Blockly.FieldImage(src, width, height, alt);
-};
+  var src = Blockly.utils.replaceMessageReferences(options["src"])
+  var width = Number(Blockly.utils.replaceMessageReferences(options["width"]))
+  var height = Number(Blockly.utils.replaceMessageReferences(options["height"]))
+  var alt = Blockly.utils.replaceMessageReferences(options["alt"])
+  return new Blockly.FieldImage(src, width, height, alt)
+}
 
 /**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
  */
-Blockly.FieldImage.prototype.EDITABLE = false;
+Blockly.FieldImage.prototype.EDITABLE = false
 
 /**
  * Install this image on a block.
@@ -89,42 +89,43 @@ Blockly.FieldImage.prototype.EDITABLE = false;
 Blockly.FieldImage.prototype.init = function() {
   if (this.fieldGroup_) {
     // Image has already been initialized once.
-    return;
+    return
   }
   // Build the DOM.
   /** @type {SVGElement} */
-  this.fieldGroup_ = Blockly.utils.createSvgElement('g', {}, null);
+  this.fieldGroup_ = Blockly.utils.createSvgElement("g", {}, null)
   if (!this.visible_) {
-    this.fieldGroup_.style.display = 'none';
+    this.fieldGroup_.style.display = "none"
   }
   /** @type {SVGElement} */
   this.imageElement_ = Blockly.utils.createSvgElement(
-      'image',
-      {
-        'height': this.height_ + 'px',
-        'width': this.width_ + 'px'
-      },
-      this.fieldGroup_);
-  this.setValue(this.src_);
-  this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+    "image",
+    {
+      height: this.height_ + "px",
+      width: this.width_ + "px"
+    },
+    this.fieldGroup_
+  )
+  this.setValue(this.src_)
+  this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_)
 
   // Configure the field to be transparent with respect to tooltips.
-  this.setTooltip(this.sourceBlock_);
-  Blockly.Tooltip.bindMouseEvents(this.imageElement_);
+  this.setTooltip(this.sourceBlock_)
+  Blockly.Tooltip.bindMouseEvents(this.imageElement_)
 
-  this.maybeAddClickHandler_();
-};
+  this.maybeAddClickHandler_()
+}
 
 /**
  * Dispose of all DOM objects belonging to this text.
  */
 Blockly.FieldImage.prototype.dispose = function() {
   if (this.fieldGroup_) {
-    Blockly.utils.removeNode(this.fieldGroup_);
-    this.fieldGroup_ = null;
+    Blockly.utils.removeNode(this.fieldGroup_)
+    this.fieldGroup_ = null
   }
-  this.imageElement_ = null;
-};
+  this.imageElement_ = null
+}
 
 /**
  * Bind events for a mouse down on the image, but only if a click handler has
@@ -133,11 +134,14 @@ Blockly.FieldImage.prototype.dispose = function() {
  */
 Blockly.FieldImage.prototype.maybeAddClickHandler_ = function() {
   if (this.clickHandler_) {
-    this.mouseDownWrapper_ =
-        Blockly.bindEventWithChecks_(
-            this.fieldGroup_, 'mousedown', this, this.onMouseDown_);
+    this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(
+      this.fieldGroup_,
+      "mousedown",
+      this,
+      this.onMouseDown_
+    )
   }
-};
+}
 
 /**
  * Change the tooltip text for this field.
@@ -145,8 +149,8 @@ Blockly.FieldImage.prototype.maybeAddClickHandler_ = function() {
  *     link to for its tooltip.
  */
 Blockly.FieldImage.prototype.setTooltip = function(newTip) {
-  this.imageElement_.tooltip = newTip;
-};
+  this.imageElement_.tooltip = newTip
+}
 
 /**
  * Get the source URL of this image.
@@ -154,8 +158,8 @@ Blockly.FieldImage.prototype.setTooltip = function(newTip) {
  * @override
  */
 Blockly.FieldImage.prototype.getValue = function() {
-  return this.src_;
-};
+  return this.src_
+}
 
 /**
  * Set the source URL of this image.
@@ -165,14 +169,17 @@ Blockly.FieldImage.prototype.getValue = function() {
 Blockly.FieldImage.prototype.setValue = function(src) {
   if (src === null) {
     // No change if null.
-    return;
+    return
   }
-  this.src_ = src;
+  this.src_ = src
   if (this.imageElement_) {
-    this.imageElement_.setAttributeNS('http://www.w3.org/1999/xlink',
-        'xlink:href', src || '');
+    this.imageElement_.setAttributeNS(
+      "http://www.w3.org/1999/xlink",
+      "xlink:href",
+      src || ""
+    )
   }
-};
+}
 
 /**
  * Set the alt text of this image.
@@ -182,10 +189,10 @@ Blockly.FieldImage.prototype.setValue = function(src) {
 Blockly.FieldImage.prototype.setText = function(alt) {
   if (alt === null) {
     // No change if null.
-    return;
+    return
   }
-  this.text_ = alt;
-};
+  this.text_ = alt
+}
 
 /**
  * Images are fixed width, no need to render.
@@ -193,14 +200,14 @@ Blockly.FieldImage.prototype.setText = function(alt) {
  */
 Blockly.FieldImage.prototype.render_ = function() {
   // NOP
-};
+}
 
 /**
  * Images are fixed width, no need to render even if forced.
  */
 Blockly.FieldImage.prototype.forceRerender = function() {
   // NOP
-};
+}
 
 /**
  * Images are fixed width, no need to update.
@@ -208,7 +215,7 @@ Blockly.FieldImage.prototype.forceRerender = function() {
  */
 Blockly.FieldImage.prototype.updateWidth = function() {
   // NOP
-};
+}
 
 /**
  * If field click is called, and click handler defined,
@@ -216,8 +223,8 @@ Blockly.FieldImage.prototype.updateWidth = function() {
  */
 Blockly.FieldImage.prototype.showEditor_ = function() {
   if (this.clickHandler_) {
-    this.clickHandler_(this);
+    this.clickHandler_(this)
   }
-};
+}
 
-Blockly.Field.register('field_image', Blockly.FieldImage);
+Blockly.Field.register("field_image", Blockly.FieldImage)

@@ -22,12 +22,11 @@
  * @fileoverview Methods for dragging a flyout visually.
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.FlyoutDragger');
+goog.provide("Blockly.FlyoutDragger")
 
-goog.require('Blockly.WorkspaceDragger');
-
+goog.require("Blockly.WorkspaceDragger")
 
 /**
  * Class for a flyout dragger.  It moves a flyout workspace around when it is
@@ -39,8 +38,10 @@ goog.require('Blockly.WorkspaceDragger');
  * @constructor
  */
 Blockly.FlyoutDragger = function(flyout) {
-  Blockly.FlyoutDragger.superClass_.constructor.call(this,
-      flyout.getWorkspace());
+  Blockly.FlyoutDragger.superClass_.constructor.call(
+    this,
+    flyout.getWorkspace()
+  )
 
   /**
    * The scrollbar to update to move the flyout.
@@ -49,7 +50,7 @@ Blockly.FlyoutDragger = function(flyout) {
    * @type {!Blockly.Scrollbar}
    * @private
    */
-  this.scrollbar_ = flyout.scrollbar_;
+  this.scrollbar_ = flyout.scrollbar_
 
   /**
    * Whether the flyout scrolls horizontally.  If false, the flyout scrolls
@@ -57,9 +58,9 @@ Blockly.FlyoutDragger = function(flyout) {
    * @type {boolean}
    * @private
    */
-  this.horizontalLayout_ = flyout.horizontalLayout_;
-};
-goog.inherits(Blockly.FlyoutDragger, Blockly.WorkspaceDragger);
+  this.horizontalLayout_ = flyout.horizontalLayout_
+}
+goog.inherits(Blockly.FlyoutDragger, Blockly.WorkspaceDragger)
 
 /**
  * Move the appropriate scrollbar to drag the flyout.
@@ -73,8 +74,8 @@ goog.inherits(Blockly.FlyoutDragger, Blockly.WorkspaceDragger);
 Blockly.FlyoutDragger.prototype.updateScroll_ = function(x, y) {
   // Move the scrollbar and the flyout will scroll automatically.
   if (this.horizontalLayout_) {
-    this.scrollbar_.set(x);
+    this.scrollbar_.set(x)
   } else {
-    this.scrollbar_.set(y);
+    this.scrollbar_.set(y)
   }
-};
+}

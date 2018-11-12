@@ -18,9 +18,7 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.callback.Counter');
-
-
+goog.provide("goog.dom.pattern.callback.Counter")
 
 /**
  * Callback class for counting matches.
@@ -33,16 +31,15 @@ goog.dom.pattern.callback.Counter = function() {
    *
    * @type {number}
    */
-  this.count = 0;
+  this.count = 0
 
   /**
    * The callback function.  Suitable as a callback for
    * {@link goog.dom.pattern.Matcher}.
    * @private {Function}
    */
-  this.callback_ = null;
-};
-
+  this.callback_ = null
+}
 
 /**
  * Get a bound callback function that is suitable as a callback for
@@ -53,17 +50,16 @@ goog.dom.pattern.callback.Counter = function() {
 goog.dom.pattern.callback.Counter.prototype.getCallback = function() {
   if (!this.callback_) {
     this.callback_ = goog.bind(function() {
-      this.count++;
-      return false;
-    }, this);
+      this.count++
+      return false
+    }, this)
   }
-  return this.callback_;
-};
-
+  return this.callback_
+}
 
 /**
  * Reset the counter.
  */
 goog.dom.pattern.callback.Counter.prototype.reset = function() {
-  this.count = 0;
-};
+  this.count = 0
+}

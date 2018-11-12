@@ -18,16 +18,14 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarRenderer');
+goog.provide("goog.ui.ToolbarRenderer")
 
-goog.require('goog.a11y.aria.Role');
-goog.require('goog.dom.TagName');
-goog.require('goog.ui.Container');
-goog.require('goog.ui.ContainerRenderer');
-goog.require('goog.ui.Separator');
-goog.require('goog.ui.ToolbarSeparatorRenderer');
-
-
+goog.require("goog.a11y.aria.Role")
+goog.require("goog.dom.TagName")
+goog.require("goog.ui.Container")
+goog.require("goog.ui.ContainerRenderer")
+goog.require("goog.ui.Separator")
+goog.require("goog.ui.ToolbarSeparatorRenderer")
 
 /**
  * Default renderer for {@link goog.ui.Toolbar}s, based on {@link
@@ -36,19 +34,17 @@ goog.require('goog.ui.ToolbarSeparatorRenderer');
  * @extends {goog.ui.ContainerRenderer}
  */
 goog.ui.ToolbarRenderer = function() {
-  goog.ui.ContainerRenderer.call(this, goog.a11y.aria.Role.TOOLBAR);
-};
-goog.inherits(goog.ui.ToolbarRenderer, goog.ui.ContainerRenderer);
-goog.addSingletonGetter(goog.ui.ToolbarRenderer);
-
+  goog.ui.ContainerRenderer.call(this, goog.a11y.aria.Role.TOOLBAR)
+}
+goog.inherits(goog.ui.ToolbarRenderer, goog.ui.ContainerRenderer)
+goog.addSingletonGetter(goog.ui.ToolbarRenderer)
 
 /**
  * Default CSS class to be applied to the root element of toolbars rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.ToolbarRenderer.CSS_CLASS = goog.getCssName('goog-toolbar');
-
+goog.ui.ToolbarRenderer.CSS_CLASS = goog.getCssName("goog-toolbar")
 
 /**
  * Inspects the element, and creates an instance of {@link goog.ui.Control} or
@@ -60,12 +56,13 @@ goog.ui.ToolbarRenderer.CSS_CLASS = goog.getCssName('goog-toolbar');
  * @override
  */
 goog.ui.ToolbarRenderer.prototype.getDecoratorForChild = function(element) {
-  return element.tagName == goog.dom.TagName.HR ?
-      new goog.ui.Separator(goog.ui.ToolbarSeparatorRenderer.getInstance()) :
-      goog.ui.ToolbarRenderer.superClass_.getDecoratorForChild.call(
-          this, element);
-};
-
+  return element.tagName == goog.dom.TagName.HR
+    ? new goog.ui.Separator(goog.ui.ToolbarSeparatorRenderer.getInstance())
+    : goog.ui.ToolbarRenderer.superClass_.getDecoratorForChild.call(
+        this,
+        element
+      )
+}
 
 /**
  * Returns the CSS class to be applied to the root element of containers
@@ -74,9 +71,8 @@ goog.ui.ToolbarRenderer.prototype.getDecoratorForChild = function(element) {
  * @override
  */
 goog.ui.ToolbarRenderer.prototype.getCssClass = function() {
-  return goog.ui.ToolbarRenderer.CSS_CLASS;
-};
-
+  return goog.ui.ToolbarRenderer.CSS_CLASS
+}
 
 /**
  * Returns the default orientation of containers rendered or decorated by this
@@ -86,5 +82,5 @@ goog.ui.ToolbarRenderer.prototype.getCssClass = function() {
  * @override
  */
 goog.ui.ToolbarRenderer.prototype.getDefaultOrientation = function() {
-  return goog.ui.Container.Orientation.HORIZONTAL;
-};
+  return goog.ui.Container.Orientation.HORIZONTAL
+}

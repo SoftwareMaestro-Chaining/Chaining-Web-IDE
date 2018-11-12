@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.userAgentQuirksTest');
-goog.setTestOnly('goog.userAgentQuirksTest');
+goog.provide("goog.userAgentQuirksTest")
+goog.setTestOnly("goog.userAgentQuirksTest")
 
-goog.require('goog.testing.jsunit');
-goog.require('goog.userAgent');
+goog.require("goog.testing.jsunit")
+goog.require("goog.userAgent")
 
 function testGetDocumentModeInQuirksMode() {
   // This test file is forcing quirks mode.
-  var expected = goog.userAgent.IE ? 5 : undefined;
-  assertEquals(expected, goog.userAgent.DOCUMENT_MODE);
+  var expected = goog.userAgent.IE ? 5 : undefined
+  assertEquals(expected, goog.userAgent.DOCUMENT_MODE)
 }

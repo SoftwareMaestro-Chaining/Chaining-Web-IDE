@@ -22,20 +22,19 @@
  * @fileoverview Empty name space for the Message singleton.
  * @author scr@google.com (Sheridan Rawlins)
  */
-'use strict';
+"use strict"
 
 /**
  * Name space for the Msg singleton.
  * Msg gets populated in the message files.
  */
-goog.provide('Blockly.Msg');
-
+goog.provide("Blockly.Msg")
 
 /**
  * Back up original getMsg function.
  * @type {!Function}
  */
-goog.getMsgOrig = goog.getMsg;
+goog.getMsgOrig = goog.getMsg
 
 /**
  * Gets a localized message.
@@ -47,16 +46,16 @@ goog.getMsgOrig = goog.getMsg;
  * @suppress {duplicate}
  */
 goog.getMsg = function(str, opt_values) {
-  var key = goog.getMsg.blocklyMsgMap[str];
+  var key = goog.getMsg.blocklyMsgMap[str]
   if (key) {
-    str = Blockly.Msg[key];
+    str = Blockly.Msg[key]
   }
-  return goog.getMsgOrig(str, opt_values);
-};
+  return goog.getMsgOrig(str, opt_values)
+}
 
 /**
  * Mapping of Closure messages to Blockly.Msg names.
  */
 goog.getMsg.blocklyMsgMap = {
-  'Today': 'TODAY'
-};
+  Today: "TODAY"
+}

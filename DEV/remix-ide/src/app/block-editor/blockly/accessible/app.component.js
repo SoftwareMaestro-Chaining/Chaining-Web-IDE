@@ -22,34 +22,34 @@
  * @author madeeha@google.com (Madeeha Ghori)
  */
 
-goog.provide('blocklyApp.AppComponent');
+goog.provide("blocklyApp.AppComponent")
 
-goog.require('Blockly');
+goog.require("Blockly")
 
-goog.require('blocklyApp.AudioService');
-goog.require('blocklyApp.BlockConnectionService');
-goog.require('blocklyApp.BlockOptionsModalComponent');
-goog.require('blocklyApp.BlockOptionsModalService');
-goog.require('blocklyApp.KeyboardInputService');
-goog.require('blocklyApp.NotificationsService');
-goog.require('blocklyApp.SidebarComponent');
-goog.require('blocklyApp.ToolboxModalComponent');
-goog.require('blocklyApp.ToolboxModalService');
-goog.require('blocklyApp.TranslatePipe');
-goog.require('blocklyApp.TreeService');
-goog.require('blocklyApp.UtilsService');
-goog.require('blocklyApp.VariableAddModalComponent');
-goog.require('blocklyApp.VariableModalService');
-goog.require('blocklyApp.VariableRenameModalComponent');
-goog.require('blocklyApp.VariableRemoveModalComponent');
-goog.require('blocklyApp.WorkspaceComponent');
+goog.require("blocklyApp.AudioService")
+goog.require("blocklyApp.BlockConnectionService")
+goog.require("blocklyApp.BlockOptionsModalComponent")
+goog.require("blocklyApp.BlockOptionsModalService")
+goog.require("blocklyApp.KeyboardInputService")
+goog.require("blocklyApp.NotificationsService")
+goog.require("blocklyApp.SidebarComponent")
+goog.require("blocklyApp.ToolboxModalComponent")
+goog.require("blocklyApp.ToolboxModalService")
+goog.require("blocklyApp.TranslatePipe")
+goog.require("blocklyApp.TreeService")
+goog.require("blocklyApp.UtilsService")
+goog.require("blocklyApp.VariableAddModalComponent")
+goog.require("blocklyApp.VariableModalService")
+goog.require("blocklyApp.VariableRenameModalComponent")
+goog.require("blocklyApp.VariableRemoveModalComponent")
+goog.require("blocklyApp.WorkspaceComponent")
 
+blocklyApp.workspace = new Blockly.Workspace()
 
-blocklyApp.workspace = new Blockly.Workspace();
-
-blocklyApp.AppComponent = ng.core.Component({
-  selector: 'blockly-app',
-  template: `
+blocklyApp.AppComponent = ng.core
+  .Component({
+    selector: "blockly-app",
+    template: `
     <blockly-workspace></blockly-workspace>
     <blockly-sidebar></blockly-sidebar>
     <!-- Warning: Hiding this when there is no content looks visually nicer,
@@ -72,38 +72,39 @@ blocklyApp.AppComponent = ng.core.Component({
       {{'WORKSPACE_BLOCK'|translate}}
     </label>
   `,
-  directives: [
-    blocklyApp.BlockOptionsModalComponent,
-    blocklyApp.SidebarComponent,
-    blocklyApp.ToolboxModalComponent,
-    blocklyApp.VariableAddModalComponent,
-    blocklyApp.VariableRenameModalComponent,
-    blocklyApp.VariableRemoveModalComponent,
-    blocklyApp.WorkspaceComponent
-  ],
-  pipes: [blocklyApp.TranslatePipe],
-  // All services are declared here, so that all components in the application
-  // use the same instance of the service.
-  // https://www.sitepoint.com/angular-2-components-providers-classes-factories-values/
-  providers: [
-    blocklyApp.AudioService,
-    blocklyApp.BlockConnectionService,
-    blocklyApp.BlockOptionsModalService,
-    blocklyApp.KeyboardInputService,
-    blocklyApp.NotificationsService,
-    blocklyApp.ToolboxModalService,
-    blocklyApp.TreeService,
-    blocklyApp.UtilsService,
-    blocklyApp.VariableModalService
-  ]
-})
-.Class({
-  constructor: [
-    blocklyApp.NotificationsService, function(notificationsService) {
-      this.notificationsService = notificationsService;
+    directives: [
+      blocklyApp.BlockOptionsModalComponent,
+      blocklyApp.SidebarComponent,
+      blocklyApp.ToolboxModalComponent,
+      blocklyApp.VariableAddModalComponent,
+      blocklyApp.VariableRenameModalComponent,
+      blocklyApp.VariableRemoveModalComponent,
+      blocklyApp.WorkspaceComponent
+    ],
+    pipes: [blocklyApp.TranslatePipe],
+    // All services are declared here, so that all components in the application
+    // use the same instance of the service.
+    // https://www.sitepoint.com/angular-2-components-providers-classes-factories-values/
+    providers: [
+      blocklyApp.AudioService,
+      blocklyApp.BlockConnectionService,
+      blocklyApp.BlockOptionsModalService,
+      blocklyApp.KeyboardInputService,
+      blocklyApp.NotificationsService,
+      blocklyApp.ToolboxModalService,
+      blocklyApp.TreeService,
+      blocklyApp.UtilsService,
+      blocklyApp.VariableModalService
+    ]
+  })
+  .Class({
+    constructor: [
+      blocklyApp.NotificationsService,
+      function(notificationsService) {
+        this.notificationsService = notificationsService
+      }
+    ],
+    getAriaLiveReadout: function() {
+      return this.notificationsService.getDisplayedMessage()
     }
-  ],
-  getAriaLiveReadout: function() {
-    return this.notificationsService.getDisplayedMessage();
-  }
-});
+  })

@@ -18,32 +18,27 @@
  * @author arv@google.com (Erik Arvidsson)
  */
 
+goog.provide("goog.userAgent.jscript")
 
-goog.provide('goog.userAgent.jscript');
-
-goog.require('goog.string');
-
+goog.require("goog.string")
 
 /**
  * @define {boolean} True if it is known at compile time that the runtime
  *     environment will not be using JScript.
  */
-goog.define('goog.userAgent.jscript.ASSUME_NO_JSCRIPT', false);
-
+goog.define("goog.userAgent.jscript.ASSUME_NO_JSCRIPT", false)
 
 /**
  * Whether we detect that the user agent is using Microsoft JScript.
  * @type {boolean}
  */
-goog.userAgent.jscript.HAS_JSCRIPT = false;
-
+goog.userAgent.jscript.HAS_JSCRIPT = false
 
 /**
  * The installed version of JScript.
  * @type {string}
  */
-goog.userAgent.jscript.VERSION = '0';
-
+goog.userAgent.jscript.VERSION = "0"
 
 /**
  * Initializer for goog.userAgent.jscript.  Detects if the user agent is using
@@ -54,18 +49,21 @@ goog.userAgent.jscript.VERSION = '0';
  * @package
  */
 goog.userAgent.jscript.init = function() {
-  var hasScriptEngine = 'ScriptEngine' in goog.global;
+  var hasScriptEngine = "ScriptEngine" in goog.global
   goog.userAgent.jscript.HAS_JSCRIPT =
-      hasScriptEngine && goog.global['ScriptEngine']() == 'JScript';
+    hasScriptEngine && goog.global["ScriptEngine"]() == "JScript"
   if (goog.userAgent.jscript.HAS_JSCRIPT) {
-    goog.userAgent.jscript.VERSION = goog.global['ScriptEngineMajorVersion']() +
-        '.' + goog.global['ScriptEngineMinorVersion']() + '.' +
-        goog.global['ScriptEngineBuildVersion']();
+    goog.userAgent.jscript.VERSION =
+      goog.global["ScriptEngineMajorVersion"]() +
+      "." +
+      goog.global["ScriptEngineMinorVersion"]() +
+      "." +
+      goog.global["ScriptEngineBuildVersion"]()
   }
-};
+}
 
 if (!goog.userAgent.jscript.ASSUME_NO_JSCRIPT) {
-  goog.userAgent.jscript.init();
+  goog.userAgent.jscript.init()
 }
 
 /**
@@ -76,6 +74,7 @@ if (!goog.userAgent.jscript.ASSUME_NO_JSCRIPT) {
  *     newer than the given version.
  */
 goog.userAgent.jscript.isVersion = function(version) {
-  return goog.string.compareVersions(goog.userAgent.jscript.VERSION, version) >=
-      0;
-};
+  return (
+    goog.string.compareVersions(goog.userAgent.jscript.VERSION, version) >= 0
+  )
+}

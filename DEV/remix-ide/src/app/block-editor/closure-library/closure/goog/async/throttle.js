@@ -18,13 +18,11 @@
  * @see ../demos/timers.html
  */
 
-goog.provide('goog.Throttle');
-goog.provide('goog.async.Throttle');
+goog.provide("goog.Throttle")
+goog.provide("goog.async.Throttle")
 
-goog.require('goog.Disposable');
-goog.require('goog.Timer');
-
-
+goog.require("goog.Disposable")
+goog.require("goog.Timer")
 
 /**
  * Throttle will perform an action that is passed in no more than once
@@ -43,7 +41,7 @@ goog.require('goog.Timer');
  * @template T
  */
 goog.async.Throttle = function(listener, interval, opt_handler) {
-  goog.async.Throttle.base(this, 'constructor');
+  goog.async.Throttle.base(this, "constructor")
 
   /**
    * Function to callback
@@ -51,31 +49,29 @@ goog.async.Throttle = function(listener, interval, opt_handler) {
    * @private
    */
   this.listener_ =
-      opt_handler != null ? goog.bind(listener, opt_handler) : listener;
+    opt_handler != null ? goog.bind(listener, opt_handler) : listener
 
   /**
    * Interval for the throttle time
    * @type {number}
    * @private
    */
-  this.interval_ = interval;
+  this.interval_ = interval
 
   /**
    * Cached callback function invoked after the throttle timeout completes
    * @type {Function}
    * @private
    */
-  this.callback_ = goog.bind(this.onTimer_, this);
+  this.callback_ = goog.bind(this.onTimer_, this)
 
   /**
    * The last arguments passed into `fire`.
    * @private {!IArrayLike}
    */
-  this.args_ = [];
-};
-goog.inherits(goog.async.Throttle, goog.Disposable);
-
-
+  this.args_ = []
+}
+goog.inherits(goog.async.Throttle, goog.Disposable)
 
 /**
  * A deprecated alias.
@@ -83,16 +79,14 @@ goog.inherits(goog.async.Throttle, goog.Disposable);
  * @constructor
  * @final
  */
-goog.Throttle = goog.async.Throttle;
-
+goog.Throttle = goog.async.Throttle
 
 /**
  * Indicates that the action is pending and needs to be fired.
  * @type {boolean}
  * @private
  */
-goog.async.Throttle.prototype.shouldFire_ = false;
-
+goog.async.Throttle.prototype.shouldFire_ = false
 
 /**
  * Indicates the count of nested pauses currently in effect on the throttle.
@@ -101,16 +95,14 @@ goog.async.Throttle.prototype.shouldFire_ = false;
  * @type {number}
  * @private
  */
-goog.async.Throttle.prototype.pauseCount_ = 0;
-
+goog.async.Throttle.prototype.pauseCount_ = 0
 
 /**
  * Timer for scheduling the next callback
  * @type {?number}
  * @private
  */
-goog.async.Throttle.prototype.timer_ = null;
-
+goog.async.Throttle.prototype.timer_ = null
 
 /**
  * Notifies the throttle that the action has happened. It will throttle the call
@@ -120,14 +112,13 @@ goog.async.Throttle.prototype.timer_ = null;
  * @param {...?} var_args Arguments to pass on to the throttled function.
  */
 goog.async.Throttle.prototype.fire = function(var_args) {
-  this.args_ = arguments;
+  this.args_ = arguments
   if (!this.timer_ && !this.pauseCount_) {
-    this.doAction_();
+    this.doAction_()
   } else {
-    this.shouldFire_ = true;
+    this.shouldFire_ = true
   }
-};
-
+}
 
 /**
  * Cancels any pending action callback. The throttle can be restarted by
@@ -135,22 +126,20 @@ goog.async.Throttle.prototype.fire = function(var_args) {
  */
 goog.async.Throttle.prototype.stop = function() {
   if (this.timer_) {
-    goog.Timer.clear(this.timer_);
-    this.timer_ = null;
-    this.shouldFire_ = false;
-    this.args_ = [];
+    goog.Timer.clear(this.timer_)
+    this.timer_ = null
+    this.shouldFire_ = false
+    this.args_ = []
   }
-};
-
+}
 
 /**
  * Pauses the throttle.  All pending and future action callbacks will be
  * delayed until the throttle is resumed.  Pauses can be nested.
  */
 goog.async.Throttle.prototype.pause = function() {
-  this.pauseCount_++;
-};
-
+  this.pauseCount_++
+}
 
 /**
  * Resumes the throttle.  If doing so drops the pausing count to zero, pending
@@ -159,40 +148,37 @@ goog.async.Throttle.prototype.pause = function() {
  * will be executed as normal.
  */
 goog.async.Throttle.prototype.resume = function() {
-  this.pauseCount_--;
+  this.pauseCount_--
   if (!this.pauseCount_ && this.shouldFire_ && !this.timer_) {
-    this.shouldFire_ = false;
-    this.doAction_();
+    this.shouldFire_ = false
+    this.doAction_()
   }
-};
-
+}
 
 /** @override */
 goog.async.Throttle.prototype.disposeInternal = function() {
-  goog.async.Throttle.base(this, 'disposeInternal');
-  this.stop();
-};
-
+  goog.async.Throttle.base(this, "disposeInternal")
+  this.stop()
+}
 
 /**
  * Handler for the timer to fire the throttle
  * @private
  */
 goog.async.Throttle.prototype.onTimer_ = function() {
-  this.timer_ = null;
+  this.timer_ = null
 
   if (this.shouldFire_ && !this.pauseCount_) {
-    this.shouldFire_ = false;
-    this.doAction_();
+    this.shouldFire_ = false
+    this.doAction_()
   }
-};
-
+}
 
 /**
  * Calls the callback
  * @private
  */
 goog.async.Throttle.prototype.doAction_ = function() {
-  this.timer_ = goog.Timer.callOnce(this.callback_, this.interval_);
-  this.listener_.apply(null, this.args_);
-};
+  this.timer_ = goog.Timer.callOnce(this.callback_, this.interval_)
+  this.listener_.apply(null, this.args_)
+}

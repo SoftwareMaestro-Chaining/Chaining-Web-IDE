@@ -20,12 +20,10 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.NodeOffset');
+goog.provide("goog.dom.NodeOffset")
 
-goog.require('goog.Disposable');
-goog.require('goog.dom.TagName');
-
-
+goog.require("goog.Disposable")
+goog.require("goog.dom.TagName")
 
 /**
  * Object to store the offset from one node to another in a way that works on
@@ -37,52 +35,50 @@ goog.require('goog.dom.TagName');
  * @final
  */
 goog.dom.NodeOffset = function(node, baseNode) {
-  goog.Disposable.call(this);
+  goog.Disposable.call(this)
 
   /**
    * A stack of childNode offsets.
    * @type {Array<number>}
    * @private
    */
-  this.offsetStack_ = [];
+  this.offsetStack_ = []
 
   /**
    * A stack of childNode names.
    * @type {Array<string>}
    * @private
    */
-  this.nameStack_ = [];
+  this.nameStack_ = []
 
   while (node && node.nodeName != goog.dom.TagName.BODY && node != baseNode) {
     // Compute the sibling offset.
-    var siblingOffset = 0;
-    var sib = node.previousSibling;
+    var siblingOffset = 0
+    var sib = node.previousSibling
     while (sib) {
-      sib = sib.previousSibling;
-      ++siblingOffset;
+      sib = sib.previousSibling
+      ++siblingOffset
     }
-    this.offsetStack_.unshift(siblingOffset);
-    this.nameStack_.unshift(node.nodeName);
+    this.offsetStack_.unshift(siblingOffset)
+    this.nameStack_.unshift(node.nodeName)
 
-    node = node.parentNode;
+    node = node.parentNode
   }
-};
-goog.inherits(goog.dom.NodeOffset, goog.Disposable);
-
+}
+goog.inherits(goog.dom.NodeOffset, goog.Disposable)
 
 /**
  * @return {string} A string representation of this object.
  * @override
  */
 goog.dom.NodeOffset.prototype.toString = function() {
-  var strs = [];
-  var name;
-  for (var i = 0; name = this.nameStack_[i]; i++) {
-    strs.push(this.offsetStack_[i] + ',' + name);
+  var strs = []
+  var name
+  for (var i = 0; (name = this.nameStack_[i]); i++) {
+    strs.push(this.offsetStack_[i] + "," + name)
   }
-  return strs.join('\n');
-};
-
+  return strs.join("\n")
+}
 
 /**
  * Walk the dom and find the node relative to baseNode.  Returns null on
@@ -93,22 +89,21 @@ goog.dom.NodeOffset.prototype.toString = function() {
  * @return {Node} The node relative to baseNode, or null on failure.
  */
 goog.dom.NodeOffset.prototype.findTargetNode = function(baseNode) {
-  var name;
-  var curNode = baseNode;
-  for (var i = 0; name = this.nameStack_[i]; ++i) {
-    curNode = curNode.childNodes[this.offsetStack_[i]];
+  var name
+  var curNode = baseNode
+  for (var i = 0; (name = this.nameStack_[i]); ++i) {
+    curNode = curNode.childNodes[this.offsetStack_[i]]
 
     // Sanity check and make sure the element names match.
     if (!curNode || curNode.nodeName != name) {
-      return null;
+      return null
     }
   }
-  return curNode;
-};
-
+  return curNode
+}
 
 /** @override */
 goog.dom.NodeOffset.prototype.disposeInternal = function() {
-  delete this.offsetStack_;
-  delete this.nameStack_;
-};
+  delete this.offsetStack_
+  delete this.nameStack_
+}

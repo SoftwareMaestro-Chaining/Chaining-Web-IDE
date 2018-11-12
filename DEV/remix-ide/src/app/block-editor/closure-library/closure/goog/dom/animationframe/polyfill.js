@@ -18,44 +18,47 @@
  * Code based on https://gist.github.com/paulirish/1579671
  */
 
-goog.provide('goog.dom.animationFrame.polyfill');
-
+goog.provide("goog.dom.animationFrame.polyfill")
 
 /**
  * @define {boolean} If true, will install the requestAnimationFrame polyfill.
  */
-goog.define('goog.dom.animationFrame.polyfill.ENABLED', true);
-
+goog.define("goog.dom.animationFrame.polyfill.ENABLED", true)
 
 /**
  * Installs the requestAnimationFrame (and cancelAnimationFrame) polyfill.
  */
 goog.dom.animationFrame.polyfill.install = function() {
   if (goog.dom.animationFrame.polyfill.ENABLED) {
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for (var i = 0, v; v = vendors[i] && !goog.global.requestAnimationFrame;
-         ++i) {
+    var vendors = ["ms", "moz", "webkit", "o"]
+    for (
+      var i = 0, v;
+      (v = vendors[i] && !goog.global.requestAnimationFrame);
+      ++i
+    ) {
       goog.global.requestAnimationFrame =
-          goog.global[v + 'RequestAnimationFrame'];
+        goog.global[v + "RequestAnimationFrame"]
       goog.global.cancelAnimationFrame =
-          goog.global[v + 'CancelAnimationFrame'] ||
-          goog.global[v + 'CancelRequestAnimationFrame'];
+        goog.global[v + "CancelAnimationFrame"] ||
+        goog.global[v + "CancelRequestAnimationFrame"]
     }
 
     if (!goog.global.requestAnimationFrame) {
-      var lastTime = 0;
+      var lastTime = 0
       goog.global.requestAnimationFrame = function(callback) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        lastTime = currTime + timeToCall;
+        var currTime = new Date().getTime()
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime))
+        lastTime = currTime + timeToCall
         return goog.global.setTimeout(function() {
-          callback(currTime + timeToCall);
-        }, timeToCall);
-      };
+          callback(currTime + timeToCall)
+        }, timeToCall)
+      }
 
       if (!goog.global.cancelAnimationFrame) {
-        goog.global.cancelAnimationFrame = function(id) { clearTimeout(id); };
+        goog.global.cancelAnimationFrame = function(id) {
+          clearTimeout(id)
+        }
       }
     }
   }
-};
+}

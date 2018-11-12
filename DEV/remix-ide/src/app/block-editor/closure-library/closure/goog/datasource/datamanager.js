@@ -25,17 +25,15 @@
  * Prepends '$' to top level data names in path to denote they are root object
  *
  */
-goog.provide('goog.ds.DataManager');
+goog.provide("goog.ds.DataManager")
 
-goog.require('goog.ds.BasicNodeList');
-goog.require('goog.ds.DataNode');
-goog.require('goog.ds.Expr');
-goog.require('goog.object');
-goog.require('goog.string');
-goog.require('goog.structs');
-goog.require('goog.structs.Map');
-
-
+goog.require("goog.ds.BasicNodeList")
+goog.require("goog.ds.DataNode")
+goog.require("goog.ds.Expr")
+goog.require("goog.object")
+goog.require("goog.string")
+goog.require("goog.structs")
+goog.require("goog.structs.Map")
 
 /**
  * Create a DataManger
@@ -44,23 +42,21 @@ goog.require('goog.structs.Map');
  * @final
  */
 goog.ds.DataManager = function() {
-  this.dataSources_ = new goog.ds.BasicNodeList();
-  this.autoloads_ = new goog.structs.Map();
-  this.listenerMap_ = {};
-  this.listenersByFunction_ = {};
-  this.aliases_ = {};
-  this.eventCount_ = 0;
-  this.indexedListenersByFunction_ = {};
-};
-
+  this.dataSources_ = new goog.ds.BasicNodeList()
+  this.autoloads_ = new goog.structs.Map()
+  this.listenerMap_ = {}
+  this.listenersByFunction_ = {}
+  this.aliases_ = {}
+  this.eventCount_ = 0
+  this.indexedListenersByFunction_ = {}
+}
 
 /**
  * Global instance
  * @private
  */
-goog.ds.DataManager.instance_ = null;
-goog.inherits(goog.ds.DataManager, goog.ds.DataNode);
-
+goog.ds.DataManager.instance_ = null
+goog.inherits(goog.ds.DataManager, goog.ds.DataNode)
 
 /**
  * Get the global instance
@@ -68,19 +64,17 @@ goog.inherits(goog.ds.DataManager, goog.ds.DataNode);
  */
 goog.ds.DataManager.getInstance = function() {
   if (!goog.ds.DataManager.instance_) {
-    goog.ds.DataManager.instance_ = new goog.ds.DataManager();
+    goog.ds.DataManager.instance_ = new goog.ds.DataManager()
   }
-  return goog.ds.DataManager.instance_;
-};
-
+  return goog.ds.DataManager.instance_
+}
 
 /**
  * Clears the global instance (for unit tests to reset state).
  */
 goog.ds.DataManager.clearInstance = function() {
-  goog.ds.DataManager.instance_ = null;
-};
-
+  goog.ds.DataManager.instance_ = null
+}
 
 /**
  * Add a data source
@@ -91,17 +85,19 @@ goog.ds.DataManager.clearInstance = function() {
  *   from the datasource.
  */
 goog.ds.DataManager.prototype.addDataSource = function(
-    ds, opt_autoload, opt_name) {
-  var autoload = !!opt_autoload;
-  var name = opt_name || ds.getDataName();
-  if (!goog.string.startsWith(name, '$')) {
-    name = '$' + name;
+  ds,
+  opt_autoload,
+  opt_name
+) {
+  var autoload = !!opt_autoload
+  var name = opt_name || ds.getDataName()
+  if (!goog.string.startsWith(name, "$")) {
+    name = "$" + name
   }
-  ds.setDataName(name);
-  this.dataSources_.add(ds);
-  this.autoloads_.set(name, autoload);
-};
-
+  ds.setDataName(name)
+  this.dataSources_.add(ds)
+  this.autoloads_.set(name, autoload)
+}
 
 /**
  * Create an alias for a data path, very similar to assigning a variable.
@@ -115,17 +111,16 @@ goog.ds.DataManager.prototype.addDataSource = function(
  */
 goog.ds.DataManager.prototype.aliasDataSource = function(name, dataPath) {
   if (!this.aliasListener_) {
-    this.aliasListener_ = goog.bind(this.listenForAlias_, this);
+    this.aliasListener_ = goog.bind(this.listenForAlias_, this)
   }
   if (this.aliases_[name]) {
-    var oldPath = this.aliases_[name].getSource();
-    this.removeListeners(this.aliasListener_, oldPath + '/...', name);
+    var oldPath = this.aliases_[name].getSource()
+    this.removeListeners(this.aliasListener_, oldPath + "/...", name)
   }
-  this.aliases_[name] = goog.ds.Expr.create(dataPath);
-  this.addListener(this.aliasListener_, dataPath + '/...', name);
-  this.fireDataChange(name);
-};
-
+  this.aliases_[name] = goog.ds.Expr.create(dataPath)
+  this.addListener(this.aliasListener_, dataPath + "/...", name)
+  this.fireDataChange(name)
+}
 
 /**
  * Listener function for matches of paths that have been aliased.
@@ -136,20 +131,19 @@ goog.ds.DataManager.prototype.aliasDataSource = function(name, dataPath) {
  * @private
  */
 goog.ds.DataManager.prototype.listenForAlias_ = function(dataPath, name) {
-  var aliasedExpr = this.aliases_[name];
+  var aliasedExpr = this.aliases_[name]
 
   if (aliasedExpr) {
     // If it's a subpath, appends the subpath to the alias name
     // otherwise just fires on the top level alias
-    var aliasedPath = aliasedExpr.getSource();
+    var aliasedPath = aliasedExpr.getSource()
     if (dataPath.indexOf(aliasedPath) == 0) {
-      this.fireDataChange(name + dataPath.substring(aliasedPath.length));
+      this.fireDataChange(name + dataPath.substring(aliasedPath.length))
     } else {
-      this.fireDataChange(name);
+      this.fireDataChange(name)
     }
   }
-};
-
+}
 
 /**
  * Gets a named child node of the current node.
@@ -160,12 +154,11 @@ goog.ds.DataManager.prototype.listenForAlias_ = function(dataPath, name) {
  */
 goog.ds.DataManager.prototype.getDataSource = function(name) {
   if (this.aliases_[name]) {
-    return this.aliases_[name].getNode();
+    return this.aliases_[name].getNode()
   } else {
-    return this.dataSources_.get(name);
+    return this.dataSources_.get(name)
   }
-};
-
+}
 
 /**
  * Get the value of the node
@@ -173,26 +166,24 @@ goog.ds.DataManager.prototype.getDataSource = function(name) {
  * @override
  */
 goog.ds.DataManager.prototype.get = function() {
-  return this.dataSources_;
-};
-
+  return this.dataSources_
+}
 
 /** @override */
 goog.ds.DataManager.prototype.set = function(value) {
-  throw new Error('Can\'t set on DataManager');
-};
-
+  throw new Error("Can't set on DataManager")
+}
 
 /** @override */
 goog.ds.DataManager.prototype.getChildNodes = function(opt_selector) {
   if (opt_selector) {
-    return new goog.ds.BasicNodeList(
-        [this.getChildNode(/** @type {string} */ (opt_selector))]);
+    return new goog.ds.BasicNodeList([
+      this.getChildNode(/** @type {string} */ (opt_selector))
+    ])
   } else {
-    return this.dataSources_;
+    return this.dataSources_
   }
-};
-
+}
 
 /**
  * Gets a named child node of the current node
@@ -202,16 +193,14 @@ goog.ds.DataManager.prototype.getChildNodes = function(opt_selector) {
  * @override
  */
 goog.ds.DataManager.prototype.getChildNode = function(name) {
-  return this.getDataSource(name);
-};
-
+  return this.getDataSource(name)
+}
 
 /** @override */
 goog.ds.DataManager.prototype.getChildNodeValue = function(name) {
-  var ds = this.getDataSource(name);
-  return ds ? ds.get() : null;
-};
-
+  var ds = this.getDataSource(name)
+  return ds ? ds.get() : null
+}
 
 /**
  * Get the name of the node relative to the parent node
@@ -219,9 +208,8 @@ goog.ds.DataManager.prototype.getChildNodeValue = function(name) {
  * @override
  */
 goog.ds.DataManager.prototype.getDataName = function() {
-  return '';
-};
-
+  return ""
+}
 
 /**
  * Gets the a qualified data path to this node
@@ -229,9 +217,8 @@ goog.ds.DataManager.prototype.getDataName = function() {
  * @override
  */
 goog.ds.DataManager.prototype.getDataPath = function() {
-  return '';
-};
-
+  return ""
+}
 
 /**
  * Load or reload the backing data for this node
@@ -239,24 +226,22 @@ goog.ds.DataManager.prototype.getDataPath = function() {
  * @override
  */
 goog.ds.DataManager.prototype.load = function() {
-  var len = this.dataSources_.getCount();
+  var len = this.dataSources_.getCount()
   for (var i = 0; i < len; i++) {
-    var ds = this.dataSources_.getByIndex(i);
-    var autoload = this.autoloads_.get(ds.getDataName());
+    var ds = this.dataSources_.getByIndex(i)
+    var autoload = this.autoloads_.get(ds.getDataName())
     if (autoload) {
-      ds.load();
+      ds.load()
     }
   }
-};
-
+}
 
 /**
  * Gets the state of the backing data for this node
  * @return {goog.ds.LoadState} The state.
  * @override
  */
-goog.ds.DataManager.prototype.getLoadState = goog.abstractMethod;
-
+goog.ds.DataManager.prototype.getLoadState = goog.abstractMethod
 
 /**
  * Whether the value of this node is a homogeneous list of data
@@ -264,18 +249,16 @@ goog.ds.DataManager.prototype.getLoadState = goog.abstractMethod;
  * @override
  */
 goog.ds.DataManager.prototype.isList = function() {
-  return false;
-};
-
+  return false
+}
 
 /**
  * Get the total count of events fired (mostly for debugging)
  * @return {number} Count of events.
  */
 goog.ds.DataManager.prototype.getEventCount = function() {
-  return this.eventCount_;
-};
-
+  return this.eventCount_
+}
 
 /**
  * Adds a listener
@@ -294,41 +277,42 @@ goog.ds.DataManager.prototype.addListener = function(fn, dataPath, opt_id) {
   // 0 means you don't fire if you are an ancestor
   // 1 means you only fire if you are parent
   // 1000 means you will fire if you are ancestor (effectively infinite)
-  var maxAncestors = 0;
-  if (goog.string.endsWith(dataPath, '/...')) {
-    maxAncestors = 1000;
-    dataPath = dataPath.substring(0, dataPath.length - 4);
-  } else if (goog.string.endsWith(dataPath, '/*')) {
-    maxAncestors = 1;
-    dataPath = dataPath.substring(0, dataPath.length - 2);
+  var maxAncestors = 0
+  if (goog.string.endsWith(dataPath, "/...")) {
+    maxAncestors = 1000
+    dataPath = dataPath.substring(0, dataPath.length - 4)
+  } else if (goog.string.endsWith(dataPath, "/*")) {
+    maxAncestors = 1
+    dataPath = dataPath.substring(0, dataPath.length - 2)
   }
 
-  opt_id = opt_id || '';
-  var key = dataPath + ':' + opt_id + ':' + goog.getUid(fn);
-  var listener = {dataPath: dataPath, id: opt_id, fn: fn};
-  var expr = goog.ds.Expr.create(dataPath);
+  opt_id = opt_id || ""
+  var key = dataPath + ":" + opt_id + ":" + goog.getUid(fn)
+  var listener = { dataPath: dataPath, id: opt_id, fn: fn }
+  var expr = goog.ds.Expr.create(dataPath)
 
-  var fnUid = goog.getUid(fn);
+  var fnUid = goog.getUid(fn)
   if (!this.listenersByFunction_[fnUid]) {
-    this.listenersByFunction_[fnUid] = {};
+    this.listenersByFunction_[fnUid] = {}
   }
-  this.listenersByFunction_[fnUid][key] = {listener: listener, items: []};
+  this.listenersByFunction_[fnUid][key] = { listener: listener, items: [] }
 
   while (expr) {
-    var listenerSpec = {listener: listener, maxAncestors: maxAncestors};
-    var matchingListeners = this.listenerMap_[expr.getSource()];
+    var listenerSpec = { listener: listener, maxAncestors: maxAncestors }
+    var matchingListeners = this.listenerMap_[expr.getSource()]
     if (matchingListeners == null) {
-      matchingListeners = {};
-      this.listenerMap_[expr.getSource()] = matchingListeners;
+      matchingListeners = {}
+      this.listenerMap_[expr.getSource()] = matchingListeners
     }
-    matchingListeners[key] = listenerSpec;
-    maxAncestors = 0;
-    expr = expr.getParent();
-    this.listenersByFunction_[fnUid][key].items.push(
-        {key: key, obj: matchingListeners});
+    matchingListeners[key] = listenerSpec
+    maxAncestors = 0
+    expr = expr.getParent()
+    this.listenersByFunction_[fnUid][key].items.push({
+      key: key,
+      obj: matchingListeners
+    })
   }
-};
-
+}
 
 /**
  * Adds an indexed listener.
@@ -347,48 +331,50 @@ goog.ds.DataManager.prototype.addListener = function(fn, dataPath, opt_id) {
  *   is matched.
  */
 goog.ds.DataManager.prototype.addIndexedListener = function(
-    fn, dataPath, opt_id) {
-  var firstStarPos = dataPath.indexOf('*');
+  fn,
+  dataPath,
+  opt_id
+) {
+  var firstStarPos = dataPath.indexOf("*")
   // Just need a regular listener
   if (firstStarPos == -1) {
-    this.addListener(fn, dataPath, opt_id);
-    return;
+    this.addListener(fn, dataPath, opt_id)
+    return
   }
 
-  var listenPath = dataPath.substring(0, firstStarPos) + '...';
+  var listenPath = dataPath.substring(0, firstStarPos) + "..."
 
   // Create regex that matches * to any non '\' character
-  var ext = '$';
-  if (goog.string.endsWith(dataPath, '/...')) {
-    dataPath = dataPath.substring(0, dataPath.length - 4);
-    ext = '';
+  var ext = "$"
+  if (goog.string.endsWith(dataPath, "/...")) {
+    dataPath = dataPath.substring(0, dataPath.length - 4)
+    ext = ""
   }
-  var regExpPath = goog.string.regExpEscape(dataPath);
-  var matchRegExp = regExpPath.replace(/\\\*/g, '([^\\\/]+)') + ext;
+  var regExpPath = goog.string.regExpEscape(dataPath)
+  var matchRegExp = regExpPath.replace(/\\\*/g, "([^\\/]+)") + ext
 
   // Matcher function applies the regex and calls back the original function
   // if the regex matches, passing in an array of the matched values
-  var matchRegExpRe = new RegExp(matchRegExp);
+  var matchRegExpRe = new RegExp(matchRegExp)
   var matcher = function(path, id) {
-    var match = matchRegExpRe.exec(path);
+    var match = matchRegExpRe.exec(path)
     if (match) {
-      match.shift();
-      fn(path, opt_id, match);
+      match.shift()
+      fn(path, opt_id, match)
     }
-  };
-  this.addListener(matcher, listenPath, opt_id);
+  }
+  this.addListener(matcher, listenPath, opt_id)
 
   // Add the indexed listener to the map so that we can remove it later.
-  var fnUid = goog.getUid(fn);
+  var fnUid = goog.getUid(fn)
   if (!this.indexedListenersByFunction_[fnUid]) {
-    this.indexedListenersByFunction_[fnUid] = {};
+    this.indexedListenersByFunction_[fnUid] = {}
   }
-  var key = dataPath + ':' + opt_id;
+  var key = dataPath + ":" + opt_id
   this.indexedListenersByFunction_[fnUid][key] = {
-    listener: {dataPath: listenPath, fn: matcher, id: opt_id}
-  };
-};
-
+    listener: { dataPath: listenPath, fn: matcher, id: opt_id }
+  }
+}
 
 /**
  * Removes indexed listeners with a given callback function, and optional
@@ -400,11 +386,18 @@ goog.ds.DataManager.prototype.addIndexedListener = function(
  *   is matched.
  */
 goog.ds.DataManager.prototype.removeIndexedListeners = function(
-    fn, opt_dataPath, opt_id) {
+  fn,
+  opt_dataPath,
+  opt_id
+) {
   this.removeListenersByFunction_(
-      this.indexedListenersByFunction_, true, fn, opt_dataPath, opt_id);
-};
-
+    this.indexedListenersByFunction_,
+    true,
+    fn,
+    opt_dataPath,
+    opt_id
+  )
+}
 
 /**
  * Removes listeners with a given callback function, and optional
@@ -416,19 +409,25 @@ goog.ds.DataManager.prototype.removeIndexedListeners = function(
  *   is matched.
  */
 goog.ds.DataManager.prototype.removeListeners = function(
-    fn, opt_dataPath, opt_id) {
-
+  fn,
+  opt_dataPath,
+  opt_id
+) {
   // Normalize data path root
-  if (opt_dataPath && goog.string.endsWith(opt_dataPath, '/...')) {
-    opt_dataPath = opt_dataPath.substring(0, opt_dataPath.length - 4);
-  } else if (opt_dataPath && goog.string.endsWith(opt_dataPath, '/*')) {
-    opt_dataPath = opt_dataPath.substring(0, opt_dataPath.length - 2);
+  if (opt_dataPath && goog.string.endsWith(opt_dataPath, "/...")) {
+    opt_dataPath = opt_dataPath.substring(0, opt_dataPath.length - 4)
+  } else if (opt_dataPath && goog.string.endsWith(opt_dataPath, "/*")) {
+    opt_dataPath = opt_dataPath.substring(0, opt_dataPath.length - 2)
   }
 
   this.removeListenersByFunction_(
-      this.listenersByFunction_, false, fn, opt_dataPath, opt_id);
-};
-
+    this.listenersByFunction_,
+    false,
+    fn,
+    opt_dataPath,
+    opt_id
+  )
+}
 
 /**
  * Removes listeners with a given callback function, and optional
@@ -445,30 +444,36 @@ goog.ds.DataManager.prototype.removeListeners = function(
  * @private
  */
 goog.ds.DataManager.prototype.removeListenersByFunction_ = function(
-    listenersByFunction, indexed, fn, opt_dataPath, opt_id) {
-  var fnUid = goog.getUid(fn);
-  var functionMatches = listenersByFunction[fnUid];
+  listenersByFunction,
+  indexed,
+  fn,
+  opt_dataPath,
+  opt_id
+) {
+  var fnUid = goog.getUid(fn)
+  var functionMatches = listenersByFunction[fnUid]
   if (functionMatches != null) {
     for (var key in functionMatches) {
-      var functionMatch = functionMatches[key];
-      var listener = functionMatch.listener;
-      if ((!opt_dataPath || opt_dataPath == listener.dataPath) &&
-          (!opt_id || opt_id == listener.id)) {
+      var functionMatch = functionMatches[key]
+      var listener = functionMatch.listener
+      if (
+        (!opt_dataPath || opt_dataPath == listener.dataPath) &&
+        (!opt_id || opt_id == listener.id)
+      ) {
         if (indexed) {
-          this.removeListeners(listener.fn, listener.dataPath, listener.id);
+          this.removeListeners(listener.fn, listener.dataPath, listener.id)
         }
         if (functionMatch.items) {
           for (var i = 0; i < functionMatch.items.length; i++) {
-            var item = functionMatch.items[i];
-            delete item.obj[item.key];
+            var item = functionMatch.items[i]
+            delete item.obj[item.key]
           }
         }
-        delete functionMatches[key];
+        delete functionMatches[key]
       }
     }
   }
-};
-
+}
 
 /**
  * Get the total number of listeners (per expression listened to, so may be
@@ -476,13 +481,12 @@ goog.ds.DataManager.prototype.removeListenersByFunction_ = function(
  * @return {number} Number of listeners.
  */
 goog.ds.DataManager.prototype.getListenerCount = function() {
-  var /** number */ count = 0;
+  var /** number */ count = 0
   goog.object.forEach(this.listenerMap_, function(matchingListeners) {
-    count += goog.structs.getCount(matchingListeners);
-  });
-  return count;
-};
-
+    count += goog.structs.getCount(matchingListeners)
+  })
+  return count
+}
 
 /**
  * Disables the sending of all data events during the execution of the given
@@ -496,17 +500,16 @@ goog.ds.DataManager.prototype.getListenerCount = function() {
  */
 goog.ds.DataManager.prototype.runWithoutFiringDataChanges = function(callback) {
   if (this.disableFiring_) {
-    throw new Error('Can not nest calls to runWithoutFiringDataChanges');
+    throw new Error("Can not nest calls to runWithoutFiringDataChanges")
   }
 
-  this.disableFiring_ = true;
+  this.disableFiring_ = true
   try {
-    callback();
+    callback()
   } finally {
-    this.disableFiring_ = false;
+    this.disableFiring_ = false
   }
-};
-
+}
 
 /**
  * Fire a data change event to all listeners
@@ -532,29 +535,29 @@ goog.ds.DataManager.prototype.runWithoutFiringDataChanges = function(callback) {
  */
 goog.ds.DataManager.prototype.fireDataChange = function(dataPath) {
   if (this.disableFiring_) {
-    return;
+    return
   }
 
-  var expr = goog.ds.Expr.create(dataPath);
-  var ancestorDepth = 0;
+  var expr = goog.ds.Expr.create(dataPath)
+  var ancestorDepth = 0
 
   // Look for listeners for expression and all its parents.
   // Parents of listener expressions are all added to the listenerMap as well,
   // so this will evaluate inner loop every time the dataPath is a child or
   // an ancestor of the original listener path
   while (expr) {
-    var matchingListeners = this.listenerMap_[expr.getSource()];
+    var matchingListeners = this.listenerMap_[expr.getSource()]
     if (matchingListeners) {
       for (var id in matchingListeners) {
-        var match = matchingListeners[id];
-        var listener = match.listener;
+        var match = matchingListeners[id]
+        var listener = match.listener
         if (ancestorDepth <= match.maxAncestors) {
-          listener.fn(dataPath, listener.id);
+          listener.fn(dataPath, listener.id)
         }
       }
     }
-    ancestorDepth++;
-    expr = expr.getParent();
+    ancestorDepth++
+    expr = expr.getParent()
   }
-  this.eventCount_++;
-};
+  this.eventCount_++
+}

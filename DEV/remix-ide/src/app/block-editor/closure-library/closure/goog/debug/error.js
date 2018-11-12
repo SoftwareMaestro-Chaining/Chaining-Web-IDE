@@ -21,9 +21,7 @@
  *
  */
 
-goog.provide('goog.debug.Error');
-
-
+goog.provide("goog.debug.Error")
 
 /**
  * Base class for custom error objects.
@@ -32,21 +30,20 @@ goog.provide('goog.debug.Error');
  * @extends {Error}
  */
 goog.debug.Error = function(opt_msg) {
-
   // Attempt to ensure there is a stack trace.
   if (Error.captureStackTrace) {
-    Error.captureStackTrace(this, goog.debug.Error);
+    Error.captureStackTrace(this, goog.debug.Error)
   } else {
-    var stack = new Error().stack;
+    var stack = new Error().stack
     if (stack) {
       /** @override */
-      this.stack = stack;
+      this.stack = stack
     }
   }
 
   if (opt_msg) {
     /** @override */
-    this.message = String(opt_msg);
+    this.message = String(opt_msg)
   }
 
   /**
@@ -56,10 +53,9 @@ goog.debug.Error = function(opt_msg) {
    * logged on the server.
    * @type {boolean}
    */
-  this.reportErrorToServer = true;
-};
-goog.inherits(goog.debug.Error, Error);
-
+  this.reportErrorToServer = true
+}
+goog.inherits(goog.debug.Error, Error)
 
 /** @override */
-goog.debug.Error.prototype.name = 'CustomError';
+goog.debug.Error.prototype.name = "CustomError"

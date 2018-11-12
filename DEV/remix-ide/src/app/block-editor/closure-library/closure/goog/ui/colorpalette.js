@@ -18,16 +18,14 @@
  *
  */
 
-goog.provide('goog.ui.ColorPalette');
+goog.provide("goog.ui.ColorPalette")
 
-goog.require('goog.array');
-goog.require('goog.color');
-goog.require('goog.dom.TagName');
-goog.require('goog.style');
-goog.require('goog.ui.Palette');
-goog.require('goog.ui.PaletteRenderer');
-
-
+goog.require("goog.array")
+goog.require("goog.color")
+goog.require("goog.dom.TagName")
+goog.require("goog.style")
+goog.require("goog.ui.Palette")
+goog.require("goog.ui.PaletteRenderer")
 
 /**
  * A color palette is a grid of color swatches that the user can highlight or
@@ -51,27 +49,28 @@ goog.ui.ColorPalette = function(opt_colors, opt_renderer, opt_domHelper) {
    * @type {Array<string>}
    * @private
    */
-  this.colors_ = opt_colors || [];
+  this.colors_ = opt_colors || []
 
   goog.ui.Palette.call(
-      this, null, opt_renderer || goog.ui.PaletteRenderer.getInstance(),
-      opt_domHelper);
+    this,
+    null,
+    opt_renderer || goog.ui.PaletteRenderer.getInstance(),
+    opt_domHelper
+  )
 
   // Set the colors separately from the super call since we need the correct
   // DomHelper to be initialized for this class.
-  this.setColors(this.colors_);
-};
-goog.inherits(goog.ui.ColorPalette, goog.ui.Palette);
-goog.tagUnsealableClass(goog.ui.ColorPalette);
-
+  this.setColors(this.colors_)
+}
+goog.inherits(goog.ui.ColorPalette, goog.ui.Palette)
+goog.tagUnsealableClass(goog.ui.ColorPalette)
 
 /**
  * Array of normalized colors. Initialized lazily as often never needed.
  * @type {?Array<string>}
  * @private
  */
-goog.ui.ColorPalette.prototype.normalizedColors_ = null;
-
+goog.ui.ColorPalette.prototype.normalizedColors_ = null
 
 /**
  * Array of labels for the colors. Will be used for the tooltips and
@@ -79,17 +78,15 @@ goog.ui.ColorPalette.prototype.normalizedColors_ = null;
  * @type {?Array<string>}
  * @private
  */
-goog.ui.ColorPalette.prototype.labels_ = null;
-
+goog.ui.ColorPalette.prototype.labels_ = null
 
 /**
  * Returns the array of colors represented in the color palette.
  * @return {Array<string>} Array of colors.
  */
 goog.ui.ColorPalette.prototype.getColors = function() {
-  return this.colors_;
-};
-
+  return this.colors_
+}
 
 /**
  * Sets the colors that are contained in the palette.
@@ -98,26 +95,24 @@ goog.ui.ColorPalette.prototype.getColors = function() {
  *        tooltips. When not provided, the color value will be used.
  */
 goog.ui.ColorPalette.prototype.setColors = function(colors, opt_labels) {
-  this.colors_ = colors;
-  this.labels_ = opt_labels || null;
-  this.normalizedColors_ = null;
-  this.setContent(this.createColorNodes());
-};
-
+  this.colors_ = colors
+  this.labels_ = opt_labels || null
+  this.normalizedColors_ = null
+  this.setContent(this.createColorNodes())
+}
 
 /**
  * @return {?string} The current selected color in hex, or null.
  */
 goog.ui.ColorPalette.prototype.getSelectedColor = function() {
-  var selectedItem = /** @type {Element} */ (this.getSelectedItem());
+  var selectedItem = /** @type {Element} */ (this.getSelectedItem())
   if (selectedItem) {
-    var color = goog.style.getStyle(selectedItem, 'background-color');
-    return goog.ui.ColorPalette.parseColor_(color);
+    var color = goog.style.getStyle(selectedItem, "background-color")
+    return goog.ui.ColorPalette.parseColor_(color)
   } else {
-    return null;
+    return null
   }
-};
-
+}
 
 /**
  * Sets the selected color.  Clears the selection if the argument is null or
@@ -126,38 +121,42 @@ goog.ui.ColorPalette.prototype.getSelectedColor = function() {
  *     selection.
  */
 goog.ui.ColorPalette.prototype.setSelectedColor = function(color) {
-  var hexColor = goog.ui.ColorPalette.parseColor_(color);
+  var hexColor = goog.ui.ColorPalette.parseColor_(color)
   if (!this.normalizedColors_) {
     this.normalizedColors_ = goog.array.map(this.colors_, function(color) {
-      return goog.ui.ColorPalette.parseColor_(color);
-    });
+      return goog.ui.ColorPalette.parseColor_(color)
+    })
   }
   this.setSelectedIndex(
-      hexColor ? goog.array.indexOf(this.normalizedColors_, hexColor) : -1);
-};
-
+    hexColor ? goog.array.indexOf(this.normalizedColors_, hexColor) : -1
+  )
+}
 
 /**
  * @return {!Array<!Node>} An array of DOM nodes for each color.
  * @protected
  */
 goog.ui.ColorPalette.prototype.createColorNodes = function() {
-  return goog.array.map(this.colors_, function(color, index) {
-    var swatch = this.getDomHelper().createDom(goog.dom.TagName.DIV, {
-      'class': goog.getCssName(this.getRenderer().getCssClass(), 'colorswatch'),
-      'style': 'background-color:' + color
-    });
-    if (this.labels_ && this.labels_[index]) {
-      swatch.title = this.labels_[index];
-    } else {
-      swatch.title = color.charAt(0) == '#' ?
-          'RGB (' + goog.color.hexToRgb(color).join(', ') + ')' :
-          color;
-    }
-    return swatch;
-  }, this);
-};
-
+  return goog.array.map(
+    this.colors_,
+    function(color, index) {
+      var swatch = this.getDomHelper().createDom(goog.dom.TagName.DIV, {
+        class: goog.getCssName(this.getRenderer().getCssClass(), "colorswatch"),
+        style: "background-color:" + color
+      })
+      if (this.labels_ && this.labels_[index]) {
+        swatch.title = this.labels_[index]
+      } else {
+        swatch.title =
+          color.charAt(0) == "#"
+            ? "RGB (" + goog.color.hexToRgb(color).join(", ") + ")"
+            : color
+      }
+      return swatch
+    },
+    this
+  )
+}
 
 /**
  * Takes a string, attempts to parse it as a color spec, and returns a
@@ -169,12 +168,11 @@ goog.ui.ColorPalette.prototype.createColorNodes = function() {
  */
 goog.ui.ColorPalette.parseColor_ = function(color) {
   if (color) {
-
     try {
-      return goog.color.parse(color).hex;
+      return goog.color.parse(color).hex
     } catch (ex) {
       // Fall through.
     }
   }
-  return null;
-};
+  return null
+}

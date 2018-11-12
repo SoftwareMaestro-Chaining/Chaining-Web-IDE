@@ -24,18 +24,17 @@
  * a JavaScript framework such as Closure.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
+"use strict"
 
 /**
  * @name Blockly.utils
  * @namespace
  **/
-goog.provide('Blockly.utils');
+goog.provide("Blockly.utils")
 
-goog.require('goog.dom');
-goog.require('goog.math.Coordinate');
-goog.require('goog.userAgent');
-
+goog.require("goog.dom")
+goog.require("goog.math.Coordinate")
+goog.require("goog.userAgent")
 
 /**
  * Remove an attribute from a element even if it's in IE 10.
@@ -48,12 +47,12 @@ goog.require('goog.userAgent');
 Blockly.utils.removeAttribute = function(element, attributeName) {
   // goog.userAgent.isVersion is deprecated, but the replacement is
   // goog.userAgent.isVersionOrHigher.
-  if (goog.userAgent.IE && goog.userAgent.isVersion('10.0')) {
-    element.setAttribute(attributeName, null);
+  if (goog.userAgent.IE && goog.userAgent.isVersion("10.0")) {
+    element.setAttribute(attributeName, null)
   } else {
-    element.removeAttribute(attributeName);
+    element.removeAttribute(attributeName)
   }
-};
+}
 
 /**
  * Add a CSS class to a element.
@@ -63,16 +62,16 @@ Blockly.utils.removeAttribute = function(element, attributeName) {
  * @return {boolean} True if class was added, false if already present.
  */
 Blockly.utils.addClass = function(element, className) {
-  var classes = element.getAttribute('class') || '';
-  if ((' ' + classes + ' ').indexOf(' ' + className + ' ') != -1) {
-    return false;
+  var classes = element.getAttribute("class") || ""
+  if ((" " + classes + " ").indexOf(" " + className + " ") != -1) {
+    return false
   }
   if (classes) {
-    classes += ' ';
+    classes += " "
   }
-  element.setAttribute('class', classes + className);
-  return true;
-};
+  element.setAttribute("class", classes + className)
+  return true
+}
 
 /**
  * Remove a CSS class from a element.
@@ -82,24 +81,24 @@ Blockly.utils.addClass = function(element, className) {
  * @return {boolean} True if class was removed, false if never present.
  */
 Blockly.utils.removeClass = function(element, className) {
-  var classes = element.getAttribute('class');
-  if ((' ' + classes + ' ').indexOf(' ' + className + ' ') == -1) {
-    return false;
+  var classes = element.getAttribute("class")
+  if ((" " + classes + " ").indexOf(" " + className + " ") == -1) {
+    return false
   }
-  var classList = classes.split(/\s+/);
+  var classList = classes.split(/\s+/)
   for (var i = 0; i < classList.length; i++) {
     if (!classList[i] || classList[i] == className) {
-      classList.splice(i, 1);
-      i--;
+      classList.splice(i, 1)
+      i--
     }
   }
   if (classList.length) {
-    element.setAttribute('class', classList.join(' '));
+    element.setAttribute("class", classList.join(" "))
   } else {
-    Blockly.utils.removeAttribute(element, 'class');
+    Blockly.utils.removeAttribute(element, "class")
   }
-  return true;
-};
+  return true
+}
 
 /**
  * Checks if an element has the specified CSS class.
@@ -110,9 +109,9 @@ Blockly.utils.removeClass = function(element, className) {
  * @package
  */
 Blockly.utils.hasClass = function(element, className) {
-  var classes = element.getAttribute('class');
-  return (' ' + classes + ' ').indexOf(' ' + className + ' ') != -1;
-};
+  var classes = element.getAttribute("class")
+  return (" " + classes + " ").indexOf(" " + className + " ") != -1
+}
 
 /**
  * Removes a node from its parent. No-op if not attached to a parent.
@@ -121,8 +120,8 @@ Blockly.utils.hasClass = function(element, className) {
  */
 // Copied from Closure goog.dom.removeNode
 Blockly.utils.removeNode = function(node) {
-  return node && node.parentNode ? node.parentNode.removeChild(node) : null;
-};
+  return node && node.parentNode ? node.parentNode.removeChild(node) : null
+}
 
 /**
  * Don't do anything for this event, just halt propagation.
@@ -130,9 +129,9 @@ Blockly.utils.removeNode = function(node) {
  */
 Blockly.utils.noEvent = function(e) {
   // This event has been handled.  No need to bubble up to the document.
-  e.preventDefault();
-  e.stopPropagation();
-};
+  e.preventDefault()
+  e.stopPropagation()
+}
 
 /**
  * Is this event targeting a text input widget?
@@ -140,12 +139,18 @@ Blockly.utils.noEvent = function(e) {
  * @return {boolean} True if text input.
  */
 Blockly.utils.isTargetInput = function(e) {
-  return e.target.type == 'textarea' || e.target.type == 'text' ||
-         e.target.type == 'number' || e.target.type == 'email' ||
-         e.target.type == 'password' || e.target.type == 'search' ||
-         e.target.type == 'tel' || e.target.type == 'url' ||
-         e.target.isContentEditable;
-};
+  return (
+    e.target.type == "textarea" ||
+    e.target.type == "text" ||
+    e.target.type == "number" ||
+    e.target.type == "email" ||
+    e.target.type == "password" ||
+    e.target.type == "search" ||
+    e.target.type == "tel" ||
+    e.target.type == "url" ||
+    e.target.isContentEditable
+  )
+}
 
 /**
  * Return the coordinates of the top-left corner of this element relative to
@@ -154,43 +159,43 @@ Blockly.utils.isTargetInput = function(e) {
  * @return {!goog.math.Coordinate} Object with .x and .y properties.
  */
 Blockly.utils.getRelativeXY = function(element) {
-  var xy = new goog.math.Coordinate(0, 0);
+  var xy = new goog.math.Coordinate(0, 0)
   // First, check for x and y attributes.
-  var x = element.getAttribute('x');
+  var x = element.getAttribute("x")
   if (x) {
-    xy.x = parseInt(x, 10);
+    xy.x = parseInt(x, 10)
   }
-  var y = element.getAttribute('y');
+  var y = element.getAttribute("y")
   if (y) {
-    xy.y = parseInt(y, 10);
+    xy.y = parseInt(y, 10)
   }
   // Second, check for transform="translate(...)" attribute.
-  var transform = element.getAttribute('transform');
-  var r = transform && transform.match(Blockly.utils.getRelativeXY.XY_REGEX_);
+  var transform = element.getAttribute("transform")
+  var r = transform && transform.match(Blockly.utils.getRelativeXY.XY_REGEX_)
   if (r) {
-    xy.x += parseFloat(r[1]);
+    xy.x += parseFloat(r[1])
     if (r[3]) {
-      xy.y += parseFloat(r[3]);
+      xy.y += parseFloat(r[3])
     }
   }
 
   // Then check for style = transform: translate(...) or translate3d(...)
-  var style = element.getAttribute('style');
-  if (style && style.indexOf('translate') > -1) {
-    var styleComponents = style.match(Blockly.utils.getRelativeXY.XY_2D_REGEX_);
+  var style = element.getAttribute("style")
+  if (style && style.indexOf("translate") > -1) {
+    var styleComponents = style.match(Blockly.utils.getRelativeXY.XY_2D_REGEX_)
     // Try transform3d if 2d transform wasn't there.
     if (!styleComponents) {
-      styleComponents = style.match(Blockly.utils.getRelativeXY.XY_3D_REGEX_);
+      styleComponents = style.match(Blockly.utils.getRelativeXY.XY_3D_REGEX_)
     }
     if (styleComponents) {
-      xy.x += parseFloat(styleComponents[1]);
+      xy.x += parseFloat(styleComponents[1])
       if (styleComponents[3]) {
-        xy.y += parseFloat(styleComponents[3]);
+        xy.y += parseFloat(styleComponents[3])
       }
     }
   }
-  return xy;
-};
+  return xy
+}
 
 /**
  * Return the coordinates of the top-left corner of this element relative to
@@ -201,20 +206,20 @@ Blockly.utils.getRelativeXY = function(element) {
  * @return {!goog.math.Coordinate} Object with .x and .y properties.
  */
 Blockly.utils.getInjectionDivXY_ = function(element) {
-  var x = 0;
-  var y = 0;
+  var x = 0
+  var y = 0
   while (element) {
-    var xy = Blockly.utils.getRelativeXY(element);
-    x = x + xy.x;
-    y = y + xy.y;
-    var classes = element.getAttribute('class') || '';
-    if ((' ' + classes + ' ').indexOf(' injectionDiv ') != -1) {
-      break;
+    var xy = Blockly.utils.getRelativeXY(element)
+    x = x + xy.x
+    y = y + xy.y
+    var classes = element.getAttribute("class") || ""
+    if ((" " + classes + " ").indexOf(" injectionDiv ") != -1) {
+      break
     }
-    element = element.parentNode;
+    element = element.parentNode
   }
-  return new goog.math.Coordinate(x, y);
-};
+  return new goog.math.Coordinate(x, y)
+}
 
 /**
  * Static regex to pull the x,y values out of an SVG translate() directive.
@@ -225,8 +230,7 @@ Blockly.utils.getInjectionDivXY_ = function(element) {
  * @type {!RegExp}
  * @private
  */
-Blockly.utils.getRelativeXY.XY_REGEX_ =
-    /translate\(\s*([-+\d.e]+)([ ,]\s*([-+\d.e]+)\s*\))?/;
+Blockly.utils.getRelativeXY.XY_REGEX_ = /translate\(\s*([-+\d.e]+)([ ,]\s*([-+\d.e]+)\s*\))?/
 
 /**
  * Static regex to pull the x,y,z values out of a translate3d() style property.
@@ -234,8 +238,7 @@ Blockly.utils.getRelativeXY.XY_REGEX_ =
  * @type {!RegExp}
  * @private
  */
-Blockly.utils.getRelativeXY.XY_3D_REGEX_ =
-    /transform:\s*translate3d\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px([ ,]\s*([-+\d.e]+)\s*)px\)?/;
+Blockly.utils.getRelativeXY.XY_3D_REGEX_ = /transform:\s*translate3d\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px([ ,]\s*([-+\d.e]+)\s*)px\)?/
 
 /**
  * Static regex to pull the x,y,z values out of a translate3d() style property.
@@ -243,8 +246,7 @@ Blockly.utils.getRelativeXY.XY_3D_REGEX_ =
  * @type {!RegExp}
  * @private
  */
-Blockly.utils.getRelativeXY.XY_2D_REGEX_ =
-    /transform:\s*translate\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px\)?/;
+Blockly.utils.getRelativeXY.XY_2D_REGEX_ = /transform:\s*translate\(\s*([-+\d.e]+)px([ ,]\s*([-+\d.e]+)\s*)px\)?/
 
 /**
  * Helper method for creating SVG elements.
@@ -254,22 +256,25 @@ Blockly.utils.getRelativeXY.XY_2D_REGEX_ =
  * @return {!SVGElement} Newly created SVG element.
  */
 Blockly.utils.createSvgElement = function(name, attrs, parent) {
-  var e = /** @type {!SVGElement} */
-      (document.createElementNS(Blockly.SVG_NS, name));
+  var e /** @type {!SVGElement} */ = document.createElementNS(
+    Blockly.SVG_NS,
+    name
+  )
   for (var key in attrs) {
-    e.setAttribute(key, attrs[key]);
+    e.setAttribute(key, attrs[key])
   }
   // IE defines a unique attribute "runtimeStyle", it is NOT applied to
   // elements created with createElementNS. However, Closure checks for IE
   // and assumes the presence of the attribute and crashes.
-  if (document.body.runtimeStyle) {  // Indicates presence of IE-only attr.
-    e.runtimeStyle = e.currentStyle = e.style;
+  if (document.body.runtimeStyle) {
+    // Indicates presence of IE-only attr.
+    e.runtimeStyle = e.currentStyle = e.style
   }
   if (parent) {
-    parent.appendChild(e);
+    parent.appendChild(e)
   }
-  return e;
-};
+  return e
+}
 
 /**
  * Is this event a right-click?
@@ -280,10 +285,10 @@ Blockly.utils.isRightButton = function(e) {
   if (e.ctrlKey && goog.userAgent.MAC) {
     // Control-clicking on Mac OS X is treated as a right-click.
     // WebKit on Mac OS X fails to change button to 2 (but Gecko does).
-    return true;
+    return true
   }
-  return e.button == 2;
-};
+  return e.button == 2
+}
 
 /**
  * Return the converted coordinates of the given mouse event.
@@ -294,15 +299,15 @@ Blockly.utils.isRightButton = function(e) {
  * @return {!SVGPoint} Object with .x and .y properties.
  */
 Blockly.utils.mouseToSvg = function(e, svg, matrix) {
-  var svgPoint = svg.createSVGPoint();
-  svgPoint.x = e.clientX;
-  svgPoint.y = e.clientY;
+  var svgPoint = svg.createSVGPoint()
+  svgPoint.x = e.clientX
+  svgPoint.y = e.clientY
 
   if (!matrix) {
-    matrix = svg.getScreenCTM().inverse();
+    matrix = svg.getScreenCTM().inverse()
   }
-  return svgPoint.matrixTransform(matrix);
-};
+  return svgPoint.matrixTransform(matrix)
+}
 
 /**
  * Given an array of strings, return the length of the shortest one.
@@ -311,12 +316,12 @@ Blockly.utils.mouseToSvg = function(e, svg, matrix) {
  */
 Blockly.utils.shortestStringLength = function(array) {
   if (!array.length) {
-    return 0;
+    return 0
   }
   return array.reduce(function(a, b) {
-    return a.length < b.length ? a : b;
-  }).length;
-};
+    return a.length < b.length ? a : b
+  }).length
+}
 
 /**
  * Given an array of strings, return the length of the common prefix.
@@ -327,31 +332,31 @@ Blockly.utils.shortestStringLength = function(array) {
  */
 Blockly.utils.commonWordPrefix = function(array, opt_shortest) {
   if (!array.length) {
-    return 0;
+    return 0
   } else if (array.length == 1) {
-    return array[0].length;
+    return array[0].length
   }
-  var wordPrefix = 0;
-  var max = opt_shortest || Blockly.utils.shortestStringLength(array);
+  var wordPrefix = 0
+  var max = opt_shortest || Blockly.utils.shortestStringLength(array)
   for (var len = 0; len < max; len++) {
-    var letter = array[0][len];
+    var letter = array[0][len]
     for (var i = 1; i < array.length; i++) {
       if (letter != array[i][len]) {
-        return wordPrefix;
+        return wordPrefix
       }
     }
-    if (letter == ' ') {
-      wordPrefix = len + 1;
+    if (letter == " ") {
+      wordPrefix = len + 1
     }
   }
   for (var i = 1; i < array.length; i++) {
-    var letter = array[i][len];
-    if (letter && letter != ' ') {
-      return wordPrefix;
+    var letter = array[i][len]
+    if (letter && letter != " ") {
+      return wordPrefix
     }
   }
-  return max;
-};
+  return max
+}
 
 /**
  * Given an array of strings, return the length of the common suffix.
@@ -362,31 +367,31 @@ Blockly.utils.commonWordPrefix = function(array, opt_shortest) {
  */
 Blockly.utils.commonWordSuffix = function(array, opt_shortest) {
   if (!array.length) {
-    return 0;
+    return 0
   } else if (array.length == 1) {
-    return array[0].length;
+    return array[0].length
   }
-  var wordPrefix = 0;
-  var max = opt_shortest || Blockly.utils.shortestStringLength(array);
+  var wordPrefix = 0
+  var max = opt_shortest || Blockly.utils.shortestStringLength(array)
   for (var len = 0; len < max; len++) {
-    var letter = array[0].substr(-len - 1, 1);
+    var letter = array[0].substr(-len - 1, 1)
     for (var i = 1; i < array.length; i++) {
       if (letter != array[i].substr(-len - 1, 1)) {
-        return wordPrefix;
+        return wordPrefix
       }
     }
-    if (letter == ' ') {
-      wordPrefix = len + 1;
+    if (letter == " ") {
+      wordPrefix = len + 1
     }
   }
   for (var i = 1; i < array.length; i++) {
-    var letter = array[i].charAt(array[i].length - len - 1);
-    if (letter && letter != ' ') {
-      return wordPrefix;
+    var letter = array[i].charAt(array[i].length - len - 1)
+    if (letter && letter != " ") {
+      return wordPrefix
     }
   }
-  return max;
-};
+  return max
+}
 
 /**
  * Parse a string with any number of interpolation tokens (%1, %2, ...).
@@ -399,8 +404,8 @@ Blockly.utils.commonWordSuffix = function(array, opt_shortest) {
  * @return {!Array.<string|number>} Array of strings and numbers.
  */
 Blockly.utils.tokenizeInterpolation = function(message) {
-  return Blockly.utils.tokenizeInterpolation_(message, true);
-};
+  return Blockly.utils.tokenizeInterpolation_(message, true)
+}
 
 /**
  * Replaces string table references in a message, if the message is a string.
@@ -411,14 +416,14 @@ Blockly.utils.tokenizeInterpolation = function(message) {
  * @return {!string} String with message references replaced.
  */
 Blockly.utils.replaceMessageReferences = function(message) {
-  if (typeof message != 'string') {
-    return message;
+  if (typeof message != "string") {
+    return message
   }
-  var interpolatedResult = Blockly.utils.tokenizeInterpolation_(message, false);
+  var interpolatedResult = Blockly.utils.tokenizeInterpolation_(message, false)
   // When parseInterpolationTokens == false, interpolatedResult should be at
   // most length 1.
-  return interpolatedResult.length ? interpolatedResult[0] : '';
-};
+  return interpolatedResult.length ? interpolatedResult[0] : ""
+}
 
 /**
  * Validates that any %{MSG_KEY} references in the message refer to keys of
@@ -428,31 +433,33 @@ Blockly.utils.replaceMessageReferences = function(message) {
  *     Otherwise, false.
  */
 Blockly.utils.checkMessageReferences = function(message) {
-  var validSoFar = true;
+  var validSoFar = true
 
-  var msgTable = Blockly.Msg;
+  var msgTable = Blockly.Msg
 
   // TODO(#1169): Implement support for other string tables, prefixes other than BKY_.
-  var regex = /%{(BKY_[A-Z][A-Z0-9_]*)}/gi;
-  var match = regex.exec(message);
+  var regex = /%{(BKY_[A-Z][A-Z0-9_]*)}/gi
+  var match = regex.exec(message)
   while (match) {
-    var msgKey = match[1];
-    msgKey = msgKey.toUpperCase();
-    if (msgKey.substr(0, 4) != 'BKY_') {
-      console.log('WARNING: Unsupported message table prefix in %{' + match[1] + '}.');
-      validSoFar = false;  // Continue to report other errors.
+    var msgKey = match[1]
+    msgKey = msgKey.toUpperCase()
+    if (msgKey.substr(0, 4) != "BKY_") {
+      console.log(
+        "WARNING: Unsupported message table prefix in %{" + match[1] + "}."
+      )
+      validSoFar = false // Continue to report other errors.
     } else if (msgTable[msgKey.substr(4)] == undefined) {
-      console.log('WARNING: No message string for %{' + match[1] + '}.');
-      validSoFar = false;  // Continue to report other errors.
+      console.log("WARNING: No message string for %{" + match[1] + "}.")
+      validSoFar = false // Continue to report other errors.
     }
 
     // Re-run on remainder of string.
-    message = message.substring(match.index + msgKey.length + 1);
-    match = regex.exec(message);
+    message = message.substring(match.index + msgKey.length + 1)
+    match = regex.exec(message)
   }
 
-  return validSoFar;
-};
+  return validSoFar
+}
 
 /**
  * Internal implementation of the message reference and interpolation token
@@ -464,134 +471,143 @@ Blockly.utils.checkMessageReferences = function(message) {
  * @return {!Array.<string|number>} Array of strings and numbers.
  * @private
  */
-Blockly.utils.tokenizeInterpolation_ = function(message,
-    parseInterpolationTokens) {
-  var tokens = [];
-  var chars = message.split('');
-  chars.push('');  // End marker.
+Blockly.utils.tokenizeInterpolation_ = function(
+  message,
+  parseInterpolationTokens
+) {
+  var tokens = []
+  var chars = message.split("")
+  chars.push("") // End marker.
   // Parse the message with a finite state machine.
   // 0 - Base case.
   // 1 - % found.
   // 2 - Digit found.
   // 3 - Message ref found.
-  var state = 0;
-  var buffer = [];
-  var number = null;
+  var state = 0
+  var buffer = []
+  var number = null
   for (var i = 0; i < chars.length; i++) {
-    var c = chars[i];
+    var c = chars[i]
     if (state == 0) {
-      if (c == '%') {
-        var text = buffer.join('');
+      if (c == "%") {
+        var text = buffer.join("")
         if (text) {
-          tokens.push(text);
+          tokens.push(text)
         }
-        buffer.length = 0;
-        state = 1;  // Start escape.
+        buffer.length = 0
+        state = 1 // Start escape.
       } else {
-        buffer.push(c);  // Regular char.
+        buffer.push(c) // Regular char.
       }
     } else if (state == 1) {
-      if (c == '%') {
-        buffer.push(c);  // Escaped %: %%
-        state = 0;
-      } else if (parseInterpolationTokens && '0' <= c && c <= '9') {
-        state = 2;
-        number = c;
-        var text = buffer.join('');
+      if (c == "%") {
+        buffer.push(c) // Escaped %: %%
+        state = 0
+      } else if (parseInterpolationTokens && "0" <= c && c <= "9") {
+        state = 2
+        number = c
+        var text = buffer.join("")
         if (text) {
-          tokens.push(text);
+          tokens.push(text)
         }
-        buffer.length = 0;
-      } else if (c == '{') {
-        state = 3;
+        buffer.length = 0
+      } else if (c == "{") {
+        state = 3
       } else {
-        buffer.push('%', c);  // Not recognized. Return as literal.
-        state = 0;
+        buffer.push("%", c) // Not recognized. Return as literal.
+        state = 0
       }
     } else if (state == 2) {
-      if ('0' <= c && c <= '9') {
-        number += c;  // Multi-digit number.
+      if ("0" <= c && c <= "9") {
+        number += c // Multi-digit number.
       } else {
-        tokens.push(parseInt(number, 10));
-        i--;  // Parse this char again.
-        state = 0;
+        tokens.push(parseInt(number, 10))
+        i-- // Parse this char again.
+        state = 0
       }
-    } else if (state == 3) {  // String table reference
-      if (c == '') {
+    } else if (state == 3) {
+      // String table reference
+      if (c == "") {
         // Premature end before closing '}'
-        buffer.splice(0, 0, '%{');  // Re-insert leading delimiter
-        i--;  // Parse this char again.
-        state = 0;  // and parse as string literal.
-      } else if (c != '}') {
-        buffer.push(c);
-      } else  {
-        var rawKey = buffer.join('');
-        if (/[a-zA-Z][a-zA-Z0-9_]*/.test(rawKey)) {  // Strict matching
+        buffer.splice(0, 0, "%{") // Re-insert leading delimiter
+        i-- // Parse this char again.
+        state = 0 // and parse as string literal.
+      } else if (c != "}") {
+        buffer.push(c)
+      } else {
+        var rawKey = buffer.join("")
+        if (/[a-zA-Z][a-zA-Z0-9_]*/.test(rawKey)) {
+          // Strict matching
           // Found a valid string key. Attempt case insensitive match.
-          var keyUpper = rawKey.toUpperCase();
+          var keyUpper = rawKey.toUpperCase()
 
           // BKY_ is the prefix used to namespace the strings used in Blockly
           // core files and the predefined blocks in ../blocks/. These strings
           // are defined in ../msgs/ files.
-          var bklyKey = Blockly.utils.startsWith(keyUpper, 'BKY_') ?
-              keyUpper.substring(4) : null;
+          var bklyKey = Blockly.utils.startsWith(keyUpper, "BKY_")
+            ? keyUpper.substring(4)
+            : null
           if (bklyKey && bklyKey in Blockly.Msg) {
-            var rawValue = Blockly.Msg[bklyKey];
-            if (typeof rawValue == 'string') {
+            var rawValue = Blockly.Msg[bklyKey]
+            if (typeof rawValue == "string") {
               // Attempt to dereference substrings, too, appending to the end.
-              Array.prototype.push.apply(tokens,
-                  Blockly.utils.tokenizeInterpolation_(
-                      rawValue, parseInterpolationTokens));
+              Array.prototype.push.apply(
+                tokens,
+                Blockly.utils.tokenizeInterpolation_(
+                  rawValue,
+                  parseInterpolationTokens
+                )
+              )
             } else if (parseInterpolationTokens) {
               // When parsing interpolation tokens, numbers are special
               // placeholders (%1, %2, etc). Make sure all other values are
               // strings.
-              tokens.push(String(rawValue));
+              tokens.push(String(rawValue))
             } else {
-              tokens.push(rawValue);
+              tokens.push(rawValue)
             }
           } else {
             // No entry found in the string table. Pass reference as string.
-            tokens.push('%{' + rawKey + '}');
+            tokens.push("%{" + rawKey + "}")
           }
-          buffer.length = 0;  // Clear the array
-          state = 0;
+          buffer.length = 0 // Clear the array
+          state = 0
         } else {
-          tokens.push('%{' + rawKey + '}');
-          buffer.length = 0;
-          state = 0;  // and parse as string literal.
+          tokens.push("%{" + rawKey + "}")
+          buffer.length = 0
+          state = 0 // and parse as string literal.
         }
       }
     }
   }
-  var text = buffer.join('');
+  var text = buffer.join("")
   if (text) {
-    tokens.push(text);
+    tokens.push(text)
   }
 
   // Merge adjacent text tokens into a single string.
-  var mergedTokens = [];
-  buffer.length = 0;
+  var mergedTokens = []
+  buffer.length = 0
   for (var i = 0; i < tokens.length; ++i) {
-    if (typeof tokens[i] == 'string') {
-      buffer.push(tokens[i]);
+    if (typeof tokens[i] == "string") {
+      buffer.push(tokens[i])
     } else {
-      text = buffer.join('');
+      text = buffer.join("")
       if (text) {
-        mergedTokens.push(text);
+        mergedTokens.push(text)
       }
-      buffer.length = 0;
-      mergedTokens.push(tokens[i]);
+      buffer.length = 0
+      mergedTokens.push(tokens[i])
     }
   }
-  text = buffer.join('');
+  text = buffer.join("")
   if (text) {
-    mergedTokens.push(text);
+    mergedTokens.push(text)
   }
-  buffer.length = 0;
+  buffer.length = 0
 
-  return mergedTokens;
-};
+  return mergedTokens
+}
 
 /**
  * Generate a unique ID.  This should be globally unique.
@@ -599,14 +615,14 @@ Blockly.utils.tokenizeInterpolation_ = function(message,
  * @return {string} A globally unique ID string.
  */
 Blockly.utils.genUid = function() {
-  var length = 20;
-  var soupLength = Blockly.utils.genUid.soup_.length;
-  var id = [];
+  var length = 20
+  var soupLength = Blockly.utils.genUid.soup_.length
+  var id = []
   for (var i = 0; i < length; i++) {
-    id[i] = Blockly.utils.genUid.soup_.charAt(Math.random() * soupLength);
+    id[i] = Blockly.utils.genUid.soup_.charAt(Math.random() * soupLength)
   }
-  return id.join('');
-};
+  return id.join("")
+}
 
 /**
  * Legal characters for the unique ID.  Should be all on a US keyboard.
@@ -615,8 +631,9 @@ Blockly.utils.genUid = function() {
  * to properly escape in your own environment.  Issues #251, #625, #682, #1304.
  * @private
  */
-Blockly.utils.genUid.soup_ = '!#$%()*+,-./:;=?@[]^_`{|}~' +
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+Blockly.utils.genUid.soup_ =
+  "!#$%()*+,-./:;=?@[]^_`{|}~" +
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 /**
  * Wrap text to the specified width.
@@ -625,12 +642,12 @@ Blockly.utils.genUid.soup_ = '!#$%()*+,-./:;=?@[]^_`{|}~' +
  * @return {string} Wrapped text.
  */
 Blockly.utils.wrap = function(text, limit) {
-  var lines = text.split('\n');
+  var lines = text.split("\n")
   for (var i = 0; i < lines.length; i++) {
-    lines[i] = Blockly.utils.wrapLine_(lines[i], limit);
+    lines[i] = Blockly.utils.wrapLine_(lines[i], limit)
   }
-  return lines.join('\n');
-};
+  return lines.join("\n")
+}
 
 /**
  * Wrap single line of text to the specified width.
@@ -642,45 +659,45 @@ Blockly.utils.wrap = function(text, limit) {
 Blockly.utils.wrapLine_ = function(text, limit) {
   if (text.length <= limit) {
     // Short text, no need to wrap.
-    return text;
+    return text
   }
   // Split the text into words.
-  var words = text.trim().split(/\s+/);
+  var words = text.trim().split(/\s+/)
   // Set limit to be the length of the largest word.
   for (var i = 0; i < words.length; i++) {
     if (words[i].length > limit) {
-      limit = words[i].length;
+      limit = words[i].length
     }
   }
 
-  var lastScore;
-  var score = -Infinity;
-  var lastText;
-  var lineCount = 1;
+  var lastScore
+  var score = -Infinity
+  var lastText
+  var lineCount = 1
   do {
-    lastScore = score;
-    lastText = text;
+    lastScore = score
+    lastText = text
     // Create a list of booleans representing if a space (false) or
     // a break (true) appears after each word.
-    var wordBreaks = [];
+    var wordBreaks = []
     // Seed the list with evenly spaced linebreaks.
-    var steps = words.length / lineCount;
-    var insertedBreaks = 1;
+    var steps = words.length / lineCount
+    var insertedBreaks = 1
     for (var i = 0; i < words.length - 1; i++) {
       if (insertedBreaks < (i + 1.5) / steps) {
-        insertedBreaks++;
-        wordBreaks[i] = true;
+        insertedBreaks++
+        wordBreaks[i] = true
       } else {
-        wordBreaks[i] = false;
+        wordBreaks[i] = false
       }
     }
-    wordBreaks = Blockly.utils.wrapMutate_(words, wordBreaks, limit);
-    score = Blockly.utils.wrapScore_(words, wordBreaks, limit);
-    text = Blockly.utils.wrapToText_(words, wordBreaks);
-    lineCount++;
-  } while (score > lastScore);
-  return lastText;
-};
+    wordBreaks = Blockly.utils.wrapMutate_(words, wordBreaks, limit)
+    score = Blockly.utils.wrapScore_(words, wordBreaks, limit)
+    text = Blockly.utils.wrapToText_(words, wordBreaks)
+    lineCount++
+  } while (score > lastScore)
+  return lastText
+}
 
 /**
  * Compute a score for how good the wrapping is.
@@ -693,45 +710,47 @@ Blockly.utils.wrapLine_ = function(text, limit) {
 Blockly.utils.wrapScore_ = function(words, wordBreaks, limit) {
   // If this function becomes a performance liability, add caching.
   // Compute the length of each line.
-  var lineLengths = [0];
-  var linePunctuation = [];
+  var lineLengths = [0]
+  var linePunctuation = []
   for (var i = 0; i < words.length; i++) {
-    lineLengths[lineLengths.length - 1] += words[i].length;
+    lineLengths[lineLengths.length - 1] += words[i].length
     if (wordBreaks[i] === true) {
-      lineLengths.push(0);
-      linePunctuation.push(words[i].charAt(words[i].length - 1));
+      lineLengths.push(0)
+      linePunctuation.push(words[i].charAt(words[i].length - 1))
     } else if (wordBreaks[i] === false) {
-      lineLengths[lineLengths.length - 1]++;
+      lineLengths[lineLengths.length - 1]++
     }
   }
-  var maxLength = Math.max.apply(Math, lineLengths);
+  var maxLength = Math.max.apply(Math, lineLengths)
 
-  var score = 0;
+  var score = 0
   for (var i = 0; i < lineLengths.length; i++) {
     // Optimize for width.
     // -2 points per char over limit (scaled to the power of 1.5).
-    score -= Math.pow(Math.abs(limit - lineLengths[i]), 1.5) * 2;
+    score -= Math.pow(Math.abs(limit - lineLengths[i]), 1.5) * 2
     // Optimize for even lines.
     // -1 point per char smaller than max (scaled to the power of 1.5).
-    score -= Math.pow(maxLength - lineLengths[i], 1.5);
+    score -= Math.pow(maxLength - lineLengths[i], 1.5)
     // Optimize for structure.
     // Add score to line endings after punctuation.
-    if ('.?!'.indexOf(linePunctuation[i]) != -1) {
-      score += limit / 3;
-    } else if (',;)]}'.indexOf(linePunctuation[i]) != -1) {
-      score += limit / 4;
+    if (".?!".indexOf(linePunctuation[i]) != -1) {
+      score += limit / 3
+    } else if (",;)]}".indexOf(linePunctuation[i]) != -1) {
+      score += limit / 4
     }
   }
   // All else being equal, the last line should not be longer than the
   // previous line.  For example, this looks wrong:
   // aaa bbb
   // ccc ddd eee
-  if (lineLengths.length > 1 && lineLengths[lineLengths.length - 1] <=
-      lineLengths[lineLengths.length - 2]) {
-    score += 0.5;
+  if (
+    lineLengths.length > 1 &&
+    lineLengths[lineLengths.length - 1] <= lineLengths[lineLengths.length - 2]
+  ) {
+    score += 0.5
   }
-  return score;
-};
+  return score
+}
 
 /**
  * Mutate the array of line break locations until an optimal solution is found.
@@ -743,30 +762,29 @@ Blockly.utils.wrapScore_ = function(words, wordBreaks, limit) {
  * @private
  */
 Blockly.utils.wrapMutate_ = function(words, wordBreaks, limit) {
-  var bestScore = Blockly.utils.wrapScore_(words, wordBreaks, limit);
-  var bestBreaks;
+  var bestScore = Blockly.utils.wrapScore_(words, wordBreaks, limit)
+  var bestBreaks
   // Try shifting every line break forward or backward.
   for (var i = 0; i < wordBreaks.length - 1; i++) {
     if (wordBreaks[i] == wordBreaks[i + 1]) {
-      continue;
+      continue
     }
-    var mutatedWordBreaks = [].concat(wordBreaks);
-    mutatedWordBreaks[i] = !mutatedWordBreaks[i];
-    mutatedWordBreaks[i + 1] = !mutatedWordBreaks[i + 1];
-    var mutatedScore =
-        Blockly.utils.wrapScore_(words, mutatedWordBreaks, limit);
+    var mutatedWordBreaks = [].concat(wordBreaks)
+    mutatedWordBreaks[i] = !mutatedWordBreaks[i]
+    mutatedWordBreaks[i + 1] = !mutatedWordBreaks[i + 1]
+    var mutatedScore = Blockly.utils.wrapScore_(words, mutatedWordBreaks, limit)
     if (mutatedScore > bestScore) {
-      bestScore = mutatedScore;
-      bestBreaks = mutatedWordBreaks;
+      bestScore = mutatedScore
+      bestBreaks = mutatedWordBreaks
     }
   }
   if (bestBreaks) {
     // Found an improvement.  See if it may be improved further.
-    return Blockly.utils.wrapMutate_(words, bestBreaks, limit);
+    return Blockly.utils.wrapMutate_(words, bestBreaks, limit)
   }
   // No improvements found.  Done.
-  return wordBreaks;
-};
+  return wordBreaks
+}
 
 /**
  * Reassemble the array of words into text, with the specified line breaks.
@@ -776,15 +794,15 @@ Blockly.utils.wrapMutate_ = function(words, wordBreaks, limit) {
  * @private
  */
 Blockly.utils.wrapToText_ = function(words, wordBreaks) {
-  var text = [];
+  var text = []
   for (var i = 0; i < words.length; i++) {
-    text.push(words[i]);
+    text.push(words[i])
     if (wordBreaks[i] !== undefined) {
-      text.push(wordBreaks[i] ? '\n' : ' ');
+      text.push(wordBreaks[i] ? "\n" : " ")
     }
   }
-  return text.join('');
-};
+  return text.join("")
+}
 
 /**
  * Check if 3D transforms are supported by adding an element
@@ -793,31 +811,31 @@ Blockly.utils.wrapToText_ = function(words, wordBreaks) {
  */
 Blockly.utils.is3dSupported = function() {
   if (Blockly.utils.is3dSupported.cached_ !== undefined) {
-    return Blockly.utils.is3dSupported.cached_;
+    return Blockly.utils.is3dSupported.cached_
   }
   // CC-BY-SA Lorenzo Polidori
   // stackoverflow.com/questions/5661671/detecting-transform-translate3d-support
   if (!goog.global.getComputedStyle) {
-    return false;
+    return false
   }
 
-  var el = document.createElement('p');
-  var has3d = 'none';
+  var el = document.createElement("p")
+  var has3d = "none"
   var transforms = {
-    'webkitTransform': '-webkit-transform',
-    'OTransform': '-o-transform',
-    'msTransform': '-ms-transform',
-    'MozTransform': '-moz-transform',
-    'transform': 'transform'
-  };
+    webkitTransform: "-webkit-transform",
+    OTransform: "-o-transform",
+    msTransform: "-ms-transform",
+    MozTransform: "-moz-transform",
+    transform: "transform"
+  }
 
   // Add it to the body to get the computed style.
-  document.body.insertBefore(el, null);
+  document.body.insertBefore(el, null)
 
   for (var t in transforms) {
     if (el.style[t] !== undefined) {
-      el.style[t] = 'translate3d(1px,1px,1px)';
-      var computedStyle = goog.global.getComputedStyle(el);
+      el.style[t] = "translate3d(1px,1px,1px)"
+      var computedStyle = goog.global.getComputedStyle(el)
       if (!computedStyle) {
         // getComputedStyle in Firefox returns null when blockly is loaded
         // inside an iframe with display: none.  Returning false and not
@@ -825,16 +843,16 @@ Blockly.utils.is3dSupported = function() {
         // when users are interacting with blocks which should mean blockly is
         // visible again.
         // See https://bugzilla.mozilla.org/show_bug.cgi?id=548397
-        document.body.removeChild(el);
-        return false;
+        document.body.removeChild(el)
+        return false
       }
-      has3d = computedStyle.getPropertyValue(transforms[t]);
+      has3d = computedStyle.getPropertyValue(transforms[t])
     }
   }
-  document.body.removeChild(el);
-  Blockly.utils.is3dSupported.cached_ = has3d !== 'none';
-  return Blockly.utils.is3dSupported.cached_;
-};
+  document.body.removeChild(el)
+  Blockly.utils.is3dSupported.cached_ = has3d !== "none"
+  return Blockly.utils.is3dSupported.cached_
+}
 
 /**
  * Insert a node after a reference node.
@@ -844,17 +862,17 @@ Blockly.utils.is3dSupported = function() {
  * @package
  */
 Blockly.utils.insertAfter = function(newNode, refNode) {
-  var siblingNode = refNode.nextSibling;
-  var parentNode = refNode.parentNode;
+  var siblingNode = refNode.nextSibling
+  var parentNode = refNode.parentNode
   if (!parentNode) {
-    throw Error('Reference node has no parent.');
+    throw Error("Reference node has no parent.")
   }
   if (siblingNode) {
-    parentNode.insertBefore(newNode, siblingNode);
+    parentNode.insertBefore(newNode, siblingNode)
   } else {
-    parentNode.appendChild(newNode);
+    parentNode.appendChild(newNode)
   }
-};
+}
 
 /**
  * Calls a function after the page has loaded, possibly immediately.
@@ -862,21 +880,23 @@ Blockly.utils.insertAfter = function(newNode, refNode) {
  * @throws Error Will throw if no global document can be found (e.g., Node.js).
  */
 Blockly.utils.runAfterPageLoad = function(fn) {
-  if (typeof document != 'object') {
-    throw new Error('Blockly.utils.runAfterPageLoad() requires browser document.');
+  if (typeof document != "object") {
+    throw new Error(
+      "Blockly.utils.runAfterPageLoad() requires browser document."
+    )
   }
-  if (document.readyState === 'complete') {
-    fn();  // Page has already loaded. Call immediately.
+  if (document.readyState === "complete") {
+    fn() // Page has already loaded. Call immediately.
   } else {
     // Poll readyState.
     var readyStateCheckInterval = setInterval(function() {
-      if (document.readyState === 'complete') {
-        clearInterval(readyStateCheckInterval);
-        fn();
+      if (document.readyState === "complete") {
+        clearInterval(readyStateCheckInterval)
+        fn()
       }
-    }, 10);
+    }, 10)
   }
-};
+}
 
 /**
  * Sets the CSS transform property on an element. This function sets the
@@ -886,9 +906,9 @@ Blockly.utils.runAfterPageLoad = function(fn) {
  * @param {string} transform The value of the CSS `transform` property.
  */
 Blockly.utils.setCssTransform = function(node, transform) {
-  node.style['transform'] = transform;
-  node.style['-webkit-transform'] = transform;
-};
+  node.style["transform"] = transform
+  node.style["-webkit-transform"] = transform
+}
 
 /**
  * Get the position of the current viewport in window coordinates.  This takes
@@ -899,16 +919,16 @@ Blockly.utils.setCssTransform = function(node, transform) {
  */
 Blockly.utils.getViewportBBox = function() {
   // Pixels.
-  var windowSize = goog.dom.getViewportSize();
+  var windowSize = goog.dom.getViewportSize()
   // Pixels, in window coordinates.
-  var scrollOffset = goog.style.getViewportPageOffset(document);
+  var scrollOffset = goog.style.getViewportPageOffset(document)
   return {
     right: windowSize.width + scrollOffset.x,
     bottom: windowSize.height + scrollOffset.y,
     top: scrollOffset.y,
     left: scrollOffset.x
-  };
-};
+  }
+}
 
 /**
  * Fast prefix-checker.
@@ -919,8 +939,8 @@ Blockly.utils.getViewportBBox = function() {
  * @package
  */
 Blockly.utils.startsWith = function(str, prefix) {
-  return str.lastIndexOf(prefix, 0) == 0;
-};
+  return str.lastIndexOf(prefix, 0) == 0
+}
 
 /**
  * Removes the first occurrence of a particular value from an array.
@@ -931,13 +951,13 @@ Blockly.utils.startsWith = function(str, prefix) {
  * @package
  */
 Blockly.utils.arrayRemove = function(arr, obj) {
-  var i = arr.indexOf(obj);
+  var i = arr.indexOf(obj)
   if (i == -1) {
-    return false;
+    return false
   }
-  arr.splice(i, 1);
-  return true;
-};
+  arr.splice(i, 1)
+  return true
+}
 
 /**
  * Converts degrees to radians.
@@ -947,8 +967,8 @@ Blockly.utils.arrayRemove = function(arr, obj) {
  * @package
  */
 Blockly.utils.toRadians = function(angleDegrees) {
-  return angleDegrees * Math.PI / 180;
-};
+  return (angleDegrees * Math.PI) / 180
+}
 
 /**
  * Converts radians to degrees.
@@ -958,8 +978,8 @@ Blockly.utils.toRadians = function(angleDegrees) {
  * @package
  */
 Blockly.utils.toDegrees = function(angleRadians) {
-  return angleRadians * 180 / Math.PI;
-};
+  return (angleRadians * 180) / Math.PI
+}
 
 /**
  * Whether a node contains another node.
@@ -969,6 +989,8 @@ Blockly.utils.toDegrees = function(angleRadians) {
  * @package
  */
 Blockly.utils.containsNode = function(parent, descendant) {
-  return !!(parent.compareDocumentPosition(descendant) &
-            Node.DOCUMENT_POSITION_CONTAINED_BY);
-};
+  return !!(
+    parent.compareDocumentPosition(descendant) &
+    Node.DOCUMENT_POSITION_CONTAINED_BY
+  )
+}

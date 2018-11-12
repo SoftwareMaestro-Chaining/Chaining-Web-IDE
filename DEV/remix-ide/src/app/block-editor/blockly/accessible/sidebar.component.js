@@ -24,20 +24,20 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.SidebarComponent');
+goog.provide("blocklyApp.SidebarComponent")
 
-goog.require('blocklyApp.UtilsService');
+goog.require("blocklyApp.UtilsService")
 
-goog.require('blocklyApp.BlockConnectionService');
-goog.require('blocklyApp.ToolboxModalService');
-goog.require('blocklyApp.TranslatePipe');
-goog.require('blocklyApp.TreeService');
-goog.require('blocklyApp.VariableModalService');
+goog.require("blocklyApp.BlockConnectionService")
+goog.require("blocklyApp.ToolboxModalService")
+goog.require("blocklyApp.TranslatePipe")
+goog.require("blocklyApp.TreeService")
+goog.require("blocklyApp.VariableModalService")
 
-
-blocklyApp.SidebarComponent = ng.core.Component({
-  selector: 'blockly-sidebar',
-  template: `
+blocklyApp.SidebarComponent = ng.core
+  .Component({
+    selector: "blockly-sidebar",
+    template: `
     <div class="blocklySidebarColumn">
       <button *ngFor="#buttonConfig of customSidebarButtons"
               id="{{buttonConfig.id || undefined}}"
@@ -70,63 +70,70 @@ blocklyApp.SidebarComponent = ng.core.Component({
       </button>
     </div>
   `,
-  pipes: [blocklyApp.TranslatePipe]
-})
-.Class({
-  constructor: [
-    blocklyApp.BlockConnectionService,
-    blocklyApp.ToolboxModalService,
-    blocklyApp.TreeService,
-    blocklyApp.UtilsService,
-    blocklyApp.VariableModalService,
-    function(
-        blockConnectionService, toolboxModalService, treeService,
-        utilsService, variableService) {
-      // ACCESSIBLE_GLOBALS is a global variable defined by the containing
-      // page. It should contain a key, customSidebarButtons, describing
-      // additional buttons that should be displayed after the default ones.
-      // See README.md for details.
-      this.customSidebarButtons =
-          ACCESSIBLE_GLOBALS && ACCESSIBLE_GLOBALS.customSidebarButtons ?
-          ACCESSIBLE_GLOBALS.customSidebarButtons : [];
+    pipes: [blocklyApp.TranslatePipe]
+  })
+  .Class({
+    constructor: [
+      blocklyApp.BlockConnectionService,
+      blocklyApp.ToolboxModalService,
+      blocklyApp.TreeService,
+      blocklyApp.UtilsService,
+      blocklyApp.VariableModalService,
+      function(
+        blockConnectionService,
+        toolboxModalService,
+        treeService,
+        utilsService,
+        variableService
+      ) {
+        // ACCESSIBLE_GLOBALS is a global variable defined by the containing
+        // page. It should contain a key, customSidebarButtons, describing
+        // additional buttons that should be displayed after the default ones.
+        // See README.md for details.
+        this.customSidebarButtons =
+          ACCESSIBLE_GLOBALS && ACCESSIBLE_GLOBALS.customSidebarButtons
+            ? ACCESSIBLE_GLOBALS.customSidebarButtons
+            : []
 
-      this.blockConnectionService = blockConnectionService;
-      this.toolboxModalService = toolboxModalService;
-      this.treeService = treeService;
-      this.utilsService = utilsService;
-      this.variableModalService = variableService;
+        this.blockConnectionService = blockConnectionService
+        this.toolboxModalService = toolboxModalService
+        this.treeService = treeService
+        this.utilsService = utilsService
+        this.variableModalService = variableService
 
-      this.ID_FOR_ATTACH_TO_LINK_BUTTON = 'blocklyAttachToLinkBtn';
-      this.ID_FOR_CREATE_NEW_GROUP_BUTTON = 'blocklyCreateNewGroupBtn';
+        this.ID_FOR_ATTACH_TO_LINK_BUTTON = "blocklyAttachToLinkBtn"
+        this.ID_FOR_CREATE_NEW_GROUP_BUTTON = "blocklyCreateNewGroupBtn"
+      }
+    ],
+    isAnyConnectionMarked: function() {
+      return this.blockConnectionService.isAnyConnectionMarked()
+    },
+    isWorkspaceEmpty: function() {
+      return this.utilsService.isWorkspaceEmpty()
+    },
+    hasVariableCategory: function() {
+      return this.toolboxModalService.toolboxHasVariableCategory()
+    },
+    clearWorkspace: function() {
+      blocklyApp.workspace.clear()
+      this.treeService.clearAllActiveDescs()
+      // The timeout is needed in order to give the blocks time to be cleared
+      // from the workspace, and for the 'workspace is empty' button to show up.
+      setTimeout(function() {
+        document.getElementById(blocklyApp.ID_FOR_EMPTY_WORKSPACE_BTN).focus()
+      }, 50)
+    },
+    showToolboxModalForAttachToMarkedConnection: function() {
+      this.toolboxModalService.showToolboxModalForAttachToMarkedConnection(
+        this.ID_FOR_ATTACH_TO_LINK_BUTTON
+      )
+    },
+    showToolboxModalForCreateNewGroup: function() {
+      this.toolboxModalService.showToolboxModalForCreateNewGroup(
+        this.ID_FOR_CREATE_NEW_GROUP_BUTTON
+      )
+    },
+    showAddVariableModal: function() {
+      this.variableModalService.showAddModal_("item")
     }
-  ],
-  isAnyConnectionMarked: function() {
-    return this.blockConnectionService.isAnyConnectionMarked();
-  },
-  isWorkspaceEmpty: function() {
-    return this.utilsService.isWorkspaceEmpty();
-  },
-  hasVariableCategory: function() {
-    return this.toolboxModalService.toolboxHasVariableCategory();
-  },
-  clearWorkspace: function() {
-    blocklyApp.workspace.clear();
-    this.treeService.clearAllActiveDescs();
-    // The timeout is needed in order to give the blocks time to be cleared
-    // from the workspace, and for the 'workspace is empty' button to show up.
-    setTimeout(function() {
-      document.getElementById(blocklyApp.ID_FOR_EMPTY_WORKSPACE_BTN).focus();
-    }, 50);
-  },
-  showToolboxModalForAttachToMarkedConnection: function() {
-    this.toolboxModalService.showToolboxModalForAttachToMarkedConnection(
-        this.ID_FOR_ATTACH_TO_LINK_BUTTON);
-  },
-  showToolboxModalForCreateNewGroup: function() {
-    this.toolboxModalService.showToolboxModalForCreateNewGroup(
-        this.ID_FOR_CREATE_NEW_GROUP_BUTTON);
-  },
-  showAddVariableModal: function() {
-    this.variableModalService.showAddModal_("item");
-  }
-});
+  })

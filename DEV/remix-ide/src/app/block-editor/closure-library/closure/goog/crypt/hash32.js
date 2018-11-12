@@ -19,26 +19,23 @@
  *
  */
 
-goog.provide('goog.crypt.hash32');
+goog.provide("goog.crypt.hash32")
 
-goog.require('goog.crypt');
-
+goog.require("goog.crypt")
 
 /**
  * Default seed used during hashing, digits of pie.
  * See SEED32 in http://go/base.hash.java
  * @type {number}
  */
-goog.crypt.hash32.SEED32 = 314159265;
-
+goog.crypt.hash32.SEED32 = 314159265
 
 /**
  * Arbitrary constant used during hashing.
  * See CONSTANT32 in http://go/base.hash.java
  * @type {number}
  */
-goog.crypt.hash32.CONSTANT32 = -1640531527;
-
+goog.crypt.hash32.CONSTANT32 = -1640531527
 
 /**
  * Hashes a string to a 32-bit value.
@@ -46,9 +43,8 @@ goog.crypt.hash32.CONSTANT32 = -1640531527;
  * @return {number} 32-bit hash.
  */
 goog.crypt.hash32.encodeString = function(str) {
-  return goog.crypt.hash32.encodeByteArray(goog.crypt.stringToByteArray(str));
-};
-
+  return goog.crypt.hash32.encodeByteArray(goog.crypt.stringToByteArray(str))
+}
 
 /**
  * Hashes a string to a 32-bit value, converting the string to UTF-8 before
@@ -58,9 +54,9 @@ goog.crypt.hash32.encodeString = function(str) {
  */
 goog.crypt.hash32.encodeStringUtf8 = function(str) {
   return goog.crypt.hash32.encodeByteArray(
-      goog.crypt.stringToUtf8ByteArray(str));
-};
-
+    goog.crypt.stringToUtf8ByteArray(str)
+  )
+}
 
 /**
  * Hashes an integer to a 32-bit value.
@@ -70,10 +66,12 @@ goog.crypt.hash32.encodeStringUtf8 = function(str) {
 goog.crypt.hash32.encodeInteger = function(value) {
   // TODO(user): Does this make sense in JavaScript with doubles?  Should we
   // force the value to be in the correct range?
-  return goog.crypt.hash32.mix32_(
-      {a: value, b: goog.crypt.hash32.CONSTANT32, c: goog.crypt.hash32.SEED32});
-};
-
+  return goog.crypt.hash32.mix32_({
+    a: value,
+    b: goog.crypt.hash32.CONSTANT32,
+    c: goog.crypt.hash32.SEED32
+  })
+}
 
 /**
  * Hashes a "byte" array to a 32-bit value using the supplied seed.
@@ -85,58 +83,63 @@ goog.crypt.hash32.encodeInteger = function(value) {
  * @return {number} 32-bit hash.
  */
 goog.crypt.hash32.encodeByteArray = function(
-    bytes, opt_offset, opt_length, opt_seed) {
-  var offset = opt_offset || 0;
-  var length = opt_length || bytes.length;
-  var seed = opt_seed || goog.crypt.hash32.SEED32;
+  bytes,
+  opt_offset,
+  opt_length,
+  opt_seed
+) {
+  var offset = opt_offset || 0
+  var length = opt_length || bytes.length
+  var seed = opt_seed || goog.crypt.hash32.SEED32
 
   var mix = {
     a: goog.crypt.hash32.CONSTANT32,
     b: goog.crypt.hash32.CONSTANT32,
     c: seed
-  };
+  }
 
-  var keylen;
+  var keylen
   for (keylen = length; keylen >= 12; keylen -= 12, offset += 12) {
-    mix.a += goog.crypt.hash32.wordAt_(bytes, offset);
-    mix.b += goog.crypt.hash32.wordAt_(bytes, offset + 4);
-    mix.c += goog.crypt.hash32.wordAt_(bytes, offset + 8);
-    goog.crypt.hash32.mix32_(mix);
+    mix.a += goog.crypt.hash32.wordAt_(bytes, offset)
+    mix.b += goog.crypt.hash32.wordAt_(bytes, offset + 4)
+    mix.c += goog.crypt.hash32.wordAt_(bytes, offset + 8)
+    goog.crypt.hash32.mix32_(mix)
   }
   // Hash any remaining bytes
-  mix.c += length;
-  switch (keylen) {  // deal with rest.  Some cases fall through
+  mix.c += length
+  switch (
+    keylen // deal with rest.  Some cases fall through
+  ) {
     case 11:
-      mix.c += (bytes[offset + 10]) << 24;
+      mix.c += bytes[offset + 10] << 24
     case 10:
-      mix.c += (bytes[offset + 9] & 0xff) << 16;
+      mix.c += (bytes[offset + 9] & 0xff) << 16
     case 9:
-      mix.c += (bytes[offset + 8] & 0xff) << 8;
+      mix.c += (bytes[offset + 8] & 0xff) << 8
     // the first byte of c is reserved for the length
     case 8:
-      mix.b += goog.crypt.hash32.wordAt_(bytes, offset + 4);
-      mix.a += goog.crypt.hash32.wordAt_(bytes, offset);
-      break;
+      mix.b += goog.crypt.hash32.wordAt_(bytes, offset + 4)
+      mix.a += goog.crypt.hash32.wordAt_(bytes, offset)
+      break
     case 7:
-      mix.b += (bytes[offset + 6] & 0xff) << 16;
+      mix.b += (bytes[offset + 6] & 0xff) << 16
     case 6:
-      mix.b += (bytes[offset + 5] & 0xff) << 8;
+      mix.b += (bytes[offset + 5] & 0xff) << 8
     case 5:
-      mix.b += (bytes[offset + 4] & 0xff);
+      mix.b += bytes[offset + 4] & 0xff
     case 4:
-      mix.a += goog.crypt.hash32.wordAt_(bytes, offset);
-      break;
+      mix.a += goog.crypt.hash32.wordAt_(bytes, offset)
+      break
     case 3:
-      mix.a += (bytes[offset + 2] & 0xff) << 16;
+      mix.a += (bytes[offset + 2] & 0xff) << 16
     case 2:
-      mix.a += (bytes[offset + 1] & 0xff) << 8;
+      mix.a += (bytes[offset + 1] & 0xff) << 8
     case 1:
-      mix.a += (bytes[offset + 0] & 0xff);
-      // case 0 : nothing left to add
+      mix.a += bytes[offset + 0] & 0xff
+    // case 0 : nothing left to add
   }
-  return goog.crypt.hash32.mix32_(mix);
-};
-
+  return goog.crypt.hash32.mix32_(mix)
+}
 
 /**
  * Performs an inplace mix of an object with the integer properties (a, b, c)
@@ -146,40 +149,41 @@ goog.crypt.hash32.encodeByteArray = function(
  * @private
  */
 goog.crypt.hash32.mix32_ = function(mix) {
-  var a = mix.a, b = mix.b, c = mix.c;
-  a -= b;
-  a -= c;
-  a ^= c >>> 13;
-  b -= c;
-  b -= a;
-  b ^= a << 8;
-  c -= a;
-  c -= b;
-  c ^= b >>> 13;
-  a -= b;
-  a -= c;
-  a ^= c >>> 12;
-  b -= c;
-  b -= a;
-  b ^= a << 16;
-  c -= a;
-  c -= b;
-  c ^= b >>> 5;
-  a -= b;
-  a -= c;
-  a ^= c >>> 3;
-  b -= c;
-  b -= a;
-  b ^= a << 10;
-  c -= a;
-  c -= b;
-  c ^= b >>> 15;
-  mix.a = a;
-  mix.b = b;
-  mix.c = c;
-  return c;
-};
-
+  var a = mix.a,
+    b = mix.b,
+    c = mix.c
+  a -= b
+  a -= c
+  a ^= c >>> 13
+  b -= c
+  b -= a
+  b ^= a << 8
+  c -= a
+  c -= b
+  c ^= b >>> 13
+  a -= b
+  a -= c
+  a ^= c >>> 12
+  b -= c
+  b -= a
+  b ^= a << 16
+  c -= a
+  c -= b
+  c ^= b >>> 5
+  a -= b
+  a -= c
+  a ^= c >>> 3
+  b -= c
+  b -= a
+  b ^= a << 10
+  c -= a
+  c -= b
+  c ^= b >>> 15
+  mix.a = a
+  mix.b = b
+  mix.c = c
+  return c
+}
 
 /**
  * Returns the word at a given offset.  Treating an array of bytes a word at a
@@ -190,13 +194,12 @@ goog.crypt.hash32.mix32_ = function(mix) {
  * @private
  */
 goog.crypt.hash32.wordAt_ = function(bytes, offset) {
-  var a = goog.crypt.hash32.toSigned_(bytes[offset + 0]);
-  var b = goog.crypt.hash32.toSigned_(bytes[offset + 1]);
-  var c = goog.crypt.hash32.toSigned_(bytes[offset + 2]);
-  var d = goog.crypt.hash32.toSigned_(bytes[offset + 3]);
-  return a + (b << 8) + (c << 16) + (d << 24);
-};
-
+  var a = goog.crypt.hash32.toSigned_(bytes[offset + 0])
+  var b = goog.crypt.hash32.toSigned_(bytes[offset + 1])
+  var c = goog.crypt.hash32.toSigned_(bytes[offset + 2])
+  var d = goog.crypt.hash32.toSigned_(bytes[offset + 3])
+  return a + (b << 8) + (c << 16) + (d << 24)
+}
 
 /**
  * Converts an unsigned "byte" to signed, that is, convert a value in the range
@@ -206,5 +209,5 @@ goog.crypt.hash32.wordAt_ = function(bytes, offset) {
  * @private
  */
 goog.crypt.hash32.toSigned_ = function(n) {
-  return n > 127 ? n - 256 : n;
-};
+  return n > 127 ? n - 256 : n
+}

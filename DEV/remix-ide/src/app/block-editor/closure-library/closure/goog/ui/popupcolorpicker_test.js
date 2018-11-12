@@ -12,55 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.PopupColorPickerTest');
-goog.setTestOnly('goog.ui.PopupColorPickerTest');
+goog.provide("goog.ui.PopupColorPickerTest")
+goog.setTestOnly("goog.ui.PopupColorPickerTest")
 
-goog.require('goog.dom');
-goog.require('goog.events');
-goog.require('goog.testing.events');
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.ColorPicker');
-goog.require('goog.ui.PopupColorPicker');
+goog.require("goog.dom")
+goog.require("goog.events")
+goog.require("goog.testing.events")
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.ColorPicker")
+goog.require("goog.ui.PopupColorPicker")
 
 // Unittest to ensure that the popup gets created in createDom().
 function testPopupCreation() {
-  var picker = new goog.ui.PopupColorPicker();
-  picker.createDom();
-  assertNotNull(picker.getPopup());
+  var picker = new goog.ui.PopupColorPicker()
+  picker.createDom()
+  assertNotNull(picker.getPopup())
 }
 
 function testAutoHideIsSetProperly() {
-  var picker = new goog.ui.PopupColorPicker();
-  picker.createDom();
-  picker.setAutoHide(true);
-  var containingDiv = goog.dom.getElement('containingDiv');
-  picker.setAutoHideRegion(containingDiv);
-  assertTrue(picker.getAutoHide());
-  assertEquals(containingDiv, picker.getAutoHideRegion());
+  var picker = new goog.ui.PopupColorPicker()
+  picker.createDom()
+  picker.setAutoHide(true)
+  var containingDiv = goog.dom.getElement("containingDiv")
+  picker.setAutoHideRegion(containingDiv)
+  assertTrue(picker.getAutoHide())
+  assertEquals(containingDiv, picker.getAutoHideRegion())
 }
 
 // Unittest to ensure the popup opens with a custom color picker.
 function testCustomColorPicker() {
-  var button1 = document.getElementById('button1');
-  var domHelper = goog.dom.getDomHelper();
-  var colorPicker = new goog.ui.ColorPicker();
-  colorPicker.setColors(['#ffffff', '#000000']);
-  var picker = new goog.ui.PopupColorPicker(domHelper, colorPicker);
-  picker.render();
-  picker.attach(button1);
-  assertNotNull(picker.getColorPicker());
-  assertNotNull(picker.getPopup().getElement());
-  assertNull(picker.getSelectedColor());
+  var button1 = document.getElementById("button1")
+  var domHelper = goog.dom.getDomHelper()
+  var colorPicker = new goog.ui.ColorPicker()
+  colorPicker.setColors(["#ffffff", "#000000"])
+  var picker = new goog.ui.PopupColorPicker(domHelper, colorPicker)
+  picker.render()
+  picker.attach(button1)
+  assertNotNull(picker.getColorPicker())
+  assertNotNull(picker.getPopup().getElement())
+  assertNull(picker.getSelectedColor())
 
-  var changeEvents = 0;
+  var changeEvents = 0
   goog.events.listen(picker, goog.ui.ColorPicker.EventType.CHANGE, function(e) {
-    changeEvents++;
-  });
+    changeEvents++
+  })
 
   // Select the first color.
-  goog.testing.events.fireClickSequence(button1);
+  goog.testing.events.fireClickSequence(button1)
   goog.testing.events.fireClickSequence(
-      document.getElementById('goog-palette-cell-0').firstChild);
-  assertEquals('#ffffff', picker.getSelectedColor());
-  assertEquals(1, changeEvents);
+    document.getElementById("goog-palette-cell-0").firstChild
+  )
+  assertEquals("#ffffff", picker.getSelectedColor())
+  assertEquals(1, changeEvents)
 }

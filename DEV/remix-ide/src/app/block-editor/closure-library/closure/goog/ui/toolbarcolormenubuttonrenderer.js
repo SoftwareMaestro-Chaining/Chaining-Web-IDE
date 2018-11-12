@@ -18,15 +18,13 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarColorMenuButtonRenderer');
+goog.provide("goog.ui.ToolbarColorMenuButtonRenderer")
 
-goog.require('goog.asserts');
-goog.require('goog.dom.classlist');
-goog.require('goog.ui.ColorMenuButtonRenderer');
-goog.require('goog.ui.MenuButtonRenderer');
-goog.require('goog.ui.ToolbarMenuButtonRenderer');
-
-
+goog.require("goog.asserts")
+goog.require("goog.dom.classlist")
+goog.require("goog.ui.ColorMenuButtonRenderer")
+goog.require("goog.ui.MenuButtonRenderer")
+goog.require("goog.ui.ToolbarMenuButtonRenderer")
 
 /**
  * Toolbar-style renderer for {@link goog.ui.ColorMenuButton}s.
@@ -35,12 +33,13 @@ goog.require('goog.ui.ToolbarMenuButtonRenderer');
  * @final
  */
 goog.ui.ToolbarColorMenuButtonRenderer = function() {
-  goog.ui.ToolbarMenuButtonRenderer.call(this);
-};
+  goog.ui.ToolbarMenuButtonRenderer.call(this)
+}
 goog.inherits(
-    goog.ui.ToolbarColorMenuButtonRenderer, goog.ui.ToolbarMenuButtonRenderer);
-goog.addSingletonGetter(goog.ui.ToolbarColorMenuButtonRenderer);
-
+  goog.ui.ToolbarColorMenuButtonRenderer,
+  goog.ui.ToolbarMenuButtonRenderer
+)
+goog.addSingletonGetter(goog.ui.ToolbarColorMenuButtonRenderer)
 
 /**
  * Overrides the superclass implementation by wrapping the caption text or DOM
@@ -59,12 +58,15 @@ goog.addSingletonGetter(goog.ui.ToolbarColorMenuButtonRenderer);
  * @override
  */
 goog.ui.ToolbarColorMenuButtonRenderer.prototype.createCaption = function(
-    content, dom) {
+  content,
+  dom
+) {
   return goog.ui.MenuButtonRenderer.wrapCaption(
-      goog.ui.ColorMenuButtonRenderer.wrapCaption(content, dom),
-      this.getCssClass(), dom);
-};
-
+    goog.ui.ColorMenuButtonRenderer.wrapCaption(content, dom),
+    this.getCssClass(),
+    dom
+  )
+}
 
 /**
  * Takes a color menu button control's root element and a value object
@@ -75,13 +77,16 @@ goog.ui.ToolbarColorMenuButtonRenderer.prototype.createCaption = function(
  * @override
  */
 goog.ui.ToolbarColorMenuButtonRenderer.prototype.setValue = function(
-    element, value) {
+  element,
+  value
+) {
   if (element) {
     goog.ui.ColorMenuButtonRenderer.setCaptionValue(
-        this.getContentElement(element), value);
+      this.getContentElement(element),
+      value
+    )
   }
-};
-
+}
 
 /**
  * Initializes the button's DOM when it enters the document.  Overrides the
@@ -92,11 +97,15 @@ goog.ui.ToolbarColorMenuButtonRenderer.prototype.setValue = function(
  * @override
  */
 goog.ui.ToolbarColorMenuButtonRenderer.prototype.initializeDom = function(
-    button) {
-  this.setValue(button.getElement(), button.getValue());
+  button
+) {
+  this.setValue(button.getElement(), button.getValue())
   goog.dom.classlist.add(
-      goog.asserts.assert(button.getElement()),
-      goog.getCssName('goog-toolbar-color-menu-button'));
+    goog.asserts.assert(button.getElement()),
+    goog.getCssName("goog-toolbar-color-menu-button")
+  )
   goog.ui.ToolbarColorMenuButtonRenderer.superClass_.initializeDom.call(
-      this, button);
-};
+    this,
+    button
+  )
+}

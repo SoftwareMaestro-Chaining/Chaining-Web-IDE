@@ -48,15 +48,14 @@
  * https://developer.mozilla.org/en-US/docs/Web/API/window.requestAnimationFrame
  */
 
-goog.provide('goog.dom.animationFrame');
-goog.provide('goog.dom.animationFrame.Spec');
-goog.provide('goog.dom.animationFrame.State');
+goog.provide("goog.dom.animationFrame")
+goog.provide("goog.dom.animationFrame.Spec")
+goog.provide("goog.dom.animationFrame.State")
 
-goog.require('goog.dom.animationFrame.polyfill');
+goog.require("goog.dom.animationFrame.polyfill")
 
 // Install the polyfill.
-goog.dom.animationFrame.polyfill.install();
-
+goog.dom.animationFrame.polyfill.install()
 
 /**
  * @typedef {{
@@ -66,8 +65,7 @@ goog.dom.animationFrame.polyfill.install();
  * }}
  * @private
  */
-goog.dom.animationFrame.Task_;
-
+goog.dom.animationFrame.Task_
 
 /**
  * @typedef {{
@@ -79,8 +77,7 @@ goog.dom.animationFrame.Task_;
  * }}
  * @private
  */
-goog.dom.animationFrame.TaskSet_;
-
+goog.dom.animationFrame.TaskSet_
 
 /**
  * @typedef {{
@@ -88,17 +85,14 @@ goog.dom.animationFrame.TaskSet_;
  *   mutate: (!Function|undefined)
  * }}
  */
-goog.dom.animationFrame.Spec;
-
-
+goog.dom.animationFrame.Spec
 
 /**
  * A type to represent state. Users may add properties as desired.
  * @constructor
  * @final
  */
-goog.dom.animationFrame.State = function() {};
-
+goog.dom.animationFrame.State = function() {}
 
 /**
  * Saves a set of tasks to be executed in the next requestAnimationFrame phase.
@@ -107,38 +101,33 @@ goog.dom.animationFrame.State = function() {};
  * a new event is created during the processing).
  * @private {!Array<!Array<goog.dom.animationFrame.TaskSet_>>}
  */
-goog.dom.animationFrame.tasks_ = [[], []];
-
+goog.dom.animationFrame.tasks_ = [[], []]
 
 /**
  * Values are 0 or 1, for whether the first or second array should be used to
  * lookup or add tasks.
  * @private {number}
  */
-goog.dom.animationFrame.doubleBufferIndex_ = 0;
-
+goog.dom.animationFrame.doubleBufferIndex_ = 0
 
 /**
  * Whether we have already requested an animation frame that hasn't happened
  * yet.
  * @private {boolean}
  */
-goog.dom.animationFrame.requestedFrame_ = false;
-
+goog.dom.animationFrame.requestedFrame_ = false
 
 /**
  * Counter to generate IDs for tasks.
  * @private {number}
  */
-goog.dom.animationFrame.taskId_ = 0;
-
+goog.dom.animationFrame.taskId_ = 0
 
 /**
  * Whether the animationframe runTasks_ loop is currently running.
  * @private {boolean}
  */
-goog.dom.animationFrame.running_ = false;
-
+goog.dom.animationFrame.running_ = false
 
 /**
  * Returns a function that schedules the two passed-in functions to be run upon
@@ -158,9 +147,9 @@ goog.dom.animationFrame.running_ = false;
  * @template THIS
  */
 goog.dom.animationFrame.createTask = function(spec, opt_context) {
-  var id = goog.dom.animationFrame.taskId_++;
-  var measureTask = {id: id, fn: spec.measure, context: opt_context};
-  var mutateTask = {id: id, fn: spec.mutate, context: opt_context};
+  var id = goog.dom.animationFrame.taskId_++
+  var measureTask = { id: id, fn: spec.measure, context: opt_context }
+  var mutateTask = { id: id, fn: spec.mutate, context: opt_context }
 
   var taskSet = {
     measureTask: measureTask,
@@ -168,7 +157,7 @@ goog.dom.animationFrame.createTask = function(spec, opt_context) {
     state: {},
     args: undefined,
     isScheduled: false
-  };
+  }
 
   return function() {
     // Save args and state.
@@ -176,79 +165,78 @@ goog.dom.animationFrame.createTask = function(spec, opt_context) {
       // The state argument goes last. That is kinda horrible but compatible
       // with {@see wiz.async.method}.
       if (!taskSet.args) {
-        taskSet.args = [];
+        taskSet.args = []
       }
-      taskSet.args.length = 0;
-      taskSet.args.push.apply(taskSet.args, arguments);
-      taskSet.args.push(taskSet.state);
+      taskSet.args.length = 0
+      taskSet.args.push.apply(taskSet.args, arguments)
+      taskSet.args.push(taskSet.state)
     } else {
       if (!taskSet.args || taskSet.args.length == 0) {
-        taskSet.args = [taskSet.state];
+        taskSet.args = [taskSet.state]
       } else {
-        taskSet.args[0] = taskSet.state;
-        taskSet.args.length = 1;
+        taskSet.args[0] = taskSet.state
+        taskSet.args.length = 1
       }
     }
     if (!taskSet.isScheduled) {
-      taskSet.isScheduled = true;
-      var tasksArray = goog.dom.animationFrame
-                           .tasks_[goog.dom.animationFrame.doubleBufferIndex_];
-      tasksArray.push(
-          /** @type {goog.dom.animationFrame.TaskSet_} */ (taskSet));
+      taskSet.isScheduled = true
+      var tasksArray =
+        goog.dom.animationFrame.tasks_[
+          goog.dom.animationFrame.doubleBufferIndex_
+        ]
+      tasksArray.push(/** @type {goog.dom.animationFrame.TaskSet_} */ (taskSet))
     }
-    goog.dom.animationFrame.requestAnimationFrame_();
-  };
-};
-
+    goog.dom.animationFrame.requestAnimationFrame_()
+  }
+}
 
 /**
  * Run scheduled tasks.
  * @private
  */
 goog.dom.animationFrame.runTasks_ = function() {
-  goog.dom.animationFrame.running_ = true;
-  goog.dom.animationFrame.requestedFrame_ = false;
-  var tasksArray = goog.dom.animationFrame
-                       .tasks_[goog.dom.animationFrame.doubleBufferIndex_];
-  var taskLength = tasksArray.length;
+  goog.dom.animationFrame.running_ = true
+  goog.dom.animationFrame.requestedFrame_ = false
+  var tasksArray =
+    goog.dom.animationFrame.tasks_[goog.dom.animationFrame.doubleBufferIndex_]
+  var taskLength = tasksArray.length
 
   // During the runTasks_, if there is a recursive call to queue up more
   // task(s) for the next frame, we use double-buffering for that.
   goog.dom.animationFrame.doubleBufferIndex_ =
-      (goog.dom.animationFrame.doubleBufferIndex_ + 1) % 2;
+    (goog.dom.animationFrame.doubleBufferIndex_ + 1) % 2
 
-  var task;
+  var task
 
   // Run all the measure tasks first.
   for (var i = 0; i < taskLength; ++i) {
-    task = tasksArray[i];
-    var measureTask = task.measureTask;
-    task.isScheduled = false;
+    task = tasksArray[i]
+    var measureTask = task.measureTask
+    task.isScheduled = false
     if (measureTask.fn) {
       // TODO (perumaal): Handle any exceptions thrown by the lambda.
-      measureTask.fn.apply(measureTask.context, task.args);
+      measureTask.fn.apply(measureTask.context, task.args)
     }
   }
 
   // Run the mutate tasks next.
   for (var i = 0; i < taskLength; ++i) {
-    task = tasksArray[i];
-    var mutateTask = task.mutateTask;
-    task.isScheduled = false;
+    task = tasksArray[i]
+    var mutateTask = task.mutateTask
+    task.isScheduled = false
     if (mutateTask.fn) {
       // TODO (perumaal): Handle any exceptions thrown by the lambda.
-      mutateTask.fn.apply(mutateTask.context, task.args);
+      mutateTask.fn.apply(mutateTask.context, task.args)
     }
 
     // Clear state for next vsync.
-    task.state = {};
+    task.state = {}
   }
 
   // Clear the tasks array as we have finished processing all the tasks.
-  tasksArray.length = 0;
-  goog.dom.animationFrame.running_ = false;
-};
-
+  tasksArray.length = 0
+  goog.dom.animationFrame.running_ = false
+}
 
 /**
  * @return {boolean} Whether the animationframe is currently running. For use
@@ -256,9 +244,8 @@ goog.dom.animationFrame.runTasks_ = function() {
  *     additional frame.
  */
 goog.dom.animationFrame.isRunning = function() {
-  return goog.dom.animationFrame.running_;
-};
-
+  return goog.dom.animationFrame.running_
+}
 
 /**
  * Request {@see goog.dom.animationFrame.runTasks_} to be called upon the
@@ -267,8 +254,8 @@ goog.dom.animationFrame.isRunning = function() {
  */
 goog.dom.animationFrame.requestAnimationFrame_ = function() {
   if (goog.dom.animationFrame.requestedFrame_) {
-    return;
+    return
   }
-  goog.dom.animationFrame.requestedFrame_ = true;
-  window.requestAnimationFrame(goog.dom.animationFrame.runTasks_);
-};
+  goog.dom.animationFrame.requestedFrame_ = true
+  window.requestAnimationFrame(goog.dom.animationFrame.runTasks_)
+}

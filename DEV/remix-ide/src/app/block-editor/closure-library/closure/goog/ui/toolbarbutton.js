@@ -18,13 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarButton');
+goog.provide("goog.ui.ToolbarButton")
 
-goog.require('goog.ui.Button');
-goog.require('goog.ui.ToolbarButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Button")
+goog.require("goog.ui.ToolbarButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A button control for a toolbar.
@@ -41,14 +39,18 @@ goog.require('goog.ui.registry');
  */
 goog.ui.ToolbarButton = function(content, opt_renderer, opt_domHelper) {
   goog.ui.Button.call(
-      this, content,
-      opt_renderer || goog.ui.ToolbarButtonRenderer.getInstance(),
-      opt_domHelper);
-};
-goog.inherits(goog.ui.ToolbarButton, goog.ui.Button);
-
+    this,
+    content,
+    opt_renderer || goog.ui.ToolbarButtonRenderer.getInstance(),
+    opt_domHelper
+  )
+}
+goog.inherits(goog.ui.ToolbarButton, goog.ui.Button)
 
 // Registers a decorator factory function for toolbar buttons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.ToolbarButtonRenderer.CSS_CLASS,
-    function() { return new goog.ui.ToolbarButton(null); });
+  goog.ui.ToolbarButtonRenderer.CSS_CLASS,
+  function() {
+    return new goog.ui.ToolbarButton(null)
+  }
+)

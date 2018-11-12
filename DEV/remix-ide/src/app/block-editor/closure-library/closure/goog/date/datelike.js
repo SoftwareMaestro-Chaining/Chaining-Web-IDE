@@ -18,12 +18,11 @@
  * @author nicksantos@google.com (Nick Santos)
  */
 
-goog.provide('goog.date.DateLike');
+goog.provide("goog.date.DateLike")
 
-goog.forwardDeclare('goog.date.Date');  // circular reference
-
+goog.forwardDeclare("goog.date.Date") // circular reference
 
 /**
  * @typedef {(Date|goog.date.Date)}
  */
-goog.date.DateLike;
+goog.date.DateLike

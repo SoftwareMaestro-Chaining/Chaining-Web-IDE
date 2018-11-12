@@ -1,4 +1,4 @@
-'use strict'
+"use strict"
 
 var ballot = `pragma solidity ^0.4.0;
 contract Ballot {
@@ -89,6 +89,6 @@ contract test3 {
 `
 
 module.exports = {
-  ballot: { name: 'ballot.sol', content: ballot },
-  ballot_test: { name: 'ballot_test.sol', content: ballotTest }
+  ballot: { name: "ballot.sol", content: ballot },
+  ballot_test: { name: "ballot_test.sol", content: ballotTest }
 }

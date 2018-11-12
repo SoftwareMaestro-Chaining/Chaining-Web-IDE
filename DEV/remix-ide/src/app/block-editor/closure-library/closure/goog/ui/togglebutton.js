@@ -19,14 +19,12 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToggleButton');
+goog.provide("goog.ui.ToggleButton")
 
-goog.require('goog.ui.Button');
-goog.require('goog.ui.Component');
-goog.require('goog.ui.CustomButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Button")
+goog.require("goog.ui.Component")
+goog.require("goog.ui.CustomButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A toggle button, with checkbox-like semantics.  Rendered using
@@ -44,16 +42,20 @@ goog.require('goog.ui.registry');
  */
 goog.ui.ToggleButton = function(content, opt_renderer, opt_domHelper) {
   goog.ui.Button.call(
-      this, content, opt_renderer || goog.ui.CustomButtonRenderer.getInstance(),
-      opt_domHelper);
-  this.setSupportedState(goog.ui.Component.State.CHECKED, true);
-};
-goog.inherits(goog.ui.ToggleButton, goog.ui.Button);
-
+    this,
+    content,
+    opt_renderer || goog.ui.CustomButtonRenderer.getInstance(),
+    opt_domHelper
+  )
+  this.setSupportedState(goog.ui.Component.State.CHECKED, true)
+}
+goog.inherits(goog.ui.ToggleButton, goog.ui.Button)
 
 // Register a decorator factory function for goog.ui.ToggleButtons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.getCssName('goog-toggle-button'), function() {
-      // ToggleButton defaults to using CustomButtonRenderer.
-      return new goog.ui.ToggleButton(null);
-    });
+  goog.getCssName("goog-toggle-button"),
+  function() {
+    // ToggleButton defaults to using CustomButtonRenderer.
+    return new goog.ui.ToggleButton(null)
+  }
+)

@@ -20,12 +20,10 @@
  * @see ../demos/toolbar.html
  */
 
-goog.provide('goog.ui.Toolbar');
+goog.provide("goog.ui.Toolbar")
 
-goog.require('goog.ui.Container');
-goog.require('goog.ui.ToolbarRenderer');
-
-
+goog.require("goog.ui.Container")
+goog.require("goog.ui.ToolbarRenderer")
 
 /**
  * A toolbar class, implemented as a {@link goog.ui.Container} that defaults to
@@ -41,20 +39,22 @@ goog.require('goog.ui.ToolbarRenderer');
  */
 goog.ui.Toolbar = function(opt_renderer, opt_orientation, opt_domHelper) {
   goog.ui.Container.call(
-      this, opt_orientation,
-      opt_renderer || goog.ui.ToolbarRenderer.getInstance(), opt_domHelper);
-};
-goog.inherits(goog.ui.Toolbar, goog.ui.Container);
-
+    this,
+    opt_orientation,
+    opt_renderer || goog.ui.ToolbarRenderer.getInstance(),
+    opt_domHelper
+  )
+}
+goog.inherits(goog.ui.Toolbar, goog.ui.Container)
 
 /** @override */
 goog.ui.Toolbar.prototype.handleFocus = function(e) {
-  goog.ui.Toolbar.base(this, 'handleFocus', e);
+  goog.ui.Toolbar.base(this, "handleFocus", e)
   // Highlight the first highlightable item on focus via the keyboard for ARIA
   // spec compliance. Do not highlight the item if the mouse button is pressed,
   // since this method is also called from handleMouseDown when a toolbar button
   // is clicked.
   if (!this.isMouseButtonPressed()) {
-    this.highlightFirst();
+    this.highlightFirst()
   }
-};
+}

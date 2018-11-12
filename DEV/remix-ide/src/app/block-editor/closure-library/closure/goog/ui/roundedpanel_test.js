@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.RoundedPanelTest');
-goog.setTestOnly('goog.ui.RoundedPanelTest');
+goog.provide("goog.ui.RoundedPanelTest")
+goog.setTestOnly("goog.ui.RoundedPanelTest")
 
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.CssRoundedPanel');
-goog.require('goog.ui.GraphicsRoundedPanel');
-goog.require('goog.ui.RoundedPanel');
-goog.require('goog.userAgent');
-
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.CssRoundedPanel")
+goog.require("goog.ui.GraphicsRoundedPanel")
+goog.require("goog.ui.RoundedPanel")
+goog.require("goog.userAgent")
 
 /**
  * Tests goog.ui.RoundedPanel.create(), ensuring that the proper instance is
@@ -28,31 +27,43 @@ goog.require('goog.userAgent');
  */
 function testRoundedPanelCreate() {
   var rcp = goog.ui.RoundedPanel.create(
-      15, 5, '#cccccc', '#cccccc', goog.ui.RoundedPanel.Corner.ALL);
-  if (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher('1.9a')) {
+    15,
+    5,
+    "#cccccc",
+    "#cccccc",
+    goog.ui.RoundedPanel.Corner.ALL
+  )
+  if (goog.userAgent.GECKO && goog.userAgent.isVersionOrHigher("1.9a")) {
     assertTrue(
-        'For Firefox 3.0+ (uses Gecko 1.9+), an instance of ' +
-            'goog.ui.CssRoundedPanel should be returned.',
-        rcp instanceof goog.ui.CssRoundedPanel);
-  } else if (goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher('500')) {
+      "For Firefox 3.0+ (uses Gecko 1.9+), an instance of " +
+        "goog.ui.CssRoundedPanel should be returned.",
+      rcp instanceof goog.ui.CssRoundedPanel
+    )
+  } else if (goog.userAgent.WEBKIT && goog.userAgent.isVersionOrHigher("500")) {
     assertTrue(
-        'For Safari 3.0+, an instance of goog.ui.CssRoundedPanel ' +
-            'should be returned.',
-        rcp instanceof goog.ui.CssRoundedPanel);
+      "For Safari 3.0+, an instance of goog.ui.CssRoundedPanel " +
+        "should be returned.",
+      rcp instanceof goog.ui.CssRoundedPanel
+    )
   } else if (goog.userAgent.EDGE) {
     assertTrue(
-        'For MS Edge, an instance of goog.ui.CssRoundedPanel ' +
-            'should be returned.',
-        rcp instanceof goog.ui.CssRoundedPanel);
+      "For MS Edge, an instance of goog.ui.CssRoundedPanel " +
+        "should be returned.",
+      rcp instanceof goog.ui.CssRoundedPanel
+    )
   } else if (
-      goog.userAgent.GECKO || goog.userAgent.IE || goog.userAgent.OPERA ||
-      goog.userAgent.WEBKIT) {
+    goog.userAgent.GECKO ||
+    goog.userAgent.IE ||
+    goog.userAgent.OPERA ||
+    goog.userAgent.WEBKIT
+  ) {
     assertTrue(
-        'For Gecko 1.8- (ex. Firefox 2.0-, Camino 1.5-, etc.), ' +
-            'IE, Opera, and Safari 2.0-, an instance of ' +
-            'goog.ui.GraphicsRoundedPanel should be returned.',
-        rcp instanceof goog.ui.GraphicsRoundedPanel);
+      "For Gecko 1.8- (ex. Firefox 2.0-, Camino 1.5-, etc.), " +
+        "IE, Opera, and Safari 2.0-, an instance of " +
+        "goog.ui.GraphicsRoundedPanel should be returned.",
+      rcp instanceof goog.ui.GraphicsRoundedPanel
+    )
   } else {
-    assertNull('For non-supported user-agents, null is returned.', rcp);
+    assertNull("For non-supported user-agents, null is returned.", rcp)
   }
 }

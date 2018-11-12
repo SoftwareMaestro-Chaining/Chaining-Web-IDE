@@ -12,35 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.ComponentUtilTest');
-goog.setTestOnly('goog.ui.ComponentUtilTest');
+goog.provide("goog.ui.ComponentUtilTest")
+goog.setTestOnly("goog.ui.ComponentUtilTest")
 
-goog.require('goog.events.EventType');
-goog.require('goog.events.PointerAsMouseEventType');
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.Component');
-goog.require('goog.ui.ComponentUtil');
+goog.require("goog.events.EventType")
+goog.require("goog.events.PointerAsMouseEventType")
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.Component")
+goog.require("goog.ui.ComponentUtil")
 
-var component;
+var component
 
 function setUp() {
-  component = new goog.ui.Component();
+  component = new goog.ui.Component()
 }
 
 function tearDown() {
-  component.dispose();
+  component.dispose()
 }
 
 function testGetMouseEventType() {
-  component.setPointerEventsEnabled(false);
+  component.setPointerEventsEnabled(false)
   assertEquals(
-      'Component must use mouse events when specified.',
-      goog.ui.ComponentUtil.getMouseEventType(component),
-      goog.events.EventType);
+    "Component must use mouse events when specified.",
+    goog.ui.ComponentUtil.getMouseEventType(component),
+    goog.events.EventType
+  )
 
-  component.setPointerEventsEnabled(true);
+  component.setPointerEventsEnabled(true)
   assertEquals(
-      'Component must use pointer events when specified.',
-      goog.ui.ComponentUtil.getMouseEventType(component),
-      goog.events.PointerAsMouseEventType);
+    "Component must use pointer events when specified.",
+    goog.ui.ComponentUtil.getMouseEventType(component),
+    goog.events.PointerAsMouseEventType
+  )
 }

@@ -20,12 +20,11 @@
  * @author nicksay@google.com (Alex Nicksay)
  */
 
-goog.provide('goog.dom.dataset');
+goog.provide("goog.dom.dataset")
 
-goog.require('goog.labs.userAgent.browser');
-goog.require('goog.string');
-goog.require('goog.userAgent.product');
-
+goog.require("goog.labs.userAgent.browser")
+goog.require("goog.string")
+goog.require("goog.userAgent.product")
 
 /**
  * Whether using the dataset property is allowed.
@@ -42,8 +41,7 @@ goog.require('goog.userAgent.product');
  * @private
  */
 goog.dom.dataset.ALLOWED_ =
-    !goog.userAgent.product.IE && !goog.labs.userAgent.browser.isSafari();
-
+  !goog.userAgent.product.IE && !goog.labs.userAgent.browser.isSafari()
 
 /**
  * The DOM attribute name prefix that must be present for it to be considered
@@ -52,8 +50,7 @@ goog.dom.dataset.ALLOWED_ =
  * @const
  * @private
  */
-goog.dom.dataset.PREFIX_ = 'data-';
-
+goog.dom.dataset.PREFIX_ = "data-"
 
 /**
  * Returns whether a string is a valid dataset property name.
@@ -62,9 +59,8 @@ goog.dom.dataset.PREFIX_ = 'data-';
  * @private
  */
 goog.dom.dataset.isValidProperty_ = function(key) {
-  return !/-[a-z]/.test(key);
-};
-
+  return !/-[a-z]/.test(key)
+}
 
 /**
  * Sets a custom data attribute on an element. The key should be
@@ -74,19 +70,20 @@ goog.dom.dataset.isValidProperty_ = function(key) {
  * @param {string} value Value for the custom data attribute.
  */
 goog.dom.dataset.set = function(element, key, value) {
-  var htmlElement = /** @type {HTMLElement} */ (element);
+  var htmlElement = /** @type {HTMLElement} */ (element)
   if (goog.dom.dataset.ALLOWED_ && htmlElement.dataset) {
-    htmlElement.dataset[key] = value;
+    htmlElement.dataset[key] = value
   } else if (!goog.dom.dataset.isValidProperty_(key)) {
     throw new Error(
-        goog.DEBUG ? '"' + key + '" is not a valid dataset property name.' :
-                     '');
+      goog.DEBUG ? '"' + key + '" is not a valid dataset property name.' : ""
+    )
   } else {
     element.setAttribute(
-        goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key), value);
+      goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key),
+      value
+    )
   }
-};
-
+}
 
 /**
  * Gets a custom data attribute from an element. The key should be
@@ -99,28 +96,30 @@ goog.dom.dataset.get = function(element, key) {
   // Edge, unlike other browsers, will do camel-case conversion when retrieving
   // "dash-case" properties.
   if (!goog.dom.dataset.isValidProperty_(key)) {
-    return null;
+    return null
   }
-  var htmlElement = /** @type {HTMLElement} */ (element);
+  var htmlElement = /** @type {HTMLElement} */ (element)
   if (goog.dom.dataset.ALLOWED_ && htmlElement.dataset) {
     // Android browser (non-chrome) returns the empty string for
     // element.dataset['doesNotExist'].
-    if (goog.labs.userAgent.browser.isAndroidBrowser() &&
-        !(key in htmlElement.dataset)) {
-      return null;
+    if (
+      goog.labs.userAgent.browser.isAndroidBrowser() &&
+      !(key in htmlElement.dataset)
+    ) {
+      return null
     }
-    var value = htmlElement.dataset[key];
-    return value === undefined ? null : value;
+    var value = htmlElement.dataset[key]
+    return value === undefined ? null : value
   } else {
     return htmlElement.getAttribute(
-        goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key));
+      goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key)
+    )
   }
-};
-
+}
 
 /**
  * Removes a custom data attribute from an element. The key should be
-  * in camelCase format (e.g "keyName" for the "data-key-name" attribute).
+ * in camelCase format (e.g "keyName" for the "data-key-name" attribute).
  * @param {Element} element DOM node to get the custom data attribute from.
  * @param {string} key Key for the custom data attribute.
  */
@@ -128,21 +127,21 @@ goog.dom.dataset.remove = function(element, key) {
   // Edge, unlike other browsers, will do camel-case conversion when removing
   // "dash-case" properties.
   if (!goog.dom.dataset.isValidProperty_(key)) {
-    return;
+    return
   }
-  var htmlElement = /** @type {HTMLElement} */ (element);
+  var htmlElement = /** @type {HTMLElement} */ (element)
   if (goog.dom.dataset.ALLOWED_ && htmlElement.dataset) {
     // In strict mode Safari will trigger an error when trying to delete a
     // property which does not exist.
     if (goog.dom.dataset.has(element, key)) {
-      delete htmlElement.dataset[key];
+      delete htmlElement.dataset[key]
     }
   } else {
     element.removeAttribute(
-        goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key));
+      goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key)
+    )
   }
-};
-
+}
 
 /**
  * Checks whether custom data attribute exists on an element. The key should be
@@ -156,20 +155,21 @@ goog.dom.dataset.has = function(element, key) {
   // Edge, unlike other browsers, will do camel-case conversion when retrieving
   // "dash-case" properties.
   if (!goog.dom.dataset.isValidProperty_(key)) {
-    return false;
+    return false
   }
-  var htmlElement = /** @type {HTMLElement} */ (element);
+  var htmlElement = /** @type {HTMLElement} */ (element)
   if (goog.dom.dataset.ALLOWED_ && htmlElement.dataset) {
-    return key in htmlElement.dataset;
+    return key in htmlElement.dataset
   } else if (htmlElement.hasAttribute) {
     return htmlElement.hasAttribute(
-        goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key));
+      goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key)
+    )
   } else {
-    return !!(htmlElement.getAttribute(
-        goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key)));
+    return !!htmlElement.getAttribute(
+      goog.dom.dataset.PREFIX_ + goog.string.toSelectorCase(key)
+    )
   }
-};
-
+}
 
 /**
  * Gets all custom data attributes as a string map.  The attribute names will be
@@ -181,20 +181,20 @@ goog.dom.dataset.has = function(element, key) {
  *     respective values.
  */
 goog.dom.dataset.getAll = function(element) {
-  var htmlElement = /** @type {HTMLElement} */ (element);
+  var htmlElement = /** @type {HTMLElement} */ (element)
   if (goog.dom.dataset.ALLOWED_ && htmlElement.dataset) {
-    return htmlElement.dataset;
+    return htmlElement.dataset
   } else {
-    var dataset = {};
-    var attributes = element.attributes;
+    var dataset = {}
+    var attributes = element.attributes
     for (var i = 0; i < attributes.length; ++i) {
-      var attribute = attributes[i];
+      var attribute = attributes[i]
       if (goog.string.startsWith(attribute.name, goog.dom.dataset.PREFIX_)) {
         // We use substr(5), since it's faster than replacing 'data-' with ''.
-        var key = goog.string.toCamelCase(attribute.name.substr(5));
-        dataset[key] = attribute.value;
+        var key = goog.string.toCamelCase(attribute.name.substr(5))
+        dataset[key] = attribute.value
       }
     }
-    return dataset;
+    return dataset
   }
-};
+}

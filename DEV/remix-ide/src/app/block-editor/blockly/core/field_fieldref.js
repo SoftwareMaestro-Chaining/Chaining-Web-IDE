@@ -22,14 +22,13 @@
  * @fileoverview Field input field.
  * @author fdohrendorf@outlook.com (Florian Dohrendorf)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.FieldFieldref');
+goog.provide("Blockly.FieldFieldref")
 
-goog.require('Blockly.FieldDropdown');
-goog.require('Blockly.Types');
-goog.require('goog.string');
-
+goog.require("Blockly.FieldDropdown")
+goog.require("Blockly.Types")
+goog.require("goog.string")
 
 /**
  * Class for a field dropdown field.
@@ -38,60 +37,63 @@ goog.require('goog.string');
  * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldFieldref = function (opt_changeHandler) {
-    Blockly.FieldFieldref.superClass_.constructor.call(this,
-        Blockly.FieldFieldref.dropdownCreate, opt_changeHandler);
-};
-goog.inherits(Blockly.FieldFieldref, Blockly.FieldDropdown);
+Blockly.FieldFieldref = function(opt_changeHandler) {
+  Blockly.FieldFieldref.superClass_.constructor.call(
+    this,
+    Blockly.FieldFieldref.dropdownCreate,
+    opt_changeHandler
+  )
+}
+goog.inherits(Blockly.FieldFieldref, Blockly.FieldDropdown)
 
 /**
  * Get the type
  * @returns {string} Current type
  */
 Blockly.FieldFieldref.prototype.getType = function() {
-    return this.type_;
+  return this.type_
 }
 
 /**
- * Set the type 
+ * Set the type
  * @param {string} type New type
  */
-Blockly.FieldFieldref.prototype.setType = function (type) {
-    // get currentField we want to use the same if the type has this field
-    var currentField = this.getValue();
+Blockly.FieldFieldref.prototype.setType = function(type) {
+  // get currentField we want to use the same if the type has this field
+  var currentField = this.getValue()
 
-    // if we don't have a current one use the previous one
-    // this is for convienience when disconnected by accident
-    if (currentField === '')
-        currentField = this.previousField_ || '';
+  // if we don't have a current one use the previous one
+  // this is for convienience when disconnected by accident
+  if (currentField === "") currentField = this.previousField_ || ""
 
-    this.type_ = type;
+  this.type_ = type
 
-    var fieldName = null;
-    if (type) {
-        
-        var fields = Blockly.Types.getFields(this.type_.name);
+  var fieldName = null
+  if (type) {
+    var fields = Blockly.Types.getFields(this.type_.name)
 
-        // try to find current Field in fields of type
-        if (fields.length > 0) {
-            if (currentField && currentField !== '') {
-                var found = fields.filter(function(e) { return e.name === currentField });
-                if (found.length > 0) {
-                    fieldName = currentField;
-                }
-            }
-
-            // if currentField wasn't found just take the first field
-            if (!fieldName) {
-                fieldName = fields[0].name;
-            }
+    // try to find current Field in fields of type
+    if (fields.length > 0) {
+      if (currentField && currentField !== "") {
+        var found = fields.filter(function(e) {
+          return e.name === currentField
+        })
+        if (found.length > 0) {
+          fieldName = currentField
         }
-    } else {
-        // no type store current as previous
-        this.previousField_ = currentField;
-    }
+      }
 
-    this.setValue(fieldName || '');
+      // if currentField wasn't found just take the first field
+      if (!fieldName) {
+        fieldName = fields[0].name
+      }
+    }
+  } else {
+    // no type store current as previous
+    this.previousField_ = currentField
+  }
+
+  this.setValue(fieldName || "")
 }
 
 /**
@@ -99,16 +101,14 @@ Blockly.FieldFieldref.prototype.setType = function (type) {
  * @return {!Array.<string>} Array of field names.
  * @this {!Blockly.FieldType}
  */
-Blockly.FieldFieldref.dropdownCreate = function () {
+Blockly.FieldFieldref.dropdownCreate = function() {
+  if (!this.type_) return [["", undefined]]
 
-    if (!this.type_) return [['', undefined]];
+  var fields = Blockly.Types.getFields(this.type_.name)
 
-
-    var fields = Blockly.Types.getFields(this.type_.name);
-
-    var result = [];
-    for (var i = 0; i < fields.length; i++) {
-        result[i] = [fields[i].name, fields[i].name];
-    }
-    return result;
-};
+  var result = []
+  for (var i = 0; i < fields.length; i++) {
+    result[i] = [fields[i].name, fields[i].name]
+  }
+  return result
+}

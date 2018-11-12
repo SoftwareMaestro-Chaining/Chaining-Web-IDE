@@ -19,13 +19,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.TabRenderer');
+goog.provide("goog.ui.TabRenderer")
 
-goog.require('goog.a11y.aria.Role');
-goog.require('goog.ui.Component');
-goog.require('goog.ui.ControlRenderer');
-
-
+goog.require("goog.a11y.aria.Role")
+goog.require("goog.ui.Component")
+goog.require("goog.ui.ControlRenderer")
 
 /**
  * Default renderer for {@link goog.ui.Tab}s, based on the `TabPane` code.
@@ -33,19 +31,17 @@ goog.require('goog.ui.ControlRenderer');
  * @extends {goog.ui.ControlRenderer}
  */
 goog.ui.TabRenderer = function() {
-  goog.ui.ControlRenderer.call(this);
-};
-goog.inherits(goog.ui.TabRenderer, goog.ui.ControlRenderer);
-goog.addSingletonGetter(goog.ui.TabRenderer);
-
+  goog.ui.ControlRenderer.call(this)
+}
+goog.inherits(goog.ui.TabRenderer, goog.ui.ControlRenderer)
+goog.addSingletonGetter(goog.ui.TabRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.TabRenderer.CSS_CLASS = goog.getCssName('goog-tab');
-
+goog.ui.TabRenderer.CSS_CLASS = goog.getCssName("goog-tab")
 
 /**
  * Returns the CSS class name to be applied to the root element of all tabs
@@ -54,9 +50,8 @@ goog.ui.TabRenderer.CSS_CLASS = goog.getCssName('goog-tab');
  * @override
  */
 goog.ui.TabRenderer.prototype.getCssClass = function() {
-  return goog.ui.TabRenderer.CSS_CLASS;
-};
-
+  return goog.ui.TabRenderer.CSS_CLASS
+}
 
 /**
  * Returns the ARIA role to be applied to the tab element.
@@ -65,9 +60,8 @@ goog.ui.TabRenderer.prototype.getCssClass = function() {
  * @override
  */
 goog.ui.TabRenderer.prototype.getAriaRole = function() {
-  return goog.a11y.aria.Role.TAB;
-};
-
+  return goog.a11y.aria.Role.TAB
+}
 
 /**
  * Returns the tab's contents wrapped in a DIV, with the renderer's own CSS
@@ -81,17 +75,16 @@ goog.ui.TabRenderer.prototype.getAriaRole = function() {
  * @override
  */
 goog.ui.TabRenderer.prototype.createDom = function(tab) {
-  var element = goog.ui.TabRenderer.superClass_.createDom.call(this, tab);
+  var element = goog.ui.TabRenderer.superClass_.createDom.call(this, tab)
 
-  var tooltip = tab.getTooltip();
+  var tooltip = tab.getTooltip()
   if (tooltip) {
     // Only update the element if the tab has a tooltip.
-    this.setTooltip(element, tooltip);
+    this.setTooltip(element, tooltip)
   }
 
-  return element;
-};
-
+  return element
+}
 
 /**
  * Decorates the element with the tab.  Initializes the tab's ID, content,
@@ -103,30 +96,29 @@ goog.ui.TabRenderer.prototype.createDom = function(tab) {
  * @override
  */
 goog.ui.TabRenderer.prototype.decorate = function(tab, element) {
-  element = goog.ui.TabRenderer.superClass_.decorate.call(this, tab, element);
+  element = goog.ui.TabRenderer.superClass_.decorate.call(this, tab, element)
 
-  var tooltip = this.getTooltip(element);
+  var tooltip = this.getTooltip(element)
   if (tooltip) {
     // Only update the tab if the element has a tooltip.
-    tab.setTooltipInternal(tooltip);
+    tab.setTooltipInternal(tooltip)
   }
 
   // If the tab is selected and hosted in a tab bar, update the tab bar's
   // selection model.
   if (tab.isSelected()) {
-    var tabBar = tab.getParent();
+    var tabBar = tab.getParent()
     if (tabBar && goog.isFunction(tabBar.setSelectedTab)) {
       // We need to temporarily deselect the tab, so the tab bar can re-select
       // it and thereby correctly initialize its state.  We use the protected
       // setState() method to avoid dispatching useless events.
-      tab.setState(goog.ui.Component.State.SELECTED, false);
-      tabBar.setSelectedTab(tab);
+      tab.setState(goog.ui.Component.State.SELECTED, false)
+      tabBar.setSelectedTab(tab)
     }
   }
 
-  return element;
-};
-
+  return element
+}
 
 /**
  * Takes a tab's root element, and returns its tooltip text, or the empty
@@ -135,9 +127,8 @@ goog.ui.TabRenderer.prototype.decorate = function(tab, element) {
  * @return {string} The tooltip text (empty string if none).
  */
 goog.ui.TabRenderer.prototype.getTooltip = function(element) {
-  return element.title || '';
-};
-
+  return element.title || ""
+}
 
 /**
  * Takes a tab's root element and a tooltip string, and updates the element
@@ -148,6 +139,6 @@ goog.ui.TabRenderer.prototype.getTooltip = function(element) {
  */
 goog.ui.TabRenderer.prototype.setTooltip = function(element, tooltip) {
   if (element) {
-    element.title = tooltip || '';
+    element.title = tooltip || ""
   }
-};
+}

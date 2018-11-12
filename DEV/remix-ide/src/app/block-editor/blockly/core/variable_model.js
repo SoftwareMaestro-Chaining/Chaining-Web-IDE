@@ -22,13 +22,12 @@
  * @fileoverview Components for the variable model.
  * @author marisaleung@google.com (Marisa Leung)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.VariableModel');
+goog.provide("Blockly.VariableModel")
 
-goog.require('Blockly.Events.VarCreate');
-goog.require('Blockly.utils');
-
+goog.require("Blockly.Events.VarCreate")
+goog.require("Blockly.utils")
 
 /**
  * Class for a variable model.
@@ -49,7 +48,7 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
    * The workspace the variable is in.
    * @type {!Blockly.Workspace}
    */
-  this.workspace = workspace;
+  this.workspace = workspace
 
   /**
    * The name of the variable, typically defined by the user. It must be
@@ -57,7 +56,7 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
    * changed by the user.
    * @type {string}
    */
-  this.name = name;
+  this.name = name
 
   /**
    * The type of the variable, such as 'int' or 'sound_effect'. This may be
@@ -66,7 +65,7 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
    * @see {Blockly.FieldVariable}
    * @type {string}
    */
-  this.type = opt_type || '';
+  this.type = opt_type || ""
 
   /**
    * A unique id for the variable. This should be defined at creation and
@@ -75,17 +74,17 @@ Blockly.VariableModel = function(workspace, name, opt_type, opt_id) {
    * @type {string}
    * @private
    */
-  this.id_ = opt_id || Blockly.utils.genUid();
+  this.id_ = opt_id || Blockly.utils.genUid()
 
-  Blockly.Events.fire(new Blockly.Events.VarCreate(this));
-};
+  Blockly.Events.fire(new Blockly.Events.VarCreate(this))
+}
 
 /**
  * @return {!string} The ID for the variable.
  */
 Blockly.VariableModel.prototype.getId = function() {
-  return this.id_;
-};
+  return this.id_
+}
 
 /**
  * A custom compare function for the VariableModel objects.
@@ -96,13 +95,13 @@ Blockly.VariableModel.prototype.getId = function() {
  * @package
  */
 Blockly.VariableModel.compareByName = function(var1, var2) {
-  var name1 = var1.name.toLowerCase();
-  var name2 = var2.name.toLowerCase();
+  var name1 = var1.name.toLowerCase()
+  var name2 = var2.name.toLowerCase()
   if (name1 < name2) {
-    return -1;
+    return -1
   } else if (name1 == name2) {
-    return 0;
+    return 0
   } else {
-    return 1;
+    return 1
   }
-};
+}

@@ -19,14 +19,12 @@
  * @see ../demos/tabbar.html
  */
 
-goog.provide('goog.ui.Tab');
+goog.provide("goog.ui.Tab")
 
-goog.require('goog.ui.Component');
-goog.require('goog.ui.Control');
-goog.require('goog.ui.TabRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Component")
+goog.require("goog.ui.Control")
+goog.require("goog.ui.TabRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * Tab control, designed to be hosted in a {@link goog.ui.TabBar}.  The tab's
@@ -43,37 +41,38 @@ goog.require('goog.ui.registry');
  */
 goog.ui.Tab = function(content, opt_renderer, opt_domHelper) {
   goog.ui.Control.call(
-      this, content, opt_renderer || goog.ui.TabRenderer.getInstance(),
-      opt_domHelper);
+    this,
+    content,
+    opt_renderer || goog.ui.TabRenderer.getInstance(),
+    opt_domHelper
+  )
 
   // Tabs support the SELECTED state.
-  this.setSupportedState(goog.ui.Component.State.SELECTED, true);
+  this.setSupportedState(goog.ui.Component.State.SELECTED, true)
 
   // Tabs must dispatch state transition events for the DISABLED and SELECTED
   // states in order for the tab bar to function properly.
   this.setDispatchTransitionEvents(
-      goog.ui.Component.State.DISABLED | goog.ui.Component.State.SELECTED,
-      true);
-};
-goog.inherits(goog.ui.Tab, goog.ui.Control);
-goog.tagUnsealableClass(goog.ui.Tab);
-
+    goog.ui.Component.State.DISABLED | goog.ui.Component.State.SELECTED,
+    true
+  )
+}
+goog.inherits(goog.ui.Tab, goog.ui.Control)
+goog.tagUnsealableClass(goog.ui.Tab)
 
 /**
  * Tooltip text for the tab, displayed on hover (if any).
  * @type {string|undefined}
  * @private
  */
-goog.ui.Tab.prototype.tooltip_;
-
+goog.ui.Tab.prototype.tooltip_
 
 /**
  * @return {string|undefined} Tab tooltip text (if any).
  */
 goog.ui.Tab.prototype.getTooltip = function() {
-  return this.tooltip_;
-};
-
+  return this.tooltip_
+}
 
 /**
  * Sets the tab tooltip text.  If the tab has already been rendered, updates
@@ -81,10 +80,9 @@ goog.ui.Tab.prototype.getTooltip = function() {
  * @param {string} tooltip New tooltip text.
  */
 goog.ui.Tab.prototype.setTooltip = function(tooltip) {
-  this.getRenderer().setTooltip(this.getElement(), tooltip);
-  this.setTooltipInternal(tooltip);
-};
-
+  this.getRenderer().setTooltip(this.getElement(), tooltip)
+  this.setTooltipInternal(tooltip)
+}
 
 /**
  * Sets the tab tooltip text.  Considered protected; to be called only by the
@@ -93,11 +91,13 @@ goog.ui.Tab.prototype.setTooltip = function(tooltip) {
  * @protected
  */
 goog.ui.Tab.prototype.setTooltipInternal = function(tooltip) {
-  this.tooltip_ = tooltip;
-};
-
+  this.tooltip_ = tooltip
+}
 
 // Register a decorator factory function for goog.ui.Tabs.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.TabRenderer.CSS_CLASS,
-    function() { return new goog.ui.Tab(null); });
+  goog.ui.TabRenderer.CSS_CLASS,
+  function() {
+    return new goog.ui.Tab(null)
+  }
+)

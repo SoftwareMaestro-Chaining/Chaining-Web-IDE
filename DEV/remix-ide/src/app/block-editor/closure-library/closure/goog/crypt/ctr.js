@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.crypt.Ctr');
+goog.provide("goog.crypt.Ctr")
 
-goog.require('goog.array');
-goog.require('goog.asserts');
-goog.require('goog.crypt');
+goog.require("goog.array")
+goog.require("goog.asserts")
+goog.require("goog.crypt")
 
 /**
  * Implementation of Ctr mode for block ciphers.  See
@@ -31,14 +31,13 @@ goog.require('goog.crypt');
  * @struct
  */
 goog.crypt.Ctr = function(cipher) {
-
   /**
    * Block cipher.
    * @type {!goog.crypt.BlockCipher}
    * @private
    */
-  this.cipher_ = cipher;
-};
+  this.cipher_ = cipher
+}
 
 /**
  * Encrypts a message.
@@ -51,35 +50,38 @@ goog.crypt.Ctr = function(cipher) {
  * @return {!Array<number>} Encrypted message.
  */
 goog.crypt.Ctr.prototype.encrypt = function(plainText, initialVector) {
-
   goog.asserts.assert(
-      initialVector.length == this.cipher_.BLOCK_SIZE,
-      'Initial vector must be size of one block.');
+    initialVector.length == this.cipher_.BLOCK_SIZE,
+    "Initial vector must be size of one block."
+  )
 
   // Copy the IV, so it's not modified.
-  var counter = goog.array.clone(initialVector);
+  var counter = goog.array.clone(initialVector)
 
-  var keyStreamBlock = [];
-  var encryptedArray = [];
-  var plainTextBlock = [];
+  var keyStreamBlock = []
+  var encryptedArray = []
+  var plainTextBlock = []
 
   while (encryptedArray.length < plainText.length) {
-    keyStreamBlock = this.cipher_.encrypt(counter);
-    goog.crypt.Ctr.incrementBigEndianCounter_(counter);
+    keyStreamBlock = this.cipher_.encrypt(counter)
+    goog.crypt.Ctr.incrementBigEndianCounter_(counter)
 
     plainTextBlock = goog.array.slice(
-        plainText, encryptedArray.length,
-        encryptedArray.length + this.cipher_.BLOCK_SIZE);
+      plainText,
+      encryptedArray.length,
+      encryptedArray.length + this.cipher_.BLOCK_SIZE
+    )
     goog.array.extend(
-        encryptedArray,
-        goog.crypt.xorByteArray(
-            plainTextBlock,
-            goog.array.slice(keyStreamBlock, 0, plainTextBlock.length)));
+      encryptedArray,
+      goog.crypt.xorByteArray(
+        plainTextBlock,
+        goog.array.slice(keyStreamBlock, 0, plainTextBlock.length)
+      )
+    )
   }
 
-  return encryptedArray;
-};
-
+  return encryptedArray
+}
 
 /**
  * Decrypts a message. In CTR, this is the same as encrypting.
@@ -90,7 +92,7 @@ goog.crypt.Ctr.prototype.encrypt = function(plainText, initialVector) {
  *     mode. An array of bytes with the same length as the block size.
  * @return {!Array<number>} Decrypted message.
  */
-goog.crypt.Ctr.prototype.decrypt = goog.crypt.Ctr.prototype.encrypt;
+goog.crypt.Ctr.prototype.decrypt = goog.crypt.Ctr.prototype.encrypt
 
 /**
  * Increments the big-endian integer represented in counter in-place.
@@ -100,13 +102,13 @@ goog.crypt.Ctr.prototype.decrypt = goog.crypt.Ctr.prototype.encrypt;
  */
 goog.crypt.Ctr.incrementBigEndianCounter_ = function(counter) {
   for (var i = counter.length - 1; i >= 0; i--) {
-    var currentByte = counter[i];
-    currentByte = (currentByte + 1) & 0xFF;  // Allow wrapping around.
-    counter[i] = currentByte;
+    var currentByte = counter[i]
+    currentByte = (currentByte + 1) & 0xff // Allow wrapping around.
+    counter[i] = currentByte
     if (currentByte != 0) {
       // This iteration hasn't wrapped around, which means there is
       // no carry to add to the next byte.
-      return;
-    }  // else, repeat with next byte.
+      return
+    } // else, repeat with next byte.
   }
-};
+}

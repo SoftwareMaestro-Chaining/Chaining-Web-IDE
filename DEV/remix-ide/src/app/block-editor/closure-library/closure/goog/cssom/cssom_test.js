@@ -12,28 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.cssomTest');
-goog.setTestOnly('goog.cssomTest');
+goog.provide("goog.cssomTest");
+goog.setTestOnly("goog.cssomTest");
 
-goog.require('goog.array');
-goog.require('goog.cssom');
-goog.require('goog.cssom.CssRuleType');
-goog.require('goog.testing.jsunit');
-goog.require('goog.userAgent');
+goog.require("goog.array");
+goog.require("goog.cssom");
+goog.require("goog.cssom.CssRuleType");
+goog.require("goog.testing.jsunit");
+goog.require("goog.userAgent");
 
 // Since sheet cssom_test1.css's first line is to import
 // cssom_test2.css, we should get 2 before one in the string.
-var cssText = '.css-link-1 { display: block; } ' +
-    '.css-import-2 { display: block; } ' +
-    '.css-import-1 { display: block; } ' +
-    '.css-style-1 { display: block; } ' +
-    '.css-style-2 { display: block; } ' +
-    '.css-style-3 { display: block; }';
+var cssText =
+  ".css-link-1 { display: block; } " +
+  ".css-import-2 { display: block; } " +
+  ".css-import-1 { display: block; } " +
+  ".css-style-1 { display: block; } " +
+  ".css-style-2 { display: block; } " +
+  ".css-style-3 { display: block; }";
 
-var replacementCssText = '.css-repl-1 { display: block; }';
+var replacementCssText = ".css-repl-1 { display: block; }";
 
-var isIe7 = goog.userAgent.IE &&
-    (goog.userAgent.compare(goog.userAgent.VERSION, '7.0') == 0);
+var isIe7 =
+  goog.userAgent.IE &&
+  goog.userAgent.compare(goog.userAgent.VERSION, "7.0") == 0;
 
 // We're going to toLowerCase cssText before testing, because IE returns
 // CSS property names in UPPERCASE, and the function shouldn't
@@ -42,33 +44,43 @@ var isIe7 = goog.userAgent.IE &&
 // Same goes for fixing the optimized removal of trailing ; in rules.
 // Also needed for Opera.
 function fixCssTextForIe(cssText) {
-  cssText = cssText.toLowerCase().replace(/\s*$/, '');
+  cssText = cssText.toLowerCase().replace(/\s*$/, "");
   if (cssText.match(/[^;] \}/)) {
-    cssText = cssText.replace(/([^;]) \}/g, '$1; }');
+    cssText = cssText.replace(/([^;]) \}/g, "$1; }");
   }
   return cssText;
 }
 
 function testGetFileNameFromStyleSheet() {
-  var styleSheet = {'href': 'http://foo.com/something/filename.css'};
+  var styleSheet = { href: "http://foo.com/something/filename.css" };
   assertEquals(
-      'filename.css', goog.cssom.getFileNameFromStyleSheet(styleSheet));
+    "filename.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheet)
+  );
 
-  styleSheet = {'href': 'https://foo.com:123/something/filename.css'};
+  styleSheet = { href: "https://foo.com:123/something/filename.css" };
   assertEquals(
-      'filename.css', goog.cssom.getFileNameFromStyleSheet(styleSheet));
+    "filename.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheet)
+  );
 
-  styleSheet = {'href': 'http://foo.com/something/filename.css?bar=bas'};
+  styleSheet = { href: "http://foo.com/something/filename.css?bar=bas" };
   assertEquals(
-      'filename.css', goog.cssom.getFileNameFromStyleSheet(styleSheet));
+    "filename.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheet)
+  );
 
-  styleSheet = {'href': 'filename.css?bar=bas'};
+  styleSheet = { href: "filename.css?bar=bas" };
   assertEquals(
-      'filename.css', goog.cssom.getFileNameFromStyleSheet(styleSheet));
+    "filename.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheet)
+  );
 
-  styleSheet = {'href': 'filename.css'};
+  styleSheet = { href: "filename.css" };
   assertEquals(
-      'filename.css', goog.cssom.getFileNameFromStyleSheet(styleSheet));
+    "filename.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheet)
+  );
 }
 
 function testGetAllCssStyleSheets() {
@@ -76,14 +88,17 @@ function testGetAllCssStyleSheets() {
   assertEquals(4, styleSheets.length);
   // Makes sure they're in the right cascade order.
   assertEquals(
-      'cssom_test_link_1.css',
-      goog.cssom.getFileNameFromStyleSheet(styleSheets[0]));
+    "cssom_test_link_1.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheets[0])
+  );
   assertEquals(
-      'cssom_test_import_2.css',
-      goog.cssom.getFileNameFromStyleSheet(styleSheets[1]));
+    "cssom_test_import_2.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheets[1])
+  );
   assertEquals(
-      'cssom_test_import_1.css',
-      goog.cssom.getFileNameFromStyleSheet(styleSheets[2]));
+    "cssom_test_import_1.css",
+    goog.cssom.getFileNameFromStyleSheet(styleSheets[2])
+  );
   // Not an external styleSheet
   assertNull(goog.cssom.getFileNameFromStyleSheet(styleSheets[3]));
 }
@@ -105,9 +120,8 @@ function testGetAllCssStyleRules() {
   assertEquals(6, allCssRules.length);
 }
 
-
 function testAddCssText() {
-  var newCssText = '.css-add-1 { display: block; }';
+  var newCssText = ".css-add-1 { display: block; }";
   var newCssNode = goog.cssom.addCssText(newCssText);
 
   assertEquals(document.styleSheets.length, 3);
@@ -123,9 +137,9 @@ function testAddCssText() {
     // Opera inserts the CSSRule to the first position. And fixCssText
     // is also needed to clean up whitespace.
     if (goog.userAgent.OPERA) {
-      assertEquals(newCssText + ' ' + cssText, fixCssTextForIe(allCssText));
+      assertEquals(newCssText + " " + cssText, fixCssTextForIe(allCssText));
     } else {
-      assertEquals(cssText + ' ' + newCssText, fixCssTextForIe(allCssText));
+      assertEquals(cssText + " " + newCssText, fixCssTextForIe(allCssText));
     }
   }
 
@@ -145,7 +159,7 @@ function testAddCssRule() {
   // sheet.
   var styleSheets = goog.cssom.getAllCssStyleSheets();
   var styleSheet = styleSheets[3];
-  var newCssRule = '.css-addCssRule { display: block; }';
+  var newCssRule = ".css-addCssRule { display: block; }";
   var rules = styleSheet.rules || styleSheet.cssRules;
   var origNumberOfRules = rules.length;
 
@@ -164,7 +178,7 @@ function testAddCssRuleAtPos() {
   // sheet at the specified position.
   var styleSheets = goog.cssom.getAllCssStyleSheets();
   var styleSheet = styleSheets[3];
-  var newCssRule = '.css-addCssRulePos { display: block; }';
+  var newCssRule = ".css-addCssRulePos { display: block; }";
   var rules = goog.cssom.getCssRulesFromStyleSheet(styleSheet);
   var origNumberOfRules = rules.length;
 
@@ -204,7 +218,7 @@ function testAddCssRuleNoIndex() {
   var styleSheet = styleSheets[3];
   var rules = goog.cssom.getCssRulesFromStyleSheet(styleSheet);
   var origNumberOfRules = rules.length;
-  var newCssRule = '.css-addCssRuleNoIndex { display: block; }';
+  var newCssRule = ".css-addCssRuleNoIndex { display: block; }";
 
   // Try inserting the rule without specifying an index.
   // Make sure we don't throw an exception, and that we added
@@ -221,7 +235,6 @@ function testAddCssRuleNoIndex() {
   rules = goog.cssom.getCssRulesFromStyleSheet(styleSheet);
   assertEquals(origNumberOfRules, rules.length);
 }
-
 
 function testGetParentStyleSheetAfterGetAllCssStyleRules() {
   var cssRules = goog.cssom.getAllCssStyleRules();
@@ -242,7 +255,9 @@ function testGetCssRuleIndexInParentStyleSheetAfterGetAllCssStyleRules() {
   var parentStyleSheet = goog.cssom.getParentStyleSheet(cssRule);
   var ruleIndex = goog.isDefAndNotNull(parentStyleSheet.cssRules) ? 2 : 1;
   assertEquals(
-      ruleIndex, goog.cssom.getCssRuleIndexInParentStyleSheet(cssRule));
+    ruleIndex,
+    goog.cssom.getCssRuleIndexInParentStyleSheet(cssRule)
+  );
 }
 
 function testGetCssRuleIndexInParentStyleSheetNonStyleRule() {
@@ -250,7 +265,7 @@ function testGetCssRuleIndexInParentStyleSheetNonStyleRule() {
   if (!goog.userAgent.IE) {
     var styleSheets = goog.cssom.getAllCssStyleSheets();
     var styleSheet = styleSheets[3];
-    var newCssRule = '@media print { .css-nonStyle { display: block; } }';
+    var newCssRule = "@media print { .css-nonStyle { display: block; } }";
     goog.cssom.addCssRule(styleSheet, newCssRule);
     var rules = styleSheet.rules || styleSheet.cssRules;
     var cssRule = rules[rules.length - 1];
@@ -269,8 +284,9 @@ function testReplaceCssRuleWithStyleSheetAndIndex() {
   var rules = goog.cssom.getCssRulesFromStyleSheet(styleSheet);
   var index = 2;
   var origCssRule = rules[index];
-  var origCssText =
-      fixCssTextForIe(goog.cssom.getCssTextFromCssRule(origCssRule));
+  var origCssText = fixCssTextForIe(
+    goog.cssom.getCssTextFromCssRule(origCssRule)
+  );
 
   goog.cssom.replaceCssRule(origCssRule, replacementCssText, styleSheet, index);
 
@@ -291,8 +307,9 @@ function testReplaceCssRuleWithStyleSheetAndIndex() {
 function testReplaceCssRuleUsingGetAllCssStyleRules() {
   var cssRules = goog.cssom.getAllCssStyleRules();
   var origCssRule = cssRules[4];
-  var origCssText =
-      fixCssTextForIe(goog.cssom.getCssTextFromCssRule(origCssRule));
+  var origCssText = fixCssTextForIe(
+    goog.cssom.getCssTextFromCssRule(origCssRule)
+  );
   // notice we don't pass in the stylesheet or index.
   goog.cssom.replaceCssRule(origCssRule, replacementCssText);
 
@@ -301,15 +318,17 @@ function testReplaceCssRuleUsingGetAllCssStyleRules() {
   var rules = goog.cssom.getCssRulesFromStyleSheet(styleSheet);
   var index = goog.isDefAndNotNull(styleSheet.cssRules) ? 2 : 1;
   var newCssRule = rules[index];
-  var newCssText =
-      fixCssTextForIe(goog.cssom.getCssTextFromCssRule(newCssRule));
+  var newCssText = fixCssTextForIe(
+    goog.cssom.getCssTextFromCssRule(newCssRule)
+  );
   assertEquals(replacementCssText, newCssText);
 
   // try getting it the other way around too.
   var cssRules = goog.cssom.getAllCssStyleRules();
   var newCssRule = cssRules[4];
-  var newCssText =
-      fixCssTextForIe(goog.cssom.getCssTextFromCssRule(newCssRule));
+  var newCssText = fixCssTextForIe(
+    goog.cssom.getCssTextFromCssRule(newCssRule)
+  );
   assertEquals(replacementCssText, newCssText);
 
   // Now we need to re-replace our rule, to preserve parity for the other
@@ -317,7 +336,8 @@ function testReplaceCssRuleUsingGetAllCssStyleRules() {
   goog.cssom.replaceCssRule(newCssRule, origCssText);
   var cssRules = goog.cssom.getAllCssStyleRules();
   var nowCssRule = cssRules[4];
-  var nowCssText =
-      fixCssTextForIe(goog.cssom.getCssTextFromCssRule(nowCssRule));
+  var nowCssText = fixCssTextForIe(
+    goog.cssom.getCssTextFromCssRule(nowCssRule)
+  );
   assertEquals(origCssText, nowCssText);
 }

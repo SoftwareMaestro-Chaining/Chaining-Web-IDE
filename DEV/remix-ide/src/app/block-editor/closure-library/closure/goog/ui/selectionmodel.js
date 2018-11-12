@@ -21,14 +21,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
+goog.provide("goog.ui.SelectionModel")
 
-goog.provide('goog.ui.SelectionModel');
-
-goog.require('goog.array');
-goog.require('goog.events.EventTarget');
-goog.require('goog.events.EventType');
-
-
+goog.require("goog.array")
+goog.require("goog.events.EventTarget")
+goog.require("goog.events.EventType")
 
 /**
  * Single-selection model.  Dispatches a {@link goog.events.EventType.SELECT}
@@ -38,7 +35,7 @@ goog.require('goog.events.EventType');
  * @constructor
  */
 goog.ui.SelectionModel = function(opt_items) {
-  goog.events.EventTarget.call(this);
+  goog.events.EventTarget.call(this)
 
   /**
    * Array of items controlled by the selection model.  If the items support
@@ -47,20 +44,18 @@ goog.ui.SelectionModel = function(opt_items) {
    * @type {!Array<Object>}
    * @private
    */
-  this.items_ = [];
-  this.addItems(opt_items);
-};
-goog.inherits(goog.ui.SelectionModel, goog.events.EventTarget);
-goog.tagUnsealableClass(goog.ui.SelectionModel);
-
+  this.items_ = []
+  this.addItems(opt_items)
+}
+goog.inherits(goog.ui.SelectionModel, goog.events.EventTarget)
+goog.tagUnsealableClass(goog.ui.SelectionModel)
 
 /**
  * The currently selected item (null if none).
  * @type {Object}
  * @private
  */
-goog.ui.SelectionModel.prototype.selectedItem_ = null;
-
+goog.ui.SelectionModel.prototype.selectedItem_ = null
 
 /**
  * Selection handler function.  Called with two arguments (the item to be
@@ -69,8 +64,7 @@ goog.ui.SelectionModel.prototype.selectedItem_ = null;
  * @type {Function}
  * @private
  */
-goog.ui.SelectionModel.prototype.selectionHandler_ = null;
-
+goog.ui.SelectionModel.prototype.selectionHandler_ = null
 
 /**
  * Returns the selection handler function used by the selection model to change
@@ -78,9 +72,8 @@ goog.ui.SelectionModel.prototype.selectionHandler_ = null;
  * @return {Function} Selection handler function (null if none).
  */
 goog.ui.SelectionModel.prototype.getSelectionHandler = function() {
-  return this.selectionHandler_;
-};
-
+  return this.selectionHandler_
+}
 
 /**
  * Sets the selection handler function to be used by the selection model to
@@ -92,18 +85,16 @@ goog.ui.SelectionModel.prototype.getSelectionHandler = function() {
  * @param {Function} handler Selection handler function.
  */
 goog.ui.SelectionModel.prototype.setSelectionHandler = function(handler) {
-  this.selectionHandler_ = handler;
-};
-
+  this.selectionHandler_ = handler
+}
 
 /**
  * Returns the number of items controlled by the selection model.
  * @return {number} Number of items.
  */
 goog.ui.SelectionModel.prototype.getItemCount = function() {
-  return this.items_.length;
-};
-
+  return this.items_.length
+}
 
 /**
  * Returns the 0-based index of the given item within the selection model, or
@@ -112,27 +103,24 @@ goog.ui.SelectionModel.prototype.getItemCount = function() {
  * @return {number} Index of the given item (-1 if none).
  */
 goog.ui.SelectionModel.prototype.indexOfItem = function(item) {
-  return item ? goog.array.indexOf(this.items_, item) : -1;
-};
-
+  return item ? goog.array.indexOf(this.items_, item) : -1
+}
 
 /**
  * @return {Object|undefined} The first item, or undefined if there are no items
  *     in the model.
  */
 goog.ui.SelectionModel.prototype.getFirst = function() {
-  return this.items_[0];
-};
-
+  return this.items_[0]
+}
 
 /**
  * @return {Object|undefined} The last item, or undefined if there are no items
  *     in the model.
  */
 goog.ui.SelectionModel.prototype.getLast = function() {
-  return this.items_[this.items_.length - 1];
-};
-
+  return this.items_[this.items_.length - 1]
+}
 
 /**
  * Returns the item at the given 0-based index.
@@ -140,9 +128,8 @@ goog.ui.SelectionModel.prototype.getLast = function() {
  * @return {Object} Item at the given index (null if none).
  */
 goog.ui.SelectionModel.prototype.getItemAt = function(index) {
-  return this.items_[index] || null;
-};
-
+  return this.items_[index] || null
+}
 
 /**
  * Bulk-adds items to the selection model.  This is more efficient than calling
@@ -153,20 +140,23 @@ goog.ui.SelectionModel.prototype.addItems = function(items) {
   if (items) {
     // New items shouldn't be selected.
     goog.array.forEach(
-        items, function(item) { this.selectItem_(item, false); }, this);
-    goog.array.extend(this.items_, items);
+      items,
+      function(item) {
+        this.selectItem_(item, false)
+      },
+      this
+    )
+    goog.array.extend(this.items_, items)
   }
-};
-
+}
 
 /**
  * Adds an item at the end of the list.
  * @param {Object} item Item to add.
  */
 goog.ui.SelectionModel.prototype.addItem = function(item) {
-  this.addItemAt(item, this.getItemCount());
-};
-
+  this.addItemAt(item, this.getItemCount())
+}
 
 /**
  * Adds an item at the given index.
@@ -176,11 +166,10 @@ goog.ui.SelectionModel.prototype.addItem = function(item) {
 goog.ui.SelectionModel.prototype.addItemAt = function(item, index) {
   if (item) {
     // New items must not be selected.
-    this.selectItem_(item, false);
-    goog.array.insertAt(this.items_, item, index);
+    this.selectItem_(item, false)
+    goog.array.insertAt(this.items_, item, index)
   }
-};
-
+}
 
 /**
  * Removes the given item (if it exists).  Dispatches a `SELECT` event if
@@ -190,37 +179,33 @@ goog.ui.SelectionModel.prototype.addItemAt = function(item, index) {
 goog.ui.SelectionModel.prototype.removeItem = function(item) {
   if (item && goog.array.remove(this.items_, item)) {
     if (item == this.selectedItem_) {
-      this.selectedItem_ = null;
-      this.dispatchEvent(goog.events.EventType.SELECT);
+      this.selectedItem_ = null
+      this.dispatchEvent(goog.events.EventType.SELECT)
     }
   }
-};
-
+}
 
 /**
  * Removes the item at the given index.
  * @param {number} index Index of the item to remove.
  */
 goog.ui.SelectionModel.prototype.removeItemAt = function(index) {
-  this.removeItem(this.getItemAt(index));
-};
-
+  this.removeItem(this.getItemAt(index))
+}
 
 /**
  * @return {Object} The currently selected item, or null if none.
  */
 goog.ui.SelectionModel.prototype.getSelectedItem = function() {
-  return this.selectedItem_;
-};
-
+  return this.selectedItem_
+}
 
 /**
  * @return {!Array<Object>} All items in the selection model.
  */
 goog.ui.SelectionModel.prototype.getItems = function() {
-  return goog.array.clone(this.items_);
-};
-
+  return goog.array.clone(this.items_)
+}
 
 /**
  * Selects the given item, deselecting any previously selected item, and
@@ -229,25 +214,23 @@ goog.ui.SelectionModel.prototype.getItems = function() {
  */
 goog.ui.SelectionModel.prototype.setSelectedItem = function(item) {
   if (item != this.selectedItem_) {
-    this.selectItem_(this.selectedItem_, false);
-    this.selectedItem_ = item;
-    this.selectItem_(item, true);
+    this.selectItem_(this.selectedItem_, false)
+    this.selectedItem_ = item
+    this.selectItem_(item, true)
   }
 
   // Always dispatch a SELECT event; let listeners decide what to do if the
   // selected item hasn't changed.
-  this.dispatchEvent(goog.events.EventType.SELECT);
-};
-
+  this.dispatchEvent(goog.events.EventType.SELECT)
+}
 
 /**
  * @return {number} The 0-based index of the currently selected item, or -1
  *     if none.
  */
 goog.ui.SelectionModel.prototype.getSelectedIndex = function() {
-  return this.indexOfItem(this.selectedItem_);
-};
-
+  return this.indexOfItem(this.selectedItem_)
+}
 
 /**
  * Selects the item at the given index, deselecting any previously selected
@@ -255,26 +238,23 @@ goog.ui.SelectionModel.prototype.getSelectedIndex = function() {
  * @param {number} index Index to select (-1 to clear the selection).
  */
 goog.ui.SelectionModel.prototype.setSelectedIndex = function(index) {
-  this.setSelectedItem(this.getItemAt(index));
-};
-
+  this.setSelectedItem(this.getItemAt(index))
+}
 
 /**
  * Clears the selection model by removing all items from the selection.
  */
 goog.ui.SelectionModel.prototype.clear = function() {
-  goog.array.clear(this.items_);
-  this.selectedItem_ = null;
-};
-
+  goog.array.clear(this.items_)
+  this.selectedItem_ = null
+}
 
 /** @override */
 goog.ui.SelectionModel.prototype.disposeInternal = function() {
-  goog.ui.SelectionModel.superClass_.disposeInternal.call(this);
-  delete this.items_;
-  this.selectedItem_ = null;
-};
-
+  goog.ui.SelectionModel.superClass_.disposeInternal.call(this)
+  delete this.items_
+  this.selectedItem_ = null
+}
 
 /**
  * Private helper; selects or deselects the given item based on the value of
@@ -289,12 +269,12 @@ goog.ui.SelectionModel.prototype.disposeInternal = function() {
  */
 goog.ui.SelectionModel.prototype.selectItem_ = function(item, select) {
   if (item) {
-    if (typeof this.selectionHandler_ == 'function') {
+    if (typeof this.selectionHandler_ == "function") {
       // Use the registered selection handler function.
-      this.selectionHandler_(item, select);
-    } else if (typeof item.setSelected == 'function') {
+      this.selectionHandler_(item, select)
+    } else if (typeof item.setSelected == "function") {
       // Call setSelected() on the item, if it supports it.
-      item.setSelected(select);
+      item.setSelected(select)
     }
   }
-};
+}

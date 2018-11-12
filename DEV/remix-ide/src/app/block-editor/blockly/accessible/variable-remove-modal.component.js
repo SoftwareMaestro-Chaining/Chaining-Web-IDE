@@ -23,20 +23,20 @@
  * @author corydiers@google.com (Cory Diers)
  */
 
-goog.provide('blocklyApp.VariableRemoveModalComponent');
+goog.provide("blocklyApp.VariableRemoveModalComponent")
 
-goog.require('blocklyApp.AudioService');
-goog.require('blocklyApp.KeyboardInputService');
-goog.require('blocklyApp.TranslatePipe');
-goog.require('blocklyApp.TreeService');
-goog.require('blocklyApp.VariableModalService');
+goog.require("blocklyApp.AudioService")
+goog.require("blocklyApp.KeyboardInputService")
+goog.require("blocklyApp.TranslatePipe")
+goog.require("blocklyApp.TreeService")
+goog.require("blocklyApp.VariableModalService")
 
-goog.require('Blockly.CommonModal');
+goog.require("Blockly.CommonModal")
 
-
-blocklyApp.VariableRemoveModalComponent = ng.core.Component({
-  selector: 'blockly-remove-variable-modal',
-  template: `
+blocklyApp.VariableRemoveModalComponent = ng.core
+  .Component({
+    selector: "blockly-remove-variable-modal",
+    template: `
     <div *ngIf="modalIsVisible"class="blocklyModalCurtain"
          (click)="dismissModal()">
       <!-- $event.stopPropagation() prevents the modal from closing when its
@@ -61,65 +61,66 @@ blocklyApp.VariableRemoveModalComponent = ng.core.Component({
       </div>
     </div>
   `,
-  pipes: [blocklyApp.TranslatePipe]
-})
-.Class({
-  constructor: [
-    blocklyApp.AudioService,
-    blocklyApp.KeyboardInputService,
-    blocklyApp.TreeService,
-    blocklyApp.VariableModalService,
-    function(audioService, keyboardService, treeService, variableService) {
-      this.workspace = blocklyApp.workspace;
-      this.treeService = treeService;
-      this.variableModalService = variableService;
-      this.audioService = audioService;
-      this.keyboardInputService = keyboardService;
-      this.modalIsVisible = false;
-      this.activeButtonIndex = -1;
-      this.currentVariableName = '';
-      this.count = 0;
+    pipes: [blocklyApp.TranslatePipe]
+  })
+  .Class({
+    constructor: [
+      blocklyApp.AudioService,
+      blocklyApp.KeyboardInputService,
+      blocklyApp.TreeService,
+      blocklyApp.VariableModalService,
+      function(audioService, keyboardService, treeService, variableService) {
+        this.workspace = blocklyApp.workspace
+        this.treeService = treeService
+        this.variableModalService = variableService
+        this.audioService = audioService
+        this.keyboardInputService = keyboardService
+        this.modalIsVisible = false
+        this.activeButtonIndex = -1
+        this.currentVariableName = ""
+        this.count = 0
 
-      var that = this;
-      this.variableModalService.registerPreRemoveShowHook(
-        function(name, count) {
-          that.currentVariableName = name;
-          that.count = count;
-          that.modalIsVisible = true;
+        var that = this
+        this.variableModalService.registerPreRemoveShowHook(function(
+          name,
+          count
+        ) {
+          that.currentVariableName = name
+          that.count = count
+          that.modalIsVisible = true
 
-          Blockly.CommonModal.setupKeyboardOverrides(that);
+          Blockly.CommonModal.setupKeyboardOverrides(that)
 
           setTimeout(function() {
-            document.getElementById('varModal').focus();
-          }, 150);
-        }
-      );
+            document.getElementById("varModal").focus()
+          }, 150)
+        })
+      }
+    ],
+    // Closes the modal (on both success and failure).
+    hideModal_: Blockly.CommonModal.hideModal,
+    // Focuses on the button represented by the given index.
+    focusOnOption: Blockly.CommonModal.focusOnOption,
+    // Counts the number of interactive elements for the modal.
+    numInteractiveElements: Blockly.CommonModal.numInteractiveElements,
+    // Gets all the interactive elements for the modal.
+    getInteractiveElements: Blockly.CommonModal.getInteractiveElements,
+    // Gets the container with interactive elements.
+    getInteractiveContainer: function() {
+      return document.getElementById("varForm")
+    },
+    getNumVariables: function() {
+      return this.variableModalService.getNumVariables(this.currentVariableName)
+    },
+    // Submits the name change for the variable.
+    submit: function() {
+      var variable = blocklyApp.workspace.getVariable(this.currentVariableName)
+      blocklyApp.workspace.deleteVariableInternal_(variable)
+      this.dismissModal()
+    },
+    // Dismisses and closes the modal.
+    dismissModal: function() {
+      this.variableModalService.hideModal()
+      this.hideModal_()
     }
-  ],
-  // Closes the modal (on both success and failure).
-  hideModal_: Blockly.CommonModal.hideModal,
-  // Focuses on the button represented by the given index.
-  focusOnOption: Blockly.CommonModal.focusOnOption,
-  // Counts the number of interactive elements for the modal.
-  numInteractiveElements: Blockly.CommonModal.numInteractiveElements,
-  // Gets all the interactive elements for the modal.
-  getInteractiveElements: Blockly.CommonModal.getInteractiveElements,
-  // Gets the container with interactive elements.
-  getInteractiveContainer: function() {
-    return document.getElementById('varForm');
-  },
-  getNumVariables: function() {
-    return this.variableModalService.getNumVariables(this.currentVariableName);
-  },
-  // Submits the name change for the variable.
-  submit: function() {
-    var variable = blocklyApp.workspace.getVariable(this.currentVariableName);
-    blocklyApp.workspace.deleteVariableInternal_(variable);
-    this.dismissModal();
-  },
-  // Dismisses and closes the modal.
-  dismissModal: function() {
-    this.variableModalService.hideModal();
-    this.hideModal_();
-  }
-})
+  })

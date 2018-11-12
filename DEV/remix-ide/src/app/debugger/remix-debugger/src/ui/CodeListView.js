@@ -1,11 +1,11 @@
-'use strict'
-var style = require('./styles/basicStyles')
-var yo = require('yo-yo')
-var remixLib = require('remix-lib')
-var DropdownPanel = require('./DropdownPanel')
+"use strict"
+var style = require("./styles/basicStyles")
+var yo = require("yo-yo")
+var remixLib = require("remix-lib")
+var DropdownPanel = require("./DropdownPanel")
 var EventManager = remixLib.EventManager
-var csjs = require('csjs-inject')
-var styleGuide = require('../../../../ui/styles-guide/theme-chooser')
+var csjs = require("csjs-inject")
+var styleGuide = require("../../../../ui/styles-guide/theme-chooser")
 var styles = styleGuide.chooser()
 
 var css = csjs`
@@ -15,7 +15,7 @@ var css = csjs`
     max-height: 150px;
   }
 `
-function CodeListView (_parent, _codeManager) {
+function CodeListView(_parent, _codeManager) {
   this.event = new EventManager()
   this.parent = _parent
   this.codeManager = _codeManager
@@ -23,48 +23,57 @@ function CodeListView (_parent, _codeManager) {
   this.address
   this.codeView
   this.itemSelected
-  this.basicPanel = new DropdownPanel('Instructions', {json: false, displayContentOnly: true})
-  this.basicPanel.event.register('hide', () => {
-    this.event.trigger('hide', [])
+  this.basicPanel = new DropdownPanel("Instructions", {
+    json: false,
+    displayContentOnly: true
   })
-  this.basicPanel.event.register('show', () => {
-    this.event.trigger('show', [])
+  this.basicPanel.event.register("hide", () => {
+    this.event.trigger("hide", [])
+  })
+  this.basicPanel.event.register("show", () => {
+    this.event.trigger("show", [])
   })
   this.init()
 }
 
-CodeListView.prototype.render = function () {
-  return yo`<div id='asmcodes' >${this.basicPanel.render({height: style.instructionsList.height})}</div>`
+CodeListView.prototype.render = function() {
+  return yo`<div id='asmcodes' >${this.basicPanel.render({
+    height: style.instructionsList.height
+  })}</div>`
 }
 
-CodeListView.prototype.init = function () {
+CodeListView.prototype.init = function() {
   var self = this
-  this.codeManager.event.register('changed', this, this.changed)
-  this.parent.event.register('traceUnloaded', this, function () {
-    self.changed([], '', -1)
+  this.codeManager.event.register("changed", this, this.changed)
+  this.parent.event.register("traceUnloaded", this, function() {
+    self.changed([], "", -1)
   })
 }
 
-CodeListView.prototype.indexChanged = function (index) {
+CodeListView.prototype.indexChanged = function(index) {
   if (index >= 0) {
     if (this.itemSelected) {
-      this.itemSelected.removeAttribute('selected')
-      this.itemSelected.removeAttribute('style')
+      this.itemSelected.removeAttribute("selected")
+      this.itemSelected.removeAttribute("style")
       if (this.itemSelected.firstChild) {
-        this.itemSelected.firstChild.removeAttribute('style')
+        this.itemSelected.firstChild.removeAttribute("style")
       }
     }
     this.itemSelected = this.codeView.children[index]
-    this.itemSelected.setAttribute('style', 'background-color: ' + styles.rightPanel.debuggerTab.text_BgHighlight)
-    this.itemSelected.setAttribute('selected', 'selected')
+    this.itemSelected.setAttribute(
+      "style",
+      "background-color: " + styles.rightPanel.debuggerTab.text_BgHighlight
+    )
+    this.itemSelected.setAttribute("selected", "selected")
     if (this.itemSelected.firstChild) {
-      this.itemSelected.firstChild.setAttribute('style', 'margin-left: 2px')
+      this.itemSelected.firstChild.setAttribute("style", "margin-left: 2px")
     }
-    this.codeView.scrollTop = this.itemSelected.offsetTop - parseInt(this.codeView.offsetTop)
+    this.codeView.scrollTop =
+      this.itemSelected.offsetTop - parseInt(this.codeView.offsetTop)
   }
 }
 
-CodeListView.prototype.changed = function (code, address, index) {
+CodeListView.prototype.changed = function(code, address, index) {
   if (this.address !== address) {
     this.code = code
     this.address = address
@@ -74,9 +83,9 @@ CodeListView.prototype.changed = function (code, address, index) {
   this.indexChanged(index)
 }
 
-CodeListView.prototype.renderAssemblyItems = function () {
+CodeListView.prototype.renderAssemblyItems = function() {
   if (this.code) {
-    var codeView = this.code.map(function (item, i) {
+    var codeView = this.code.map(function(item, i) {
       return yo`<div key=${i} value=${i}><span>${item}</span></div>`
     })
     return yo`<div class=${css.instructions} id='asmitems' ref='itemsList'>

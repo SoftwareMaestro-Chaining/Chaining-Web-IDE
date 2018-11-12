@@ -25,16 +25,15 @@
  * @author madeeha@google.com (Madeeha Ghori)
  */
 
-goog.provide('blocklyApp.TreeService');
+goog.provide("blocklyApp.TreeService")
 
-goog.require('blocklyApp.UtilsService');
+goog.require("blocklyApp.UtilsService")
 
-goog.require('blocklyApp.AudioService');
-goog.require('blocklyApp.BlockConnectionService');
-goog.require('blocklyApp.BlockOptionsModalService');
-goog.require('blocklyApp.NotificationsService');
-goog.require('blocklyApp.VariableModalService');
-
+goog.require("blocklyApp.AudioService")
+goog.require("blocklyApp.BlockConnectionService")
+goog.require("blocklyApp.BlockOptionsModalService")
+goog.require("blocklyApp.NotificationsService")
+goog.require("blocklyApp.VariableModalService")
 
 blocklyApp.TreeService = ng.core.Class({
   constructor: [
@@ -45,122 +44,130 @@ blocklyApp.TreeService = ng.core.Class({
     blocklyApp.UtilsService,
     blocklyApp.VariableModalService,
     function(
-        audioService, blockConnectionService, blockOptionsModalService,
-        notificationsService, utilsService, variableModalService) {
-      this.audioService = audioService;
-      this.blockConnectionService = blockConnectionService;
-      this.blockOptionsModalService = blockOptionsModalService;
-      this.notificationsService = notificationsService;
-      this.utilsService = utilsService;
-      this.variableModalService = variableModalService;
+      audioService,
+      blockConnectionService,
+      blockOptionsModalService,
+      notificationsService,
+      utilsService,
+      variableModalService
+    ) {
+      this.audioService = audioService
+      this.blockConnectionService = blockConnectionService
+      this.blockOptionsModalService = blockOptionsModalService
+      this.notificationsService = notificationsService
+      this.utilsService = utilsService
+      this.variableModalService = variableModalService
 
       // The suffix used for all IDs of block root elements.
-      this.BLOCK_ROOT_ID_SUFFIX_ = blocklyApp.BLOCK_ROOT_ID_SUFFIX;
+      this.BLOCK_ROOT_ID_SUFFIX_ = blocklyApp.BLOCK_ROOT_ID_SUFFIX
       // Maps tree IDs to the IDs of their active descendants.
-      this.activeDescendantIds_ = {};
+      this.activeDescendantIds_ = {}
       // Array containing all the sidebar button elements.
       this.sidebarButtonElements_ = Array.from(
-          document.querySelectorAll('button.blocklySidebarButton'));
+        document.querySelectorAll("button.blocklySidebarButton")
+      )
     }
   ],
   scrollToElement_: function(elementId) {
-    var element = document.getElementById(elementId);
-    var documentElement = document.body || document.documentElement;
-    if (element.offsetTop < documentElement.scrollTop ||
-        element.offsetTop > documentElement.scrollTop + window.innerHeight) {
-      window.scrollTo(0, element.offsetTop - 10);
+    var element = document.getElementById(elementId)
+    var documentElement = document.body || document.documentElement
+    if (
+      element.offsetTop < documentElement.scrollTop ||
+      element.offsetTop > documentElement.scrollTop + window.innerHeight
+    ) {
+      window.scrollTo(0, element.offsetTop - 10)
     }
   },
 
   isLi_: function(node) {
-    return node.tagName == 'LI';
+    return node.tagName == "LI"
   },
   getParentLi_: function(element) {
-    var nextNode = element.parentNode;
+    var nextNode = element.parentNode
     while (nextNode && !this.isLi_(nextNode)) {
-      nextNode = nextNode.parentNode;
+      nextNode = nextNode.parentNode
     }
-    return nextNode;
+    return nextNode
   },
   getFirstChildLi_: function(element) {
-    var childList = element.children;
+    var childList = element.children
     for (var i = 0; i < childList.length; i++) {
       if (this.isLi_(childList[i])) {
-        return childList[i];
+        return childList[i]
       } else {
-        var potentialElement = this.getFirstChildLi_(childList[i]);
+        var potentialElement = this.getFirstChildLi_(childList[i])
         if (potentialElement) {
-          return potentialElement;
+          return potentialElement
         }
       }
     }
-    return null;
+    return null
   },
   getLastChildLi_: function(element) {
-    var childList = element.children;
+    var childList = element.children
     for (var i = childList.length - 1; i >= 0; i--) {
       if (this.isLi_(childList[i])) {
-        return childList[i];
+        return childList[i]
       } else {
-        var potentialElement = this.getLastChildLi_(childList[i]);
+        var potentialElement = this.getLastChildLi_(childList[i])
         if (potentialElement) {
-          return potentialElement;
+          return potentialElement
         }
       }
     }
-    return null;
+    return null
   },
   getInitialSiblingLi_: function(element) {
     while (true) {
-      var previousSibling = this.getPreviousSiblingLi_(element);
+      var previousSibling = this.getPreviousSiblingLi_(element)
       if (previousSibling && previousSibling.id != element.id) {
-        element = previousSibling;
+        element = previousSibling
       } else {
-        return element;
+        return element
       }
     }
   },
   getPreviousSiblingLi_: function(element) {
     if (element.previousElementSibling) {
-      var sibling = element.previousElementSibling;
-      return this.isLi_(sibling) ? sibling : this.getLastChildLi_(sibling);
+      var sibling = element.previousElementSibling
+      return this.isLi_(sibling) ? sibling : this.getLastChildLi_(sibling)
     } else {
-      var parent = element.parentNode;
-      while (parent && parent.tagName != 'OL') {
+      var parent = element.parentNode
+      while (parent && parent.tagName != "OL") {
         if (parent.previousElementSibling) {
-          var node = parent.previousElementSibling;
-          return this.isLi_(node) ? node : this.getLastChildLi_(node);
+          var node = parent.previousElementSibling
+          return this.isLi_(node) ? node : this.getLastChildLi_(node)
         } else {
-          parent = parent.parentNode;
+          parent = parent.parentNode
         }
       }
-      return null;
+      return null
     }
   },
   getNextSiblingLi_: function(element) {
     if (element.nextElementSibling) {
-      var sibling = element.nextElementSibling;
-      return this.isLi_(sibling) ? sibling : this.getFirstChildLi_(sibling);
+      var sibling = element.nextElementSibling
+      return this.isLi_(sibling) ? sibling : this.getFirstChildLi_(sibling)
     } else {
-      var parent = element.parentNode;
-      while (parent && parent.tagName != 'OL') {
+      var parent = element.parentNode
+      while (parent && parent.tagName != "OL") {
         if (parent.nextElementSibling) {
-          var node = parent.nextElementSibling;
-          return this.isLi_(node) ? node : this.getFirstChildLi_(node);
+          var node = parent.nextElementSibling
+          return this.isLi_(node) ? node : this.getFirstChildLi_(node)
         } else {
-          parent = parent.parentNode;
+          parent = parent.parentNode
         }
       }
-      return null;
+      return null
     }
   },
   getFinalSiblingLi_: function(element) {
     while (true) {
-      var nextSibling = this.getNextSiblingLi_(element);
+      var nextSibling = this.getNextSiblingLi_(element)
       if (nextSibling && nextSibling.id != element.id) {
-        element = nextSibling;
+        element = nextSibling
       } else {
-        return element;
+        return element
       }
     }
   },
@@ -168,105 +175,105 @@ blocklyApp.TreeService = ng.core.Class({
   // Returns a list of all focus targets in the workspace, including the
   // "Create new group" button that appears when no blocks are present.
   getWorkspaceFocusTargets_: function() {
-    return Array.from(
-        document.querySelectorAll('.blocklyWorkspaceFocusTarget'));
+    return Array.from(document.querySelectorAll(".blocklyWorkspaceFocusTarget"))
   },
   getAllFocusTargets_: function() {
-    return this.getWorkspaceFocusTargets_().concat(this.sidebarButtonElements_);
+    return this.getWorkspaceFocusTargets_().concat(this.sidebarButtonElements_)
   },
   getNextFocusTargetId_: function(treeId) {
-    var trees = this.getAllFocusTargets_();
+    var trees = this.getAllFocusTargets_()
     for (var i = 0; i < trees.length - 1; i++) {
       if (trees[i].id == treeId) {
-        return trees[i + 1].id;
+        return trees[i + 1].id
       }
     }
-    return null;
+    return null
   },
   getPreviousFocusTargetId_: function(treeId) {
-    var trees = this.getAllFocusTargets_();
+    var trees = this.getAllFocusTargets_()
     for (var i = trees.length - 1; i > 0; i--) {
       if (trees[i].id == treeId) {
-        return trees[i - 1].id;
+        return trees[i - 1].id
       }
     }
-    return null;
+    return null
   },
 
   getActiveDescId: function(treeId) {
-    return this.activeDescendantIds_[treeId] || '';
+    return this.activeDescendantIds_[treeId] || ""
   },
   // Set the active desc for this tree to its first child.
   initActiveDesc: function(treeId) {
-    var tree = document.getElementById(treeId);
-    this.setActiveDesc(this.getFirstChildLi_(tree).id, treeId);
+    var tree = document.getElementById(treeId)
+    this.setActiveDesc(this.getFirstChildLi_(tree).id, treeId)
   },
   // Make a given element the active descendant of a given tree.
   setActiveDesc: function(newActiveDescId, treeId) {
     if (this.getActiveDescId(treeId)) {
-      this.clearActiveDesc(treeId);
+      this.clearActiveDesc(treeId)
     }
-    document.getElementById(newActiveDescId).classList.add(
-        'blocklyActiveDescendant');
-    this.activeDescendantIds_[treeId] = newActiveDescId;
+    document
+      .getElementById(newActiveDescId)
+      .classList.add("blocklyActiveDescendant")
+    this.activeDescendantIds_[treeId] = newActiveDescId
 
     // Scroll the new active desc into view, if needed. This has no effect
     // for blind users, but is helpful for sighted onlookers.
-    this.scrollToElement_(newActiveDescId);
+    this.scrollToElement_(newActiveDescId)
   },
   // This clears the active descendant of the given tree. It is used just
   // before the tree is deleted.
   clearActiveDesc: function(treeId) {
-    var activeDesc = document.getElementById(this.getActiveDescId(treeId));
+    var activeDesc = document.getElementById(this.getActiveDescId(treeId))
     if (activeDesc) {
-      activeDesc.classList.remove('blocklyActiveDescendant');
+      activeDesc.classList.remove("blocklyActiveDescendant")
     }
 
     if (this.activeDescendantIds_[treeId]) {
-      delete this.activeDescendantIds_[treeId];
+      delete this.activeDescendantIds_[treeId]
     }
   },
   clearAllActiveDescs: function() {
     for (var treeId in this.activeDescendantIds_) {
-      var activeDesc = document.getElementById(this.getActiveDescId(treeId));
+      var activeDesc = document.getElementById(this.getActiveDescId(treeId))
       if (activeDesc) {
-        activeDesc.classList.remove('blocklyActiveDescendant');
+        activeDesc.classList.remove("blocklyActiveDescendant")
       }
     }
 
-    this.activeDescendantIds_ = {};
+    this.activeDescendantIds_ = {}
   },
 
   isTreeRoot_: function(element) {
-    return element.classList.contains('blocklyTree');
+    return element.classList.contains("blocklyTree")
   },
   getBlockRootId_: function(blockId) {
-    return blockId + this.BLOCK_ROOT_ID_SUFFIX_;
+    return blockId + this.BLOCK_ROOT_ID_SUFFIX_
   },
   // Return the 'lowest' Blockly block in the DOM tree that contains the given
   // DOM element.
   getContainingBlock_: function(domElement) {
-    var potentialBlockRoot = domElement;
+    var potentialBlockRoot = domElement
     while (potentialBlockRoot.id.indexOf(this.BLOCK_ROOT_ID_SUFFIX_) === -1) {
-      potentialBlockRoot = potentialBlockRoot.parentNode;
+      potentialBlockRoot = potentialBlockRoot.parentNode
     }
 
-    var blockRootId = potentialBlockRoot.id;
+    var blockRootId = potentialBlockRoot.id
     var blockId = blockRootId.substring(
-        0, blockRootId.length - this.BLOCK_ROOT_ID_SUFFIX_.length);
-    return blocklyApp.workspace.getBlockById(blockId);
+      0,
+      blockRootId.length - this.BLOCK_ROOT_ID_SUFFIX_.length
+    )
+    return blocklyApp.workspace.getBlockById(blockId)
   },
   isTopLevelBlock_: function(block) {
-    return !block.getParent();
+    return !block.getParent()
   },
   // Returns whether the given block is at the top level, and has no siblings.
   isIsolatedTopLevelBlock_: function(block) {
-    var blockHasNoSiblings = (
-        (!block.nextConnection ||
-         !block.nextConnection.targetConnection) &&
-        (!block.previousConnection ||
-         !block.previousConnection.targetConnection));
-    return this.isTopLevelBlock_(block) && blockHasNoSiblings;
+    var blockHasNoSiblings =
+      (!block.nextConnection || !block.nextConnection.targetConnection) &&
+      (!block.previousConnection || !block.previousConnection.targetConnection)
+    return this.isTopLevelBlock_(block) && blockHasNoSiblings
   },
   safelyRemoveBlock_: function(block, deleteBlockFunc, areNextBlocksRemoved) {
     // Runs the given deleteBlockFunc (which should have the effect of deleting
@@ -277,41 +284,41 @@ blocklyApp.TreeService = ng.core.Class({
     //   the current tree has no more blocks after the deletion. So, pick a new
     //   tree to focus on.
     // - Otherwise, set the correct new active desc for the current tree.
-    var treeId = this.getTreeIdForBlock(block.id);
+    var treeId = this.getTreeIdForBlock(block.id)
 
-    var treeCeasesToExist = areNextBlocksRemoved ?
-        this.isTopLevelBlock_(block) : this.isIsolatedTopLevelBlock_(block);
+    var treeCeasesToExist = areNextBlocksRemoved
+      ? this.isTopLevelBlock_(block)
+      : this.isIsolatedTopLevelBlock_(block)
 
     if (treeCeasesToExist) {
       // Find the node to focus on after the deletion happens.
-      var nextElementToFocusOn = null;
-      var focusTargets = this.getWorkspaceFocusTargets_();
+      var nextElementToFocusOn = null
+      var focusTargets = this.getWorkspaceFocusTargets_()
       for (var i = 0; i < focusTargets.length; i++) {
         if (focusTargets[i].id == treeId) {
           if (i + 1 < focusTargets.length) {
-            nextElementToFocusOn = focusTargets[i + 1];
+            nextElementToFocusOn = focusTargets[i + 1]
           } else if (i > 0) {
-            nextElementToFocusOn = focusTargets[i - 1];
+            nextElementToFocusOn = focusTargets[i - 1]
           }
-          break;
+          break
         }
       }
 
-      this.clearActiveDesc(treeId);
-      deleteBlockFunc();
+      this.clearActiveDesc(treeId)
+      deleteBlockFunc()
       // Invoke a digest cycle, so that the DOM settles (and the "Create new
       // group" button in the workspace shows up, if applicable).
       setTimeout(function() {
         if (nextElementToFocusOn) {
-          nextElementToFocusOn.focus();
+          nextElementToFocusOn.focus()
         } else {
-          document.getElementById(
-              blocklyApp.ID_FOR_EMPTY_WORKSPACE_BTN).focus();
+          document.getElementById(blocklyApp.ID_FOR_EMPTY_WORKSPACE_BTN).focus()
         }
-      });
+      })
     } else {
-      var blockRootId = this.getBlockRootId_(block.id);
-      var blockRootElement = document.getElementById(blockRootId);
+      var blockRootId = this.getBlockRootId_(block.id)
+      var blockRootElement = document.getElementById(blockRootId)
 
       // Find the new active desc for the current tree by trying the following
       // possibilities in order: the parent, the next sibling, and the previous
@@ -319,87 +326,93 @@ blocklyApp.TreeService = ng.core.Class({
       // moved together with the moved block, so we don't check it.)
       if (areNextBlocksRemoved) {
         var newActiveDesc =
-            this.getParentLi_(blockRootElement) ||
-            this.getPreviousSiblingLi_(blockRootElement);
+          this.getParentLi_(blockRootElement) ||
+          this.getPreviousSiblingLi_(blockRootElement)
       } else {
         var newActiveDesc =
-            this.getParentLi_(blockRootElement) ||
-            this.getNextSiblingLi_(blockRootElement) ||
-            this.getPreviousSiblingLi_(blockRootElement);
+          this.getParentLi_(blockRootElement) ||
+          this.getNextSiblingLi_(blockRootElement) ||
+          this.getPreviousSiblingLi_(blockRootElement)
       }
 
-      this.clearActiveDesc(treeId);
-      deleteBlockFunc();
+      this.clearActiveDesc(treeId)
+      deleteBlockFunc()
       // Invoke a digest cycle, so that the DOM settles.
-      var that = this;
+      var that = this
       setTimeout(function() {
-        that.setActiveDesc(newActiveDesc.id, treeId);
-        document.getElementById(treeId).focus();
-      });
+        that.setActiveDesc(newActiveDesc.id, treeId)
+        document.getElementById(treeId).focus()
+      })
     }
   },
   getTreeIdForBlock: function(blockId) {
     // Walk up the DOM until we get to the root element of the tree.
-    var potentialRoot = document.getElementById(this.getBlockRootId_(blockId));
+    var potentialRoot = document.getElementById(this.getBlockRootId_(blockId))
     while (!this.isTreeRoot_(potentialRoot)) {
-      potentialRoot = potentialRoot.parentNode;
+      potentialRoot = potentialRoot.parentNode
     }
-    return potentialRoot.id;
+    return potentialRoot.id
   },
   // Set focus to the tree containing the given block, and set the tree's
   // active desc to the root element of the given block.
   focusOnBlock: function(blockId) {
     // Invoke a digest cycle, in order to allow the ID of the newly-created
     // tree to be set in the DOM.
-    var that = this;
+    var that = this
     setTimeout(function() {
-      var treeId = that.getTreeIdForBlock(blockId);
-      document.getElementById(treeId).focus();
-      that.setActiveDesc(that.getBlockRootId_(blockId), treeId);
-    });
+      var treeId = that.getTreeIdForBlock(blockId)
+      document.getElementById(treeId).focus()
+      that.setActiveDesc(that.getBlockRootId_(blockId), treeId)
+    })
   },
   showBlockOptionsModal: function(block) {
-    var that = this;
-    var actionButtonsInfo = [];
+    var that = this
+    var actionButtonsInfo = []
 
     if (block.previousConnection) {
       actionButtonsInfo.push({
         action: function() {
-          that.blockConnectionService.markConnection(block.previousConnection);
-          that.focusOnBlock(block.id);
+          that.blockConnectionService.markConnection(block.previousConnection)
+          that.focusOnBlock(block.id)
         },
-        translationIdForText: 'MARK_SPOT_BEFORE'
-      });
+        translationIdForText: "MARK_SPOT_BEFORE"
+      })
     }
 
     if (block.nextConnection) {
       actionButtonsInfo.push({
         action: function() {
-          that.blockConnectionService.markConnection(block.nextConnection);
-          that.focusOnBlock(block.id);
+          that.blockConnectionService.markConnection(block.nextConnection)
+          that.focusOnBlock(block.id)
         },
-        translationIdForText: 'MARK_SPOT_AFTER'
-      });
+        translationIdForText: "MARK_SPOT_AFTER"
+      })
     }
 
     if (this.blockConnectionService.canBeMovedToMarkedConnection(block)) {
       actionButtonsInfo.push({
         action: function() {
-          var blockDescription = that.utilsService.getBlockDescription(block);
+          var blockDescription = that.utilsService.getBlockDescription(block)
           var oldDestinationTreeId = that.getTreeIdForBlock(
-              that.blockConnectionService.getMarkedConnectionSourceBlock().id);
-          that.clearActiveDesc(oldDestinationTreeId);
+            that.blockConnectionService.getMarkedConnectionSourceBlock().id
+          )
+          that.clearActiveDesc(oldDestinationTreeId)
 
           var newBlockId = that.blockConnectionService.attachToMarkedConnection(
-              block);
-          that.safelyRemoveBlock_(block, function() {
-            block.dispose(false);
-          }, true);
+            block
+          )
+          that.safelyRemoveBlock_(
+            block,
+            function() {
+              block.dispose(false)
+            },
+            true
+          )
 
           // Invoke a digest cycle, so that the DOM settles.
           setTimeout(function() {
-            that.focusOnBlock(newBlockId);
-            var newDestinationTreeId = that.getTreeIdForBlock(newBlockId);
+            that.focusOnBlock(newBlockId)
+            var newDestinationTreeId = that.getTreeIdForBlock(newBlockId)
 
             if (newDestinationTreeId != oldDestinationTreeId) {
               // The tree ID for a moved block does not seem to behave
@@ -411,98 +424,111 @@ blocklyApp.TreeService = ng.core.Class({
               // Here, we double-check to ensure that all affected trees have
               // an active desc set.
               if (document.getElementById(oldDestinationTreeId)) {
-                var activeDescId = that.getActiveDescId(oldDestinationTreeId);
-                var activeDescTreeId = null;
+                var activeDescId = that.getActiveDescId(oldDestinationTreeId)
+                var activeDescTreeId = null
                 if (activeDescId) {
                   var oldDestinationBlock = that.getContainingBlock_(
-                      document.getElementById(activeDescId));
-                  activeDescTreeId = that.getTreeIdForBlock(
-                      oldDestinationBlock);
+                    document.getElementById(activeDescId)
+                  )
+                  activeDescTreeId = that.getTreeIdForBlock(oldDestinationBlock)
                   if (activeDescTreeId != oldDestinationTreeId) {
-                    that.clearActiveDesc(oldDestinationTreeId);
+                    that.clearActiveDesc(oldDestinationTreeId)
                   }
                 }
-                that.initActiveDesc(oldDestinationTreeId);
+                that.initActiveDesc(oldDestinationTreeId)
               }
             }
 
             that.notificationsService.speak(
-                blockDescription + ' ' +
+              blockDescription +
+                " " +
                 Blockly.Msg.ATTACHED_BLOCK_TO_LINK_MSG +
-                '. Now on attached block in workspace.');
-          });
+                ". Now on attached block in workspace."
+            )
+          })
         },
-        translationIdForText: 'MOVE_TO_MARKED_SPOT'
-      });
+        translationIdForText: "MOVE_TO_MARKED_SPOT"
+      })
     }
 
     actionButtonsInfo.push({
       action: function() {
-        var blockDescription = that.utilsService.getBlockDescription(block);
+        var blockDescription = that.utilsService.getBlockDescription(block)
 
-        that.safelyRemoveBlock_(block, function() {
-          block.dispose(true);
-          that.audioService.playDeleteSound();
-        }, false);
+        that.safelyRemoveBlock_(
+          block,
+          function() {
+            block.dispose(true)
+            that.audioService.playDeleteSound()
+          },
+          false
+        )
 
         setTimeout(function() {
-          var message = blockDescription + ' deleted. ' + (
-              that.utilsService.isWorkspaceEmpty() ?
-              'Workspace is empty.' : 'Now on workspace.');
-          that.notificationsService.speak(message);
-        });
+          var message =
+            blockDescription +
+            " deleted. " +
+            (that.utilsService.isWorkspaceEmpty()
+              ? "Workspace is empty."
+              : "Now on workspace.")
+          that.notificationsService.speak(message)
+        })
       },
-      translationIdForText: 'DELETE'
-    });
+      translationIdForText: "DELETE"
+    })
 
     this.blockOptionsModalService.showModal(actionButtonsInfo, function() {
-      that.focusOnBlock(block.id);
-    });
+      that.focusOnBlock(block.id)
+    })
   },
 
   moveUpOneLevel_: function(treeId) {
-    var activeDesc = document.getElementById(this.getActiveDescId(treeId));
-    var nextNode = this.getParentLi_(activeDesc);
+    var activeDesc = document.getElementById(this.getActiveDescId(treeId))
+    var nextNode = this.getParentLi_(activeDesc)
     if (nextNode) {
-      this.setActiveDesc(nextNode.id, treeId);
+      this.setActiveDesc(nextNode.id, treeId)
     } else {
-      this.audioService.playOopsSound();
+      this.audioService.playOopsSound()
     }
   },
   onKeypress: function(e, tree) {
     // TODO(sll): Instead of this, have a common ActiveContextService which
     // returns true if at least one modal is shown, and false otherwise.
-    if (this.blockOptionsModalService.isModalShown() ||
-        this.variableModalService.isModalShown()) {
-      return;
+    if (
+      this.blockOptionsModalService.isModalShown() ||
+      this.variableModalService.isModalShown()
+    ) {
+      return
     }
 
-    var treeId = tree.id;
-    var activeDesc = document.getElementById(this.getActiveDescId(treeId));
+    var treeId = tree.id
+    var activeDesc = document.getElementById(this.getActiveDescId(treeId))
     if (!activeDesc) {
       // The underlying Blockly instance may have decided blocks needed to
       // be deleted. This is not necessarily an error, but needs to be repaired.
-      this.initActiveDesc(treeId);
-      activeDesc = document.getElementById(this.getActiveDescId(treeId));
+      this.initActiveDesc(treeId)
+      activeDesc = document.getElementById(this.getActiveDescId(treeId))
     }
 
     if (e.altKey || e.ctrlKey) {
       // Do not intercept combinations such as Alt+Home.
-      return;
+      return
     }
 
-    if (document.activeElement.tagName == 'INPUT' ||
-        document.activeElement.tagName == 'SELECT') {
+    if (
+      document.activeElement.tagName == "INPUT" ||
+      document.activeElement.tagName == "SELECT"
+    ) {
       // For input fields, Esc, Enter, and Tab keystrokes are handled specially.
       if (e.keyCode == 9 || e.keyCode == 13 || e.keyCode == 27) {
         // Return the focus to the workspace tree containing the input field.
-        document.getElementById(treeId).focus();
+        document.getElementById(treeId).focus()
 
         // Note that Tab and Enter events stop propagating, this behavior is
         // handled on other listeners.
         if (e.keyCode == 27 || e.keyCode == 13) {
-          e.preventDefault();
-          e.stopPropagation();
+          e.preventDefault()
+          e.stopPropagation()
         }
       }
     } else {
@@ -514,96 +540,97 @@ blocklyApp.TreeService = ng.core.Class({
         // Algorithm to find the field: do a DFS through the children until
         // we find an INPUT, BUTTON or SELECT element (in which case we use it).
         // Truncate the search at child LI elements.
-        e.stopPropagation();
+        e.stopPropagation()
 
-        var found = false;
-        var dfsStack = Array.from(activeDesc.children);
+        var found = false
+        var dfsStack = Array.from(activeDesc.children)
         while (dfsStack.length) {
-          var currentNode = dfsStack.shift();
-          if (currentNode.tagName == 'BUTTON') {
-            currentNode.click();
-            found = true;
-            break;
-          } else if (currentNode.tagName == 'INPUT') {
-            currentNode.focus();
-            currentNode.select();
+          var currentNode = dfsStack.shift()
+          if (currentNode.tagName == "BUTTON") {
+            currentNode.click()
+            found = true
+            break
+          } else if (currentNode.tagName == "INPUT") {
+            currentNode.focus()
+            currentNode.select()
             this.notificationsService.speak(
-                'Type a value, then press Escape to exit');
-            found = true;
-            break;
-          } else if (currentNode.tagName == 'SELECT') {
-            currentNode.focus();
-            found = true;
-            return;
-          } else if (currentNode.tagName == 'LI') {
-            continue;
+              "Type a value, then press Escape to exit"
+            )
+            found = true
+            break
+          } else if (currentNode.tagName == "SELECT") {
+            currentNode.focus()
+            found = true
+            return
+          } else if (currentNode.tagName == "LI") {
+            continue
           }
 
           if (currentNode.children) {
-            var reversedChildren = Array.from(currentNode.children).reverse();
+            var reversedChildren = Array.from(currentNode.children).reverse()
             reversedChildren.forEach(function(childNode) {
-              dfsStack.unshift(childNode);
-            });
+              dfsStack.unshift(childNode)
+            })
           }
         }
 
         // If we cannot find a field to interact with, we open the modal for
         // the current block instead.
         if (!found) {
-          var block = this.getContainingBlock_(activeDesc);
-          this.showBlockOptionsModal(block);
+          var block = this.getContainingBlock_(activeDesc)
+          this.showBlockOptionsModal(block)
         }
       } else if (e.keyCode == 9) {
         // Tab key. The event is allowed to propagate through.
       } else if ([27, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) !== -1) {
         if (e.keyCode == 27 || e.keyCode == 37) {
           // Esc or left arrow key. Go up a level, if possible.
-          this.moveUpOneLevel_(treeId);
+          this.moveUpOneLevel_(treeId)
         } else if (e.keyCode == 35) {
           // End key. Go to the last sibling in the subtree.
-          var potentialFinalSibling = this.getFinalSiblingLi_(activeDesc);
+          var potentialFinalSibling = this.getFinalSiblingLi_(activeDesc)
           if (potentialFinalSibling) {
-            this.setActiveDesc(potentialFinalSibling.id, treeId);
+            this.setActiveDesc(potentialFinalSibling.id, treeId)
           }
         } else if (e.keyCode == 36) {
           // Home key. Go to the first sibling in the subtree.
-          var potentialInitialSibling = this.getInitialSiblingLi_(activeDesc);
+          var potentialInitialSibling = this.getInitialSiblingLi_(activeDesc)
           if (potentialInitialSibling) {
-            this.setActiveDesc(potentialInitialSibling.id, treeId);
+            this.setActiveDesc(potentialInitialSibling.id, treeId)
           }
         } else if (e.keyCode == 38) {
           // Up arrow key. Go to the previous sibling, if possible.
-          var potentialPrevSibling = this.getPreviousSiblingLi_(activeDesc);
+          var potentialPrevSibling = this.getPreviousSiblingLi_(activeDesc)
           if (potentialPrevSibling) {
-            this.setActiveDesc(potentialPrevSibling.id, treeId);
+            this.setActiveDesc(potentialPrevSibling.id, treeId)
           } else {
-            var statusMessage = 'Reached top of list.';
+            var statusMessage = "Reached top of list."
             if (this.getParentLi_(activeDesc)) {
-              statusMessage += ' Press left to go to parent list.';
+              statusMessage += " Press left to go to parent list."
             }
-            this.audioService.playOopsSound(statusMessage);
+            this.audioService.playOopsSound(statusMessage)
           }
         } else if (e.keyCode == 39) {
           // Right arrow key. Go down a level, if possible.
-          var potentialFirstChild = this.getFirstChildLi_(activeDesc);
+          var potentialFirstChild = this.getFirstChildLi_(activeDesc)
           if (potentialFirstChild) {
-            this.setActiveDesc(potentialFirstChild.id, treeId);
+            this.setActiveDesc(potentialFirstChild.id, treeId)
           } else {
-            this.audioService.playOopsSound();
+            this.audioService.playOopsSound()
           }
         } else if (e.keyCode == 40) {
           // Down arrow key. Go to the next sibling, if possible.
-          var potentialNextSibling = this.getNextSiblingLi_(activeDesc);
+          var potentialNextSibling = this.getNextSiblingLi_(activeDesc)
           if (potentialNextSibling) {
-            this.setActiveDesc(potentialNextSibling.id, treeId);
+            this.setActiveDesc(potentialNextSibling.id, treeId)
           } else {
-            this.audioService.playOopsSound('Reached bottom of list.');
+            this.audioService.playOopsSound("Reached bottom of list.")
           }
         }
 
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault()
+        e.stopPropagation()
       }
     }
   }
-});
+})

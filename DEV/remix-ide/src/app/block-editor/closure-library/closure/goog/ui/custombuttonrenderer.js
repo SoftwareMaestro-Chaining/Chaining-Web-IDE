@@ -19,18 +19,16 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.CustomButtonRenderer');
+goog.provide("goog.ui.CustomButtonRenderer")
 
-goog.require('goog.a11y.aria.Role');
-goog.require('goog.asserts');
-goog.require('goog.dom.NodeType');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.string');
-goog.require('goog.ui.ButtonRenderer');
-goog.require('goog.ui.INLINE_BLOCK_CLASSNAME');
-
-
+goog.require("goog.a11y.aria.Role")
+goog.require("goog.asserts")
+goog.require("goog.dom.NodeType")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.string")
+goog.require("goog.ui.ButtonRenderer")
+goog.require("goog.ui.INLINE_BLOCK_CLASSNAME")
 
 /**
  * Custom renderer for {@link goog.ui.Button}s.  Custom buttons can contain
@@ -41,19 +39,17 @@ goog.require('goog.ui.INLINE_BLOCK_CLASSNAME');
  * @extends {goog.ui.ButtonRenderer}
  */
 goog.ui.CustomButtonRenderer = function() {
-  goog.ui.ButtonRenderer.call(this);
-};
-goog.inherits(goog.ui.CustomButtonRenderer, goog.ui.ButtonRenderer);
-goog.addSingletonGetter(goog.ui.CustomButtonRenderer);
-
+  goog.ui.ButtonRenderer.call(this)
+}
+goog.inherits(goog.ui.CustomButtonRenderer, goog.ui.ButtonRenderer)
+goog.addSingletonGetter(goog.ui.CustomButtonRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.CustomButtonRenderer.CSS_CLASS = goog.getCssName('goog-custom-button');
-
+goog.ui.CustomButtonRenderer.CSS_CLASS = goog.getCssName("goog-custom-button")
 
 /**
  * Returns the button's contents wrapped in the following DOM structure:
@@ -72,17 +68,19 @@ goog.ui.CustomButtonRenderer.CSS_CLASS = goog.getCssName('goog-custom-button');
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.createDom = function(control) {
-  var button = /** @type {goog.ui.Button} */ (control);
-  var classNames = this.getClassNames(button);
-  var buttonElement = button.getDomHelper().createDom(
+  var button = /** @type {goog.ui.Button} */ (control)
+  var classNames = this.getClassNames(button)
+  var buttonElement = button
+    .getDomHelper()
+    .createDom(
       goog.dom.TagName.DIV,
-      goog.ui.INLINE_BLOCK_CLASSNAME + ' ' + classNames.join(' '),
-      this.createButton(button.getContent(), button.getDomHelper()));
-  this.setTooltip(buttonElement, /** @type {string}*/ (button.getTooltip()));
+      goog.ui.INLINE_BLOCK_CLASSNAME + " " + classNames.join(" "),
+      this.createButton(button.getContent(), button.getDomHelper())
+    )
+  this.setTooltip(buttonElement, /** @type {string}*/ (button.getTooltip()))
 
-  return buttonElement;
-};
-
+  return buttonElement
+}
 
 /**
  * Returns the ARIA role to be applied to custom buttons.
@@ -90,9 +88,8 @@ goog.ui.CustomButtonRenderer.prototype.createDom = function(control) {
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.getAriaRole = function() {
-  return goog.a11y.aria.Role.BUTTON;
-};
-
+  return goog.a11y.aria.Role.BUTTON
+}
 
 /**
  * Takes the button's root element and returns the parent element of the
@@ -104,10 +101,12 @@ goog.ui.CustomButtonRenderer.prototype.getAriaRole = function() {
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.getContentElement = function(element) {
-  return element && element.firstChild &&
-      /** @type {Element} */ (element.firstChild.firstChild);
-};
-
+  return (
+    element &&
+    element.firstChild &&
+    /** @type {Element} */ (element.firstChild.firstChild)
+  )
+}
 
 /**
  * Takes a text caption or existing DOM structure, and returns the content
@@ -128,14 +127,19 @@ goog.ui.CustomButtonRenderer.prototype.getContentElement = function(element) {
  */
 goog.ui.CustomButtonRenderer.prototype.createButton = function(content, dom) {
   return dom.createDom(
-      goog.dom.TagName.DIV, goog.ui.INLINE_BLOCK_CLASSNAME + ' ' +
-          goog.getCssName(this.getCssClass(), 'outer-box'),
-      dom.createDom(
-          goog.dom.TagName.DIV, goog.ui.INLINE_BLOCK_CLASSNAME + ' ' +
-              goog.getCssName(this.getCssClass(), 'inner-box'),
-          content));
-};
-
+    goog.dom.TagName.DIV,
+    goog.ui.INLINE_BLOCK_CLASSNAME +
+      " " +
+      goog.getCssName(this.getCssClass(), "outer-box"),
+    dom.createDom(
+      goog.dom.TagName.DIV,
+      goog.ui.INLINE_BLOCK_CLASSNAME +
+        " " +
+        goog.getCssName(this.getCssClass(), "inner-box"),
+      content
+    )
+  )
+}
 
 /**
  * Returns true if this renderer can decorate the element.  Overrides
@@ -146,9 +150,8 @@ goog.ui.CustomButtonRenderer.prototype.createButton = function(content, dom) {
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.canDecorate = function(element) {
-  return element.tagName == goog.dom.TagName.DIV;
-};
-
+  return element.tagName == goog.dom.TagName.DIV
+}
 
 /**
  * Check if the button's element has a box structure.
@@ -159,20 +162,21 @@ goog.ui.CustomButtonRenderer.prototype.canDecorate = function(element) {
  * @protected
  */
 goog.ui.CustomButtonRenderer.prototype.hasBoxStructure = function(
-    button, element) {
-  var outer = button.getDomHelper().getFirstElementChild(element);
-  var outerClassName = goog.getCssName(this.getCssClass(), 'outer-box');
+  button,
+  element
+) {
+  var outer = button.getDomHelper().getFirstElementChild(element)
+  var outerClassName = goog.getCssName(this.getCssClass(), "outer-box")
   if (outer && goog.dom.classlist.contains(outer, outerClassName)) {
-    var inner = button.getDomHelper().getFirstElementChild(outer);
-    var innerClassName = goog.getCssName(this.getCssClass(), 'inner-box');
+    var inner = button.getDomHelper().getFirstElementChild(outer)
+    var innerClassName = goog.getCssName(this.getCssClass(), "inner-box")
     if (inner && goog.dom.classlist.contains(inner, innerClassName)) {
       // We have a proper box structure.
-      return true;
+      return true
     }
   }
-  return false;
-};
-
+  return false
+}
 
 /**
  * Takes an existing element and decorates it with the custom button control.
@@ -185,26 +189,31 @@ goog.ui.CustomButtonRenderer.prototype.hasBoxStructure = function(
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.decorate = function(control, element) {
-  goog.asserts.assert(element);
+  goog.asserts.assert(element)
 
-  var button = /** @type {goog.ui.Button} */ (control);
+  var button = /** @type {goog.ui.Button} */ (control)
   // Trim text nodes in the element's child node list; otherwise madness
   // ensues (i.e. on Gecko, buttons will flicker and shift when moused over).
-  goog.ui.CustomButtonRenderer.trimTextNodes_(element, true);
-  goog.ui.CustomButtonRenderer.trimTextNodes_(element, false);
+  goog.ui.CustomButtonRenderer.trimTextNodes_(element, true)
+  goog.ui.CustomButtonRenderer.trimTextNodes_(element, false)
 
   // Create the buttom dom if it has not been created.
   if (!this.hasBoxStructure(button, element)) {
     element.appendChild(
-        this.createButton(element.childNodes, button.getDomHelper()));
+      this.createButton(element.childNodes, button.getDomHelper())
+    )
   }
 
-  goog.dom.classlist.addAll(
-      element, [goog.ui.INLINE_BLOCK_CLASSNAME, this.getCssClass()]);
+  goog.dom.classlist.addAll(element, [
+    goog.ui.INLINE_BLOCK_CLASSNAME,
+    this.getCssClass()
+  ])
   return goog.ui.CustomButtonRenderer.superClass_.decorate.call(
-      this, button, element);
-};
-
+    this,
+    button,
+    element
+  )
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -213,9 +222,8 @@ goog.ui.CustomButtonRenderer.prototype.decorate = function(control, element) {
  * @override
  */
 goog.ui.CustomButtonRenderer.prototype.getCssClass = function() {
-  return goog.ui.CustomButtonRenderer.CSS_CLASS;
-};
-
+  return goog.ui.CustomButtonRenderer.CSS_CLASS
+}
 
 /**
  * Takes an element and removes leading or trailing whitespace from the start
@@ -250,28 +258,30 @@ goog.ui.CustomButtonRenderer.prototype.getCssClass = function() {
  */
 goog.ui.CustomButtonRenderer.trimTextNodes_ = function(element, fromStart) {
   if (element) {
-    var node = fromStart ? element.firstChild : element.lastChild, next;
+    var node = fromStart ? element.firstChild : element.lastChild,
+      next
     // Tag soup HTML may result in a DOM where siblings have different parents.
     while (node && node.parentNode == element) {
       // Get the next/previous sibling here, since the node may be removed.
-      next = fromStart ? node.nextSibling : node.previousSibling;
+      next = fromStart ? node.nextSibling : node.previousSibling
       if (node.nodeType == goog.dom.NodeType.TEXT) {
         // Found a text node.
-        var text = node.nodeValue;
-        if (goog.string.trim(text) == '') {
+        var text = node.nodeValue
+        if (goog.string.trim(text) == "") {
           // Found an empty text node; remove it.
-          element.removeChild(node);
+          element.removeChild(node)
         } else {
           // Found a non-empty text node; trim from the start/end, then exit.
-          node.nodeValue = fromStart ? goog.string.trimLeft(text) :
-                                       goog.string.trimRight(text);
-          break;
+          node.nodeValue = fromStart
+            ? goog.string.trimLeft(text)
+            : goog.string.trimRight(text)
+          break
         }
       } else {
         // Found a non-text node; done.
-        break;
+        break
       }
-      node = next;
+      node = next
     }
   }
-};
+}

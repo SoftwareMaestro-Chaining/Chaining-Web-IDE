@@ -31,15 +31,13 @@
  * @see ../../demos/autocompleterichremote.html
  */
 
-goog.provide('goog.ui.ac.RichRemote');
+goog.provide("goog.ui.ac.RichRemote")
 
-goog.require('goog.ui.ac.AutoComplete');
-goog.require('goog.ui.ac.Remote');
-goog.require('goog.ui.ac.Renderer');
-goog.require('goog.ui.ac.RichInputHandler');
-goog.require('goog.ui.ac.RichRemoteArrayMatcher');
-
-
+goog.require("goog.ui.ac.AutoComplete")
+goog.require("goog.ui.ac.Remote")
+goog.require("goog.ui.ac.Renderer")
+goog.require("goog.ui.ac.RichInputHandler")
+goog.require("goog.ui.ac.RichRemoteArrayMatcher")
 
 /**
  * Factory class to create a rich autocomplete widget that autocompletes an
@@ -59,10 +57,10 @@ goog.require('goog.ui.ac.RichRemoteArrayMatcher');
 goog.ui.ac.RichRemote = function(url, input, opt_multi, opt_useSimilar) {
   // Create a custom renderer that renders rich rows.  The renderer calls
   // row.render(node, token) for each row.
-  var customRenderer = {};
+  var customRenderer = {}
   customRenderer.renderRow = function(row, token, node) {
-    return row.data.render(node, token);
-  };
+    return row.data.render(node, token)
+  }
 
   /**
    * A standard renderer that uses a custom row renderer to display the
@@ -70,30 +68,33 @@ goog.ui.ac.RichRemote = function(url, input, opt_multi, opt_useSimilar) {
    * @type {goog.ui.ac.Renderer}
    * @private
    */
-  var renderer = new goog.ui.ac.Renderer(null, customRenderer);
+  var renderer = new goog.ui.ac.Renderer(null, customRenderer)
 
   /**
    * A remote matcher that parses rich results returned by the server.
    * @type {goog.ui.ac.RichRemoteArrayMatcher}
    * @private
    */
-  var matcher = new goog.ui.ac.RichRemoteArrayMatcher(url, !opt_useSimilar);
+  var matcher = new goog.ui.ac.RichRemoteArrayMatcher(url, !opt_useSimilar)
 
   /**
    * An input handler that calls select on a row when it is selected.
    * @type {goog.ui.ac.RichInputHandler}
    * @private
    */
-  var inputhandler =
-      new goog.ui.ac.RichInputHandler(null, null, !!opt_multi, 300);
+  var inputhandler = new goog.ui.ac.RichInputHandler(
+    null,
+    null,
+    !!opt_multi,
+    300
+  )
 
   // Create the widget and connect it to the input handler.
-  goog.ui.ac.AutoComplete.call(this, matcher, renderer, inputhandler);
-  inputhandler.attachAutoComplete(this);
-  inputhandler.attachInputs(input);
-};
-goog.inherits(goog.ui.ac.RichRemote, goog.ui.ac.Remote);
-
+  goog.ui.ac.AutoComplete.call(this, matcher, renderer, inputhandler)
+  inputhandler.attachAutoComplete(this)
+  inputhandler.attachInputs(input)
+}
+goog.inherits(goog.ui.ac.RichRemote, goog.ui.ac.Remote)
 
 /**
  * Set the filter that is called before the array matches are returned.
@@ -101,9 +102,8 @@ goog.inherits(goog.ui.ac.RichRemote, goog.ui.ac.Remote);
  *     a subset of the rows input array.
  */
 goog.ui.ac.RichRemote.prototype.setRowFilter = function(rowFilter) {
-  this.matcher_.setRowFilter(rowFilter);
-};
-
+  this.matcher_.setRowFilter(rowFilter)
+}
 
 /**
  * Sets the function building the rows.
@@ -112,5 +112,5 @@ goog.ui.ac.RichRemote.prototype.setRowFilter = function(rowFilter) {
  *     an object with two methods: render(node, token) and select(target).
  */
 goog.ui.ac.RichRemote.prototype.setRowBuilder = function(rowBuilder) {
-  this.matcher_.setRowBuilder(rowBuilder);
-};
+  this.matcher_.setRowBuilder(rowBuilder)
+}

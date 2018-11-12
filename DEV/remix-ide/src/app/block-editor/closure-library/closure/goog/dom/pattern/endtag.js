@@ -18,12 +18,10 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.EndTag');
+goog.provide("goog.dom.pattern.EndTag")
 
-goog.require('goog.dom.TagWalkType');
-goog.require('goog.dom.pattern.Tag');
-
-
+goog.require("goog.dom.TagWalkType")
+goog.require("goog.dom.pattern.Tag")
 
 /**
  * Pattern object that matches a closing tag.
@@ -44,6 +42,12 @@ goog.require('goog.dom.pattern.Tag');
  */
 goog.dom.pattern.EndTag = function(tag, opt_attrs, opt_styles, opt_test) {
   goog.dom.pattern.Tag.call(
-      this, tag, goog.dom.TagWalkType.END_TAG, opt_attrs, opt_styles, opt_test);
-};
-goog.inherits(goog.dom.pattern.EndTag, goog.dom.pattern.Tag);
+    this,
+    tag,
+    goog.dom.TagWalkType.END_TAG,
+    opt_attrs,
+    opt_styles,
+    opt_test
+  )
+}
+goog.inherits(goog.dom.pattern.EndTag, goog.dom.pattern.Tag)

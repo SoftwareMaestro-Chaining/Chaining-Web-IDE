@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview provides a reusable FlickrSet photo UI component given a public
  * FlickrSetModel.
@@ -59,17 +58,15 @@
  * 'You need to install flash' message).
  */
 
-goog.provide('goog.ui.media.FlickrSet');
-goog.provide('goog.ui.media.FlickrSetModel');
+goog.provide("goog.ui.media.FlickrSet")
+goog.provide("goog.ui.media.FlickrSetModel")
 
-goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.string.Const');
-goog.require('goog.ui.media.FlashObject');
-goog.require('goog.ui.media.Media');
-goog.require('goog.ui.media.MediaModel');
-goog.require('goog.ui.media.MediaRenderer');
-
-
+goog.require("goog.html.TrustedResourceUrl")
+goog.require("goog.string.Const")
+goog.require("goog.ui.media.FlashObject")
+goog.require("goog.ui.media.Media")
+goog.require("goog.ui.media.MediaModel")
+goog.require("goog.ui.media.MediaRenderer")
 
 /**
  * Subclasses a goog.ui.media.MediaRenderer to provide a FlickrSet specific
@@ -94,11 +91,10 @@ goog.require('goog.ui.media.MediaRenderer');
  * @final
  */
 goog.ui.media.FlickrSet = function() {
-  goog.ui.media.MediaRenderer.call(this);
-};
-goog.inherits(goog.ui.media.FlickrSet, goog.ui.media.MediaRenderer);
-goog.addSingletonGetter(goog.ui.media.FlickrSet);
-
+  goog.ui.media.MediaRenderer.call(this)
+}
+goog.inherits(goog.ui.media.FlickrSet, goog.ui.media.MediaRenderer)
+goog.addSingletonGetter(goog.ui.media.FlickrSet)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
@@ -106,8 +102,7 @@ goog.addSingletonGetter(goog.ui.media.FlickrSet);
  *
  * @type {string}
  */
-goog.ui.media.FlickrSet.CSS_CLASS = goog.getCssName('goog-ui-media-flickrset');
-
+goog.ui.media.FlickrSet.CSS_CLASS = goog.getCssName("goog-ui-media-flickrset")
 
 /**
  * Flash player URL. Uses Flickr's flash player by default.
@@ -116,9 +111,10 @@ goog.ui.media.FlickrSet.CSS_CLASS = goog.getCssName('goog-ui-media-flickrset');
  * @private
  */
 goog.ui.media.FlickrSet.flashUrl_ = goog.html.TrustedResourceUrl.fromConstant(
-    goog.string.Const.from(
-        'http://www.flickr.com/apps/slideshow/show.swf?v=63961'));
-
+  goog.string.Const.from(
+    "http://www.flickr.com/apps/slideshow/show.swf?v=63961"
+  )
+)
 
 /**
  * A static convenient method to construct a goog.ui.media.Media control out of
@@ -137,11 +133,13 @@ goog.ui.media.FlickrSet.flashUrl_ = goog.html.TrustedResourceUrl.fromConstant(
  */
 goog.ui.media.FlickrSet.newControl = function(dataModel, opt_domHelper) {
   var control = new goog.ui.media.Media(
-      dataModel, goog.ui.media.FlickrSet.getInstance(), opt_domHelper);
-  control.setSelected(true);
-  return control;
-};
-
+    dataModel,
+    goog.ui.media.FlickrSet.getInstance(),
+    opt_domHelper
+  )
+  control.setSelected(true)
+  return control
+}
 
 /**
  * A static method that sets which flash URL this class should use. Use this if
@@ -151,9 +149,8 @@ goog.ui.media.FlickrSet.newControl = function(dataModel, opt_domHelper) {
  *     player.
  */
 goog.ui.media.FlickrSet.setFlashUrl = function(flashUrl) {
-  goog.ui.media.FlickrSet.flashUrl_ = flashUrl;
-};
-
+  goog.ui.media.FlickrSet.flashUrl_ = flashUrl
+}
 
 /**
  * Creates the initial DOM structure of the flickr set, which is basically a
@@ -164,22 +161,22 @@ goog.ui.media.FlickrSet.setFlashUrl = function(flashUrl) {
  * @override
  */
 goog.ui.media.FlickrSet.prototype.createDom = function(c) {
-  var control = /** @type {goog.ui.media.Media} */ (c);
-  var div = goog.ui.media.FlickrSet.superClass_.createDom.call(this, control);
+  var control = /** @type {goog.ui.media.Media} */ (c)
+  var div = goog.ui.media.FlickrSet.superClass_.createDom.call(this, control)
 
-  var model =
-      /** @type {goog.ui.media.FlickrSetModel} */ (control.getDataModel());
+  var model = /** @type {goog.ui.media.FlickrSetModel} */ (control.getDataModel())
 
   // TODO(user): find out what is the policy about hosting this SWF. figure out
   // if it works over https.
   var flash = new goog.ui.media.FlashObject(
-      model.getPlayer().getTrustedResourceUrl(), control.getDomHelper());
-  flash.addFlashVars(model.getPlayer().getVars());
-  flash.render(div);
+    model.getPlayer().getTrustedResourceUrl(),
+    control.getDomHelper()
+  )
+  flash.addFlashVars(model.getPlayer().getVars())
+  flash.render(div)
 
-  return div;
-};
-
+  return div
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -188,10 +185,8 @@ goog.ui.media.FlickrSet.prototype.createDom = function(c) {
  * @override
  */
 goog.ui.media.FlickrSet.prototype.getCssClass = function() {
-  return goog.ui.media.FlickrSet.CSS_CLASS;
-};
-
-
+  return goog.ui.media.FlickrSet.CSS_CLASS
+}
 
 /**
  * The `goog.ui.media.FlickrAlbum` media data model. It stores a required
@@ -207,40 +202,49 @@ goog.ui.media.FlickrSet.prototype.getCssClass = function() {
  * @final
  */
 goog.ui.media.FlickrSetModel = function(
-    userId, setId, opt_caption, opt_description) {
+  userId,
+  setId,
+  opt_caption,
+  opt_description
+) {
   goog.ui.media.MediaModel.call(
-      this, goog.ui.media.FlickrSetModel.buildUrl(userId, setId), opt_caption,
-      opt_description, goog.ui.media.MediaModel.MimeType.FLASH);
+    this,
+    goog.ui.media.FlickrSetModel.buildUrl(userId, setId),
+    opt_caption,
+    opt_description,
+    goog.ui.media.MediaModel.MimeType.FLASH
+  )
 
   /**
    * The Flickr user id.
    * @type {string}
    * @private
    */
-  this.userId_ = userId;
+  this.userId_ = userId
 
   /**
    * The Flickr set id.
    * @type {string}
    * @private
    */
-  this.setId_ = setId;
+  this.setId_ = setId
 
   var flashVars = {
-    'offsite': 'true',
-    'lang': 'en',
-    'page_show_url': '/photos/' + userId + '/sets/' + setId + '/show/',
-    'page_show_back_url': '/photos/' + userId + '/sets/' + setId,
-    'set_id': setId
-  };
+    offsite: "true",
+    lang: "en",
+    page_show_url: "/photos/" + userId + "/sets/" + setId + "/show/",
+    page_show_back_url: "/photos/" + userId + "/sets/" + setId,
+    set_id: setId
+  }
 
   var player = new goog.ui.media.MediaModel.Player(
-      goog.ui.media.FlickrSet.flashUrl_, flashVars);
+    goog.ui.media.FlickrSet.flashUrl_,
+    flashVars
+  )
 
-  this.setPlayer(player);
-};
-goog.inherits(goog.ui.media.FlickrSetModel, goog.ui.media.MediaModel);
-
+  this.setPlayer(player)
+}
+goog.inherits(goog.ui.media.FlickrSetModel, goog.ui.media.MediaModel)
 
 /**
  * Regular expression used to extract the username and set id out of the flickr
@@ -252,9 +256,7 @@ goog.inherits(goog.ui.media.FlickrSetModel, goog.ui.media.MediaModel);
  * @private
  * @const
  */
-goog.ui.media.FlickrSetModel.MATCHER_ =
-    /(?:http:\/\/)?(?:www\.)?flickr\.com\/(?:photos\/([\d\w@\-]+)\/sets\/(\d+))\/?/i;
-
+goog.ui.media.FlickrSetModel.MATCHER_ = /(?:http:\/\/)?(?:www\.)?flickr\.com\/(?:photos\/([\d\w@\-]+)\/sets\/(\d+))\/?/i
 
 /**
  * Takes a `flickrSetUrl` and extracts the flickr username and set id.
@@ -267,15 +269,21 @@ goog.ui.media.FlickrSetModel.MATCHER_ =
  * @throws exception in case the parsing fails
  */
 goog.ui.media.FlickrSetModel.newInstance = function(
-    flickrSetUrl, opt_caption, opt_description) {
+  flickrSetUrl,
+  opt_caption,
+  opt_description
+) {
   if (goog.ui.media.FlickrSetModel.MATCHER_.test(flickrSetUrl)) {
-    var data = goog.ui.media.FlickrSetModel.MATCHER_.exec(flickrSetUrl);
+    var data = goog.ui.media.FlickrSetModel.MATCHER_.exec(flickrSetUrl)
     return new goog.ui.media.FlickrSetModel(
-        data[1], data[2], opt_caption, opt_description);
+      data[1],
+      data[2],
+      opt_caption,
+      opt_description
+    )
   }
-  throw new Error('failed to parse flickr url: ' + flickrSetUrl);
-};
-
+  throw new Error("failed to parse flickr url: " + flickrSetUrl)
+}
 
 /**
  * Takes a flickr username and set id and returns an URL.
@@ -285,23 +293,21 @@ goog.ui.media.FlickrSetModel.newInstance = function(
  * @return {string} The URL of the set.
  */
 goog.ui.media.FlickrSetModel.buildUrl = function(userId, setId) {
-  return 'http://flickr.com/photos/' + userId + '/sets/' + setId;
-};
-
+  return "http://flickr.com/photos/" + userId + "/sets/" + setId
+}
 
 /**
  * Gets the Flickr user id.
  * @return {string} The Flickr user id.
  */
 goog.ui.media.FlickrSetModel.prototype.getUserId = function() {
-  return this.userId_;
-};
-
+  return this.userId_
+}
 
 /**
  * Gets the Flickr set id.
  * @return {string} The Flickr set id.
  */
 goog.ui.media.FlickrSetModel.prototype.getSetId = function() {
-  return this.setId_;
-};
+  return this.setId_
+}

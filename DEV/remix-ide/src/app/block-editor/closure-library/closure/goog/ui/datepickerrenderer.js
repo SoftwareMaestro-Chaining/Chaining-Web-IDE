@@ -18,17 +18,14 @@
  * @see ../demos/datepicker.html
  */
 
-goog.provide('goog.ui.DatePickerRenderer');
-
-
+goog.provide("goog.ui.DatePickerRenderer")
 
 /**
  * The renderer for {@link goog.ui.DatePicker}. Renders the date picker's
  * navigation header and footer.
  * @interface
  */
-goog.ui.DatePickerRenderer = function() {};
-
+goog.ui.DatePickerRenderer = function() {}
 
 /**
  * Render the navigation row.
@@ -43,8 +40,7 @@ goog.ui.DatePickerRenderer = function() {};
  * @param {string} fullDateFormat The full date format.
  *     {@see goog.i18n.DateTimeSymbols}.
  */
-goog.ui.DatePickerRenderer.prototype.renderNavigationRow = goog.abstractMethod;
-
+goog.ui.DatePickerRenderer.prototype.renderNavigationRow = goog.abstractMethod
 
 /**
  * Render the footer row.
@@ -52,4 +48,4 @@ goog.ui.DatePickerRenderer.prototype.renderNavigationRow = goog.abstractMethod;
  * @param {!Element} row The parent element to render the component into.
  * @param {boolean} showWeekNum Whether week numbers should be shown.
  */
-goog.ui.DatePickerRenderer.prototype.renderFooterRow = goog.abstractMethod;
+goog.ui.DatePickerRenderer.prototype.renderFooterRow = goog.abstractMethod

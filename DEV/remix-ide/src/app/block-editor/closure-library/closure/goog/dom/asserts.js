@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.dom.asserts');
+goog.provide("goog.dom.asserts")
 
-goog.require('goog.asserts');
+goog.require("goog.asserts")
 
 /**
  * @fileoverview Custom assertions to ensure that an element has the appropriate
@@ -62,18 +62,20 @@ goog.require('goog.asserts');
  */
 goog.dom.asserts.assertIsLocation = function(o) {
   if (goog.asserts.ENABLE_ASSERTS) {
-    var win = goog.dom.asserts.getWindow_(o);
-    if (typeof win.Location != 'undefined' &&
-        typeof win.Element != 'undefined') {
+    var win = goog.dom.asserts.getWindow_(o)
+    if (
+      typeof win.Location != "undefined" &&
+      typeof win.Element != "undefined"
+    ) {
       goog.asserts.assert(
-          o && (o instanceof win.Location || !(o instanceof win.Element)),
-          'Argument is not a Location (or a non-Element mock); got: %s',
-          goog.dom.asserts.debugStringForType_(o));
+        o && (o instanceof win.Location || !(o instanceof win.Element)),
+        "Argument is not a Location (or a non-Element mock); got: %s",
+        goog.dom.asserts.debugStringForType_(o)
+      )
     }
   }
-  return /** @type {!Location} */ (o);
-};
-
+  return /** @type {!Location} */ (o)
+}
 
 /**
  * Asserts that a given object is either the given subtype of Element
@@ -99,20 +101,24 @@ goog.dom.asserts.assertIsLocation = function(o) {
 // TODO(bangert): Make an analog of goog.dom.TagName to correctly handle casts?
 goog.dom.asserts.assertIsElementType_ = function(o, typename) {
   if (goog.asserts.ENABLE_ASSERTS) {
-    var win = goog.dom.asserts.getWindow_(o);
-    if (typeof win[typename] != 'undefined' &&
-        typeof win.Location != 'undefined' &&
-        typeof win.Element != 'undefined') {
+    var win = goog.dom.asserts.getWindow_(o)
+    if (
+      typeof win[typename] != "undefined" &&
+      typeof win.Location != "undefined" &&
+      typeof win.Element != "undefined"
+    ) {
       goog.asserts.assert(
-          o &&
-              (o instanceof win[typename] ||
-               !((o instanceof win.Location) || (o instanceof win.Element))),
-          'Argument is not a %s (or a non-Element, non-Location mock); got: %s',
-          typename, goog.dom.asserts.debugStringForType_(o));
+        o &&
+          (o instanceof win[typename] ||
+            !(o instanceof win.Location || o instanceof win.Element)),
+        "Argument is not a %s (or a non-Element, non-Location mock); got: %s",
+        typename,
+        goog.dom.asserts.debugStringForType_(o)
+      )
     }
   }
-  return /** @type {!Element} */ (o);
-};
+  return /** @type {!Element} */ (o)
+}
 
 /**
  * Asserts that a given object is a HTMLAnchorElement.
@@ -125,9 +131,11 @@ goog.dom.asserts.assertIsElementType_ = function(o, typename) {
  * @return {!HTMLAnchorElement}
  */
 goog.dom.asserts.assertIsHTMLAnchorElement = function(o) {
-  return /** @type {!HTMLAnchorElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLAnchorElement'));
-};
+  return /** @type {!HTMLAnchorElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLAnchorElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLButtonElement.
@@ -139,9 +147,11 @@ goog.dom.asserts.assertIsHTMLAnchorElement = function(o) {
  * @return {!HTMLButtonElement}
  */
 goog.dom.asserts.assertIsHTMLButtonElement = function(o) {
-  return /** @type {!HTMLButtonElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLButtonElement'));
-};
+  return /** @type {!HTMLButtonElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLButtonElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLLinkElement.
@@ -153,9 +163,11 @@ goog.dom.asserts.assertIsHTMLButtonElement = function(o) {
  * @return {!HTMLLinkElement}
  */
 goog.dom.asserts.assertIsHTMLLinkElement = function(o) {
-  return /** @type {!HTMLLinkElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLLinkElement'));
-};
+  return /** @type {!HTMLLinkElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLLinkElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLImageElement.
@@ -167,9 +179,11 @@ goog.dom.asserts.assertIsHTMLLinkElement = function(o) {
  * @return {!HTMLImageElement}
  */
 goog.dom.asserts.assertIsHTMLImageElement = function(o) {
-  return /** @type {!HTMLImageElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLImageElement'));
-};
+  return /** @type {!HTMLImageElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLImageElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLAudioElement.
@@ -181,9 +195,11 @@ goog.dom.asserts.assertIsHTMLImageElement = function(o) {
  * @return {!HTMLAudioElement}
  */
 goog.dom.asserts.assertIsHTMLAudioElement = function(o) {
-  return /** @type {!HTMLAudioElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLAudioElement'));
-};
+  return /** @type {!HTMLAudioElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLAudioElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLVideoElement.
@@ -195,9 +211,11 @@ goog.dom.asserts.assertIsHTMLAudioElement = function(o) {
  * @return {!HTMLVideoElement}
  */
 goog.dom.asserts.assertIsHTMLVideoElement = function(o) {
-  return /** @type {!HTMLVideoElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLVideoElement'));
-};
+  return /** @type {!HTMLVideoElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLVideoElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLInputElement.
@@ -209,9 +227,11 @@ goog.dom.asserts.assertIsHTMLVideoElement = function(o) {
  * @return {!HTMLInputElement}
  */
 goog.dom.asserts.assertIsHTMLInputElement = function(o) {
-  return /** @type {!HTMLInputElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLInputElement'));
-};
+  return /** @type {!HTMLInputElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLInputElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLEmbedElement.
@@ -223,9 +243,11 @@ goog.dom.asserts.assertIsHTMLInputElement = function(o) {
  * @return {!HTMLEmbedElement}
  */
 goog.dom.asserts.assertIsHTMLEmbedElement = function(o) {
-  return /** @type {!HTMLEmbedElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLEmbedElement'));
-};
+  return /** @type {!HTMLEmbedElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLEmbedElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLFormElement.
@@ -237,9 +259,11 @@ goog.dom.asserts.assertIsHTMLEmbedElement = function(o) {
  * @return {!HTMLFormElement}
  */
 goog.dom.asserts.assertIsHTMLFormElement = function(o) {
-  return /** @type {!HTMLFormElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLFormElement'));
-};
+  return /** @type {!HTMLFormElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLFormElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLFrameElement.
@@ -251,9 +275,11 @@ goog.dom.asserts.assertIsHTMLFormElement = function(o) {
  * @return {!HTMLFrameElement}
  */
 goog.dom.asserts.assertIsHTMLFrameElement = function(o) {
-  return /** @type {!HTMLFrameElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLFrameElement'));
-};
+  return /** @type {!HTMLFrameElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLFrameElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLIFrameElement.
@@ -265,9 +291,11 @@ goog.dom.asserts.assertIsHTMLFrameElement = function(o) {
  * @return {!HTMLIFrameElement}
  */
 goog.dom.asserts.assertIsHTMLIFrameElement = function(o) {
-  return /** @type {!HTMLIFrameElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLIFrameElement'));
-};
+  return /** @type {!HTMLIFrameElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLIFrameElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLObjectElement.
@@ -279,9 +307,11 @@ goog.dom.asserts.assertIsHTMLIFrameElement = function(o) {
  * @return {!HTMLObjectElement}
  */
 goog.dom.asserts.assertIsHTMLObjectElement = function(o) {
-  return /** @type {!HTMLObjectElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLObjectElement'));
-};
+  return /** @type {!HTMLObjectElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLObjectElement"
+  ))
+}
 
 /**
  * Asserts that a given object is a HTMLScriptElement.
@@ -293,9 +323,11 @@ goog.dom.asserts.assertIsHTMLObjectElement = function(o) {
  * @return {!HTMLScriptElement}
  */
 goog.dom.asserts.assertIsHTMLScriptElement = function(o) {
-  return /** @type {!HTMLScriptElement} */ (
-      goog.dom.asserts.assertIsElementType_(o, 'HTMLScriptElement'));
-};
+  return /** @type {!HTMLScriptElement} */ (goog.dom.asserts.assertIsElementType_(
+    o,
+    "HTMLScriptElement"
+  ))
+}
 
 /**
  * Returns a string representation of a value's type.
@@ -306,13 +338,19 @@ goog.dom.asserts.assertIsHTMLScriptElement = function(o) {
  */
 goog.dom.asserts.debugStringForType_ = function(value) {
   if (goog.isObject(value)) {
-    return value.constructor.displayName || value.constructor.name ||
-        Object.prototype.toString.call(value);
+    return (
+      value.constructor.displayName ||
+      value.constructor.name ||
+      Object.prototype.toString.call(value)
+    )
   } else {
-    return value === undefined ? 'undefined' :
-                                 value === null ? 'null' : typeof value;
+    return value === undefined
+      ? "undefined"
+      : value === null
+      ? "null"
+      : typeof value
   }
-};
+}
 
 /**
  * Gets window of element.
@@ -322,7 +360,7 @@ goog.dom.asserts.debugStringForType_ = function(value) {
  * @suppress {strictMissingProperties} ownerDocument not defined on Object
  */
 goog.dom.asserts.getWindow_ = function(o) {
-  var doc = o && o.ownerDocument;
-  var win = doc && /** @type {?Window} */ (doc.defaultView || doc.parentWindow);
-  return win || /** @type {!Window} */ (goog.global);
-};
+  var doc = o && o.ownerDocument
+  var win = doc && /** @type {?Window} */ (doc.defaultView || doc.parentWindow)
+  return win || /** @type {!Window} */ (goog.global)
+}

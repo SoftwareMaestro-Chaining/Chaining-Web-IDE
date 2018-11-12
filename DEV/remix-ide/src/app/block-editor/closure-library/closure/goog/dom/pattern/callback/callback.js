@@ -18,14 +18,13 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.callback');
+goog.provide("goog.dom.pattern.callback")
 
-goog.require('goog.dom');
-goog.require('goog.dom.TagWalkType');
-goog.require('goog.iter');
+goog.require("goog.dom")
+goog.require("goog.dom.TagWalkType")
+goog.require("goog.iter")
 
-goog.forwardDeclare('goog.dom.TagIterator');
-
+goog.forwardDeclare("goog.dom.TagIterator")
 
 /**
  * Callback function for use in {@link goog.dom.pattern.Matcher.addPattern}
@@ -39,20 +38,19 @@ goog.forwardDeclare('goog.dom.TagIterator');
  */
 goog.dom.pattern.callback.removeNode = function(node, position) {
   // Find out which position would be next.
-  position.setPosition(node, goog.dom.TagWalkType.END_TAG);
+  position.setPosition(node, goog.dom.TagWalkType.END_TAG)
 
-  goog.iter.nextOrValue(position, null);
+  goog.iter.nextOrValue(position, null)
 
   // Remove the node.
-  goog.dom.removeNode(node);
+  goog.dom.removeNode(node)
 
   // Correct for the depth change.
-  position.depth -= 1;
+  position.depth -= 1
 
   // Indicate that we made position/tree changes.
-  return true;
-};
-
+  return true
+}
 
 /**
  * Callback function for use in {@link goog.dom.pattern.Matcher.addPattern}
@@ -68,17 +66,20 @@ goog.dom.pattern.callback.removeNode = function(node, position) {
 goog.dom.pattern.callback.flattenElement = function(node, position) {
   // Find out which position would be next.
   position.setPosition(
-      node, node.firstChild ? goog.dom.TagWalkType.START_TAG :
-                              goog.dom.TagWalkType.END_TAG);
+    node,
+    node.firstChild
+      ? goog.dom.TagWalkType.START_TAG
+      : goog.dom.TagWalkType.END_TAG
+  )
 
-  goog.iter.nextOrValue(position, null);
+  goog.iter.nextOrValue(position, null)
 
   // Flatten the node.
-  goog.dom.flattenElement(node);
+  goog.dom.flattenElement(node)
 
   // Correct for the depth change.
-  position.depth -= 1;
+  position.depth -= 1
 
   // Indicate that we made position/tree changes.
-  return true;
-};
+  return true
+}

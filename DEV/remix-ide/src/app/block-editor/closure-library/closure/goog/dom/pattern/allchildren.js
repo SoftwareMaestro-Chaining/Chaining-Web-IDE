@@ -18,12 +18,10 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.AllChildren');
+goog.provide("goog.dom.pattern.AllChildren")
 
-goog.require('goog.dom.pattern.AbstractPattern');
-goog.require('goog.dom.pattern.MatchType');
-
-
+goog.require("goog.dom.pattern.AbstractPattern")
+goog.require("goog.dom.pattern.MatchType")
 
 /**
  * Pattern object that matches any nodes at or below the current tree depth.
@@ -37,10 +35,9 @@ goog.dom.pattern.AllChildren = function() {
    *
    * @private {number}
    */
-  this.depth_ = 0;
-};
-goog.inherits(goog.dom.pattern.AllChildren, goog.dom.pattern.AbstractPattern);
-
+  this.depth_ = 0
+}
+goog.inherits(goog.dom.pattern.AllChildren, goog.dom.pattern.AbstractPattern)
 
 /**
  * Test whether the given token is on the same level.
@@ -52,21 +49,20 @@ goog.inherits(goog.dom.pattern.AllChildren, goog.dom.pattern.AbstractPattern);
  * @override
  */
 goog.dom.pattern.AllChildren.prototype.matchToken = function(token, type) {
-  this.depth_ += type;
+  this.depth_ += type
 
   if (this.depth_ >= 0) {
-    return goog.dom.pattern.MatchType.MATCHING;
+    return goog.dom.pattern.MatchType.MATCHING
   } else {
-    this.depth_ = 0;
-    return goog.dom.pattern.MatchType.BACKTRACK_MATCH;
+    this.depth_ = 0
+    return goog.dom.pattern.MatchType.BACKTRACK_MATCH
   }
-};
-
+}
 
 /**
  * Reset any internal state this pattern keeps.
  * @override
  */
 goog.dom.pattern.AllChildren.prototype.reset = function() {
-  this.depth_ = 0;
-};
+  this.depth_ = 0
+}

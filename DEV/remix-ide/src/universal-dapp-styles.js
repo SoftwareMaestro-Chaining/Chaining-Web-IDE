@@ -1,5 +1,5 @@
-var csjs = require('csjs-inject')
-var styleGuide = require('./app/ui/styles-guide/theme-chooser')
+var csjs = require("csjs-inject")
+var styleGuide = require("./app/ui/styles-guide/theme-chooser")
 var styles = styleGuide.chooser()
 
 var css = csjs`

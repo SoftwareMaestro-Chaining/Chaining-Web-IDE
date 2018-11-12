@@ -12,24 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview Announcer that allows messages to be spoken by assistive
  * technologies.
  */
 
-goog.provide('goog.a11y.aria.Announcer');
+goog.provide("goog.a11y.aria.Announcer")
 
-goog.require('goog.Disposable');
-goog.require('goog.Timer');
-goog.require('goog.a11y.aria');
-goog.require('goog.a11y.aria.LivePriority');
-goog.require('goog.a11y.aria.State');
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.object');
-
-
+goog.require("goog.Disposable")
+goog.require("goog.Timer")
+goog.require("goog.a11y.aria")
+goog.require("goog.a11y.aria.LivePriority")
+goog.require("goog.a11y.aria.State")
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.object")
 
 /**
  * Class that allows messages to be spoken by assistive technologies that the
@@ -41,13 +38,13 @@ goog.require('goog.object');
  * @final
  */
 goog.a11y.aria.Announcer = function(opt_domHelper) {
-  goog.a11y.aria.Announcer.base(this, 'constructor');
+  goog.a11y.aria.Announcer.base(this, "constructor")
 
   /**
    * @type {goog.dom.DomHelper}
    * @private
    */
-  this.domHelper_ = opt_domHelper || goog.dom.getDomHelper();
+  this.domHelper_ = opt_domHelper || goog.dom.getDomHelper()
 
   /**
    * Map of priority to live region elements to use for communicating updates.
@@ -55,20 +52,21 @@ goog.a11y.aria.Announcer = function(opt_domHelper) {
    * @type {Object<goog.a11y.aria.LivePriority, !Element>}
    * @private
    */
-  this.liveRegions_ = {};
-};
-goog.inherits(goog.a11y.aria.Announcer, goog.Disposable);
-
+  this.liveRegions_ = {}
+}
+goog.inherits(goog.a11y.aria.Announcer, goog.Disposable)
 
 /** @override */
 goog.a11y.aria.Announcer.prototype.disposeInternal = function() {
   goog.object.forEach(
-      this.liveRegions_, this.domHelper_.removeNode, this.domHelper_);
-  this.liveRegions_ = null;
-  this.domHelper_ = null;
-  goog.a11y.aria.Announcer.base(this, 'disposeInternal');
-};
-
+    this.liveRegions_,
+    this.domHelper_.removeNode,
+    this.domHelper_
+  )
+  this.liveRegions_ = null
+  this.domHelper_ = null
+  goog.a11y.aria.Announcer.base(this, "disposeInternal")
+}
 
 /**
  * Announce a message to be read by any assistive technologies the user may
@@ -78,19 +76,18 @@ goog.a11y.aria.Announcer.prototype.disposeInternal = function() {
  *     message. Defaults to POLITE.
  */
 goog.a11y.aria.Announcer.prototype.say = function(message, opt_priority) {
-  var priority = opt_priority || goog.a11y.aria.LivePriority.POLITE;
-  var liveRegion = this.getLiveRegion_(priority);
+  var priority = opt_priority || goog.a11y.aria.LivePriority.POLITE
+  var liveRegion = this.getLiveRegion_(priority)
   // Resets text content to force a DOM mutation (so that the setTextContent
   // post-timeout function will be noticed by the screen reader). This is to
   // avoid the problem of when the same message is "said" twice, which doesn't
   // trigger a DOM mutation.
-  goog.dom.setTextContent(liveRegion, '');
+  goog.dom.setTextContent(liveRegion, "")
   // Uses non-zero timer to make VoiceOver and NVDA work
   goog.Timer.callOnce(function() {
-    goog.dom.setTextContent(liveRegion, message);
-  }, 1);
-};
-
+    goog.dom.setTextContent(liveRegion, message)
+  }, 1)
+}
 
 /**
  * Returns an aria-live region that can be used to communicate announcements.
@@ -99,23 +96,23 @@ goog.a11y.aria.Announcer.prototype.say = function(message, opt_priority) {
  * @private
  */
 goog.a11y.aria.Announcer.prototype.getLiveRegion_ = function(priority) {
-  var liveRegion = this.liveRegions_[priority];
+  var liveRegion = this.liveRegions_[priority]
   if (liveRegion) {
     // Make sure the live region is not aria-hidden.
-    goog.a11y.aria.removeState(liveRegion, goog.a11y.aria.State.HIDDEN);
-    return liveRegion;
+    goog.a11y.aria.removeState(liveRegion, goog.a11y.aria.State.HIDDEN)
+    return liveRegion
   }
 
-  liveRegion = this.domHelper_.createElement(goog.dom.TagName.DIV);
+  liveRegion = this.domHelper_.createElement(goog.dom.TagName.DIV)
   // Note that IE has a habit of declaring things that aren't display:none as
   // invisible to third-party tools like JAWs, so we can't just use height:0.
-  liveRegion.style.position = 'absolute';
-  liveRegion.style.top = '-1000px';
-  liveRegion.style.height = '1px';
-  liveRegion.style.overflow = 'hidden';
-  goog.a11y.aria.setState(liveRegion, goog.a11y.aria.State.LIVE, priority);
-  goog.a11y.aria.setState(liveRegion, goog.a11y.aria.State.ATOMIC, 'true');
-  this.domHelper_.getDocument().body.appendChild(liveRegion);
-  this.liveRegions_[priority] = liveRegion;
-  return liveRegion;
-};
+  liveRegion.style.position = "absolute"
+  liveRegion.style.top = "-1000px"
+  liveRegion.style.height = "1px"
+  liveRegion.style.overflow = "hidden"
+  goog.a11y.aria.setState(liveRegion, goog.a11y.aria.State.LIVE, priority)
+  goog.a11y.aria.setState(liveRegion, goog.a11y.aria.State.ATOMIC, "true")
+  this.domHelper_.getDocument().body.appendChild(liveRegion)
+  this.liveRegions_[priority] = liveRegion
+  return liveRegion
+}

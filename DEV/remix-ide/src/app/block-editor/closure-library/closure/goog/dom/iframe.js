@@ -18,18 +18,16 @@
  * @author gboyer@google.com (Garry Boyer)
  */
 
+goog.provide("goog.dom.iframe")
 
-goog.provide('goog.dom.iframe');
-
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.safe');
-goog.require('goog.html.SafeHtml');
-goog.require('goog.html.SafeStyle');
-goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.string.Const');
-goog.require('goog.userAgent');
-
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.safe")
+goog.require("goog.html.SafeHtml")
+goog.require("goog.html.SafeStyle")
+goog.require("goog.html.TrustedResourceUrl")
+goog.require("goog.string.Const")
+goog.require("goog.userAgent")
 
 /**
  * Safe source for a blank iframe.
@@ -41,20 +39,21 @@ goog.require('goog.userAgent');
  *
  * @const {!goog.html.TrustedResourceUrl}
  */
-goog.dom.iframe.BLANK_SOURCE_URL = goog.userAgent.IE ?
-    goog.html.TrustedResourceUrl.fromConstant(
-        goog.string.Const.from('javascript:""')) :
-    goog.html.TrustedResourceUrl.fromConstant(
-        goog.string.Const.from('about:blank'));
-
+goog.dom.iframe.BLANK_SOURCE_URL = goog.userAgent.IE
+  ? goog.html.TrustedResourceUrl.fromConstant(
+      goog.string.Const.from('javascript:""')
+    )
+  : goog.html.TrustedResourceUrl.fromConstant(
+      goog.string.Const.from("about:blank")
+    )
 
 /**
  * Legacy version of goog.dom.iframe.BLANK_SOURCE_URL.
  * @const {string}
  */
-goog.dom.iframe.BLANK_SOURCE =
-    goog.html.TrustedResourceUrl.unwrap(goog.dom.iframe.BLANK_SOURCE_URL);
-
+goog.dom.iframe.BLANK_SOURCE = goog.html.TrustedResourceUrl.unwrap(
+  goog.dom.iframe.BLANK_SOURCE_URL
+)
 
 /**
  * Safe source for a new blank iframe that may not cause a new load of the
@@ -84,28 +83,28 @@ goog.dom.iframe.BLANK_SOURCE =
  *
  * @const {!goog.html.TrustedResourceUrl}
  */
-goog.dom.iframe.BLANK_SOURCE_NEW_FRAME_URL = goog.userAgent.IE ?
-    goog.html.TrustedResourceUrl.fromConstant(
-        goog.string.Const.from('javascript:""')) :
-    goog.html.TrustedResourceUrl.fromConstant(
-        goog.string.Const.from('javascript:undefined'));
-
+goog.dom.iframe.BLANK_SOURCE_NEW_FRAME_URL = goog.userAgent.IE
+  ? goog.html.TrustedResourceUrl.fromConstant(
+      goog.string.Const.from('javascript:""')
+    )
+  : goog.html.TrustedResourceUrl.fromConstant(
+      goog.string.Const.from("javascript:undefined")
+    )
 
 /**
  * Legacy version of goog.dom.iframe.BLANK_SOURCE_NEW_FRAME_URL.
  * @const {string}
  */
 goog.dom.iframe.BLANK_SOURCE_NEW_FRAME = goog.html.TrustedResourceUrl.unwrap(
-    goog.dom.iframe.BLANK_SOURCE_NEW_FRAME_URL);
-
+  goog.dom.iframe.BLANK_SOURCE_NEW_FRAME_URL
+)
 
 /**
  * Styles to help ensure an undecorated iframe.
  * @const {string}
  * @private
  */
-goog.dom.iframe.STYLES_ = 'border:0;vertical-align:bottom;';
-
+goog.dom.iframe.STYLES_ = "border:0;vertical-align:bottom;"
 
 /**
  * Creates a completely blank iframe element.
@@ -123,23 +122,23 @@ goog.dom.iframe.STYLES_ = 'border:0;vertical-align:bottom;';
  * @return {!HTMLIFrameElement} A completely blank iframe.
  */
 goog.dom.iframe.createBlank = function(domHelper, opt_styles) {
-  var styles;
+  var styles
   if (opt_styles) {
     // SafeStyle has to be converted back to a string for now, since there's
     // no safe alternative to createDom().
-    styles = goog.html.SafeStyle.unwrap(opt_styles);
-  } else {  // undefined.
-    styles = '';
+    styles = goog.html.SafeStyle.unwrap(opt_styles)
+  } else {
+    // undefined.
+    styles = ""
   }
   return domHelper.createDom(goog.dom.TagName.IFRAME, {
-    'frameborder': 0,
+    frameborder: 0,
     // Since iframes are inline elements, we must align to bottom to
     // compensate for the line descent.
-    'style': goog.dom.iframe.STYLES_ + styles,
-    'src': goog.dom.iframe.BLANK_SOURCE
-  });
-};
-
+    style: goog.dom.iframe.STYLES_ + styles,
+    src: goog.dom.iframe.BLANK_SOURCE
+  })
+}
 
 /**
  * Writes the contents of a blank iframe that has already been inserted
@@ -151,12 +150,11 @@ goog.dom.iframe.createBlank = function(domHelper, opt_styles) {
  *     from doctype to the HTML close tag.
  */
 goog.dom.iframe.writeSafeContent = function(iframe, content) {
-  var doc = goog.dom.getFrameContentDocument(iframe);
-  doc.open();
-  goog.dom.safe.documentWrite(doc, content);
-  doc.close();
-};
-
+  var doc = goog.dom.getFrameContentDocument(iframe)
+  doc.open()
+  goog.dom.safe.documentWrite(doc, content)
+  doc.close()
+}
 
 // TODO(gboyer): Provide a higher-level API for the most common use case, so
 // that you can just provide a list of stylesheets and some content HTML.
@@ -182,24 +180,34 @@ goog.dom.iframe.writeSafeContent = function(iframe, content) {
  * @return {!HTMLIFrameElement} An iframe that has the specified contents.
  */
 goog.dom.iframe.createWithContent = function(
-    parentElement, opt_headContents, opt_bodyContents, opt_styles, opt_quirks) {
-  var domHelper = goog.dom.getDomHelper(parentElement);
+  parentElement,
+  opt_headContents,
+  opt_bodyContents,
+  opt_styles,
+  opt_quirks
+) {
+  var domHelper = goog.dom.getDomHelper(parentElement)
 
   var content = goog.html.SafeHtml.create(
-      'html', {},
-      goog.html.SafeHtml.concat(
-          goog.html.SafeHtml.create('head', {}, opt_headContents),
-          goog.html.SafeHtml.create('body', {}, opt_bodyContents)));
+    "html",
+    {},
+    goog.html.SafeHtml.concat(
+      goog.html.SafeHtml.create("head", {}, opt_headContents),
+      goog.html.SafeHtml.create("body", {}, opt_bodyContents)
+    )
+  )
   if (!opt_quirks) {
-    content =
-        goog.html.SafeHtml.concat(goog.html.SafeHtml.DOCTYPE_HTML, content);
+    content = goog.html.SafeHtml.concat(
+      goog.html.SafeHtml.DOCTYPE_HTML,
+      content
+    )
   }
 
-  var iframe = goog.dom.iframe.createBlank(domHelper, opt_styles);
+  var iframe = goog.dom.iframe.createBlank(domHelper, opt_styles)
 
   // Cannot manipulate iframe content until it is in a document.
-  parentElement.appendChild(iframe);
-  goog.dom.iframe.writeSafeContent(iframe, content);
+  parentElement.appendChild(iframe)
+  goog.dom.iframe.writeSafeContent(iframe, content)
 
-  return iframe;
-};
+  return iframe
+}

@@ -20,18 +20,15 @@
  * @author nicksantos@google.com (Nick Santos) (Ported to Closure)
  */
 
+goog.provide("goog.ui.IframeMask")
 
-goog.provide('goog.ui.IframeMask');
-
-goog.require('goog.Disposable');
-goog.require('goog.Timer');
-goog.require('goog.dom');
-goog.require('goog.dom.iframe');
-goog.require('goog.events.EventHandler');
-goog.require('goog.structs.Pool');
-goog.require('goog.style');
-
-
+goog.require("goog.Disposable")
+goog.require("goog.Timer")
+goog.require("goog.dom")
+goog.require("goog.dom.iframe")
+goog.require("goog.events.EventHandler")
+goog.require("goog.structs.Pool")
+goog.require("goog.style")
 
 /**
  * Controller for an iframe mask. The mask is only valid in the current
@@ -46,14 +43,14 @@ goog.require('goog.style');
  * @extends {goog.Disposable}
  */
 goog.ui.IframeMask = function(opt_domHelper, opt_iframePool) {
-  goog.Disposable.call(this);
+  goog.Disposable.call(this)
 
   /**
    * The DOM helper for this document.
    * @type {goog.dom.DomHelper}
    * @private
    */
-  this.dom_ = opt_domHelper || goog.dom.getDomHelper();
+  this.dom_ = opt_domHelper || goog.dom.getDomHelper()
 
   /**
    * An Element to snap the mask to. If none is given, defaults to
@@ -61,41 +58,38 @@ goog.ui.IframeMask = function(opt_domHelper, opt_iframePool) {
    * @type {Element}
    * @private
    */
-  this.snapElement_ = this.dom_.getDocument().documentElement;
+  this.snapElement_ = this.dom_.getDocument().documentElement
 
   /**
    * An event handler for listening to popups and the like.
    * @type {goog.events.EventHandler<!goog.ui.IframeMask>}
    * @private
    */
-  this.handler_ = new goog.events.EventHandler(this);
+  this.handler_ = new goog.events.EventHandler(this)
 
   /**
    * An iframe pool.
    * @type {goog.structs.Pool|undefined}
    * @private
    */
-  this.iframePool_ = opt_iframePool;
-};
-goog.inherits(goog.ui.IframeMask, goog.Disposable);
-goog.tagUnsealableClass(goog.ui.IframeMask);
-
+  this.iframePool_ = opt_iframePool
+}
+goog.inherits(goog.ui.IframeMask, goog.Disposable)
+goog.tagUnsealableClass(goog.ui.IframeMask)
 
 /**
  * An iframe.
  * @type {HTMLIFrameElement}
  * @private
  */
-goog.ui.IframeMask.prototype.iframe_;
-
+goog.ui.IframeMask.prototype.iframe_
 
 /**
  * The z-index of the iframe mask.
  * @type {number}
  * @private
  */
-goog.ui.IframeMask.prototype.zIndex_ = 1;
-
+goog.ui.IframeMask.prototype.zIndex_ = 1
 
 /**
  * The opacity of the iframe mask, expressed as a value between 0 and 1, with
@@ -103,8 +97,7 @@ goog.ui.IframeMask.prototype.zIndex_ = 1;
  * @type {number}
  * @private
  */
-goog.ui.IframeMask.prototype.opacity_ = 0;
-
+goog.ui.IframeMask.prototype.opacity_ = 0
 
 /**
  * Removes the iframe from the DOM.
@@ -114,41 +107,38 @@ goog.ui.IframeMask.prototype.opacity_ = 0;
 goog.ui.IframeMask.prototype.disposeInternal = function() {
   if (this.iframePool_) {
     this.iframePool_.releaseObject(
-        /** @type {HTMLIFrameElement} */ (this.iframe_));
+      /** @type {HTMLIFrameElement} */ (this.iframe_)
+    )
   } else {
-    goog.dom.removeNode(this.iframe_);
+    goog.dom.removeNode(this.iframe_)
   }
-  this.iframe_ = null;
+  this.iframe_ = null
 
-  this.handler_.dispose();
-  this.handler_ = null;
+  this.handler_.dispose()
+  this.handler_ = null
 
-  goog.ui.IframeMask.superClass_.disposeInternal.call(this);
-};
-
+  goog.ui.IframeMask.superClass_.disposeInternal.call(this)
+}
 
 /**
  * CSS for a hidden iframe.
  * @type {string}
  * @private
  */
-goog.ui.IframeMask.HIDDEN_CSS_TEXT_ =
-    'position:absolute;display:none;z-index:1';
-
+goog.ui.IframeMask.HIDDEN_CSS_TEXT_ = "position:absolute;display:none;z-index:1"
 
 /**
  * Removes the mask from the screen.
  */
 goog.ui.IframeMask.prototype.hideMask = function() {
   if (this.iframe_) {
-    this.iframe_.style.cssText = goog.ui.IframeMask.HIDDEN_CSS_TEXT_;
+    this.iframe_.style.cssText = goog.ui.IframeMask.HIDDEN_CSS_TEXT_
     if (this.iframePool_) {
-      this.iframePool_.releaseObject(this.iframe_);
-      this.iframe_ = null;
+      this.iframePool_.releaseObject(this.iframe_)
+      this.iframe_ = null
     }
   }
-};
-
+}
 
 /**
  * Gets the iframe to use as a mask. Creates a new one if one has not been
@@ -158,32 +148,40 @@ goog.ui.IframeMask.prototype.hideMask = function() {
  */
 goog.ui.IframeMask.prototype.getIframe_ = function() {
   if (!this.iframe_) {
-    this.iframe_ = this.iframePool_ ?
-        /** @type {HTMLIFrameElement} */ (this.iframePool_.getObject()) :
-                                         goog.dom.iframe.createBlank(this.dom_);
-    this.iframe_.style.cssText = goog.ui.IframeMask.HIDDEN_CSS_TEXT_;
-    this.dom_.getDocument().body.appendChild(this.iframe_);
+    this.iframe_ = this.iframePool_
+      ? /** @type {HTMLIFrameElement} */ (this.iframePool_.getObject())
+      : goog.dom.iframe.createBlank(this.dom_)
+    this.iframe_.style.cssText = goog.ui.IframeMask.HIDDEN_CSS_TEXT_
+    this.dom_.getDocument().body.appendChild(this.iframe_)
   }
-  return this.iframe_;
-};
-
+  return this.iframe_
+}
 
 /**
  * Applies the iframe mask to the screen.
  */
 goog.ui.IframeMask.prototype.applyMask = function() {
-  var iframe = this.getIframe_();
-  var bounds = goog.style.getBounds(this.snapElement_);
-  iframe.style.cssText = 'position:absolute;' +
-      'left:' + bounds.left + 'px;' +
-      'top:' + bounds.top + 'px;' +
-      'width:' + bounds.width + 'px;' +
-      'height:' + bounds.height + 'px;' +
-      'z-index:' + this.zIndex_;
-  goog.style.setOpacity(iframe, this.opacity_);
-  iframe.style.display = 'block';
-};
-
+  var iframe = this.getIframe_()
+  var bounds = goog.style.getBounds(this.snapElement_)
+  iframe.style.cssText =
+    "position:absolute;" +
+    "left:" +
+    bounds.left +
+    "px;" +
+    "top:" +
+    bounds.top +
+    "px;" +
+    "width:" +
+    bounds.width +
+    "px;" +
+    "height:" +
+    bounds.height +
+    "px;" +
+    "z-index:" +
+    this.zIndex_
+  goog.style.setOpacity(iframe, this.opacity_)
+  iframe.style.display = "block"
+}
 
 /**
  * Sets the opacity of the mask. Will take effect the next time the mask
@@ -192,9 +190,8 @@ goog.ui.IframeMask.prototype.applyMask = function() {
  *     totally opaque.
  */
 goog.ui.IframeMask.prototype.setOpacity = function(opacity) {
-  this.opacity_ = opacity;
-};
-
+  this.opacity_ = opacity
+}
 
 /**
  * Sets the z-index of the mask. Will take effect the next time the mask
@@ -202,9 +199,8 @@ goog.ui.IframeMask.prototype.setOpacity = function(opacity) {
  * @param {number} zIndex A z-index value.
  */
 goog.ui.IframeMask.prototype.setZIndex = function(zIndex) {
-  this.zIndex_ = zIndex;
-};
-
+  this.zIndex_ = zIndex
+}
 
 /**
  * Sets the element to use as the bounds of the mask. Takes effect immediately.
@@ -212,12 +208,11 @@ goog.ui.IframeMask.prototype.setZIndex = function(zIndex) {
  *     "snapped" around.
  */
 goog.ui.IframeMask.prototype.setSnapElement = function(snapElement) {
-  this.snapElement_ = snapElement;
+  this.snapElement_ = snapElement
   if (this.iframe_ && goog.style.isElementShown(this.iframe_)) {
-    this.applyMask();
+    this.applyMask()
   }
-};
-
+}
 
 /**
  * Listens on the specified target, hiding and showing the iframe mask
@@ -230,29 +225,32 @@ goog.ui.IframeMask.prototype.setSnapElement = function(snapElement) {
  *     use the default snap element.
  */
 goog.ui.IframeMask.prototype.listenOnTarget = function(
-    target, showEvent, hideEvent, opt_snapElement) {
-  var timerKey;
+  target,
+  showEvent,
+  hideEvent,
+  opt_snapElement
+) {
+  var timerKey
   this.handler_.listen(target, showEvent, function() {
     if (opt_snapElement) {
-      this.setSnapElement(opt_snapElement);
+      this.setSnapElement(opt_snapElement)
     }
     // Check out the iframe asynchronously, so we don't block the SHOW
     // event and cause a bounce.
-    timerKey = goog.Timer.callOnce(this.applyMask, 0, this);
-  });
+    timerKey = goog.Timer.callOnce(this.applyMask, 0, this)
+  })
   this.handler_.listen(target, hideEvent, function() {
     if (timerKey) {
-      goog.Timer.clear(timerKey);
-      timerKey = null;
+      goog.Timer.clear(timerKey)
+      timerKey = null
     }
-    this.hideMask();
-  });
-};
-
+    this.hideMask()
+  })
+}
 
 /**
  * Removes all handlers attached by listenOnTarget.
  */
 goog.ui.IframeMask.prototype.removeHandlers = function() {
-  this.handler_.removeAll();
-};
+  this.handler_.removeAll()
+}

@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.defineClassTest');
-goog.setTestOnly('goog.defineClassTest');
+goog.provide("goog.defineClassTest")
+goog.setTestOnly("goog.defineClassTest")
 
-goog.require('goog.testing.jsunit');
+goog.require("goog.testing.jsunit")
 
 function testSuper() {
   /** @constructor */
@@ -24,73 +24,81 @@ function testSuper() {
   var SomeClass = goog.defineClass(SomeSuper, {
     /** @constructor */
     constructor: function() {}
-  });
+  })
 
-  assertTrue(new SomeClass() instanceof SomeClass);
-  assertTrue(new SomeClass() instanceof SomeSuper);
+  assertTrue(new SomeClass() instanceof SomeClass)
+  assertTrue(new SomeClass() instanceof SomeSuper)
 }
 
 function testPrototypeProp() {
   var SomeClass = goog.defineClass(null, {
     /** @constructor */
     constructor: function() {},
-    trueMethod: function() { return true; }
-  });
+    trueMethod: function() {
+      return true
+    }
+  })
 
-  assertEquals(new SomeClass().falseProp, false);
-  assertEquals(new SomeClass().trueMethod(), true);
+  assertEquals(new SomeClass().falseProp, false)
+  assertEquals(new SomeClass().trueMethod(), true)
 }
 
 function testInstanceProp() {
   var SomeClass = goog.defineClass(null, {
     /** @constructor */
-    constructor: function() { this.falseProp = false; }
-  });
+    constructor: function() {
+      this.falseProp = false
+    }
+  })
 
-  assertEquals(new SomeClass().falseProp, false);
+  assertEquals(new SomeClass().falseProp, false)
 }
 
 function testPrototypeProp() {
   var SomeClass = goog.defineClass(null, {
     /** @constructor */
     constructor: function() {},
-    trueMethod: function() { return true; }
-  });
+    trueMethod: function() {
+      return true
+    }
+  })
 
-  assertEquals(new SomeClass().trueMethod(), true);
-  assertEquals(SomeClass.prototype.trueMethod(), true);
+  assertEquals(new SomeClass().trueMethod(), true)
+  assertEquals(SomeClass.prototype.trueMethod(), true)
 }
 
 function testStaticProp() {
   var SomeClass = goog.defineClass(null, {
     /** @constructor */
     constructor: function() {},
-    statics: {someProp: 100}
-  });
+    statics: { someProp: 100 }
+  })
 
-  assertEquals(new SomeClass().statics, undefined);
-  assertEquals(new SomeClass().someProp, undefined);
-  assertEquals(SomeClass.someProp, 100);
+  assertEquals(new SomeClass().statics, undefined)
+  assertEquals(new SomeClass().someProp, undefined)
+  assertEquals(SomeClass.someProp, 100)
 }
 
 function testStaticPropFn() {
   var SomeClass = goog.defineClass(null, {
     /** @constructor */
     constructor: function() {},
-    statics: function(cls) { cls.someProp = 100; }
-  });
+    statics: function(cls) {
+      cls.someProp = 100
+    }
+  })
 
-  assertEquals(new SomeClass().statics, undefined);
-  assertEquals(new SomeClass().someProp, undefined);
-  assertEquals(SomeClass.someProp, 100);
+  assertEquals(new SomeClass().statics, undefined)
+  assertEquals(new SomeClass().someProp, undefined)
+  assertEquals(SomeClass.someProp, 100)
 }
 
 function testUid() {
-  var SomeClass = goog.defineClass(null, {constructor: function() {}});
+  var SomeClass = goog.defineClass(null, { constructor: function() {} })
 
-  var obj1 = new SomeClass();
-  var obj2 = new SomeClass();
-  assertEquals(goog.getUid(obj1), goog.getUid(obj1));
-  assertEquals(goog.getUid(obj2), goog.getUid(obj2));
-  assertNotEquals(goog.getUid(obj1), goog.getUid(obj2));
+  var obj1 = new SomeClass()
+  var obj2 = new SomeClass()
+  assertEquals(goog.getUid(obj1), goog.getUid(obj1))
+  assertEquals(goog.getUid(obj2), goog.getUid(obj2))
+  assertNotEquals(goog.getUid(obj1), goog.getUid(obj2))
 }

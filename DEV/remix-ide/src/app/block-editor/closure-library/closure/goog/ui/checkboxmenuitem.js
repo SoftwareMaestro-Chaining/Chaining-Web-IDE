@@ -18,12 +18,10 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.CheckBoxMenuItem');
+goog.provide("goog.ui.CheckBoxMenuItem")
 
-goog.require('goog.ui.MenuItem');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.MenuItem")
+goog.require("goog.ui.registry")
 
 /**
  * Class representing a checkbox menu item.  This is just a convenience class
@@ -39,15 +37,16 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.MenuItem}
  */
 goog.ui.CheckBoxMenuItem = function(content, opt_model, opt_domHelper) {
-  goog.ui.MenuItem.call(this, content, opt_model, opt_domHelper);
-  this.setCheckable(true);
-};
-goog.inherits(goog.ui.CheckBoxMenuItem, goog.ui.MenuItem);
-
+  goog.ui.MenuItem.call(this, content, opt_model, opt_domHelper)
+  this.setCheckable(true)
+}
+goog.inherits(goog.ui.CheckBoxMenuItem, goog.ui.MenuItem)
 
 // Register a decorator factory function for goog.ui.CheckBoxMenuItems.
 goog.ui.registry.setDecoratorByClassName(
-    goog.getCssName('goog-checkbox-menuitem'), function() {
-      // CheckBoxMenuItem defaults to using MenuItemRenderer.
-      return new goog.ui.CheckBoxMenuItem(null);
-    });
+  goog.getCssName("goog-checkbox-menuitem"),
+  function() {
+    // CheckBoxMenuItem defaults to using MenuItemRenderer.
+    return new goog.ui.CheckBoxMenuItem(null)
+  }
+)

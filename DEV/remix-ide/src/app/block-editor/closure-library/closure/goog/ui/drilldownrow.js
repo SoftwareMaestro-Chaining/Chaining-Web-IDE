@@ -58,18 +58,16 @@
 // the place of a new DrilldownRow in the DOM needs to be determined by
 // its position in the tree of DrilldownRows.
 
-goog.provide('goog.ui.DrilldownRow');
+goog.provide("goog.ui.DrilldownRow")
 
-goog.require('goog.asserts');
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.dom.safe');
-goog.require('goog.html.SafeHtml');
-goog.require('goog.string.Unicode');
-goog.require('goog.ui.Component');
-
-
+goog.require("goog.asserts")
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.dom.safe")
+goog.require("goog.html.SafeHtml")
+goog.require("goog.string.Unicode")
+goog.require("goog.ui.Component")
 
 /**
  * Builds a DrilldownRow component, which can overlay a tree
@@ -83,17 +81,17 @@ goog.require('goog.ui.Component');
  * @final
  */
 goog.ui.DrilldownRow = function(opt_properties, opt_domHelper) {
-  goog.ui.Component.call(this, opt_domHelper);
-  var properties = opt_properties || {};
+  goog.ui.Component.call(this, opt_domHelper)
+  var properties = opt_properties || {}
 
   // Initialize instance variables.
 
-  var html;
+  var html
   if (!goog.isDefAndNotNull(properties.html)) {
-    html = goog.html.SafeHtml.EMPTY;
+    html = goog.html.SafeHtml.EMPTY
   } else {
-    goog.asserts.assert(properties.html instanceof goog.html.SafeHtml);
-    html = properties.html;
+    goog.asserts.assert(properties.html instanceof goog.html.SafeHtml)
+    html = properties.html
   }
   /**
    * String of HTML to initialize the DOM structure for the table row.
@@ -101,7 +99,7 @@ goog.ui.DrilldownRow = function(opt_properties, opt_domHelper) {
    * @type {!goog.html.SafeHtml}
    * @private
    */
-  this.html_ = html;
+  this.html_ = html
 
   /**
    * Controls whether this component's children will show when it shows.
@@ -109,7 +107,7 @@ goog.ui.DrilldownRow = function(opt_properties, opt_domHelper) {
    * @private
    */
   this.expanded_ =
-      typeof properties.expanded != 'undefined' ? properties.expanded : true;
+    typeof properties.expanded != "undefined" ? properties.expanded : true
 
   /**
    * If this component's DOM element is created from a string of
@@ -118,7 +116,7 @@ goog.ui.DrilldownRow = function(opt_properties, opt_domHelper) {
    *   of the DrilldownRow.
    * @private
    */
-  this.decoratorFn_ = properties.decorator || goog.ui.DrilldownRow.decorate;
+  this.decoratorFn_ = properties.decorator || goog.ui.DrilldownRow.decorate
 
   /**
    * Is the DrilldownRow to be displayed?  If it is rendered, this mirrors
@@ -126,10 +124,9 @@ goog.ui.DrilldownRow = function(opt_properties, opt_domHelper) {
    * @type {boolean}
    * @private
    */
-  this.displayed_ = true;
-};
-goog.inherits(goog.ui.DrilldownRow, goog.ui.Component);
-
+  this.displayed_ = true
+}
+goog.inherits(goog.ui.DrilldownRow, goog.ui.Component)
 
 /**
  * Used to define properties for a new DrilldownRow. Properties can contain:
@@ -147,8 +144,7 @@ goog.inherits(goog.ui.DrilldownRow, goog.ui.Component);
  *   decorator: (Function|undefined)
  * }}
  */
-goog.ui.DrilldownRow.DrilldownRowProperties;
-
+goog.ui.DrilldownRow.DrilldownRowProperties
 
 /**
  * Example object with properties of the form accepted by the class
@@ -157,29 +153,30 @@ goog.ui.DrilldownRow.DrilldownRowProperties;
  */
 goog.ui.DrilldownRow.sampleProperties = {
   html: goog.html.SafeHtml.create(
-      goog.dom.TagName.TR, {},
-      goog.html.SafeHtml.concat(
-          goog.html.SafeHtml.create(goog.dom.TagName.TD, {}, 'Sample'),
-          goog.html.SafeHtml.create(goog.dom.TagName.TD, {}, 'Sample'))),
+    goog.dom.TagName.TR,
+    {},
+    goog.html.SafeHtml.concat(
+      goog.html.SafeHtml.create(goog.dom.TagName.TD, {}, "Sample"),
+      goog.html.SafeHtml.create(goog.dom.TagName.TD, {}, "Sample")
+    )
+  ),
   loaded: true,
   decorator: function(selfObj, handler) {
     // When the mouse is hovering, add CSS class goog-drilldown-hover.
-    goog.ui.DrilldownRow.decorate(selfObj);
-    var row = selfObj.getElement();
-    handler.listen(row, 'mouseover', function() {
-      goog.dom.classlist.add(row, goog.getCssName('goog-drilldown-hover'));
-    });
-    handler.listen(row, 'mouseout', function() {
-      goog.dom.classlist.remove(row, goog.getCssName('goog-drilldown-hover'));
-    });
+    goog.ui.DrilldownRow.decorate(selfObj)
+    var row = selfObj.getElement()
+    handler.listen(row, "mouseover", function() {
+      goog.dom.classlist.add(row, goog.getCssName("goog-drilldown-hover"))
+    })
+    handler.listen(row, "mouseout", function() {
+      goog.dom.classlist.remove(row, goog.getCssName("goog-drilldown-hover"))
+    })
   }
-};
-
+}
 
 //
 // Implementations of Component methods.
 //
-
 
 /**
  * The base class method calls its superclass method and this
@@ -187,17 +184,16 @@ goog.ui.DrilldownRow.sampleProperties = {
  * @override
  */
 goog.ui.DrilldownRow.prototype.enterDocument = function() {
-  goog.ui.DrilldownRow.superClass_.enterDocument.call(this);
-  this.decoratorFn_(this, this.getHandler());
-};
-
+  goog.ui.DrilldownRow.superClass_.enterDocument.call(this)
+  this.decoratorFn_(this, this.getHandler())
+}
 
 /** @override */
 goog.ui.DrilldownRow.prototype.createDom = function() {
   this.setElementInternal(
-      goog.ui.DrilldownRow.createRowNode_(this.html_, this.getDomHelper()));
-};
-
+    goog.ui.DrilldownRow.createRowNode_(this.html_, this.getDomHelper())
+  )
+}
 
 /**
  * A top-level DrilldownRow decorates a TR element.
@@ -207,9 +203,8 @@ goog.ui.DrilldownRow.prototype.createDom = function() {
  * @override
  */
 goog.ui.DrilldownRow.prototype.canDecorate = function(node) {
-  return node.tagName == goog.dom.TagName.TR;
-};
-
+  return node.tagName == goog.dom.TagName.TR
+}
 
 /**
  * Child drilldowns are rendered when needed.
@@ -220,21 +215,19 @@ goog.ui.DrilldownRow.prototype.canDecorate = function(node) {
  * @override
  */
 goog.ui.DrilldownRow.prototype.addChildAt = function(child, index, opt_render) {
-  goog.asserts.assertInstanceof(child, goog.ui.DrilldownRow);
-  goog.ui.DrilldownRow.superClass_.addChildAt.call(this, child, index, false);
-  child.setDisplayable_(this.isVisible_() && this.isExpanded());
+  goog.asserts.assertInstanceof(child, goog.ui.DrilldownRow)
+  goog.ui.DrilldownRow.superClass_.addChildAt.call(this, child, index, false)
+  child.setDisplayable_(this.isVisible_() && this.isExpanded())
   if (opt_render && !child.isInDocument()) {
-    child.render();
+    child.render()
   }
-};
-
+}
 
 /** @override */
 goog.ui.DrilldownRow.prototype.removeChild = function(child) {
-  goog.dom.removeNode(child.getElement());
-  return goog.ui.DrilldownRow.superClass_.removeChild.call(this, child);
-};
-
+  goog.dom.removeNode(child.getElement())
+  return goog.ui.DrilldownRow.superClass_.removeChild.call(this, child)
+}
 
 /**
  * Rendering of DrilldownRow's is on need, do not call this directly
@@ -249,37 +242,36 @@ goog.ui.DrilldownRow.prototype.removeChild = function(child) {
  */
 goog.ui.DrilldownRow.prototype.render = function() {
   if (arguments.length) {
-    throw new Error('A DrilldownRow cannot be placed under a specific parent.');
+    throw new Error("A DrilldownRow cannot be placed under a specific parent.")
   } else {
-    var parent = this.getParent();
+    var parent = this.getParent()
     if (!parent.isInDocument()) {
-      throw new Error('Cannot render child of un-rendered parent');
+      throw new Error("Cannot render child of un-rendered parent")
     }
     // The new child's TR node needs to go just after the last TR
     // of the part of the parent's subtree that is to the left
     // of this.  The subtree includes the parent.
-    goog.asserts.assertInstanceof(parent, goog.ui.DrilldownRow);
-    var previous = parent.previousRenderedChild_(this);
-    var row;
+    goog.asserts.assertInstanceof(parent, goog.ui.DrilldownRow)
+    var previous = parent.previousRenderedChild_(this)
+    var row
     if (previous) {
-      goog.asserts.assertInstanceof(previous, goog.ui.DrilldownRow);
-      row = previous.lastRenderedLeaf_().getElement();
+      goog.asserts.assertInstanceof(previous, goog.ui.DrilldownRow)
+      row = previous.lastRenderedLeaf_().getElement()
     } else {
-      row = parent.getElement();
+      row = parent.getElement()
     }
-    row = /** @type {Element} */ (row.nextSibling);
+    row = /** @type {Element} */ (row.nextSibling)
     // Render the child row component into the document.
     if (row) {
-      this.renderBefore(row);
+      this.renderBefore(row)
     } else {
       // Render at the end of the parent of this DrilldownRow's
       // DOM element.
-      var tbody = /** @type {Element} */ (parent.getElement().parentNode);
-      goog.ui.DrilldownRow.superClass_.render.call(this, tbody);
+      var tbody = /** @type {Element} */ (parent.getElement().parentNode)
+      goog.ui.DrilldownRow.superClass_.render.call(this, tbody)
     }
   }
-};
-
+}
 
 /**
  * Finds the numeric index of this child within its parent Component.
@@ -288,18 +280,16 @@ goog.ui.DrilldownRow.prototype.render = function() {
  * @return {number} index of this within the children of the parent Component.
  */
 goog.ui.DrilldownRow.prototype.findIndex = function() {
-  var parent = this.getParent();
+  var parent = this.getParent()
   if (!parent) {
-    throw new Error('Component has no parent');
+    throw new Error("Component has no parent")
   }
-  return parent.indexOfChild(this);
-};
-
+  return parent.indexOfChild(this)
+}
 
 //
 // Type-specific operations
 //
-
 
 /**
  * Returns the expanded state of the DrilldownRow.
@@ -307,9 +297,8 @@ goog.ui.DrilldownRow.prototype.findIndex = function() {
  * @return {boolean} true iff this is expanded.
  */
 goog.ui.DrilldownRow.prototype.isExpanded = function() {
-  return this.expanded_;
-};
-
+  return this.expanded_
+}
 
 /**
  * Sets the expanded state of this DrilldownRow: makes all children
@@ -319,18 +308,18 @@ goog.ui.DrilldownRow.prototype.isExpanded = function() {
  */
 goog.ui.DrilldownRow.prototype.setExpanded = function(expanded) {
   if (expanded != this.expanded_) {
-    this.expanded_ = expanded;
-    var elem = this.getElement();
-    goog.asserts.assert(elem);
-    goog.dom.classlist.toggle(elem, goog.getCssName('goog-drilldown-expanded'));
-    goog.dom.classlist.toggle(
-        elem, goog.getCssName('goog-drilldown-collapsed'));
+    this.expanded_ = expanded
+    var elem = this.getElement()
+    goog.asserts.assert(elem)
+    goog.dom.classlist.toggle(elem, goog.getCssName("goog-drilldown-expanded"))
+    goog.dom.classlist.toggle(elem, goog.getCssName("goog-drilldown-collapsed"))
     if (this.isVisible_()) {
-      this.forEachChild(function(child) { child.setDisplayable_(expanded); });
+      this.forEachChild(function(child) {
+        child.setDisplayable_(expanded)
+      })
     }
   }
-};
-
+}
 
 /**
  * Returns this DrilldownRow's level in the tree.  Top level is 1.
@@ -338,13 +327,13 @@ goog.ui.DrilldownRow.prototype.setExpanded = function(expanded) {
  * @return {number} depth of this DrilldownRow in its tree of drilldowns.
  */
 goog.ui.DrilldownRow.prototype.getDepth = function() {
-  for (var component = this, depth = 0;
-       component instanceof goog.ui.DrilldownRow;
-       component = component.getParent(), depth++) {
-  }
-  return depth;
-};
-
+  for (
+    var component = this, depth = 0;
+    component instanceof goog.ui.DrilldownRow;
+    component = component.getParent(), depth++
+  ) {}
+  return depth
+}
 
 /**
  * This static function is a default decorator that adds HTML at the
@@ -371,39 +360,42 @@ goog.ui.DrilldownRow.prototype.getDepth = function() {
  * @param {goog.ui.DrilldownRow} selfObj DrilldownRow to be decorated.
  */
 goog.ui.DrilldownRow.decorate = function(selfObj) {
-  var depth = selfObj.getDepth();
-  var row = selfObj.getElement();
-  goog.asserts.assert(row);
+  var depth = selfObj.getDepth()
+  var row = selfObj.getElement()
+  goog.asserts.assert(row)
   if (!row.cells) {
-    throw new Error('No cells');
+    throw new Error("No cells")
   }
-  var cell = row.cells[0];
-  var dom = selfObj.getDomHelper();
+  var cell = row.cells[0]
+  var dom = selfObj.getDomHelper()
   var fragment = dom.createDom(
-      goog.dom.TagName.DIV, {'style': 'float: left; width: ' + depth + 'em;'},
-      dom.createDom(
-          goog.dom.TagName.DIV,
-          {'class': 'toggle', 'style': 'width: 1em; float: right;'},
-          // NOTE: NBSP is probably only needed by IE6. This div can probably be
-          // made contentless.
-          goog.string.Unicode.NBSP));
-  cell.insertBefore(fragment, cell.firstChild);
+    goog.dom.TagName.DIV,
+    { style: "float: left; width: " + depth + "em;" },
+    dom.createDom(
+      goog.dom.TagName.DIV,
+      { class: "toggle", style: "width: 1em; float: right;" },
+      // NOTE: NBSP is probably only needed by IE6. This div can probably be
+      // made contentless.
+      goog.string.Unicode.NBSP
+    )
+  )
+  cell.insertBefore(fragment, cell.firstChild)
   goog.dom.classlist.add(
-      row, selfObj.isExpanded() ? goog.getCssName('goog-drilldown-expanded') :
-                                  goog.getCssName('goog-drilldown-collapsed'));
+    row,
+    selfObj.isExpanded()
+      ? goog.getCssName("goog-drilldown-expanded")
+      : goog.getCssName("goog-drilldown-collapsed")
+  )
   // Default mouse event handling:
-  var toggler =
-      goog.dom.getElementsByTagName(goog.dom.TagName.DIV, fragment)[0];
-  selfObj.getHandler().listen(toggler, 'click', function(event) {
-    selfObj.setExpanded(!selfObj.isExpanded());
-  });
-};
-
+  var toggler = goog.dom.getElementsByTagName(goog.dom.TagName.DIV, fragment)[0]
+  selfObj.getHandler().listen(toggler, "click", function(event) {
+    selfObj.setExpanded(!selfObj.isExpanded())
+  })
+}
 
 //
 // Private methods
 //
-
 
 /**
  * Turn display of a DrilldownRow on or off.  If the DrilldownRow has not
@@ -416,21 +408,20 @@ goog.ui.DrilldownRow.decorate = function(selfObj) {
  */
 goog.ui.DrilldownRow.prototype.setDisplayable_ = function(display) {
   if (display && !this.isInDocument()) {
-    this.render();
+    this.render()
   }
   if (this.displayed_ == display) {
-    return;
+    return
   }
-  this.displayed_ = display;
+  this.displayed_ = display
   if (this.isInDocument()) {
-    this.getElement().style.display = display ? '' : 'none';
+    this.getElement().style.display = display ? "" : "none"
   }
-  var selfObj = this;
+  var selfObj = this
   this.forEachChild(function(child) {
-    child.setDisplayable_(display && selfObj.expanded_);
-  });
-};
-
+    child.setDisplayable_(display && selfObj.expanded_)
+  })
+}
 
 /**
  * True iff this and all its DrilldownRow parents are displayable.  The
@@ -443,13 +434,15 @@ goog.ui.DrilldownRow.prototype.setDisplayable_ = function(display) {
  * @private
  */
 goog.ui.DrilldownRow.prototype.isVisible_ = function() {
-  for (var component = this; component instanceof goog.ui.DrilldownRow;
-       component = component.getParent()) {
-    if (!component.displayed_) return false;
+  for (
+    var component = this;
+    component instanceof goog.ui.DrilldownRow;
+    component = component.getParent()
+  ) {
+    if (!component.displayed_) return false
   }
-  return true;
-};
-
+  return true
+}
 
 /**
  * Create and return a TR element from HTML that looks like
@@ -462,12 +455,11 @@ goog.ui.DrilldownRow.prototype.isVisible_ = function() {
  */
 goog.ui.DrilldownRow.createRowNode_ = function(html, dom) {
   // Note: this may be slow.
-  var tableHtml = goog.html.SafeHtml.create(goog.dom.TagName.TABLE, {}, html);
-  var div = dom.createElement(goog.dom.TagName.DIV);
-  goog.dom.safe.setInnerHtml(div, tableHtml);
-  return div.firstChild.rows[0];
-};
-
+  var tableHtml = goog.html.SafeHtml.create(goog.dom.TagName.TABLE, {}, html)
+  var div = dom.createElement(goog.dom.TagName.DIV)
+  goog.dom.safe.setInnerHtml(div, tableHtml)
+  return div.firstChild.rows[0]
+}
 
 /**
  * Get the recursively rightmost child that is in the document.
@@ -478,15 +470,17 @@ goog.ui.DrilldownRow.createRowNode_ = function(html, dom) {
  * @private
  */
 goog.ui.DrilldownRow.prototype.lastRenderedLeaf_ = function() {
-  var leaf = null;
-  for (var node = this; node && node.isInDocument();
-       // Node will become undefined if parent has no children.
-       node = node.getChildAt(node.getChildCount() - 1)) {
-    leaf = node;
+  var leaf = null
+  for (
+    var node = this;
+    node && node.isInDocument();
+    // Node will become undefined if parent has no children.
+    node = node.getChildAt(node.getChildCount() - 1)
+  ) {
+    leaf = node
   }
-  return /** @type {goog.ui.DrilldownRow} */ (leaf);
-};
-
+  return /** @type {goog.ui.DrilldownRow} */ (leaf)
+}
 
 /**
  * Search this node's direct children for the last one that is in the
@@ -500,12 +494,12 @@ goog.ui.DrilldownRow.prototype.previousRenderedChild_ = function(child) {
   for (var i = this.getChildCount() - 1; i >= 0; i--) {
     if (this.getChildAt(i) == child) {
       for (var j = i - 1; j >= 0; j--) {
-        var prev = this.getChildAt(j);
+        var prev = this.getChildAt(j)
         if (prev.isInDocument()) {
-          return prev;
+          return prev
         }
       }
     }
   }
-  return null;
-};
+  return null
+}

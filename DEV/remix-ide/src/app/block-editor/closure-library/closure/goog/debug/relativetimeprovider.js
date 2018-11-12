@@ -17,9 +17,7 @@
  *
  */
 
-goog.provide('goog.debug.RelativeTimeProvider');
-
-
+goog.provide("goog.debug.RelativeTimeProvider")
 
 /**
  * A simple object to keep track of a timestamp considered the start of
@@ -38,50 +36,44 @@ goog.debug.RelativeTimeProvider = function() {
    * @type {number}
    * @private
    */
-  this.relativeTimeStart_ = goog.now();
-};
-
+  this.relativeTimeStart_ = goog.now()
+}
 
 /**
  * Default instance.
  * @type {goog.debug.RelativeTimeProvider}
  * @private
  */
-goog.debug.RelativeTimeProvider.defaultInstance_ = null;
-
+goog.debug.RelativeTimeProvider.defaultInstance_ = null
 
 /**
  * Sets the start time to the specified time.
  * @param {number} timeStamp The start time.
  */
 goog.debug.RelativeTimeProvider.prototype.set = function(timeStamp) {
-  this.relativeTimeStart_ = timeStamp;
-};
-
+  this.relativeTimeStart_ = timeStamp
+}
 
 /**
  * Resets the start time to now.
  */
 goog.debug.RelativeTimeProvider.prototype.reset = function() {
-  this.set(goog.now());
-};
-
+  this.set(goog.now())
+}
 
 /**
  * @return {number} The start time.
  */
 goog.debug.RelativeTimeProvider.prototype.get = function() {
-  return this.relativeTimeStart_;
-};
-
+  return this.relativeTimeStart_
+}
 
 /**
  * @return {goog.debug.RelativeTimeProvider} The default instance.
  */
 goog.debug.RelativeTimeProvider.getDefaultInstance = function() {
   if (!goog.debug.RelativeTimeProvider.defaultInstance_) {
-    goog.debug.RelativeTimeProvider.defaultInstance_ =
-        new goog.debug.RelativeTimeProvider();
+    goog.debug.RelativeTimeProvider.defaultInstance_ = new goog.debug.RelativeTimeProvider()
   }
-  return goog.debug.RelativeTimeProvider.defaultInstance_;
-};
+  return goog.debug.RelativeTimeProvider.defaultInstance_
+}

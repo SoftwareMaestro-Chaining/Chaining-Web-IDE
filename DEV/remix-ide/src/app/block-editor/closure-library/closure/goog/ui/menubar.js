@@ -22,11 +22,10 @@
  * @see ../demos/menubar.html
  */
 
-goog.provide('goog.ui.menuBar');
+goog.provide("goog.ui.menuBar")
 
-goog.require('goog.ui.Container');
-goog.require('goog.ui.MenuBarRenderer');
-
+goog.require("goog.ui.Container")
+goog.require("goog.ui.MenuBarRenderer")
 
 /**
  * The menuBar factory creates a new menu bar.
@@ -38,6 +37,8 @@ goog.require('goog.ui.MenuBarRenderer');
  */
 goog.ui.menuBar.create = function(opt_renderer, opt_domHelper) {
   return new goog.ui.Container(
-      null, opt_renderer ? opt_renderer : goog.ui.MenuBarRenderer.getInstance(),
-      opt_domHelper);
-};
+    null,
+    opt_renderer ? opt_renderer : goog.ui.MenuBarRenderer.getInstance(),
+    opt_domHelper
+  )
+}

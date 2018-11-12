@@ -18,11 +18,9 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.NodeIterator');
+goog.provide("goog.dom.NodeIterator")
 
-goog.require('goog.dom.TagIterator');
-
-
+goog.require("goog.dom.TagIterator")
 
 /**
  * A DOM tree traversal iterator.
@@ -65,12 +63,21 @@ goog.require('goog.dom.TagIterator');
  * @final
  */
 goog.dom.NodeIterator = function(
-    opt_node, opt_reversed, opt_unconstrained, opt_depth) {
+  opt_node,
+  opt_reversed,
+  opt_unconstrained,
+  opt_depth
+) {
   goog.dom.TagIterator.call(
-      this, opt_node, opt_reversed, opt_unconstrained, null, opt_depth);
-};
-goog.inherits(goog.dom.NodeIterator, goog.dom.TagIterator);
-
+    this,
+    opt_node,
+    opt_reversed,
+    opt_unconstrained,
+    null,
+    opt_depth
+  )
+}
+goog.inherits(goog.dom.NodeIterator, goog.dom.TagIterator)
 
 /**
  * Moves to the next position in the DOM tree.
@@ -80,8 +87,8 @@ goog.inherits(goog.dom.NodeIterator, goog.dom.TagIterator);
  */
 goog.dom.NodeIterator.prototype.next = function() {
   do {
-    goog.dom.NodeIterator.superClass_.next.call(this);
-  } while (this.isEndTag());
+    goog.dom.NodeIterator.superClass_.next.call(this)
+  } while (this.isEndTag())
 
-  return this.node;
-};
+  return this.node
+}

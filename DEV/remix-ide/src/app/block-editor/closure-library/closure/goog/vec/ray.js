@@ -21,11 +21,9 @@
  * except where noted.
  *
  */
-goog.provide('goog.vec.Ray');
+goog.provide("goog.vec.Ray")
 
-goog.require('goog.vec.Vec3');
-
-
+goog.require("goog.vec.Vec3")
 
 /**
  * Constructs a new ray with an optional origin and direction. If not specified,
@@ -39,20 +37,19 @@ goog.vec.Ray = function(opt_origin, opt_dir) {
   /**
    * @type {goog.vec.Vec3.Float64}
    */
-  this.origin = goog.vec.Vec3.createFloat64();
+  this.origin = goog.vec.Vec3.createFloat64()
   if (opt_origin) {
-    goog.vec.Vec3.setFromArray(this.origin, opt_origin);
+    goog.vec.Vec3.setFromArray(this.origin, opt_origin)
   }
 
   /**
    * @type {goog.vec.Vec3.Float64}
    */
-  this.dir = goog.vec.Vec3.createFloat64();
+  this.dir = goog.vec.Vec3.createFloat64()
   if (opt_dir) {
-    goog.vec.Vec3.setFromArray(this.dir, opt_dir);
+    goog.vec.Vec3.setFromArray(this.dir, opt_dir)
   }
-};
-
+}
 
 /**
  * Sets the origin and direction of the ray.
@@ -60,28 +57,25 @@ goog.vec.Ray = function(opt_origin, opt_dir) {
  * @param {goog.vec.AnyType} dir The new direction.
  */
 goog.vec.Ray.prototype.set = function(origin, dir) {
-  goog.vec.Vec3.setFromArray(this.origin, origin);
-  goog.vec.Vec3.setFromArray(this.dir, dir);
-};
-
+  goog.vec.Vec3.setFromArray(this.origin, origin)
+  goog.vec.Vec3.setFromArray(this.dir, dir)
+}
 
 /**
  * Sets the origin of the ray.
  * @param {goog.vec.AnyType} origin the new origin.
  */
 goog.vec.Ray.prototype.setOrigin = function(origin) {
-  goog.vec.Vec3.setFromArray(this.origin, origin);
-};
-
+  goog.vec.Vec3.setFromArray(this.origin, origin)
+}
 
 /**
  * Sets the direction of the ray.
  * @param {goog.vec.AnyType} dir The new direction.
  */
 goog.vec.Ray.prototype.setDir = function(dir) {
-  goog.vec.Vec3.setFromArray(this.dir, dir);
-};
-
+  goog.vec.Vec3.setFromArray(this.dir, dir)
+}
 
 /**
  * Returns true if this ray is equal to the other ray.
@@ -89,6 +83,9 @@ goog.vec.Ray.prototype.setDir = function(dir) {
  * @return {boolean} True if this ray is equal to the other ray.
  */
 goog.vec.Ray.prototype.equals = function(other) {
-  return other != null && goog.vec.Vec3.equals(this.origin, other.origin) &&
-      goog.vec.Vec3.equals(this.dir, other.dir);
-};
+  return (
+    other != null &&
+    goog.vec.Vec3.equals(this.origin, other.origin) &&
+    goog.vec.Vec3.equals(this.dir, other.dir)
+  )
+}

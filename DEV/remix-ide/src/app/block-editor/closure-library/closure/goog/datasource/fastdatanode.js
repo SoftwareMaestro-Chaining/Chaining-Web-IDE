@@ -35,15 +35,15 @@
 
  */
 
-goog.provide('goog.ds.AbstractFastDataNode');
-goog.provide('goog.ds.FastDataNode');
-goog.provide('goog.ds.FastListNode');
-goog.provide('goog.ds.PrimitiveFastDataNode');
+goog.provide("goog.ds.AbstractFastDataNode")
+goog.provide("goog.ds.FastDataNode")
+goog.provide("goog.ds.FastListNode")
+goog.provide("goog.ds.PrimitiveFastDataNode")
 
-goog.require('goog.ds.DataManager');
-goog.require('goog.ds.DataNodeList');
-goog.require('goog.ds.EmptyNodeList');
-goog.require('goog.string');
+goog.require("goog.ds.DataManager")
+goog.require("goog.ds.DataNodeList")
+goog.require("goog.ds.EmptyNodeList")
+goog.require("goog.string")
 
 /*
  * Implementation note: In order to reduce the number of objects,
@@ -66,12 +66,11 @@ goog.require('goog.string');
 // TODO(arv): Use interfaces when available.
 goog.ds.AbstractFastDataNode = function(dataName, opt_parent) {
   if (!dataName) {
-    throw new Error('Cannot create a fast data node without a data name');
+    throw new Error("Cannot create a fast data node without a data name")
   }
-  this['__dataName'] = dataName;
-  this['__parent'] = opt_parent;
-};
-
+  this["__dataName"] = dataName
+  this["__parent"] = opt_parent
+}
 
 /**
  * Return the name of this data node.
@@ -79,9 +78,8 @@ goog.ds.AbstractFastDataNode = function(dataName, opt_parent) {
  * @override
  */
 goog.ds.AbstractFastDataNode.prototype.getDataName = function() {
-  return this['__dataName'];
-};
-
+  return this["__dataName"]
+}
 
 /**
  * Set the name of this data node.
@@ -89,9 +87,8 @@ goog.ds.AbstractFastDataNode.prototype.getDataName = function() {
  * @override
  */
 goog.ds.AbstractFastDataNode.prototype.setDataName = function(value) {
-  this['__dataName'] = value;
-};
-
+  this["__dataName"] = value
+}
 
 /**
  * Get the path leading to this data node.
@@ -99,16 +96,14 @@ goog.ds.AbstractFastDataNode.prototype.setDataName = function(value) {
  * @override
  */
 goog.ds.AbstractFastDataNode.prototype.getDataPath = function() {
-  var parentPath;
-  if (this['__parent']) {
-    parentPath = this['__parent'].getDataPath() + goog.ds.STR_PATH_SEPARATOR;
+  var parentPath
+  if (this["__parent"]) {
+    parentPath = this["__parent"].getDataPath() + goog.ds.STR_PATH_SEPARATOR
   } else {
-    parentPath = '';
+    parentPath = ""
   }
-  return parentPath + this.getDataName();
-};
-
-
+  return parentPath + this.getDataName()
+}
 
 /**
  * Creates a new fast data node, using the properties of root.
@@ -119,11 +114,10 @@ goog.ds.AbstractFastDataNode.prototype.getDataPath = function() {
  * @constructor
  */
 goog.ds.FastDataNode = function(root, dataName, opt_parent) {
-  goog.ds.AbstractFastDataNode.call(this, dataName, opt_parent);
-  this.extendWith(root);
-};
-goog.inherits(goog.ds.FastDataNode, goog.ds.AbstractFastDataNode);
-
+  goog.ds.AbstractFastDataNode.call(this, dataName, opt_parent)
+  this.extendWith(root)
+}
+goog.inherits(goog.ds.FastDataNode, goog.ds.AbstractFastDataNode)
 
 /**
  * Add all attributes of object to this data node.
@@ -132,10 +126,9 @@ goog.inherits(goog.ds.FastDataNode, goog.ds.AbstractFastDataNode);
  */
 goog.ds.FastDataNode.prototype.extendWith = function(object) {
   for (var key in object) {
-    this[key] = object[key];
+    this[key] = object[key]
   }
-};
-
+}
 
 /**
  * Creates a new FastDataNode structure initialized from object. This will
@@ -153,23 +146,24 @@ goog.ds.FastDataNode.prototype.extendWith = function(object) {
  */
 goog.ds.FastDataNode.fromJs = function(object, dataName, opt_parent) {
   if (goog.isArray(object)) {
-    return new goog.ds.FastListNode(object, dataName, opt_parent);
+    return new goog.ds.FastListNode(object, dataName, opt_parent)
   } else if (goog.isObject(object)) {
-    return new goog.ds.FastDataNode(object, dataName, opt_parent);
+    return new goog.ds.FastDataNode(object, dataName, opt_parent)
   } else {
     return new goog.ds.PrimitiveFastDataNode(
-        object || !!object, dataName, opt_parent);
+      object || !!object,
+      dataName,
+      opt_parent
+    )
   }
-};
-
+}
 
 /**
  * Static instance of an empty list.
  * @type {!goog.ds.EmptyNodeList}
  * @private
  */
-goog.ds.FastDataNode.emptyList_ = new goog.ds.EmptyNodeList();
-
+goog.ds.FastDataNode.emptyList_ = new goog.ds.EmptyNodeList()
 
 /**
  * Not supported for normal FastDataNodes.
@@ -177,23 +171,22 @@ goog.ds.FastDataNode.emptyList_ = new goog.ds.EmptyNodeList();
  * @override
  */
 goog.ds.FastDataNode.prototype.set = function(value) {
-  throw new Error('Not implemented yet');
-};
-
+  throw new Error("Not implemented yet")
+}
 
 /** @override */
 goog.ds.FastDataNode.prototype.getChildNodes = function(opt_selector) {
   if (!opt_selector || opt_selector == goog.ds.STR_ALL_CHILDREN_SELECTOR) {
-    return this;
+    return this
   } else if (opt_selector.indexOf(goog.ds.STR_WILDCARD) == -1) {
-    var child = this.getChildNode(opt_selector);
-    return child ? new goog.ds.FastListNode([child], '') :
-                   new goog.ds.EmptyNodeList();
+    var child = this.getChildNode(opt_selector)
+    return child
+      ? new goog.ds.FastListNode([child], "")
+      : new goog.ds.EmptyNodeList()
   } else {
-    throw new Error('Unsupported selector: ' + opt_selector);
+    throw new Error("Unsupported selector: " + opt_selector)
   }
-};
-
+}
 
 /**
  * Makes sure that a named child is wrapped in a data node structure.
@@ -201,12 +194,11 @@ goog.ds.FastDataNode.prototype.getChildNodes = function(opt_selector) {
  * @private
  */
 goog.ds.FastDataNode.prototype.wrapChild_ = function(name) {
-  var child = this[name];
+  var child = this[name]
   if (child != null && !child.getDataName) {
-    this[name] = goog.ds.FastDataNode.fromJs(this[name], name, this);
+    this[name] = goog.ds.FastDataNode.fromJs(this[name], name, this)
   }
-};
-
+}
 
 /**
  * Get a child node by name.
@@ -217,16 +209,15 @@ goog.ds.FastDataNode.prototype.wrapChild_ = function(name) {
  * @override
  */
 goog.ds.FastDataNode.prototype.getChildNode = function(name, opt_create) {
-  this.wrapChild_(name);
+  this.wrapChild_(name)
   // this[name] always is a data node object, so using "||" is fine.
-  var child = this[name] || null;
+  var child = this[name] || null
   if (child == null && opt_create) {
-    child = new goog.ds.FastDataNode({}, name, this);
-    this[name] = child;
+    child = new goog.ds.FastDataNode({}, name, this)
+    this[name] = child
   }
-  return child;
-};
-
+  return child
+}
 
 /**
  * Sets a child node. Creates the child if it does not exist.
@@ -239,15 +230,15 @@ goog.ds.FastDataNode.prototype.getChildNode = function(name, opt_create) {
  */
 goog.ds.FastDataNode.prototype.setChildNode = function(name, value) {
   if (value != null) {
-    this[name] = value;
+    this[name] = value
   } else {
-    delete this[name];
+    delete this[name]
   }
   goog.ds.DataManager.getInstance().fireDataChange(
-      this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + name);
-  return null;
-};
-
+    this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + name
+  )
+  return null
+}
 
 /**
  * Returns the value of a child node. By using this method you can avoid
@@ -257,14 +248,13 @@ goog.ds.FastDataNode.prototype.setChildNode = function(name, value) {
  * @override
  */
 goog.ds.FastDataNode.prototype.getChildNodeValue = function(name) {
-  var child = this[name];
+  var child = this[name]
   if (child != null) {
-    return (child.getDataName ? child.get() : child);
+    return child.getDataName ? child.get() : child
   } else {
-    return null;
+    return null
   }
-};
-
+}
 
 /**
  * Returns whether this data node is a list. Always returns false for
@@ -273,9 +263,8 @@ goog.ds.FastDataNode.prototype.getChildNodeValue = function(name) {
  * @override
  */
 goog.ds.FastDataNode.prototype.isList = function() {
-  return false;
-};
-
+  return false
+}
 
 /**
  * Returns a javascript object representation of this data node. You should
@@ -283,31 +272,31 @@ goog.ds.FastDataNode.prototype.isList = function() {
  * @return {!Object} JavaScript object representation of this data node.
  */
 goog.ds.FastDataNode.prototype.getJsObject = function() {
-  var result = {};
+  var result = {}
   for (var key in this) {
-    if (!goog.string.startsWith(key, '__') && !goog.isFunction(this[key])) {
-      result[key] =
-          (this[key]['__dataName'] ? this[key].getJsObject() : this[key]);
+    if (!goog.string.startsWith(key, "__") && !goog.isFunction(this[key])) {
+      result[key] = this[key]["__dataName"]
+        ? this[key].getJsObject()
+        : this[key]
     }
   }
-  return result;
-};
-
+  return result
+}
 
 /**
  * Creates a deep copy of this data node.
  * @return {goog.ds.FastDataNode} Clone of this data node.
  */
 goog.ds.FastDataNode.prototype.clone = function() {
-  return /** @type {!goog.ds.FastDataNode} */ (
-      goog.ds.FastDataNode.fromJs(this.getJsObject(), this.getDataName()));
-};
-
+  return /** @type {!goog.ds.FastDataNode} */ (goog.ds.FastDataNode.fromJs(
+    this.getJsObject(),
+    this.getDataName()
+  ))
+}
 
 /*
  * Implementation of goog.ds.DataNodeList for FastDataNode.
  */
-
 
 /**
  * Adds a child to this data node.
@@ -315,9 +304,8 @@ goog.ds.FastDataNode.prototype.clone = function() {
  * @override
  */
 goog.ds.FastDataNode.prototype.add = function(value) {
-  this.setChildNode(value.getDataName(), value);
-};
-
+  this.setChildNode(value.getDataName(), value)
+}
 
 /**
  * Gets the value of this data node (if called without opt_key) or
@@ -329,12 +317,11 @@ goog.ds.FastDataNode.prototype.add = function(value) {
 goog.ds.FastDataNode.prototype.get = function(opt_key) {
   if (!goog.isDef(opt_key)) {
     // if there is no key, DataNode#get was called
-    return this;
+    return this
   } else {
-    return this.getChildNode(opt_key);
+    return this.getChildNode(opt_key)
   }
-};
-
+}
 
 /**
  * Gets a child node by index. This method has a complexity of O(n) where
@@ -345,19 +332,18 @@ goog.ds.FastDataNode.prototype.get = function(opt_key) {
  * @override
  */
 goog.ds.FastDataNode.prototype.getByIndex = function(index) {
-  var i = 0;
+  var i = 0
   for (var key in this) {
-    if (!goog.string.startsWith(key, '__') && !goog.isFunction(this[key])) {
+    if (!goog.string.startsWith(key, "__") && !goog.isFunction(this[key])) {
       if (i == index) {
-        this.wrapChild_(key);
-        return this[key];
+        this.wrapChild_(key)
+        return this[key]
       }
-      ++i;
+      ++i
     }
   }
-  return null;
-};
-
+  return null
+}
 
 /**
  * Gets the number of child nodes. This method has a complexity of O(n) where
@@ -367,16 +353,15 @@ goog.ds.FastDataNode.prototype.getByIndex = function(index) {
  * @override
  */
 goog.ds.FastDataNode.prototype.getCount = function() {
-  var count = 0;
+  var count = 0
   for (var key in this) {
-    if (!goog.string.startsWith(key, '__') && !goog.isFunction(this[key])) {
-      ++count;
+    if (!goog.string.startsWith(key, "__") && !goog.isFunction(this[key])) {
+      ++count
     }
   }
   // maybe cache this?
-  return count;
-};
-
+  return count
+}
 
 /**
  * Sets a child node.
@@ -385,20 +370,17 @@ goog.ds.FastDataNode.prototype.getCount = function() {
  * @override
  */
 goog.ds.FastDataNode.prototype.setNode = function(name, value) {
-  this.setChildNode(name, value);
-};
-
+  this.setChildNode(name, value)
+}
 
 /**
  * Removes a child node.
  * @override
  */
 goog.ds.FastDataNode.prototype.removeNode = function(name) {
-  delete this[name];
-  return false;
-};
-
-
+  delete this[name]
+  return false
+}
 
 /**
  * Creates a new data node wrapping a primitive value.
@@ -410,11 +392,10 @@ goog.ds.FastDataNode.prototype.removeNode = function(name) {
  * @final
  */
 goog.ds.PrimitiveFastDataNode = function(value, dataName, opt_parent) {
-  this.value_ = value;
-  goog.ds.AbstractFastDataNode.call(this, dataName, opt_parent);
-};
-goog.inherits(goog.ds.PrimitiveFastDataNode, goog.ds.AbstractFastDataNode);
-
+  this.value_ = value
+  goog.ds.AbstractFastDataNode.call(this, dataName, opt_parent)
+}
+goog.inherits(goog.ds.PrimitiveFastDataNode, goog.ds.AbstractFastDataNode)
 
 /**
  * Returns the value of this data node.
@@ -422,9 +403,8 @@ goog.inherits(goog.ds.PrimitiveFastDataNode, goog.ds.AbstractFastDataNode);
  * @override
  */
 goog.ds.PrimitiveFastDataNode.prototype.get = function() {
-  return this.value_;
-};
-
+  return this.value_
+}
 
 /**
  * Sets this data node to a new value.
@@ -433,12 +413,11 @@ goog.ds.PrimitiveFastDataNode.prototype.get = function() {
  */
 goog.ds.PrimitiveFastDataNode.prototype.set = function(value) {
   if (goog.isArray(value) || goog.isObject(value)) {
-    throw new Error('can only set PrimitiveFastDataNode to primitive values');
+    throw new Error("can only set PrimitiveFastDataNode to primitive values")
   }
-  this.value_ = value;
-  goog.ds.DataManager.getInstance().fireDataChange(this.getDataPath());
-};
-
+  this.value_ = value
+  goog.ds.DataManager.getInstance().fireDataChange(this.getDataPath())
+}
 
 /**
  * Returns child nodes of this data node. Always returns an unmodifiable,
@@ -447,9 +426,8 @@ goog.ds.PrimitiveFastDataNode.prototype.set = function(value) {
  * @override
  */
 goog.ds.PrimitiveFastDataNode.prototype.getChildNodes = function() {
-  return goog.ds.FastDataNode.emptyList_;
-};
-
+  return goog.ds.FastDataNode.emptyList_
+}
 
 /**
  * Get a child node by name. Always returns null.
@@ -458,9 +436,8 @@ goog.ds.PrimitiveFastDataNode.prototype.getChildNodes = function() {
  * @override
  */
 goog.ds.PrimitiveFastDataNode.prototype.getChildNode = function(name) {
-  return null;
-};
-
+  return null
+}
 
 /**
  * Returns the value of a child node. Always returns null.
@@ -469,9 +446,8 @@ goog.ds.PrimitiveFastDataNode.prototype.getChildNode = function(name) {
  * @override
  */
 goog.ds.PrimitiveFastDataNode.prototype.getChildNodeValue = function(name) {
-  return null;
-};
-
+  return null
+}
 
 /**
  * Not supported by primitive data nodes.
@@ -480,9 +456,8 @@ goog.ds.PrimitiveFastDataNode.prototype.getChildNodeValue = function(name) {
  * @override
  */
 goog.ds.PrimitiveFastDataNode.prototype.setChildNode = function(name, value) {
-  throw new Error('Cannot set a child node for a PrimitiveFastDataNode');
-};
-
+  throw new Error("Cannot set a child node for a PrimitiveFastDataNode")
+}
 
 /**
  * Returns whether this data node is a list. Always returns false for
@@ -491,9 +466,8 @@ goog.ds.PrimitiveFastDataNode.prototype.setChildNode = function(name, value) {
  * @override
  */
 goog.ds.PrimitiveFastDataNode.prototype.isList = function() {
-  return false;
-};
-
+  return false
+}
 
 /**
  * Returns a javascript object representation of this data node. You should
@@ -501,9 +475,8 @@ goog.ds.PrimitiveFastDataNode.prototype.isList = function() {
  * @return {*} JavaScript object representation of this data node.
  */
 goog.ds.PrimitiveFastDataNode.prototype.getJsObject = function() {
-  return this.value_;
-};
-
+  return this.value_
+}
 
 /**
  * Creates a new list node from an array.
@@ -517,21 +490,20 @@ goog.ds.PrimitiveFastDataNode.prototype.getJsObject = function() {
 // TODO(arv): Use interfaces when available.  This implements DataNodeList
 // as well.
 goog.ds.FastListNode = function(values, dataName, opt_parent) {
-  this.values_ = [];
+  this.values_ = []
   for (var i = 0; i < values.length; ++i) {
-    var name = values[i].id || ('[' + i + ']');
-    this.values_.push(goog.ds.FastDataNode.fromJs(values[i], name, this));
+    var name = values[i].id || "[" + i + "]"
+    this.values_.push(goog.ds.FastDataNode.fromJs(values[i], name, this))
     if (values[i].id) {
       if (!this.map_) {
-        this.map_ = {};
+        this.map_ = {}
       }
-      this.map_[values[i].id] = i;
+      this.map_[values[i].id] = i
     }
   }
-  goog.ds.AbstractFastDataNode.call(this, dataName, opt_parent);
-};
-goog.inherits(goog.ds.FastListNode, goog.ds.AbstractFastDataNode);
-
+  goog.ds.AbstractFastDataNode.call(this, dataName, opt_parent)
+}
+goog.inherits(goog.ds.FastListNode, goog.ds.AbstractFastDataNode)
 
 /**
  * Not supported for FastListNodes.
@@ -539,9 +511,8 @@ goog.inherits(goog.ds.FastListNode, goog.ds.AbstractFastDataNode);
  * @override
  */
 goog.ds.FastListNode.prototype.set = function(value) {
-  throw new Error('Cannot set a FastListNode to a new value');
-};
-
+  throw new Error("Cannot set a FastListNode to a new value")
+}
 
 /**
  * Returns child nodes of this data node. Currently, only supports
@@ -550,9 +521,8 @@ goog.ds.FastListNode.prototype.set = function(value) {
  * @override
  */
 goog.ds.FastListNode.prototype.getChildNodes = function() {
-  return this;
-};
-
+  return this
+}
 
 /**
  * Get a child node by name.
@@ -563,20 +533,19 @@ goog.ds.FastListNode.prototype.getChildNodes = function() {
  * @override
  */
 goog.ds.FastListNode.prototype.getChildNode = function(key, opt_create) {
-  var index = this.getKeyAsNumber_(key);
+  var index = this.getKeyAsNumber_(key)
   if (index == null && this.map_) {
-    index = this.map_[key];
+    index = this.map_[key]
   }
   if (index != null && this.values_[index]) {
-    return this.values_[index];
+    return this.values_[index]
   } else if (opt_create) {
-    this.setChildNode(key, {});
-    return this.getChildNode(key);
+    this.setChildNode(key, {})
+    return this.getChildNode(key)
   } else {
-    return null;
+    return null
   }
-};
-
+}
 
 /**
  * Returns the value of a child node.
@@ -585,10 +554,9 @@ goog.ds.FastListNode.prototype.getChildNode = function(key, opt_create) {
  * @override
  */
 goog.ds.FastListNode.prototype.getChildNodeValue = function(key) {
-  var child = this.getChildNode(key);
-  return (child ? child.get() : null);
-};
-
+  var child = this.getChildNode(key)
+  return child ? child.get() : null
+}
 
 /**
  * Tries to interpret key as a numeric index enclosed by square brakcets.
@@ -598,13 +566,12 @@ goog.ds.FastListNode.prototype.getChildNodeValue = function(key) {
  * @private
  */
 goog.ds.FastListNode.prototype.getKeyAsNumber_ = function(key) {
-  if (key.charAt(0) == '[' && key.charAt(key.length - 1) == ']') {
-    return Number(key.substring(1, key.length - 1));
+  if (key.charAt(0) == "[" && key.charAt(key.length - 1) == "]") {
+    return Number(key.substring(1, key.length - 1))
   } else {
-    return null;
+    return null
   }
-};
-
+}
 
 /**
  * Sets a child node. Creates the child if it does not exist. To set
@@ -619,15 +586,15 @@ goog.ds.FastListNode.prototype.getKeyAsNumber_ = function(key) {
  * @override
  */
 goog.ds.FastListNode.prototype.setChildNode = function(key, value) {
-  var count = this.values_.length;
+  var count = this.values_.length
   if (value != null) {
     if (!value.getDataName) {
-      value = goog.ds.FastDataNode.fromJs(value, key, this);
+      value = goog.ds.FastDataNode.fromJs(value, key, this)
     }
-    var index = this.getKeyAsNumber_(key);
+    var index = this.getKeyAsNumber_(key)
     if (index != null) {
       if (index < 0 || index >= this.values_.length) {
-        throw new Error('List index out of bounds: ' + index);
+        throw new Error("List index out of bounds: " + index)
       }
       // NOTE: This code here appears to want to use "index" rather than
       // "key" here (which would be better for an array. However, changing
@@ -637,27 +604,26 @@ goog.ds.FastListNode.prototype.setChildNode = function(key, value) {
       // strings as indexes.
 
       /** @type {!Object} */
-      var values = this.values_;
+      var values = this.values_
 
-      values[key] = value;
+      values[key] = value
     } else {
       if (!this.map_) {
-        this.map_ = {};
+        this.map_ = {}
       }
-      this.values_.push(value);
-      this.map_[key] = this.values_.length - 1;
+      this.values_.push(value)
+      this.map_[key] = this.values_.length - 1
     }
   } else {
-    this.removeNode(key);
+    this.removeNode(key)
   }
-  var dm = goog.ds.DataManager.getInstance();
-  dm.fireDataChange(this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + key);
+  var dm = goog.ds.DataManager.getInstance()
+  dm.fireDataChange(this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + key)
   if (this.values_.length != count) {
-    this.listSizeChanged_();
+    this.listSizeChanged_()
   }
-  return null;
-};
-
+  return null
+}
 
 /**
  * Fire data changes that are appropriate when the size of this list changes.
@@ -665,12 +631,10 @@ goog.ds.FastListNode.prototype.setChildNode = function(key, value) {
  * @private
  */
 goog.ds.FastListNode.prototype.listSizeChanged_ = function() {
-  var dm = goog.ds.DataManager.getInstance();
-  dm.fireDataChange(this.getDataPath());
-  dm.fireDataChange(
-      this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + 'count()');
-};
-
+  var dm = goog.ds.DataManager.getInstance()
+  dm.fireDataChange(this.getDataPath())
+  dm.fireDataChange(this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + "count()")
+}
 
 /**
  * Returns whether this data node is a list. Always returns true.
@@ -678,9 +642,8 @@ goog.ds.FastListNode.prototype.listSizeChanged_ = function() {
  * @override
  */
 goog.ds.FastListNode.prototype.isList = function() {
-  return true;
-};
-
+  return true
+}
 
 /**
  * Returns a javascript object representation of this data node. You should
@@ -688,18 +651,16 @@ goog.ds.FastListNode.prototype.isList = function() {
  * @return {!Object} JavaScript object representation of this data node.
  */
 goog.ds.FastListNode.prototype.getJsObject = function() {
-  var result = [];
+  var result = []
   for (var i = 0; i < this.values_.length; ++i) {
-    result.push(this.values_[i].getJsObject());
+    result.push(this.values_[i].getJsObject())
   }
-  return result;
-};
-
+  return result
+}
 
 /*
  * Implementation of goog.ds.DataNodeList for FastListNode.
  */
-
 
 /**
  * Adds a child to this data node
@@ -709,16 +670,22 @@ goog.ds.FastListNode.prototype.getJsObject = function() {
 goog.ds.FastListNode.prototype.add = function(value) {
   if (!value.getDataName) {
     value = goog.ds.FastDataNode.fromJs(
-        value, String('[' + (this.values_.length) + ']'), this);
+      value,
+      String("[" + this.values_.length + "]"),
+      this
+    )
   }
-  this.values_.push(value);
-  var dm = goog.ds.DataManager.getInstance();
+  this.values_.push(value)
+  var dm = goog.ds.DataManager.getInstance()
   dm.fireDataChange(
-      this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + '[' +
-      (this.values_.length - 1) + ']');
-  this.listSizeChanged_();
-};
-
+    this.getDataPath() +
+      goog.ds.STR_PATH_SEPARATOR +
+      "[" +
+      (this.values_.length - 1) +
+      "]"
+  )
+  this.listSizeChanged_()
+}
 
 /**
  * Gets the value of this data node (if called without opt_key) or
@@ -731,12 +698,11 @@ goog.ds.FastListNode.prototype.add = function(value) {
 goog.ds.FastListNode.prototype.get = function(opt_key) {
   // if there are no arguments, DataNode.get was called
   if (!goog.isDef(opt_key)) {
-    return this.values_;
+    return this.values_
   } else {
-    return this.getChildNode(opt_key);
+    return this.getChildNode(opt_key)
   }
-};
-
+}
 
 /**
  * Gets a child node by (numeric) index.
@@ -745,10 +711,9 @@ goog.ds.FastListNode.prototype.get = function(opt_key) {
  * @override
  */
 goog.ds.FastListNode.prototype.getByIndex = function(index) {
-  var child = this.values_[index];
-  return (child != null ? child : null);  // never return undefined
-};
-
+  var child = this.values_[index]
+  return child != null ? child : null // never return undefined
+}
 
 /**
  * Gets the number of child nodes.
@@ -756,9 +721,8 @@ goog.ds.FastListNode.prototype.getByIndex = function(index) {
  * @override
  */
 goog.ds.FastListNode.prototype.getCount = function() {
-  return this.values_.length;
-};
-
+  return this.values_.length
+}
 
 /**
  * Sets a child node.
@@ -768,42 +732,42 @@ goog.ds.FastListNode.prototype.getCount = function() {
  */
 goog.ds.FastListNode.prototype.setNode = function(name, value) {
   throw new Error(
-      'Setting child nodes of a FastListNode is not implemented, yet');
-};
-
+    "Setting child nodes of a FastListNode is not implemented, yet"
+  )
+}
 
 /**
  * Removes a child node.
  * @override
  */
 goog.ds.FastListNode.prototype.removeNode = function(name) {
-  var index = this.getKeyAsNumber_(name);
+  var index = this.getKeyAsNumber_(name)
   if (index == null && this.map_) {
-    index = this.map_[name];
+    index = this.map_[name]
   }
   if (index != null) {
-    this.values_.splice(index, 1);
+    this.values_.splice(index, 1)
     if (this.map_) {
-      var keyToDelete = null;
+      var keyToDelete = null
       for (var key in this.map_) {
         if (this.map_[key] == index) {
-          keyToDelete = key;
+          keyToDelete = key
         } else if (this.map_[key] > index) {
-          --this.map_[key];
+          --this.map_[key]
         }
       }
       if (keyToDelete) {
-        delete this.map_[keyToDelete];
+        delete this.map_[keyToDelete]
       }
     }
-    var dm = goog.ds.DataManager.getInstance();
+    var dm = goog.ds.DataManager.getInstance()
     dm.fireDataChange(
-        this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + '[' + index + ']');
-    this.listSizeChanged_();
+      this.getDataPath() + goog.ds.STR_PATH_SEPARATOR + "[" + index + "]"
+    )
+    this.listSizeChanged_()
   }
-  return false;
-};
-
+  return false
+}
 
 /**
  * Returns the index of a named child nodes. This method only works if
@@ -813,12 +777,12 @@ goog.ds.FastListNode.prototype.removeNode = function(name) {
  * @return {number} Index of child node named name.
  */
 goog.ds.FastListNode.prototype.indexOf = function(name) {
-  var index = this.getKeyAsNumber_(name);
+  var index = this.getKeyAsNumber_(name)
   if (index == null && this.map_) {
-    index = this.map_[name];
+    index = this.map_[name]
   }
   if (index == null) {
-    throw new Error('Cannot determine index for: ' + name);
+    throw new Error("Cannot determine index for: " + name)
   }
-  return /** @type {number} */ (index);
-};
+  return /** @type {number} */ (index)
+}

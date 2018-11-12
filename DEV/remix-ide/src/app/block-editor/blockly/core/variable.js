@@ -22,11 +22,11 @@
  * @fileoverview Variable type for closure annotations
  * @author fdohrendorf@outlook.com (Florian Dohrendorf)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Variable');
+goog.provide("Blockly.Variable")
 
 /**
  * @typedef {{name:string, type:?string}}
  */
-Blockly.Variable = undefined;
+Blockly.Variable = undefined

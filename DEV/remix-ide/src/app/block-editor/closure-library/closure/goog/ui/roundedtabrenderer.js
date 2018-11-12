@@ -18,16 +18,14 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.RoundedTabRenderer');
+goog.provide("goog.ui.RoundedTabRenderer")
 
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.ui.Tab');
-goog.require('goog.ui.TabBar');
-goog.require('goog.ui.TabRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.ui.Tab")
+goog.require("goog.ui.TabBar")
+goog.require("goog.ui.TabRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * Rounded corner tab renderer for {@link goog.ui.Tab}s.
@@ -36,19 +34,17 @@ goog.require('goog.ui.registry');
  * @final
  */
 goog.ui.RoundedTabRenderer = function() {
-  goog.ui.TabRenderer.call(this);
-};
-goog.inherits(goog.ui.RoundedTabRenderer, goog.ui.TabRenderer);
-goog.addSingletonGetter(goog.ui.RoundedTabRenderer);
-
+  goog.ui.TabRenderer.call(this)
+}
+goog.inherits(goog.ui.RoundedTabRenderer, goog.ui.TabRenderer)
+goog.addSingletonGetter(goog.ui.RoundedTabRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.RoundedTabRenderer.CSS_CLASS = goog.getCssName('goog-rounded-tab');
-
+goog.ui.RoundedTabRenderer.CSS_CLASS = goog.getCssName("goog-rounded-tab")
 
 /**
  * Returns the CSS class name to be applied to the root element of all tabs
@@ -57,9 +53,8 @@ goog.ui.RoundedTabRenderer.CSS_CLASS = goog.getCssName('goog-rounded-tab');
  * @override
  */
 goog.ui.RoundedTabRenderer.prototype.getCssClass = function() {
-  return goog.ui.RoundedTabRenderer.CSS_CLASS;
-};
-
+  return goog.ui.RoundedTabRenderer.CSS_CLASS
+}
 
 /**
  * Creates the tab's DOM structure, based on the containing tab bar's location
@@ -90,9 +85,10 @@ goog.ui.RoundedTabRenderer.prototype.getCssClass = function() {
  */
 goog.ui.RoundedTabRenderer.prototype.createDom = function(tab) {
   return this.decorate(
-      tab, goog.ui.RoundedTabRenderer.superClass_.createDom.call(this, tab));
-};
-
+    tab,
+    goog.ui.RoundedTabRenderer.superClass_.createDom.call(this, tab)
+  )
+}
 
 /**
  * Decorates the element with the tab.  Overrides the superclass implementation
@@ -103,20 +99,26 @@ goog.ui.RoundedTabRenderer.prototype.createDom = function(tab) {
  * @override
  */
 goog.ui.RoundedTabRenderer.prototype.decorate = function(tab, element) {
-  var tabBar = tab.getParent();
+  var tabBar = tab.getParent()
 
   if (!this.getContentElement(element)) {
     // The element to be decorated doesn't appear to have the full tab DOM,
     // so we have to create it.
     element.appendChild(
-        this.createTab(
-            tab.getDomHelper(), element.childNodes, tabBar.getLocation()));
+      this.createTab(
+        tab.getDomHelper(),
+        element.childNodes,
+        tabBar.getLocation()
+      )
+    )
   }
 
   return goog.ui.RoundedTabRenderer.superClass_.decorate.call(
-      this, tab, element);
-};
-
+    this,
+    tab,
+    element
+  )
+}
 
 /**
  * Creates a table implementing a rounded corner tab.
@@ -129,28 +131,32 @@ goog.ui.RoundedTabRenderer.prototype.decorate = function(tab, element) {
  * @protected
  */
 goog.ui.RoundedTabRenderer.prototype.createTab = function(
-    dom, caption, location) {
-  var rows = [];
+  dom,
+  caption,
+  location
+) {
+  var rows = []
 
   if (location != goog.ui.TabBar.Location.BOTTOM) {
     // This is a left, right, or top tab, so it needs a rounded top edge.
-    rows.push(this.createEdge(dom, /* isTopEdge */ true));
+    rows.push(this.createEdge(dom, /* isTopEdge */ true))
   }
-  rows.push(this.createCaption(dom, caption));
+  rows.push(this.createCaption(dom, caption))
   if (location != goog.ui.TabBar.Location.TOP) {
     // This is a left, right, or bottom tab, so it needs a rounded bottom edge.
-    rows.push(this.createEdge(dom, /* isTopEdge */ false));
+    rows.push(this.createEdge(dom, /* isTopEdge */ false))
   }
 
   return dom.createDom(
-      goog.dom.TagName.TABLE, {
-        'cellPadding': 0,
-        'cellSpacing': 0,
-        'className': goog.getCssName(this.getStructuralCssClass(), 'table')
-      },
-      dom.createDom(goog.dom.TagName.TBODY, null, rows));
-};
-
+    goog.dom.TagName.TABLE,
+    {
+      cellPadding: 0,
+      cellSpacing: 0,
+      className: goog.getCssName(this.getStructuralCssClass(), "table")
+    },
+    dom.createDom(goog.dom.TagName.TBODY, null, rows)
+  )
+}
 
 /**
  * Creates a table row implementing the tab caption.
@@ -161,16 +167,21 @@ goog.ui.RoundedTabRenderer.prototype.createTab = function(
  * @protected
  */
 goog.ui.RoundedTabRenderer.prototype.createCaption = function(dom, caption) {
-  var baseClass = this.getStructuralCssClass();
+  var baseClass = this.getStructuralCssClass()
   return dom.createDom(
-      goog.dom.TagName.TR, null,
+    goog.dom.TagName.TR,
+    null,
+    dom.createDom(
+      goog.dom.TagName.TD,
+      { noWrap: true },
       dom.createDom(
-          goog.dom.TagName.TD, {'noWrap': true},
-          dom.createDom(
-              goog.dom.TagName.DIV, goog.getCssName(baseClass, 'caption'),
-              caption)));
-};
-
+        goog.dom.TagName.DIV,
+        goog.getCssName(baseClass, "caption"),
+        caption
+      )
+    )
+  )
+}
 
 /**
  * Creates a table row implementing a rounded tab edge.
@@ -180,32 +191,44 @@ goog.ui.RoundedTabRenderer.prototype.createCaption = function(dom, caption) {
  * @protected
  */
 goog.ui.RoundedTabRenderer.prototype.createEdge = function(dom, isTopEdge) {
-  var baseClass = this.getStructuralCssClass();
+  var baseClass = this.getStructuralCssClass()
   var inner = dom.createDom(
-      goog.dom.TagName.DIV, goog.getCssName(baseClass, 'inner-edge'));
+    goog.dom.TagName.DIV,
+    goog.getCssName(baseClass, "inner-edge")
+  )
   var outer = dom.createDom(
-      goog.dom.TagName.DIV, goog.getCssName(baseClass, 'outer-edge'));
+    goog.dom.TagName.DIV,
+    goog.getCssName(baseClass, "outer-edge")
+  )
   return dom.createDom(
-      goog.dom.TagName.TR, null,
-      dom.createDom(
-          goog.dom.TagName.TD, {'noWrap': true},
-          isTopEdge ? [outer, inner] : [inner, outer]));
-};
-
+    goog.dom.TagName.TR,
+    null,
+    dom.createDom(
+      goog.dom.TagName.TD,
+      { noWrap: true },
+      isTopEdge ? [outer, inner] : [inner, outer]
+    )
+  )
+}
 
 /** @override */
 goog.ui.RoundedTabRenderer.prototype.getContentElement = function(element) {
-  var baseClass = this.getStructuralCssClass();
-  return element &&
-      goog.dom.getElementsByTagNameAndClass(
-          goog.dom.TagName.DIV, goog.getCssName(baseClass, 'caption'),
-          element)[0];
-};
-
+  var baseClass = this.getStructuralCssClass()
+  return (
+    element &&
+    goog.dom.getElementsByTagNameAndClass(
+      goog.dom.TagName.DIV,
+      goog.getCssName(baseClass, "caption"),
+      element
+    )[0]
+  )
+}
 
 // Register a decorator factory function for goog.ui.Tabs using the rounded
 // tab renderer.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.RoundedTabRenderer.CSS_CLASS, function() {
-      return new goog.ui.Tab(null, goog.ui.RoundedTabRenderer.getInstance());
-    });
+  goog.ui.RoundedTabRenderer.CSS_CLASS,
+  function() {
+    return new goog.ui.Tab(null, goog.ui.RoundedTabRenderer.getInstance())
+  }
+)

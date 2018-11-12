@@ -52,15 +52,13 @@
  *
  */
 
-goog.provide('goog.ui.media.Photo');
+goog.provide("goog.ui.media.Photo")
 
-goog.require('goog.dom.TagName');
-goog.require('goog.ui.media.Media');
-goog.require('goog.ui.media.MediaRenderer');
+goog.require("goog.dom.TagName")
+goog.require("goog.ui.media.Media")
+goog.require("goog.ui.media.MediaRenderer")
 
-goog.forwardDeclare('goog.ui.media.MediaModel');
-
-
+goog.forwardDeclare("goog.ui.media.MediaModel")
 
 /**
  * Subclasses a goog.ui.media.MediaRenderer to provide a Photo specific media
@@ -78,11 +76,10 @@ goog.forwardDeclare('goog.ui.media.MediaModel');
  * @final
  */
 goog.ui.media.Photo = function() {
-  goog.ui.media.MediaRenderer.call(this);
-};
-goog.inherits(goog.ui.media.Photo, goog.ui.media.MediaRenderer);
-goog.addSingletonGetter(goog.ui.media.Photo);
-
+  goog.ui.media.MediaRenderer.call(this)
+}
+goog.inherits(goog.ui.media.Photo, goog.ui.media.MediaRenderer)
+goog.addSingletonGetter(goog.ui.media.Photo)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
@@ -90,8 +87,7 @@ goog.addSingletonGetter(goog.ui.media.Photo);
  *
  * @type {string}
  */
-goog.ui.media.Photo.CSS_CLASS = goog.getCssName('goog-ui-media-photo');
-
+goog.ui.media.Photo.CSS_CLASS = goog.getCssName("goog-ui-media-photo")
 
 /**
  * A static convenient method to construct a goog.ui.media.Media control out of
@@ -106,11 +102,12 @@ goog.ui.media.Photo.CSS_CLASS = goog.getCssName('goog-ui-media-photo');
  *     renderer.
  */
 goog.ui.media.Photo.newControl = function(dataModel) {
-  var control =
-      new goog.ui.media.Media(dataModel, goog.ui.media.Photo.getInstance());
-  return control;
-};
-
+  var control = new goog.ui.media.Media(
+    dataModel,
+    goog.ui.media.Photo.getInstance()
+  )
+  return control
+}
 
 /**
  * Creates the initial DOM structure of a photo.
@@ -120,19 +117,21 @@ goog.ui.media.Photo.newControl = function(dataModel) {
  * @override
  */
 goog.ui.media.Photo.prototype.createDom = function(c) {
-  var control = /** @type {goog.ui.media.Media} */ (c);
-  var div = goog.ui.media.Photo.superClass_.createDom.call(this, control);
+  var control = /** @type {goog.ui.media.Media} */ (c)
+  var div = goog.ui.media.Photo.superClass_.createDom.call(this, control)
 
   var img = control.getDomHelper().createDom(goog.dom.TagName.IMG, {
-    src: control.getDataModel().getPlayer().getUrl(),
-    className: goog.getCssName(this.getCssClass(), 'image')
-  });
+    src: control
+      .getDataModel()
+      .getPlayer()
+      .getUrl(),
+    className: goog.getCssName(this.getCssClass(), "image")
+  })
 
-  div.appendChild(img);
+  div.appendChild(img)
 
-  return div;
-};
-
+  return div
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -141,5 +140,5 @@ goog.ui.media.Photo.prototype.createDom = function(c) {
  * @override
  */
 goog.ui.media.Photo.prototype.getCssClass = function() {
-  return goog.ui.media.Photo.CSS_CLASS;
-};
+  return goog.ui.media.Photo.CSS_CLASS
+}

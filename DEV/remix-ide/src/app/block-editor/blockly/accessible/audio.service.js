@@ -22,75 +22,76 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.AudioService');
+goog.provide("blocklyApp.AudioService")
 
-goog.require('blocklyApp.NotificationsService');
-
+goog.require("blocklyApp.NotificationsService")
 
 blocklyApp.AudioService = ng.core.Class({
   constructor: [
-    blocklyApp.NotificationsService, function(notificationsService) {
-      this.notificationsService = notificationsService;
+    blocklyApp.NotificationsService,
+    function(notificationsService) {
+      this.notificationsService = notificationsService
 
       // We do not play any audio unless a media path prefix is specified.
-      this.canPlayAudio = false;
+      this.canPlayAudio = false
 
-      if (ACCESSIBLE_GLOBALS.hasOwnProperty('mediaPathPrefix')) {
-        this.canPlayAudio = true;
-        var mediaPathPrefix = ACCESSIBLE_GLOBALS['mediaPathPrefix'];
+      if (ACCESSIBLE_GLOBALS.hasOwnProperty("mediaPathPrefix")) {
+        this.canPlayAudio = true
+        var mediaPathPrefix = ACCESSIBLE_GLOBALS["mediaPathPrefix"]
         this.AUDIO_PATHS_ = {
-          'connect': mediaPathPrefix + 'click.mp3',
-          'delete': mediaPathPrefix + 'delete.mp3',
-          'oops': mediaPathPrefix + 'oops.mp3'
-        };
+          connect: mediaPathPrefix + "click.mp3",
+          delete: mediaPathPrefix + "delete.mp3",
+          oops: mediaPathPrefix + "oops.mp3"
+        }
       }
 
-      this.cachedAudioFiles_ = {};
+      this.cachedAudioFiles_ = {}
       // Store callback references here so that they can be removed if a new
       // call to this.play_() comes in.
       this.onEndedCallbacks_ = {
-        'connect': [],
-        'delete': [],
-        'oops': []
-      };
+        connect: [],
+        delete: [],
+        oops: []
+      }
     }
   ],
   play_: function(audioId, onEndedCallback) {
     if (this.canPlayAudio) {
       if (!this.cachedAudioFiles_.hasOwnProperty(audioId)) {
-        this.cachedAudioFiles_[audioId] = new Audio(this.AUDIO_PATHS_[audioId]);
+        this.cachedAudioFiles_[audioId] = new Audio(this.AUDIO_PATHS_[audioId])
       }
 
       if (onEndedCallback) {
-        this.onEndedCallbacks_[audioId].push(onEndedCallback);
+        this.onEndedCallbacks_[audioId].push(onEndedCallback)
         this.cachedAudioFiles_[audioId].addEventListener(
-            'ended', onEndedCallback);
+          "ended",
+          onEndedCallback
+        )
       } else {
-        var that = this;
+        var that = this
         this.onEndedCallbacks_[audioId].forEach(function(callback) {
-          that.cachedAudioFiles_[audioId].removeEventListener(
-              'ended', callback);
-        });
-        this.onEndedCallbacks_[audioId].length = 0;
+          that.cachedAudioFiles_[audioId].removeEventListener("ended", callback)
+        })
+        this.onEndedCallbacks_[audioId].length = 0
       }
 
-      this.cachedAudioFiles_[audioId].play();
+      this.cachedAudioFiles_[audioId].play()
     }
   },
   playConnectSound: function() {
-    this.play_('connect');
+    this.play_("connect")
   },
   playDeleteSound: function() {
-    this.play_('delete');
+    this.play_("delete")
   },
   playOopsSound: function(optionalStatusMessage) {
     if (optionalStatusMessage) {
-      var that = this;
-      this.play_('oops', function() {
-        that.notificationsService.speak(optionalStatusMessage);
-      });
+      var that = this
+      this.play_("oops", function() {
+        that.notificationsService.speak(optionalStatusMessage)
+      })
     } else {
-      this.play_('oops');
+      this.play_("oops")
     }
   }
-});
+})

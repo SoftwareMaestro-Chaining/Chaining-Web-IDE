@@ -18,14 +18,12 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.iter.AncestorIterator');
-goog.provide('goog.dom.iter.ChildIterator');
-goog.provide('goog.dom.iter.SiblingIterator');
+goog.provide("goog.dom.iter.AncestorIterator")
+goog.provide("goog.dom.iter.ChildIterator")
+goog.provide("goog.dom.iter.SiblingIterator")
 
-goog.require('goog.iter.Iterator');
-goog.require('goog.iter.StopIteration');
-
-
+goog.require("goog.iter.Iterator")
+goog.require("goog.iter.StopIteration")
 
 /**
  * Iterator over a Node's siblings.
@@ -43,33 +41,30 @@ goog.dom.iter.SiblingIterator = function(node, opt_includeNode, opt_reverse) {
    * @type {Node}
    * @private
    */
-  this.node_ = node;
+  this.node_ = node
 
   /**
    * Whether to iterate in reverse.
    * @type {boolean}
    * @private
    */
-  this.reverse_ = !!opt_reverse;
+  this.reverse_ = !!opt_reverse
 
   if (node && !opt_includeNode) {
-    this.next();
+    this.next()
   }
-};
-goog.inherits(goog.dom.iter.SiblingIterator, goog.iter.Iterator);
-
+}
+goog.inherits(goog.dom.iter.SiblingIterator, goog.iter.Iterator)
 
 /** @override */
 goog.dom.iter.SiblingIterator.prototype.next = function() {
-  var node = this.node_;
+  var node = this.node_
   if (!node) {
-    throw goog.iter.StopIteration;
+    throw goog.iter.StopIteration
   }
-  this.node_ = this.reverse_ ? node.previousSibling : node.nextSibling;
-  return node;
-};
-
-
+  this.node_ = this.reverse_ ? node.previousSibling : node.nextSibling
+  return node
+}
 
 /**
  * Iterator over an Element's children.
@@ -83,16 +78,19 @@ goog.dom.iter.SiblingIterator.prototype.next = function() {
  */
 goog.dom.iter.ChildIterator = function(element, opt_reverse, opt_startIndex) {
   if (!goog.isDef(opt_startIndex)) {
-    opt_startIndex = opt_reverse && element.childNodes.length ?
-        element.childNodes.length - 1 :
-        0;
+    opt_startIndex =
+      opt_reverse && element.childNodes.length
+        ? element.childNodes.length - 1
+        : 0
   }
   goog.dom.iter.SiblingIterator.call(
-      this, element.childNodes[opt_startIndex], true, opt_reverse);
-};
-goog.inherits(goog.dom.iter.ChildIterator, goog.dom.iter.SiblingIterator);
-
-
+    this,
+    element.childNodes[opt_startIndex],
+    true,
+    opt_reverse
+  )
+}
+goog.inherits(goog.dom.iter.ChildIterator, goog.dom.iter.SiblingIterator)
 
 /**
  * Iterator over a Node's ancestors, stopping after the document body.
@@ -109,21 +107,20 @@ goog.dom.iter.AncestorIterator = function(node, opt_includeNode) {
    * @type {Node}
    * @private
    */
-  this.node_ = node;
+  this.node_ = node
 
   if (node && !opt_includeNode) {
-    this.next();
+    this.next()
   }
-};
-goog.inherits(goog.dom.iter.AncestorIterator, goog.iter.Iterator);
-
+}
+goog.inherits(goog.dom.iter.AncestorIterator, goog.iter.Iterator)
 
 /** @override */
 goog.dom.iter.AncestorIterator.prototype.next = function() {
-  var node = this.node_;
+  var node = this.node_
   if (!node) {
-    throw goog.iter.StopIteration;
+    throw goog.iter.StopIteration
   }
-  this.node_ = node.parentNode;
-  return node;
-};
+  this.node_ = node.parentNode
+  return node
+}

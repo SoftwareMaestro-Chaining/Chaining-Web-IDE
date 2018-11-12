@@ -19,15 +19,13 @@
  * @see ../demos/popup.html
  */
 
-goog.provide('goog.ui.Popup');
+goog.provide("goog.ui.Popup")
 
-goog.require('goog.math.Box');
-goog.require('goog.positioning.AbstractPosition');
-goog.require('goog.positioning.Corner');
-goog.require('goog.style');
-goog.require('goog.ui.PopupBase');
-
-
+goog.require("goog.math.Box")
+goog.require("goog.positioning.AbstractPosition")
+goog.require("goog.positioning.Corner")
+goog.require("goog.style")
+goog.require("goog.ui.PopupBase")
 
 /**
  * The Popup class provides functionality for displaying an absolutely
@@ -52,19 +50,18 @@ goog.ui.Popup = function(opt_element, opt_position) {
    * @type {goog.positioning.Corner}
    * @private
    */
-  this.popupCorner_ = goog.positioning.Corner.TOP_START;
+  this.popupCorner_ = goog.positioning.Corner.TOP_START
 
   /**
    * Positioning helper object.
    *
    * @private {goog.positioning.AbstractPosition|undefined}
    */
-  this.position_ = opt_position || undefined;
-  goog.ui.PopupBase.call(this, opt_element);
-};
-goog.inherits(goog.ui.Popup, goog.ui.PopupBase);
-goog.tagUnsealableClass(goog.ui.Popup);
-
+  this.position_ = opt_position || undefined
+  goog.ui.PopupBase.call(this, opt_element)
+}
+goog.inherits(goog.ui.Popup, goog.ui.PopupBase)
+goog.tagUnsealableClass(goog.ui.Popup)
 
 /**
  * Margin for the popup used in positioning algorithms.
@@ -72,8 +69,7 @@ goog.tagUnsealableClass(goog.ui.Popup);
  * @type {goog.math.Box|undefined}
  * @private
  */
-goog.ui.Popup.prototype.margin_;
-
+goog.ui.Popup.prototype.margin_
 
 /**
  * Returns the corner of the popup to used in the positioning algorithm.
@@ -81,9 +77,8 @@ goog.ui.Popup.prototype.margin_;
  * @return {goog.positioning.Corner} The popup corner used for positioning.
  */
 goog.ui.Popup.prototype.getPinnedCorner = function() {
-  return this.popupCorner_;
-};
-
+  return this.popupCorner_
+}
 
 /**
  * Sets the corner of the popup to used in the positioning algorithm.
@@ -92,21 +87,19 @@ goog.ui.Popup.prototype.getPinnedCorner = function() {
  *     positioning.
  */
 goog.ui.Popup.prototype.setPinnedCorner = function(corner) {
-  this.popupCorner_ = corner;
+  this.popupCorner_ = corner
   if (this.isVisible()) {
-    this.reposition();
+    this.reposition()
   }
-};
-
+}
 
 /**
  * @return {goog.positioning.AbstractPosition} The position helper object
  *     associated with the popup.
  */
 goog.ui.Popup.prototype.getPosition = function() {
-  return this.position_ || null;
-};
-
+  return this.position_ || null
+}
 
 /**
  * Sets the position helper object associated with the popup.
@@ -114,12 +107,11 @@ goog.ui.Popup.prototype.getPosition = function() {
  * @param {goog.positioning.AbstractPosition} position A position helper object.
  */
 goog.ui.Popup.prototype.setPosition = function(position) {
-  this.position_ = position || undefined;
+  this.position_ = position || undefined
   if (this.isVisible()) {
-    this.reposition();
+    this.reposition()
   }
-};
-
+}
 
 /**
  * Returns the margin to place around the popup.
@@ -127,9 +119,8 @@ goog.ui.Popup.prototype.setPosition = function(position) {
  * @return {goog.math.Box?} The margin.
  */
 goog.ui.Popup.prototype.getMargin = function() {
-  return this.margin_ || null;
-};
-
+  return this.margin_ || null
+}
 
 /**
  * Sets the margin to place around the popup.
@@ -140,21 +131,25 @@ goog.ui.Popup.prototype.getMargin = function() {
  * @param {number=} opt_arg4 Left value.
  */
 goog.ui.Popup.prototype.setMargin = function(
-    arg1, opt_arg2, opt_arg3, opt_arg4) {
+  arg1,
+  opt_arg2,
+  opt_arg3,
+  opt_arg4
+) {
   if (arg1 == null || arg1 instanceof goog.math.Box) {
-    this.margin_ = arg1;
+    this.margin_ = arg1
   } else {
     this.margin_ = new goog.math.Box(
-        arg1,
-        /** @type {number} */ (opt_arg2),
-        /** @type {number} */ (opt_arg3),
-        /** @type {number} */ (opt_arg4));
+      arg1,
+      /** @type {number} */ (opt_arg2),
+      /** @type {number} */ (opt_arg3),
+      /** @type {number} */ (opt_arg4)
+    )
   }
   if (this.isVisible()) {
-    this.reposition();
+    this.reposition()
   }
-};
-
+}
 
 /**
  * Repositions the popup according to the current state.
@@ -162,24 +157,24 @@ goog.ui.Popup.prototype.setMargin = function(
  */
 goog.ui.Popup.prototype.reposition = function() {
   if (!this.position_) {
-    return;
+    return
   }
 
-  var hideForPositioning = !this.isVisible() &&
-      this.getType() != goog.ui.PopupBase.Type.MOVE_OFFSCREEN;
-  var el = this.getElement();
+  var hideForPositioning =
+    !this.isVisible() && this.getType() != goog.ui.PopupBase.Type.MOVE_OFFSCREEN
+  var el = this.getElement()
   if (hideForPositioning) {
-    el.style.visibility = 'hidden';
-    goog.style.setElementShown(el, true);
+    el.style.visibility = "hidden"
+    goog.style.setElementShown(el, true)
   }
 
-  this.position_.reposition(el, this.popupCorner_, this.margin_);
+  this.position_.reposition(el, this.popupCorner_, this.margin_)
 
   if (hideForPositioning) {
     // NOTE(eae): The visibility property is reset to 'visible' by the show_
     // method in PopupBase. Resetting it here causes flickering in some
     // situations, even if set to visible after the display property has been
     // set to none by the call below.
-    goog.style.setElementShown(el, false);
+    goog.style.setElementShown(el, false)
   }
-};
+}

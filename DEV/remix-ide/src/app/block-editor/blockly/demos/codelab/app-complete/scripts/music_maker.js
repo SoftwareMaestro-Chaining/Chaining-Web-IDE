@@ -14,20 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- const MusicMaker = {
+const MusicMaker = {
   queue_: [],
   player_: new Audio(),
   queueSound: function(soundUrl) {
-    this.queue_.push(soundUrl);
+    this.queue_.push(soundUrl)
   },
   play: function() {
-    let next = this.queue_.shift();
+    let next = this.queue_.shift()
     if (next) {
-      this.player_.src = next;
-      this.player_.play();
+      this.player_.src = next
+      this.player_.play()
     }
-  },
-};
+  }
+}
 
-MusicMaker.player_.addEventListener(
-    'ended', MusicMaker.play.bind(MusicMaker));
+MusicMaker.player_.addEventListener("ended", MusicMaker.play.bind(MusicMaker))

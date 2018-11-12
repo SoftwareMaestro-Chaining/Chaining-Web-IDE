@@ -91,19 +91,17 @@
  *
  */
 
-goog.provide('goog.ui.media.Media');
-goog.provide('goog.ui.media.MediaRenderer');
+goog.provide("goog.ui.media.Media")
+goog.provide("goog.ui.media.MediaRenderer")
 
-goog.require('goog.asserts');
-goog.require('goog.dom.TagName');
-goog.require('goog.style');
-goog.require('goog.ui.Component');
-goog.require('goog.ui.Control');
-goog.require('goog.ui.ControlRenderer');
+goog.require("goog.asserts")
+goog.require("goog.dom.TagName")
+goog.require("goog.style")
+goog.require("goog.ui.Component")
+goog.require("goog.ui.Control")
+goog.require("goog.ui.ControlRenderer")
 
-goog.forwardDeclare('goog.ui.media.MediaModel');
-
-
+goog.forwardDeclare("goog.ui.media.MediaModel")
 
 /**
  * Provides the control mechanism of media types.
@@ -119,23 +117,22 @@ goog.forwardDeclare('goog.ui.media.MediaModel');
  * @final
  */
 goog.ui.media.Media = function(dataModel, opt_renderer, opt_domHelper) {
-  goog.ui.Control.call(this, null, opt_renderer, opt_domHelper);
+  goog.ui.Control.call(this, null, opt_renderer, opt_domHelper)
 
   // Sets up the data model.
-  this.setDataModel(dataModel);
-  this.setSupportedState(goog.ui.Component.State.OPENED, true);
-  this.setSupportedState(goog.ui.Component.State.SELECTED, true);
+  this.setDataModel(dataModel)
+  this.setSupportedState(goog.ui.Component.State.OPENED, true)
+  this.setSupportedState(goog.ui.Component.State.SELECTED, true)
   // TODO(user): had to do this to for mouseDownHandler not to
   // e.preventDefault(), because it was not allowing the event to reach the
   // flash player. figure out a better way to not e.preventDefault().
-  this.setAllowTextSelection(true);
+  this.setAllowTextSelection(true)
 
   // Media items don't use RTL styles, so avoid accessing computed styles to
   // figure out if the control is RTL.
-  this.setRightToLeft(false);
-};
-goog.inherits(goog.ui.media.Media, goog.ui.Control);
-
+  this.setRightToLeft(false)
+}
+goog.inherits(goog.ui.media.Media, goog.ui.Control)
 
 /**
  * The media data model used on the renderer.
@@ -143,8 +140,7 @@ goog.inherits(goog.ui.media.Media, goog.ui.Control);
  * @type {goog.ui.media.MediaModel}
  * @private
  */
-goog.ui.media.Media.prototype.dataModel_;
-
+goog.ui.media.Media.prototype.dataModel_
 
 /**
  * Sets the media model to be used on the renderer.
@@ -152,19 +148,16 @@ goog.ui.media.Media.prototype.dataModel_;
  *     should use.
  */
 goog.ui.media.Media.prototype.setDataModel = function(dataModel) {
-  this.dataModel_ = dataModel;
-};
-
+  this.dataModel_ = dataModel
+}
 
 /**
  * Gets the media model renderer is using.
  * @return {goog.ui.media.MediaModel} The media model being used.
  */
 goog.ui.media.Media.prototype.getDataModel = function() {
-  return this.dataModel_;
-};
-
-
+  return this.dataModel_
+}
 
 /**
  * Base class of all media renderers. Provides the common renderer functionality
@@ -187,10 +180,9 @@ goog.ui.media.Media.prototype.getDataModel = function() {
  * @extends {goog.ui.ControlRenderer}
  */
 goog.ui.media.MediaRenderer = function() {
-  goog.ui.ControlRenderer.call(this);
-};
-goog.inherits(goog.ui.media.MediaRenderer, goog.ui.ControlRenderer);
-
+  goog.ui.ControlRenderer.call(this)
+}
+goog.inherits(goog.ui.media.MediaRenderer, goog.ui.ControlRenderer)
 
 /**
  * Builds the common DOM structure of medias. Builds an outer div, and appends
@@ -203,72 +195,83 @@ goog.inherits(goog.ui.media.MediaRenderer, goog.ui.ControlRenderer);
  * @override
  */
 goog.ui.media.MediaRenderer.prototype.createDom = function(control) {
-  goog.asserts.assertInstanceof(control, goog.ui.media.Media);
-  var domHelper = control.getDomHelper();
-  var div = domHelper.createElement(goog.dom.TagName.DIV);
-  div.className = this.getClassNames(control).join(' ');
+  goog.asserts.assertInstanceof(control, goog.ui.media.Media)
+  var domHelper = control.getDomHelper()
+  var div = domHelper.createElement(goog.dom.TagName.DIV)
+  div.className = this.getClassNames(control).join(" ")
 
-  var dataModel = control.getDataModel();
+  var dataModel = control.getDataModel()
 
   // Only creates DOMs if the data is available.
-  var dataCaption = dataModel.getCaption();
+  var dataCaption = dataModel.getCaption()
   if (dataCaption) {
-    var caption = domHelper.createElement(goog.dom.TagName.DIV);
-    caption.className = goog.getCssName(this.getCssClass(), 'caption');
+    var caption = domHelper.createElement(goog.dom.TagName.DIV)
+    caption.className = goog.getCssName(this.getCssClass(), "caption")
 
-    caption.appendChild(domHelper.createDom(
-        goog.dom.TagName.P, goog.getCssName(this.getCssClass(), 'caption-text'),
-        dataCaption));
-    domHelper.appendChild(div, caption);
+    caption.appendChild(
+      domHelper.createDom(
+        goog.dom.TagName.P,
+        goog.getCssName(this.getCssClass(), "caption-text"),
+        dataCaption
+      )
+    )
+    domHelper.appendChild(div, caption)
   }
 
-  var dataDescription = dataModel.getDescription();
+  var dataDescription = dataModel.getDescription()
   if (dataDescription) {
-    var description = domHelper.createElement(goog.dom.TagName.DIV);
-    description.className = goog.getCssName(this.getCssClass(), 'description');
-    description.appendChild(domHelper.createDom(
+    var description = domHelper.createElement(goog.dom.TagName.DIV)
+    description.className = goog.getCssName(this.getCssClass(), "description")
+    description.appendChild(
+      domHelper.createDom(
         goog.dom.TagName.P,
-        goog.getCssName(this.getCssClass(), 'description-text'),
-        dataDescription));
-    domHelper.appendChild(div, description);
+        goog.getCssName(this.getCssClass(), "description-text"),
+        dataDescription
+      )
+    )
+    domHelper.appendChild(div, description)
   }
 
   // Creates thumbnails of the media.
-  var thumbnails = dataModel.getThumbnails() || [];
+  var thumbnails = dataModel.getThumbnails() || []
   for (var index = 0; index < thumbnails.length; index++) {
-    var thumbnail = thumbnails[index];
-    var thumbnailElement = domHelper.createElement(goog.dom.TagName.IMG);
-    thumbnailElement.src = thumbnail.getUrl();
-    thumbnailElement.className = this.getThumbnailCssName(index);
+    var thumbnail = thumbnails[index]
+    var thumbnailElement = domHelper.createElement(goog.dom.TagName.IMG)
+    thumbnailElement.src = thumbnail.getUrl()
+    thumbnailElement.className = this.getThumbnailCssName(index)
 
     // Check that the size is defined and that the size's height and width
     // are defined. Undefined height and width is deprecated but still
     // seems to exist in some cases.
-    var size = thumbnail.getSize();
+    var size = thumbnail.getSize()
 
-    if (size && goog.isDefAndNotNull(size.height) &&
-        goog.isDefAndNotNull(size.width)) {
-      goog.style.setSize(thumbnailElement, size);
+    if (
+      size &&
+      goog.isDefAndNotNull(size.height) &&
+      goog.isDefAndNotNull(size.width)
+    ) {
+      goog.style.setSize(thumbnailElement, size)
     }
-    domHelper.appendChild(div, thumbnailElement);
+    domHelper.appendChild(div, thumbnailElement)
   }
 
   if (dataModel.getPlayer()) {
     // if medias have players, allow UI for a play button.
-    var playButton = domHelper.createElement(goog.dom.TagName.DIV);
-    playButton.className = goog.getCssName(this.getCssClass(), 'playbutton');
-    domHelper.appendChild(div, playButton);
+    var playButton = domHelper.createElement(goog.dom.TagName.DIV)
+    playButton.className = goog.getCssName(this.getCssClass(), "playbutton")
+    domHelper.appendChild(div, playButton)
   }
 
-  control.setElementInternal(div);
+  control.setElementInternal(div)
 
   this.setState(
-      control,
-      /** @type {goog.ui.Component.State} */ (control.getState()), true);
+    control,
+    /** @type {goog.ui.Component.State} */ (control.getState()),
+    true
+  )
 
-  return div;
-};
-
+  return div
+}
 
 /**
  * Returns a renamable CSS class name for a numbered thumbnail. The default
@@ -285,16 +288,16 @@ goog.ui.media.MediaRenderer.prototype.createDom = function(control) {
 goog.ui.media.MediaRenderer.prototype.getThumbnailCssName = function(index) {
   switch (index) {
     case 0:
-      return goog.getCssName(this.getCssClass(), 'thumbnail0');
+      return goog.getCssName(this.getCssClass(), "thumbnail0")
     case 1:
-      return goog.getCssName(this.getCssClass(), 'thumbnail1');
+      return goog.getCssName(this.getCssClass(), "thumbnail1")
     case 2:
-      return goog.getCssName(this.getCssClass(), 'thumbnail2');
+      return goog.getCssName(this.getCssClass(), "thumbnail2")
     case 3:
-      return goog.getCssName(this.getCssClass(), 'thumbnail3');
+      return goog.getCssName(this.getCssClass(), "thumbnail3")
     case 4:
-      return goog.getCssName(this.getCssClass(), 'thumbnail4');
+      return goog.getCssName(this.getCssClass(), "thumbnail4")
     default:
-      return goog.getCssName(this.getCssClass(), 'thumbnailn');
+      return goog.getCssName(this.getCssClass(), "thumbnailn")
   }
-};
+}

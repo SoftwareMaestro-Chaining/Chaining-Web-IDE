@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.dom.HtmlElement');
-
-
+goog.provide("goog.dom.HtmlElement")
 
 /**
  * This subclass of HTMLElement is used when only a HTMLElement is possible and
@@ -26,4 +24,4 @@ goog.provide('goog.dom.HtmlElement');
  * @constructor
  * @extends {HTMLElement}
  */
-goog.dom.HtmlElement = function() {};
+goog.dom.HtmlElement = function() {}

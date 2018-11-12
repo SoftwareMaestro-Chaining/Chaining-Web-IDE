@@ -52,16 +52,14 @@
  *
  */
 
-goog.provide('goog.ui.media.Mp3');
+goog.provide("goog.ui.media.Mp3")
 
-goog.require('goog.string');
-goog.require('goog.ui.media.FlashObject');
-goog.require('goog.ui.media.Media');
-goog.require('goog.ui.media.MediaRenderer');
+goog.require("goog.string")
+goog.require("goog.ui.media.FlashObject")
+goog.require("goog.ui.media.Media")
+goog.require("goog.ui.media.MediaRenderer")
 
-goog.forwardDeclare('goog.ui.media.MediaModel');
-
-
+goog.forwardDeclare("goog.ui.media.MediaModel")
 
 /**
  * Subclasses a goog.ui.media.MediaRenderer to provide a Mp3 specific media
@@ -85,11 +83,10 @@ goog.forwardDeclare('goog.ui.media.MediaModel');
  * @final
  */
 goog.ui.media.Mp3 = function() {
-  goog.ui.media.MediaRenderer.call(this);
-};
-goog.inherits(goog.ui.media.Mp3, goog.ui.media.MediaRenderer);
-goog.addSingletonGetter(goog.ui.media.Mp3);
-
+  goog.ui.media.MediaRenderer.call(this)
+}
+goog.inherits(goog.ui.media.Mp3, goog.ui.media.MediaRenderer)
+goog.addSingletonGetter(goog.ui.media.Mp3)
 
 /**
  * Flash player arguments. We expect that `flashUrl_` will contain a flash
@@ -99,8 +96,7 @@ goog.addSingletonGetter(goog.ui.media.Mp3);
  * @type {string}
  * @private
  */
-goog.ui.media.Mp3.PLAYER_ARGUMENTS_ = 'audioUrl=%s';
-
+goog.ui.media.Mp3.PLAYER_ARGUMENTS_ = "audioUrl=%s"
 
 /**
  * Default CSS class to be applied to the root element of components rendered
@@ -108,8 +104,7 @@ goog.ui.media.Mp3.PLAYER_ARGUMENTS_ = 'audioUrl=%s';
  *
  * @type {string}
  */
-goog.ui.media.Mp3.CSS_CLASS = goog.getCssName('goog-ui-media-mp3');
-
+goog.ui.media.Mp3.CSS_CLASS = goog.getCssName("goog-ui-media-mp3")
 
 /**
  * Flash player URL. Uses Google Reader's mp3 flash player by default.
@@ -118,8 +113,7 @@ goog.ui.media.Mp3.CSS_CLASS = goog.getCssName('goog-ui-media-mp3');
  * @private
  */
 goog.ui.media.Mp3.flashUrl_ =
-    'http://www.google.com/reader/ui/3523697345-audio-player.swf';
-
+  "http://www.google.com/reader/ui/3523697345-audio-player.swf"
 
 /**
  * Regular expression to check if a given URL is a valid mp3 URL.
@@ -134,9 +128,7 @@ goog.ui.media.Mp3.flashUrl_ =
  *
  * @type {RegExp}
  */
-goog.ui.media.Mp3.MATCHER =
-    /(https?:\/\/[\w-%&\/.=:#\+~\(\)]+\.(mp3)+(\?[\w-%&\/.=:#\+~\(\)]+)?)/i;
-
+goog.ui.media.Mp3.MATCHER = /(https?:\/\/[\w-%&\/.=:#\+~\(\)]+\.(mp3)+(\?[\w-%&\/.=:#\+~\(\)]+)?)/i
 
 /**
  * A static convenient method to construct a goog.ui.media.Media control out of
@@ -155,13 +147,15 @@ goog.ui.media.Mp3.MATCHER =
  */
 goog.ui.media.Mp3.newControl = function(dataModel, opt_domHelper) {
   var control = new goog.ui.media.Media(
-      dataModel, goog.ui.media.Mp3.getInstance(), opt_domHelper);
+    dataModel,
+    goog.ui.media.Mp3.getInstance(),
+    opt_domHelper
+  )
   // mp3 ui doesn't have a non selected view: it shows the mp3 player by
   // default.
-  control.setSelected(true);
-  return control;
-};
-
+  control.setSelected(true)
+  return control
+}
 
 /**
  * A static method that sets which flash URL this class should use. Use this if
@@ -170,9 +164,8 @@ goog.ui.media.Mp3.newControl = function(dataModel, opt_domHelper) {
  * @param {string} flashUrl The URL of the flash mp3 player.
  */
 goog.ui.media.Mp3.setFlashUrl = function(flashUrl) {
-  goog.ui.media.Mp3.flashUrl_ = flashUrl;
-};
-
+  goog.ui.media.Mp3.flashUrl_ = flashUrl
+}
 
 /**
  * A static method that builds a URL that will contain the flash player that
@@ -183,12 +176,15 @@ goog.ui.media.Mp3.setFlashUrl = function(flashUrl) {
  *     given `mp3Url`.
  */
 goog.ui.media.Mp3.buildFlashUrl = function(mp3Url) {
-  var flashUrl = goog.ui.media.Mp3.flashUrl_ + '?' +
-      goog.string.subs(
-          goog.ui.media.Mp3.PLAYER_ARGUMENTS_, goog.string.urlEncode(mp3Url));
-  return flashUrl;
-};
-
+  var flashUrl =
+    goog.ui.media.Mp3.flashUrl_ +
+    "?" +
+    goog.string.subs(
+      goog.ui.media.Mp3.PLAYER_ARGUMENTS_,
+      goog.string.urlEncode(mp3Url)
+    )
+  return flashUrl
+}
 
 /**
  * Creates the initial DOM structure of a mp3 video, which is basically a
@@ -199,19 +195,19 @@ goog.ui.media.Mp3.buildFlashUrl = function(mp3Url) {
  * @override
  */
 goog.ui.media.Mp3.prototype.createDom = function(c) {
-  var control = /** @type {goog.ui.media.Media} */ (c);
-  var div = goog.ui.media.Mp3.superClass_.createDom.call(this, control);
+  var control = /** @type {goog.ui.media.Media} */ (c)
+  var div = goog.ui.media.Mp3.superClass_.createDom.call(this, control)
 
-  var dataModel =
-      /** @type {goog.ui.media.MediaModel} */ (control.getDataModel());
+  var dataModel = /** @type {goog.ui.media.MediaModel} */ (control.getDataModel())
   var flash = new goog.ui.media.FlashObject(
-      dataModel.getPlayer().getTrustedResourceUrl(), control.getDomHelper());
-  flash.setFlashVar('playerMode', 'embedded');
-  flash.render(div);
+    dataModel.getPlayer().getTrustedResourceUrl(),
+    control.getDomHelper()
+  )
+  flash.setFlashVar("playerMode", "embedded")
+  flash.render(div)
 
-  return div;
-};
-
+  return div
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -220,5 +216,5 @@ goog.ui.media.Mp3.prototype.createDom = function(c) {
  * @override
  */
 goog.ui.media.Mp3.prototype.getCssClass = function() {
-  return goog.ui.media.Mp3.CSS_CLASS;
-};
+  return goog.ui.media.Mp3.CSS_CLASS
+}

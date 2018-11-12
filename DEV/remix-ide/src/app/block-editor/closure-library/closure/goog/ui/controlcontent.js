@@ -17,12 +17,11 @@
  *
  * @author nicksantos@google.com (Nick Santos)
  */
-goog.provide('goog.ui.ControlContent');
-
+goog.provide("goog.ui.ControlContent")
 
 /**
  * Type declaration for text caption or DOM structure to be used as the content
  * of {@link goog.ui.Control}s.
  * @typedef {string|Node|Array<!Node>|NodeList<!Node>}
  */
-goog.ui.ControlContent;
+goog.ui.ControlContent

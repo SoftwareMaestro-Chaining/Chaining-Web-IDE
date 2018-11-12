@@ -18,12 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.decorate');
+goog.provide("goog.ui.decorate")
 
-goog.require('goog.ui.registry');
+goog.require("goog.ui.registry")
 
-goog.forwardDeclare('goog.ui.Component');
-
+goog.forwardDeclare("goog.ui.Component")
 
 /**
  * Decorates the element with a suitable {@link goog.ui.Component} instance, if
@@ -32,9 +31,9 @@ goog.forwardDeclare('goog.ui.Component');
  * @return {goog.ui.Component?} New component instance, decorating the element.
  */
 goog.ui.decorate = function(element) {
-  var decorator = goog.ui.registry.getDecorator(element);
+  var decorator = goog.ui.registry.getDecorator(element)
   if (decorator) {
-    decorator.decorate(element);
+    decorator.decorate(element)
   }
-  return decorator;
-};
+  return decorator
+}

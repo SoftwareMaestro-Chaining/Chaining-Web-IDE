@@ -30,11 +30,9 @@
  *
  */
 
-goog.provide('goog.crypt.Arc4');
+goog.provide("goog.crypt.Arc4")
 
-goog.require('goog.asserts');
-
-
+goog.require("goog.asserts")
 
 /**
  * ARC4 streamcipher implementation.
@@ -48,23 +46,22 @@ goog.crypt.Arc4 = function() {
    * @type {Array<number>}
    * @private
    */
-  this.state_ = [];
+  this.state_ = []
 
   /**
    * 8 bit index pointer into this.state_.
    * @type {number}
    * @private
    */
-  this.index1_ = 0;
+  this.index1_ = 0
 
   /**
    * 8 bit index pointer into this.state_.
    * @type {number}
    * @private
    */
-  this.index2_ = 0;
-};
-
+  this.index2_ = 0
+}
 
 /**
  * Initialize the cipher for use with new key.
@@ -72,31 +69,30 @@ goog.crypt.Arc4 = function() {
  * @param {number=} opt_length Indicates # of bytes to take from the key.
  */
 goog.crypt.Arc4.prototype.setKey = function(key, opt_length) {
-  goog.asserts.assertArray(key, 'Key parameter must be a byte array');
+  goog.asserts.assertArray(key, "Key parameter must be a byte array")
 
   if (!opt_length) {
-    opt_length = key.length;
+    opt_length = key.length
   }
 
-  var state = this.state_;
+  var state = this.state_
 
   for (var i = 0; i < 256; ++i) {
-    state[i] = i;
+    state[i] = i
   }
 
-  var j = 0;
+  var j = 0
   for (var i = 0; i < 256; ++i) {
-    j = (j + state[i] + key[i % opt_length]) & 255;
+    j = (j + state[i] + key[i % opt_length]) & 255
 
-    var tmp = state[i];
-    state[i] = state[j];
-    state[j] = tmp;
+    var tmp = state[i]
+    state[i] = state[j]
+    state[j] = tmp
   }
 
-  this.index1_ = 0;
-  this.index2_ = 0;
-};
-
+  this.index1_ = 0
+  this.index2_ = 0
+}
 
 /**
  * Discards n bytes of the keystream.
@@ -117,23 +113,22 @@ goog.crypt.Arc4.prototype.setKey = function(key, opt_length) {
  * @param {number} length Number of bytes to disregard from the stream.
  */
 goog.crypt.Arc4.prototype.discard = function(length) {
-  var i = this.index1_;
-  var j = this.index2_;
-  var state = this.state_;
+  var i = this.index1_
+  var j = this.index2_
+  var state = this.state_
 
   for (var n = 0; n < length; ++n) {
-    i = (i + 1) & 255;
-    j = (j + state[i]) & 255;
+    i = (i + 1) & 255
+    j = (j + state[i]) & 255
 
-    var tmp = state[i];
-    state[i] = state[j];
-    state[j] = tmp;
+    var tmp = state[i]
+    state[i] = state[j]
+    state[j] = tmp
   }
 
-  this.index1_ = i;
-  this.index2_ = j;
-};
-
+  this.index1_ = i
+  this.index2_ = j
+}
 
 /**
  * En- or decrypt (same operation for streamciphers like ARC4)
@@ -142,23 +137,23 @@ goog.crypt.Arc4.prototype.discard = function(length) {
  */
 goog.crypt.Arc4.prototype.crypt = function(data, opt_length) {
   if (!opt_length) {
-    opt_length = data.length;
+    opt_length = data.length
   }
-  var i = this.index1_;
-  var j = this.index2_;
-  var state = this.state_;
+  var i = this.index1_
+  var j = this.index2_
+  var state = this.state_
 
   for (var n = 0; n < opt_length; ++n) {
-    i = (i + 1) & 255;
-    j = (j + state[i]) & 255;
+    i = (i + 1) & 255
+    j = (j + state[i]) & 255
 
-    var tmp = state[i];
-    state[i] = state[j];
-    state[j] = tmp;
+    var tmp = state[i]
+    state[i] = state[j]
+    state[j] = tmp
 
-    data[n] ^= state[(state[i] + state[j]) & 255];
+    data[n] ^= state[(state[i] + state[j]) & 255]
   }
 
-  this.index1_ = i;
-  this.index2_ = j;
-};
+  this.index1_ = i
+  this.index2_ = j
+}

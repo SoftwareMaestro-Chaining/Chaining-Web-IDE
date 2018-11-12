@@ -17,10 +17,7 @@
  *
  */
 
-
-goog.provide('goog.db.KeyRange');
-
-
+goog.provide("goog.db.KeyRange")
 
 /**
  * Creates a new IDBKeyRange wrapper object. Should not be created directly,
@@ -39,9 +36,8 @@ goog.db.KeyRange = function(range) {
    * @type {!IDBKeyRange}
    * @private
    */
-  this.range_ = range;
-};
-
+  this.range_ = range
+}
 
 /**
  * The IDBKeyRange.
@@ -49,8 +45,7 @@ goog.db.KeyRange = function(range) {
  * @private
  */
 goog.db.KeyRange.IDB_KEY_RANGE_ =
-    goog.global.IDBKeyRange || goog.global.webkitIDBKeyRange;
-
+  goog.global.IDBKeyRange || goog.global.webkitIDBKeyRange
 
 /**
  * Creates a new key range for a single value.
@@ -59,9 +54,8 @@ goog.db.KeyRange.IDB_KEY_RANGE_ =
  * @return {!goog.db.KeyRange} The key range.
  */
 goog.db.KeyRange.only = function(key) {
-  return new goog.db.KeyRange(goog.db.KeyRange.IDB_KEY_RANGE_.only(key));
-};
-
+  return new goog.db.KeyRange(goog.db.KeyRange.IDB_KEY_RANGE_.only(key))
+}
 
 /**
  * Creates a key range with upper and lower bounds.
@@ -76,10 +70,14 @@ goog.db.KeyRange.only = function(key) {
  */
 goog.db.KeyRange.bound = function(lower, upper, opt_lowerOpen, opt_upperOpen) {
   return new goog.db.KeyRange(
-      goog.db.KeyRange.IDB_KEY_RANGE_.bound(
-          lower, upper, opt_lowerOpen, opt_upperOpen));
-};
-
+    goog.db.KeyRange.IDB_KEY_RANGE_.bound(
+      lower,
+      upper,
+      opt_lowerOpen,
+      opt_upperOpen
+    )
+  )
+}
 
 /**
  * Creates a key range with a lower bound only, finishes at the last record.
@@ -91,9 +89,9 @@ goog.db.KeyRange.bound = function(lower, upper, opt_lowerOpen, opt_upperOpen) {
  */
 goog.db.KeyRange.lowerBound = function(lower, opt_lowerOpen) {
   return new goog.db.KeyRange(
-      goog.db.KeyRange.IDB_KEY_RANGE_.lowerBound(lower, opt_lowerOpen));
-};
-
+    goog.db.KeyRange.IDB_KEY_RANGE_.lowerBound(lower, opt_lowerOpen)
+  )
+}
 
 /**
  * Creates a key range with a upper bound only, starts at the first record.
@@ -105,9 +103,9 @@ goog.db.KeyRange.lowerBound = function(lower, opt_lowerOpen) {
  */
 goog.db.KeyRange.upperBound = function(upper, opt_upperOpen) {
   return new goog.db.KeyRange(
-      goog.db.KeyRange.IDB_KEY_RANGE_.upperBound(upper, opt_upperOpen));
-};
-
+    goog.db.KeyRange.IDB_KEY_RANGE_.upperBound(upper, opt_upperOpen)
+  )
+}
 
 /**
  * Returns underlying key range object. This is used in ObjectStore's openCursor
@@ -115,5 +113,5 @@ goog.db.KeyRange.upperBound = function(upper, opt_upperOpen) {
  * @return {!IDBKeyRange}
  */
 goog.db.KeyRange.prototype.range = function() {
-  return this.range_;
-};
+  return this.range_
+}

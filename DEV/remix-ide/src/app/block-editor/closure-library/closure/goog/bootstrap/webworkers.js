@@ -22,7 +22,6 @@
  * @nocompile
  */
 
-
 /**
  * Imports a script using the Web Worker importScript API.
  *
@@ -34,8 +33,8 @@ this.CLOSURE_IMPORT_SCRIPT = (function(global) {
     if (opt_sourceText) {
       eval(opt_sourceText)
     } else {
-      global['importScripts'](src);
+      global["importScripts"](src)
     }
-    return true;
-  };
-})(this);
+    return true
+  }
+})(this)

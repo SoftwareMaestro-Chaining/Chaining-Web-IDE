@@ -20,12 +20,10 @@
  *
  */
 
-goog.provide('goog.ui.ac.RichRemoteArrayMatcher');
+goog.provide("goog.ui.ac.RichRemoteArrayMatcher")
 
-goog.require('goog.dom');
-goog.require('goog.ui.ac.RemoteArrayMatcher');
-
-
+goog.require("goog.dom")
+goog.require("goog.ui.ac.RemoteArrayMatcher")
 
 /**
  * An array matcher that requests rich matches via ajax and converts them into
@@ -41,7 +39,7 @@ goog.require('goog.ui.ac.RemoteArrayMatcher');
  * @extends {goog.ui.ac.RemoteArrayMatcher}
  */
 goog.ui.ac.RichRemoteArrayMatcher = function(url, opt_noSimilar) {
-  goog.ui.ac.RemoteArrayMatcher.call(this, url, opt_noSimilar);
+  goog.ui.ac.RemoteArrayMatcher.call(this, url, opt_noSimilar)
 
   /**
    * A function(rows) that is called before the array matches are returned.
@@ -50,7 +48,7 @@ goog.ui.ac.RichRemoteArrayMatcher = function(url, opt_noSimilar) {
    * @type {Function}
    * @private
    */
-  this.rowFilter_ = null;
+  this.rowFilter_ = null
 
   /**
    * A function(type, response) converting the type and the server response to
@@ -58,11 +56,10 @@ goog.ui.ac.RichRemoteArrayMatcher = function(url, opt_noSimilar) {
    * @private {goog.ui.ac.RichRemoteArrayMatcher.RowBuilder}
    */
   this.rowBuilder_ = function(type, response) {
-    return /** @type {!Object} */ (response);
-  };
-};
-goog.inherits(goog.ui.ac.RichRemoteArrayMatcher, goog.ui.ac.RemoteArrayMatcher);
-
+    return /** @type {!Object} */ (response)
+  }
+}
+goog.inherits(goog.ui.ac.RichRemoteArrayMatcher, goog.ui.ac.RemoteArrayMatcher)
 
 /**
  * Set the filter that is called before the array matches are returned.
@@ -70,9 +67,8 @@ goog.inherits(goog.ui.ac.RichRemoteArrayMatcher, goog.ui.ac.RemoteArrayMatcher);
  *     a subset of the rows input array.
  */
 goog.ui.ac.RichRemoteArrayMatcher.prototype.setRowFilter = function(rowFilter) {
-  this.rowFilter_ = rowFilter;
-};
-
+  this.rowFilter_ = rowFilter
+}
 
 /**
  * @typedef {function(string, *): {
@@ -80,8 +76,7 @@ goog.ui.ac.RichRemoteArrayMatcher.prototype.setRowFilter = function(rowFilter) {
  *   select: (function(!Element)|undefined)
  * }}
  */
-goog.ui.ac.RichRemoteArrayMatcher.RowBuilder;
-
+goog.ui.ac.RichRemoteArrayMatcher.RowBuilder
 
 /**
  * Sets the function building the rows.
@@ -90,10 +85,10 @@ goog.ui.ac.RichRemoteArrayMatcher.RowBuilder;
  *     an object with two methods: render(node, token) and select(target).
  */
 goog.ui.ac.RichRemoteArrayMatcher.prototype.setRowBuilder = function(
-    rowBuilder) {
-  this.rowBuilder_ = rowBuilder;
-};
-
+  rowBuilder
+) {
+  this.rowBuilder_ = rowBuilder
+}
 
 /**
  * Retrieve a set of matching rows from the server via ajax and convert them
@@ -108,46 +103,52 @@ goog.ui.ac.RichRemoteArrayMatcher.prototype.setRowBuilder = function(
  * @override
  */
 goog.ui.ac.RichRemoteArrayMatcher.prototype.requestMatchingRows = function(
-    token, maxMatches, matchHandler) {
+  token,
+  maxMatches,
+  matchHandler
+) {
   // The RichRemoteArrayMatcher must map over the results and filter them
   // before calling the request matchHandler.  This is done by passing
   // myMatchHandler to RemoteArrayMatcher.requestMatchingRows which maps,
   // filters, and then calls matchHandler.
   var myMatchHandler = goog.bind(function(token, matches) {
-
     try {
-      var rows = [];
+      var rows = []
       for (var i = 0; i < matches.length; i++) {
         for (var j = 1; j < matches[i].length; j++) {
-          var richRow = this.rowBuilder_(matches[i][0], matches[i][j]);
-          rows.push(richRow);
+          var richRow = this.rowBuilder_(matches[i][0], matches[i][j])
+          rows.push(richRow)
 
           // If no render function was provided, set the node's textContent.
-          if (typeof richRow.render == 'undefined') {
+          if (typeof richRow.render == "undefined") {
             richRow.render = function(node, token) {
-              goog.dom.setTextContent(node, richRow.toString());
-            };
+              goog.dom.setTextContent(node, richRow.toString())
+            }
           }
 
           // If no select function was provided, set the text of the input.
-          if (typeof richRow.select == 'undefined') {
+          if (typeof richRow.select == "undefined") {
             richRow.select = function(target) {
-              target.value = richRow.toString();
-            };
+              target.value = richRow.toString()
+            }
           }
         }
       }
       if (this.rowFilter_) {
-        rows = this.rowFilter_(rows);
+        rows = this.rowFilter_(rows)
       }
-      matchHandler(token, rows);
+      matchHandler(token, rows)
     } catch (exception) {
       // TODO(user): Is this what we want?
-      matchHandler(token, []);
+      matchHandler(token, [])
     }
-  }, this);
+  }, this)
 
   // Call the super's requestMatchingRows with myMatchHandler
   goog.ui.ac.RichRemoteArrayMatcher.superClass_.requestMatchingRows.call(
-      this, token, maxMatches, myMatchHandler);
-};
+    this,
+    token,
+    maxMatches,
+    myMatchHandler
+  )
+}

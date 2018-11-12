@@ -28,24 +28,23 @@
  * @author Emma Dauterman (evd2014)
  */
 
-
 /**
  * Class for a WorkspaceFactoryGenerator
  * @constructor
  */
 WorkspaceFactoryGenerator = function(model) {
   // Model to share information about categories and shadow blocks.
-  this.model = model;
+  this.model = model
   // Create hidden workspace to load saved XML to generate toolbox XML.
-  var hiddenBlocks = document.createElement('div');
+  var hiddenBlocks = document.createElement("div")
   // Generate a globally unique ID for the hidden div element to avoid
   // collisions.
-  var hiddenBlocksId = Blockly.utils.genUid();
-  hiddenBlocks.id = hiddenBlocksId;
-  hiddenBlocks.style.display = 'none';
-  document.body.appendChild(hiddenBlocks);
-  this.hiddenWorkspace = Blockly.inject(hiddenBlocksId);
-};
+  var hiddenBlocksId = Blockly.utils.genUid()
+  hiddenBlocks.id = hiddenBlocksId
+  hiddenBlocks.style.display = "none"
+  document.body.appendChild(hiddenBlocks)
+  this.hiddenWorkspace = Blockly.inject(hiddenBlocksId)
+}
 
 /**
  * Generates the XML for the toolbox or flyout with information from
@@ -59,77 +58,76 @@ WorkspaceFactoryGenerator = function(model) {
  */
 WorkspaceFactoryGenerator.prototype.generateToolboxXml = function() {
   // Create DOM for XML.
-  var xmlDom = document.createElement('xml');
-  xmlDom.id = 'toolbox';
-  xmlDom.style.display = 'none';
+  var xmlDom = document.createElement("xml")
+  xmlDom.id = "toolbox"
+  xmlDom.style.display = "none"
 
   if (!this.model.hasElements()) {
     // Toolbox has no categories. Use XML directly from workspace.
-    this.loadToHiddenWorkspace_(this.model.getSelectedXml());
-    this.appendHiddenWorkspaceToDom_(xmlDom);
+    this.loadToHiddenWorkspace_(this.model.getSelectedXml())
+    this.appendHiddenWorkspaceToDom_(xmlDom)
   } else {
     // Toolbox has categories.
     // Assert that selected != null
     if (!this.model.getSelected()) {
-      throw new Error('Selected is null when the toolbox is empty.');
+      throw new Error("Selected is null when the toolbox is empty.")
     }
 
-    var xml = this.model.getSelectedXml();
-    var toolboxList = this.model.getToolboxList();
+    var xml = this.model.getSelectedXml()
+    var toolboxList = this.model.getToolboxList()
 
     // Iterate through each category to generate XML for each using the
     // hidden workspace. Load each category to the hidden workspace to make sure
     // that all the blocks that are not top blocks are also captured as block
     // groups in the flyout.
     for (var i = 0; i < toolboxList.length; i++) {
-      var element = toolboxList[i];
+      var element = toolboxList[i]
       if (element.type == ListElement.TYPE_SEPARATOR) {
         // If the next element is a separator.
-        var nextElement = document.createElement('sep');
+        var nextElement = document.createElement("sep")
       } else if (element.type == ListElement.TYPE_CATEGORY) {
         // If the next element is a category.
-        var nextElement = document.createElement('category');
-        nextElement.setAttribute('name', element.name);
+        var nextElement = document.createElement("category")
+        nextElement.setAttribute("name", element.name)
         // Add a colour attribute if one exists.
         if (element.color != null) {
-          nextElement.setAttribute('colour', element.color);
+          nextElement.setAttribute("colour", element.color)
         }
         // Add a custom attribute if one exists.
         if (element.custom != null) {
-          nextElement.setAttribute('custom', element.custom);
+          nextElement.setAttribute("custom", element.custom)
         }
         // Load that category to hidden workspace, setting user-generated shadow
         // blocks as real shadow blocks.
-        this.loadToHiddenWorkspace_(element.xml);
-        this.appendHiddenWorkspaceToDom_(nextElement);
+        this.loadToHiddenWorkspace_(element.xml)
+        this.appendHiddenWorkspaceToDom_(nextElement)
       }
-      xmlDom.appendChild(nextElement);
+      xmlDom.appendChild(nextElement)
     }
   }
-  return xmlDom;
- };
+  return xmlDom
+}
 
-
- /**
-  * Generates XML for the workspace (different from generateConfigXml in that
-  * it includes XY and ID attributes). Uses a workspace and converts user
-  * generated shadow blocks to actual shadow blocks.
-  * @return {!Element} XML element representing toolbox or flyout corresponding
-  * to toolbox workspace.
-  */
+/**
+ * Generates XML for the workspace (different from generateConfigXml in that
+ * it includes XY and ID attributes). Uses a workspace and converts user
+ * generated shadow blocks to actual shadow blocks.
+ * @return {!Element} XML element representing toolbox or flyout corresponding
+ * to toolbox workspace.
+ */
 WorkspaceFactoryGenerator.prototype.generateWorkspaceXml = function() {
   // Load workspace XML to hidden workspace with user-generated shadow blocks
   // as actual shadow blocks.
-  this.hiddenWorkspace.clear();
-  Blockly.Xml.domToWorkspace(this.model.getPreloadXml(), this.hiddenWorkspace);
-  this.setShadowBlocksInHiddenWorkspace_();
+  this.hiddenWorkspace.clear()
+  Blockly.Xml.domToWorkspace(this.model.getPreloadXml(), this.hiddenWorkspace)
+  this.setShadowBlocksInHiddenWorkspace_()
 
   // Generate XML and set attributes.
-  var generatedXml = Blockly.Xml.workspaceToDom(this.hiddenWorkspace);
-  generatedXml.setAttribute('id', 'workspaceBlocks');
-  generatedXml.setAttribute('style', 'display:none');
-  return generatedXml;
-};
+  var generatedXml = Blockly.Xml.workspaceToDom(this.hiddenWorkspace)
+  generatedXml.setAttribute("id", "workspaceBlocks")
+  generatedXml.setAttribute("style", "display:none")
+  return generatedXml
+}
 
 /**
  * Generates a string representation of the options object for injecting the
@@ -139,45 +137,52 @@ WorkspaceFactoryGenerator.prototype.generateWorkspaceXml = function() {
 WorkspaceFactoryGenerator.prototype.generateInjectString = function() {
   var addAttributes = function(obj, tabChar) {
     if (!obj) {
-      return '{}\n';
+      return "{}\n"
     }
-    var str = '';
+    var str = ""
     for (var key in obj) {
-      if (key == 'grid' || key == 'zoom') {
-        var temp = tabChar + key + ' : {\n' + addAttributes(obj[key],
-            tabChar + '\t') + tabChar + '}, \n';
-      } else if (typeof obj[key] == 'string') {
-        var temp = tabChar + key + ' : \'' + obj[key] + '\', \n';
+      if (key == "grid" || key == "zoom") {
+        var temp =
+          tabChar +
+          key +
+          " : {\n" +
+          addAttributes(obj[key], tabChar + "\t") +
+          tabChar +
+          "}, \n"
+      } else if (typeof obj[key] == "string") {
+        var temp = tabChar + key + " : '" + obj[key] + "', \n"
       } else {
-        var temp = tabChar + key + ' : ' + obj[key] + ', \n';
+        var temp = tabChar + key + " : " + obj[key] + ", \n"
       }
-      str += temp;
+      str += temp
     }
-    var lastCommaIndex = str.lastIndexOf(',');
-    str = str.slice(0, lastCommaIndex) + '\n';
-    return str;
-  };
-
-  var attributes = addAttributes(this.model.options, '\t');
-  if (!this.model.options['readOnly']) {
-    attributes = '\ttoolbox : toolbox, \n' +
-      attributes;
+    var lastCommaIndex = str.lastIndexOf(",")
+    str = str.slice(0, lastCommaIndex) + "\n"
+    return str
   }
-  var finalStr = '/* TODO: Change toolbox XML ID if necessary. Can export ' +
-      'toolbox XML from Workspace Factory. */\n' +
-      'var toolbox = document.getElementById("toolbox");\n\n';
-  finalStr += 'var options = { \n' + attributes + '};';
-  finalStr += '\n\n/* Inject your workspace */ \nvar workspace = Blockly.' +
-      'inject(/* TODO: Add ID of div to inject Blockly into */, options);';
-  finalStr += '\n\n/* Load Workspace Blocks from XML to workspace. ' +
-      'Remove all code below if no blocks to load */\n\n' +
-      '/* TODO: Change workspace blocks XML ID if necessary. Can export' +
-      ' workspace blocks XML from Workspace Factory. */\n' +
-      'var workspaceBlocks = document.getElementById("workspaceBlocks"); \n\n' +
-      '/* Load blocks to workspace. */\n' +
-      'Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);';
-  return finalStr;
-};
+
+  var attributes = addAttributes(this.model.options, "\t")
+  if (!this.model.options["readOnly"]) {
+    attributes = "\ttoolbox : toolbox, \n" + attributes
+  }
+  var finalStr =
+    "/* TODO: Change toolbox XML ID if necessary. Can export " +
+    "toolbox XML from Workspace Factory. */\n" +
+    'var toolbox = document.getElementById("toolbox");\n\n'
+  finalStr += "var options = { \n" + attributes + "};"
+  finalStr +=
+    "\n\n/* Inject your workspace */ \nvar workspace = Blockly." +
+    "inject(/* TODO: Add ID of div to inject Blockly into */, options);"
+  finalStr +=
+    "\n\n/* Load Workspace Blocks from XML to workspace. " +
+    "Remove all code below if no blocks to load */\n\n" +
+    "/* TODO: Change workspace blocks XML ID if necessary. Can export" +
+    " workspace blocks XML from Workspace Factory. */\n" +
+    'var workspaceBlocks = document.getElementById("workspaceBlocks"); \n\n' +
+    "/* Load blocks to workspace. */\n" +
+    "Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);"
+  return finalStr
+}
 
 /**
  * Loads the given XML to the hidden workspace and sets any user-generated
@@ -186,10 +191,10 @@ WorkspaceFactoryGenerator.prototype.generateInjectString = function() {
  * @private
  */
 WorkspaceFactoryGenerator.prototype.loadToHiddenWorkspace_ = function(xml) {
-  this.hiddenWorkspace.clear();
-  Blockly.Xml.domToWorkspace(xml, this.hiddenWorkspace);
-  this.setShadowBlocksInHiddenWorkspace_();
-};
+  this.hiddenWorkspace.clear()
+  Blockly.Xml.domToWorkspace(xml, this.hiddenWorkspace)
+  this.setShadowBlocksInHiddenWorkspace_()
+}
 
 /**
  * Encodes blocks in the hidden workspace in a XML DOM element. Very
@@ -198,14 +203,15 @@ WorkspaceFactoryGenerator.prototype.loadToHiddenWorkspace_ = function(xml) {
  * @private
  * @param {!Element} xmlDom Tree of XML elements to be appended to.
  */
-WorkspaceFactoryGenerator.prototype.appendHiddenWorkspaceToDom_ =
-    function(xmlDom) {
-  var blocks = this.hiddenWorkspace.getTopBlocks();
-  for (var i = 0, block; block = blocks[i]; i++) {
-    var blockChild = Blockly.Xml.blockToDom(block, /* opt_noId */ true);
-    xmlDom.appendChild(blockChild);
+WorkspaceFactoryGenerator.prototype.appendHiddenWorkspaceToDom_ = function(
+  xmlDom
+) {
+  var blocks = this.hiddenWorkspace.getTopBlocks()
+  for (var i = 0, block; (block = blocks[i]); i++) {
+    var blockChild = Blockly.Xml.blockToDom(block, /* opt_noId */ true)
+    xmlDom.appendChild(blockChild)
   }
-};
+}
 
 /**
  * Sets the user-generated shadow blocks loaded into hiddenWorkspace to be
@@ -213,15 +219,14 @@ WorkspaceFactoryGenerator.prototype.appendHiddenWorkspaceToDom_ =
  * shadow blocks instead of regular blocks.
  * @private
  */
-WorkspaceFactoryGenerator.prototype.setShadowBlocksInHiddenWorkspace_ =
-    function() {
-  var blocks = this.hiddenWorkspace.getAllBlocks();
+WorkspaceFactoryGenerator.prototype.setShadowBlocksInHiddenWorkspace_ = function() {
+  var blocks = this.hiddenWorkspace.getAllBlocks()
   for (var i = 0; i < blocks.length; i++) {
     if (this.model.isShadowBlock(blocks[i].id)) {
-      blocks[i].setShadow(true);
+      blocks[i].setShadow(true)
     }
   }
-};
+}
 
 /**
  * Given a set of block types, gets the Blockly.Block objects for each block
@@ -231,10 +236,11 @@ WorkspaceFactoryGenerator.prototype.setShadowBlocksInHiddenWorkspace_ =
  *    to the array of blockTypes.
  */
 WorkspaceFactoryGenerator.prototype.getDefinedBlocks = function(blockTypes) {
-  var blocks = [];
-  for (var i = 0; i < blockTypes.length ; i++) {
-    blocks.push(FactoryUtils.getDefinedBlock(blockTypes[i],
-        this.hiddenWorkspace));
+  var blocks = []
+  for (var i = 0; i < blockTypes.length; i++) {
+    blocks.push(
+      FactoryUtils.getDefinedBlock(blockTypes[i], this.hiddenWorkspace)
+    )
   }
-  return blocks;
-};
+  return blocks
+}

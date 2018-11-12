@@ -2,24 +2,23 @@
  * @fileoverview Helper functions for generating Solidity for blocks.
  * @author jeanmarc.leroux@google.com (Jean-Marc Le Roux)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Solidity');
+goog.provide("Blockly.Solidity")
 
-goog.require('Blockly.Generator');
-
+goog.require("Blockly.Generator")
 
 /**
  * Solidity code generator.
  * @type {!Blockly.Generator}
  */
-Blockly.Solidity = new Blockly.Generator('Solidity');
+Blockly.Solidity = new Blockly.Generator("Solidity")
 
-Blockly.Solidity.LABEL_GROUP_STATE      = "state";
-Blockly.Solidity.LABEL_GROUP_PARAMETER  = "parameter";
-Blockly.Solidity.LABEL_GROUP_VARIABLE   = "variable";
-Blockly.Solidity.LABEL_GROUP_METHOD     = "method";
-Blockly.Solidity.UNDEFINED_NAME         = "__UNDEFINED__";
+Blockly.Solidity.LABEL_GROUP_STATE = "state"
+Blockly.Solidity.LABEL_GROUP_PARAMETER = "parameter"
+Blockly.Solidity.LABEL_GROUP_VARIABLE = "variable"
+Blockly.Solidity.LABEL_GROUP_METHOD = "method"
+Blockly.Solidity.UNDEFINED_NAME = "__UNDEFINED__"
 
 /**
  * List of illegal variable names.
@@ -29,46 +28,45 @@ Blockly.Solidity.UNDEFINED_NAME         = "__UNDEFINED__";
  * @private
  */
 Blockly.Solidity.addReservedWords(
-    'Blockly,' +  // In case JS is evaled in the current window.
-    'FIXME'
-);
+  "Blockly," + "FIXME" // In case JS is evaled in the current window.
+)
 
 /**
  * Order of operation ENUMs.
  * https://developer.mozilla.org/en/Solidity/Reference/Operators/Operator_Precedence
  */
-Blockly.Solidity.ORDER_ATOMIC = 0;           // 0 "" ...
-Blockly.Solidity.ORDER_NEW = 1.1;            // new
-Blockly.Solidity.ORDER_MEMBER = 1.2;         // . []
-Blockly.Solidity.ORDER_FUNCTION_CALL = 2;    // ()
-Blockly.Solidity.ORDER_INCREMENT = 3;        // ++
-Blockly.Solidity.ORDER_DECREMENT = 3;        // --
-Blockly.Solidity.ORDER_BITWISE_NOT = 4.1;    // ~
-Blockly.Solidity.ORDER_UNARY_PLUS = 4.2;     // +
-Blockly.Solidity.ORDER_UNARY_NEGATION = 4.3; // -
-Blockly.Solidity.ORDER_LOGICAL_NOT = 4.4;    // !
-Blockly.Solidity.ORDER_TYPEOF = 4.5;         // typeof
-Blockly.Solidity.ORDER_VOID = 4.6;           // void
-Blockly.Solidity.ORDER_DELETE = 4.7;         // delete
-Blockly.Solidity.ORDER_DIVISION = 5.1;       // /
-Blockly.Solidity.ORDER_MULTIPLICATION = 5.2; // *
-Blockly.Solidity.ORDER_MODULUS = 5.3;        // %
-Blockly.Solidity.ORDER_SUBTRACTION = 6.1;    // -
-Blockly.Solidity.ORDER_ADDITION = 6.2;       // +
-Blockly.Solidity.ORDER_BITWISE_SHIFT = 7;    // << >> >>>
-Blockly.Solidity.ORDER_RELATIONAL = 8;       // < <= > >=
-Blockly.Solidity.ORDER_IN = 8;               // in
-Blockly.Solidity.ORDER_INSTANCEOF = 8;       // instanceof
-Blockly.Solidity.ORDER_EQUALITY = 9;         // == != === !==
-Blockly.Solidity.ORDER_BITWISE_AND = 10;     // &
-Blockly.Solidity.ORDER_BITWISE_XOR = 11;     // ^
-Blockly.Solidity.ORDER_BITWISE_OR = 12;      // |
-Blockly.Solidity.ORDER_LOGICAL_AND = 13;     // &&
-Blockly.Solidity.ORDER_LOGICAL_OR = 14;      // ||
-Blockly.Solidity.ORDER_CONDITIONAL = 15;     // ?:
-Blockly.Solidity.ORDER_ASSIGNMENT = 16;      // = += -= *= /= %= <<= >>= ...
-Blockly.Solidity.ORDER_COMMA = 17;           // ,
-Blockly.Solidity.ORDER_NONE = 99;            // (...)
+Blockly.Solidity.ORDER_ATOMIC = 0 // 0 "" ...
+Blockly.Solidity.ORDER_NEW = 1.1 // new
+Blockly.Solidity.ORDER_MEMBER = 1.2 // . []
+Blockly.Solidity.ORDER_FUNCTION_CALL = 2 // ()
+Blockly.Solidity.ORDER_INCREMENT = 3 // ++
+Blockly.Solidity.ORDER_DECREMENT = 3 // --
+Blockly.Solidity.ORDER_BITWISE_NOT = 4.1 // ~
+Blockly.Solidity.ORDER_UNARY_PLUS = 4.2 // +
+Blockly.Solidity.ORDER_UNARY_NEGATION = 4.3 // -
+Blockly.Solidity.ORDER_LOGICAL_NOT = 4.4 // !
+Blockly.Solidity.ORDER_TYPEOF = 4.5 // typeof
+Blockly.Solidity.ORDER_VOID = 4.6 // void
+Blockly.Solidity.ORDER_DELETE = 4.7 // delete
+Blockly.Solidity.ORDER_DIVISION = 5.1 // /
+Blockly.Solidity.ORDER_MULTIPLICATION = 5.2 // *
+Blockly.Solidity.ORDER_MODULUS = 5.3 // %
+Blockly.Solidity.ORDER_SUBTRACTION = 6.1 // -
+Blockly.Solidity.ORDER_ADDITION = 6.2 // +
+Blockly.Solidity.ORDER_BITWISE_SHIFT = 7 // << >> >>>
+Blockly.Solidity.ORDER_RELATIONAL = 8 // < <= > >=
+Blockly.Solidity.ORDER_IN = 8 // in
+Blockly.Solidity.ORDER_INSTANCEOF = 8 // instanceof
+Blockly.Solidity.ORDER_EQUALITY = 9 // == != === !==
+Blockly.Solidity.ORDER_BITWISE_AND = 10 // &
+Blockly.Solidity.ORDER_BITWISE_XOR = 11 // ^
+Blockly.Solidity.ORDER_BITWISE_OR = 12 // |
+Blockly.Solidity.ORDER_LOGICAL_AND = 13 // &&
+Blockly.Solidity.ORDER_LOGICAL_OR = 14 // ||
+Blockly.Solidity.ORDER_CONDITIONAL = 15 // ?:
+Blockly.Solidity.ORDER_ASSIGNMENT = 16 // = += -= *= /= %= <<= >>= ...
+Blockly.Solidity.ORDER_COMMA = 17 // ,
+Blockly.Solidity.ORDER_NONE = 99 // (...)
 
 /**
  * List of outer-inner pairings that do NOT require parentheses.
@@ -92,14 +90,17 @@ Blockly.Solidity.ORDER_OVERRIDES = [
   // !(!foo) -> !!foo
   [Blockly.Solidity.ORDER_LOGICAL_NOT, Blockly.Solidity.ORDER_LOGICAL_NOT],
   // a * (b * c) -> a * b * c
-  [Blockly.Solidity.ORDER_MULTIPLICATION, Blockly.Solidity.ORDER_MULTIPLICATION],
+  [
+    Blockly.Solidity.ORDER_MULTIPLICATION,
+    Blockly.Solidity.ORDER_MULTIPLICATION
+  ],
   // a + (b + c) -> a + b + c
   [Blockly.Solidity.ORDER_ADDITION, Blockly.Solidity.ORDER_ADDITION],
   // a && (b && c) -> a && b && c
   [Blockly.Solidity.ORDER_LOGICAL_AND, Blockly.Solidity.ORDER_LOGICAL_AND],
   // a || (b || c) -> a || b || c
   [Blockly.Solidity.ORDER_LOGICAL_OR, Blockly.Solidity.ORDER_LOGICAL_OR]
-];
+]
 
 /**
  * Initialise the database of variable names.
@@ -107,18 +108,18 @@ Blockly.Solidity.ORDER_OVERRIDES = [
  */
 Blockly.Solidity.init = function(workspace) {
   // Create a dictionary of definitions to be printed before the code.
-  Blockly.Solidity.definitions_ = Object.create(null);
+  Blockly.Solidity.definitions_ = Object.create(null)
   // Create a dictionary mapping desired function names in definitions_
   // to actual function names (to avoid collisions with user functions).
-  Blockly.Solidity.functionNames_ = Object.create(null);
+  Blockly.Solidity.functionNames_ = Object.create(null)
 
   if (!Blockly.Solidity.variableDB_) {
-    Blockly.Solidity.variableDB_ =
-        new Blockly.Names(Blockly.Solidity.RESERVED_WORDS_);
+    Blockly.Solidity.variableDB_ = new Blockly.Names(
+      Blockly.Solidity.RESERVED_WORDS_
+    )
   } else {
-    Blockly.Solidity.variableDB_.reset();
+    Blockly.Solidity.variableDB_.reset()
   }
-
 
   // var defvars = [];
   // var variables = workspace.getAllVariables();
@@ -130,7 +131,7 @@ Blockly.Solidity.init = function(workspace) {
   //   Blockly.Solidity.definitions_['variables'] =
   //       'int ' + defvars.join(', ') + ';';
   // }
-};
+}
 
 /**
  * Prepend the generated code with the variable definitions.
@@ -139,16 +140,16 @@ Blockly.Solidity.init = function(workspace) {
  */
 Blockly.Solidity.finish = function(code) {
   // Convert the definitions dictionary into a list.
-  var definitions = [];
+  var definitions = []
   for (var name in Blockly.Solidity.definitions_) {
-    definitions.push(Blockly.Solidity.definitions_[name]);
+    definitions.push(Blockly.Solidity.definitions_[name])
   }
   // Clean up temporary data.
-  delete Blockly.Solidity.definitions_;
-  delete Blockly.Solidity.functionNames_;
-  Blockly.Solidity.variableDB_.reset();
-  return definitions.join('\n\n') + '\n\n\n' + code;
-};
+  delete Blockly.Solidity.definitions_
+  delete Blockly.Solidity.functionNames_
+  Blockly.Solidity.variableDB_.reset()
+  return definitions.join("\n\n") + "\n\n\n" + code
+}
 
 /**
  * Naked values are top-level blocks with outputs that aren't plugged into
@@ -157,8 +158,8 @@ Blockly.Solidity.finish = function(code) {
  * @return {string} Legal line of code.
  */
 Blockly.Solidity.scrubNakedValue = function(line) {
-  return line + ';\n';
-};
+  return line + ";\n"
+}
 
 /**
  * Encode a string as a properly escaped Solidity string, complete with
@@ -170,11 +171,12 @@ Blockly.Solidity.scrubNakedValue = function(line) {
 Blockly.Solidity.quote_ = function(string) {
   // Can't use goog.string.quote since Google's style guide recommends
   // JS string literals use single quotes.
-  string = string.replace(/\\/g, '\\\\')
-                 .replace(/\n/g, '\\\n')
-                 .replace(/'/g, '\\\'');
-  return '\'' + string + '\'';
-};
+  string = string
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\\n")
+    .replace(/'/g, "\\'")
+  return "'" + string + "'"
+}
 
 /**
  * Common tasks for generating Solidity from blocks.
@@ -186,40 +188,41 @@ Blockly.Solidity.quote_ = function(string) {
  * @private
  */
 Blockly.Solidity.scrub_ = function(block, code) {
-  var commentCode = '';
+  var commentCode = ""
   // Only collect comments for blocks that aren't inline.
   if (!block.outputConnection || !block.outputConnection.targetConnection) {
     // Collect comment for this block.
-    var comment = block.getCommentText();
-    comment = Blockly.utils.wrap(comment, Blockly.Solidity.COMMENT_WRAP - 3);
+    var comment = block.getCommentText()
+    comment = Blockly.utils.wrap(comment, Blockly.Solidity.COMMENT_WRAP - 3)
     if (comment) {
       if (block.getProcedureDef) {
         // Use a comment block for function comments.
-        commentCode += '/**\n' +
-                       Blockly.Solidity.prefixLines(comment + '\n', ' * ') +
-                       ' */\n';
+        commentCode +=
+          "/**\n" +
+          Blockly.Solidity.prefixLines(comment + "\n", " * ") +
+          " */\n"
       } else {
-        commentCode += Blockly.Solidity.prefixLines(comment + '\n', '// ');
+        commentCode += Blockly.Solidity.prefixLines(comment + "\n", "// ")
       }
     }
     // Collect comments for all value arguments.
     // Don't collect comments for nested statements.
     for (var i = 0; i < block.inputList.length; i++) {
       if (block.inputList[i].type == Blockly.INPUT_VALUE) {
-        var childBlock = block.inputList[i].connection.targetBlock();
+        var childBlock = block.inputList[i].connection.targetBlock()
         if (childBlock) {
-          var comment = Blockly.Solidity.allNestedComments(childBlock);
+          var comment = Blockly.Solidity.allNestedComments(childBlock)
           if (comment) {
-            commentCode += Blockly.Solidity.prefixLines(comment, '// ');
+            commentCode += Blockly.Solidity.prefixLines(comment, "// ")
           }
         }
       }
     }
   }
-  var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
-  var nextCode = Blockly.Solidity.blockToCode(nextBlock);
-  return commentCode + code + nextCode;
-};
+  var nextBlock = block.nextConnection && block.nextConnection.targetBlock()
+  var nextCode = Blockly.Solidity.blockToCode(nextBlock)
+  return commentCode + code + nextCode
+}
 
 /**
  * Gets a property and adjusts the value while taking into account indexing.
@@ -230,219 +233,251 @@ Blockly.Solidity.scrub_ = function(block, code) {
  * @param {number=} opt_order The highest order acting on this value.
  * @return {string|number}
  */
-Blockly.Solidity.getAdjusted = function(block, atId, opt_delta, opt_negate,
-    opt_order) {
-  var delta = opt_delta || 0;
-  var order = opt_order || Blockly.Solidity.ORDER_NONE;
+Blockly.Solidity.getAdjusted = function(
+  block,
+  atId,
+  opt_delta,
+  opt_negate,
+  opt_order
+) {
+  var delta = opt_delta || 0
+  var order = opt_order || Blockly.Solidity.ORDER_NONE
   if (block.workspace.options.oneBasedIndex) {
-    delta--;
+    delta--
   }
-  var defaultAtIndex = block.workspace.options.oneBasedIndex ? '1' : '0';
+  var defaultAtIndex = block.workspace.options.oneBasedIndex ? "1" : "0"
   if (delta > 0) {
-    var at = Blockly.Solidity.valueToCode(block, atId,
-        Blockly.Solidity.ORDER_ADDITION) || defaultAtIndex;
+    var at =
+      Blockly.Solidity.valueToCode(
+        block,
+        atId,
+        Blockly.Solidity.ORDER_ADDITION
+      ) || defaultAtIndex
   } else if (delta < 0) {
-    var at = Blockly.Solidity.valueToCode(block, atId,
-        Blockly.Solidity.ORDER_SUBTRACTION) || defaultAtIndex;
+    var at =
+      Blockly.Solidity.valueToCode(
+        block,
+        atId,
+        Blockly.Solidity.ORDER_SUBTRACTION
+      ) || defaultAtIndex
   } else if (opt_negate) {
-    var at = Blockly.Solidity.valueToCode(block, atId,
-        Blockly.Solidity.ORDER_UNARY_NEGATION) || defaultAtIndex;
+    var at =
+      Blockly.Solidity.valueToCode(
+        block,
+        atId,
+        Blockly.Solidity.ORDER_UNARY_NEGATION
+      ) || defaultAtIndex
   } else {
-    var at = Blockly.Solidity.valueToCode(block, atId, order) ||
-        defaultAtIndex;
+    var at = Blockly.Solidity.valueToCode(block, atId, order) || defaultAtIndex
   }
 
   if (Blockly.isNumber(at)) {
     // If the index is a naked number, adjust it right now.
-    at = parseFloat(at) + delta;
+    at = parseFloat(at) + delta
     if (opt_negate) {
-      at = -at;
+      at = -at
     }
   } else {
     // If the index is dynamic, adjust it in code.
     if (delta > 0) {
-      at = at + ' + ' + delta;
-      var innerOrder = Blockly.Solidity.ORDER_ADDITION;
+      at = at + " + " + delta
+      var innerOrder = Blockly.Solidity.ORDER_ADDITION
     } else if (delta < 0) {
-      at = at + ' - ' + -delta;
-      var innerOrder = Blockly.Solidity.ORDER_SUBTRACTION;
+      at = at + " - " + -delta
+      var innerOrder = Blockly.Solidity.ORDER_SUBTRACTION
     }
     if (opt_negate) {
       if (delta) {
-        at = '-(' + at + ')';
+        at = "-(" + at + ")"
       } else {
-        at = '-' + at;
+        at = "-" + at
       }
-      var innerOrder = Blockly.Solidity.ORDER_UNARY_NEGATION;
+      var innerOrder = Blockly.Solidity.ORDER_UNARY_NEGATION
     }
-    innerOrder = Math.floor(innerOrder);
-    order = Math.floor(order);
+    innerOrder = Math.floor(innerOrder)
+    order = Math.floor(order)
     if (innerOrder && order >= innerOrder) {
-      at = '(' + at + ')';
+      at = "(" + at + ")"
     }
   }
-  return at;
-};
+  return at
+}
 
 Blockly.Solidity.updateWorkspaceNameFields = function(workspace) {
-  var blocks = workspace.getAllBlocks();
+  var blocks = workspace.getAllBlocks()
   for (var i = 0; i < blocks.length; ++i) {
     var nameField = blocks[i].getVariableNameSelectField
       ? blocks[i].getVariableNameSelectField()
-      : null;
+      : null
     var group = blocks[i].getVariableLabelGroup
       ? blocks[i].getVariableLabelGroup()
-      : null;
+      : null
 
     if (!!nameField && !!group) {
-      var vars = Blockly.Solidity.getVariablesInScope(blocks[i], group);
+      var vars = Blockly.Solidity.getVariablesInScope(blocks[i], group)
       var options = vars.map(function(v) {
-          return [Blockly.Solidity.getVariableName(v), v.id_];
-        });
+        return [Blockly.Solidity.getVariableName(v), v.id_]
+      })
 
-      var selectedOption = nameField.getValue();
+      var selectedOption = nameField.getValue()
 
       if (options.length != 0) {
-        var wasUndefined = nameField.menuGenerator_[0][1]
-          == Blockly.Solidity.UNDEFINED_NAME;
+        var wasUndefined =
+          nameField.menuGenerator_[0][1] == Blockly.Solidity.UNDEFINED_NAME
 
-        nameField.menuGenerator_ = options;
+        nameField.menuGenerator_ = options
         if (wasUndefined) {
-          nameField.setValue(options[0][1]);
+          nameField.setValue(options[0][1])
         } else {
-          nameField.setValue(selectedOption);
+          nameField.setValue(selectedOption)
           // The text input does not redraw/update itself after we call "setValue",
           // so we set the text manually.
           nameField.setText(
-            options.filter(function(o) {return o[1] == selectedOption})[0][0]
-          );
+            options.filter(function(o) {
+              return o[1] == selectedOption
+            })[0][0]
+          )
         }
       }
     }
   }
-};
+}
 
-Blockly.Solidity.updateWorkspaceTypes = function(workspace, nameFieldName, valueFieldName) {
-  var blocks = workspace.getAllBlocks();
-  var vars = workspace.getAllVariables();
+Blockly.Solidity.updateWorkspaceTypes = function(
+  workspace,
+  nameFieldName,
+  valueFieldName
+) {
+  var blocks = workspace.getAllBlocks()
+  var vars = workspace.getAllVariables()
 
   for (var i = 0; i < blocks.length; ++i) {
-    var stateNameField = blocks[i].getField(nameFieldName);
+    var stateNameField = blocks[i].getField(nameFieldName)
 
     if (!stateNameField) {
-      continue;
+      continue
     }
 
-    var variableId = blocks[i].getFieldValue(nameFieldName);
-    var variable = workspace.getVariableById(variableId);
+    var variableId = blocks[i].getFieldValue(nameFieldName)
+    var variable = workspace.getVariableById(variableId)
 
     if (!variable) {
-      return;
+      return
     }
 
-    if (blocks[i].inputList[0] && blocks[i].inputList[0].name == valueFieldName) {
+    if (
+      blocks[i].inputList[0] &&
+      blocks[i].inputList[0].name == valueFieldName
+    ) {
       switch (variable.type) {
-        case 'TYPE_BOOL':
-          blocks[i].inputList[0].setCheck("Boolean");
-          break;
-        case 'TYPE_INT':
-          blocks[i].inputList[0].setCheck("Number");
-          break;
-        case 'TYPE_UINT':
-          blocks[i].inputList[0].setCheck("Number");
-          break;
-        case 'TYPE_ADDRESS' :
-          blocks[i].inputList[0].setCheck("Number");
-          break;
-        case 'TYPE_STRING' :
-          blocks[i].inputList[0].setCheck("String");
-          break;
+        case "TYPE_BOOL":
+          blocks[i].inputList[0].setCheck("Boolean")
+          break
+        case "TYPE_INT":
+          blocks[i].inputList[0].setCheck("Number")
+          break
+        case "TYPE_UINT":
+          blocks[i].inputList[0].setCheck("Number")
+          break
+        case "TYPE_ADDRESS":
+          blocks[i].inputList[0].setCheck("Number")
+          break
+        case "TYPE_STRING":
+          blocks[i].inputList[0].setCheck("String")
+          break
         default:
       }
     }
     // FIXME: update the output type
   }
-};
+}
 
 Blockly.Solidity.updateWorkspaceStateTypes = function(workspace) {
-  Blockly.Solidity.updateWorkspaceTypes(
-    workspace,
-    'STATE_NAME',
-    'STATE_VALUE'
-  );
-};
+  Blockly.Solidity.updateWorkspaceTypes(workspace, "STATE_NAME", "STATE_VALUE")
+}
 
 Blockly.Solidity.updateWorkspaceParameterTypes = function(workspace) {
-  Blockly.Solidity.updateWorkspaceTypes(
-    workspace,
-    'PARAM_NAME',
-    'PARAM_VALUE'
-  );
-};
+  Blockly.Solidity.updateWorkspaceTypes(workspace, "PARAM_NAME", "PARAM_VALUE")
+}
 
-Blockly.Solidity.createVariable = function(workspace, group, type, name, scope, id) {
-  var variable = workspace.createVariable(name, type, id);
+Blockly.Solidity.createVariable = function(
+  workspace,
+  group,
+  type,
+  name,
+  scope,
+  id
+) {
+  var variable = workspace.createVariable(name, type, id)
 
-  variable.group = group;
-  variable.scope = scope;
+  variable.group = group
+  variable.scope = scope
 
-  Blockly.Solidity.setVariableName(variable, name);
+  Blockly.Solidity.setVariableName(variable, name)
 
-  return variable;
-};
+  return variable
+}
 
 Blockly.Solidity.getVariableById = function(workspace, id) {
-  return workspace.getVariableById(id);
-};
+  return workspace.getVariableById(id)
+}
 
 Blockly.Solidity.getVariableByName = function(workspace, name) {
-  return Blockly.Solidity.getAllVariables(workspace)
-    .filter(function(v) { return Blockly.Solidity.getVariableName(v) == name; })
-    [0];
-};
+  return Blockly.Solidity.getAllVariables(workspace).filter(function(v) {
+    return Blockly.Solidity.getVariableName(v) == name
+  })[0]
+}
 
-Blockly.Solidity.getVariableByNameAndScope = function(name, scope, group = null) {
-  return Blockly.Solidity.getVariablesInScope(scope, group)
-    .filter(function(v) { return Blockly.Solidity.getVariableName(v) == name; })
-    [0];
-};
+Blockly.Solidity.getVariableByNameAndScope = function(
+  name,
+  scope,
+  group = null
+) {
+  return Blockly.Solidity.getVariablesInScope(scope, group).filter(function(v) {
+    return Blockly.Solidity.getVariableName(v) == name
+  })[0]
+}
 
 Blockly.Solidity.deleteVariableById = function(workspace, id) {
   Blockly.Solidity.deleteVariableByName(
     workspace,
     Blockly.Solidity.getVariableById(workspace, id).name
-  );
+  )
 }
 
 Blockly.Solidity.deleteVariableByName = function(workspace, name) {
-  return workspace.deleteVariable(name);
-};
+  return workspace.deleteVariable(name)
+}
 
 Blockly.Solidity.variableIsInScope = function(variable, scope) {
   while (!!scope && scope.id != variable.scope.id) {
-    var type = scope.type;
+    var type = scope.type
     do {
-      scope = scope.getParent();
+      scope = scope.getParent()
     } while (scope && type == scope.type)
   }
 
-  return !!scope;
-};
+  return !!scope
+}
 
 Blockly.Solidity.setVariableName = function(variable, name) {
-  variable.name = '_scope("' + variable.scope.id + '")_' + name;
+  variable.name = '_scope("' + variable.scope.id + '")_' + name
 }
 
 Blockly.Solidity.getVariableName = function(variable) {
-  return variable.name.replace('_scope("' + variable.scope.id + '")_', '');
+  return variable.name.replace('_scope("' + variable.scope.id + '")_', "")
 }
 
 Blockly.Solidity.getAllVariables = function(workspace) {
-  return workspace.getAllVariables();
-};
+  return workspace.getAllVariables()
+}
 
 Blockly.Solidity.getVariablesInScope = function(block, group = null) {
   return Blockly.Solidity.getAllVariables(block.workspace)
-    .filter(function(v) { return Blockly.Solidity.variableIsInScope(v, block); })
-    .filter(function(v) { return !group || v.group == group });
-};
+    .filter(function(v) {
+      return Blockly.Solidity.variableIsInScope(v, block)
+    })
+    .filter(function(v) {
+      return !group || v.group == group
+    })
+}

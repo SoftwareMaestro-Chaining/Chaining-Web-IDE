@@ -21,15 +21,13 @@
  * @author nnaze@google.com (Nathan Naze)
  */
 
-goog.provide('goog.crypt.BlockCipher');
-
-
+goog.provide("goog.crypt.BlockCipher")
 
 /**
  * Interface definition for a block cipher.
  * @interface
  */
-goog.crypt.BlockCipher = function() {};
+goog.crypt.BlockCipher = function() {}
 
 /**
  * Block size, in bytes.
@@ -37,7 +35,7 @@ goog.crypt.BlockCipher = function() {};
  * @const
  * @public
  */
-goog.crypt.BlockCipher.prototype.BLOCK_SIZE;
+goog.crypt.BlockCipher.prototype.BLOCK_SIZE
 
 /**
  * Encrypt a plaintext block.  The implementation may expect (and assert)
@@ -46,8 +44,7 @@ goog.crypt.BlockCipher.prototype.BLOCK_SIZE;
  * @return {!Array<number>} Encrypted ciphertext array of bytes.  Should be the
  *     same length as input.
  */
-goog.crypt.BlockCipher.prototype.encrypt;
-
+goog.crypt.BlockCipher.prototype.encrypt
 
 /**
  * Decrypt a plaintext block.  The implementation may expect (and assert)
@@ -56,4 +53,4 @@ goog.crypt.BlockCipher.prototype.encrypt;
  * @return {!Array<number>} Decrypted plaintext array of bytes.  Should be the
  *     same length as input.
  */
-goog.crypt.BlockCipher.prototype.decrypt;
+goog.crypt.BlockCipher.prototype.decrypt

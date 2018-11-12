@@ -17,12 +17,9 @@
  *
  */
 
-goog.provide('goog.ui.ItemEvent');
+goog.provide("goog.ui.ItemEvent")
 
-
-goog.require('goog.events.Event');
-
-
+goog.require("goog.events.Event")
 
 /**
  * Generic ui event class for events that take a single item like a menu click
@@ -37,7 +34,7 @@ goog.require('goog.events.Event');
  * @final
  */
 goog.ui.ItemEvent = function(type, target, item) {
-  goog.events.Event.call(this, type, target);
+  goog.events.Event.call(this, type, target)
 
   /**
    * Item for the event. The type of this object is specific to the type
@@ -46,6 +43,6 @@ goog.ui.ItemEvent = function(type, target, item) {
    *
    * @type {Object}
    */
-  this.item = item;
-};
-goog.inherits(goog.ui.ItemEvent, goog.events.Event);
+  this.item = item
+}
+goog.inherits(goog.ui.ItemEvent, goog.events.Event)

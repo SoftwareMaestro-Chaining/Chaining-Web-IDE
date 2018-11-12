@@ -21,13 +21,11 @@
  * @author eae@google.com (Emil A Eklund)
  */
 
-goog.provide('goog.ui.FilterObservingMenuItem');
+goog.provide("goog.ui.FilterObservingMenuItem")
 
-goog.require('goog.ui.FilterObservingMenuItemRenderer');
-goog.require('goog.ui.MenuItem');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.FilterObservingMenuItemRenderer")
+goog.require("goog.ui.MenuItem")
+goog.require("goog.ui.registry")
 
 /**
  * Class representing a filter observing menu item.
@@ -43,39 +41,43 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.MenuItem}
  */
 goog.ui.FilterObservingMenuItem = function(
-    content, opt_model, opt_domHelper, opt_renderer) {
+  content,
+  opt_model,
+  opt_domHelper,
+  opt_renderer
+) {
   goog.ui.MenuItem.call(
-      this, content, opt_model, opt_domHelper,
-      opt_renderer || new goog.ui.FilterObservingMenuItemRenderer());
-};
-goog.inherits(goog.ui.FilterObservingMenuItem, goog.ui.MenuItem);
-goog.tagUnsealableClass(goog.ui.FilterObservingMenuItem);
-
+    this,
+    content,
+    opt_model,
+    opt_domHelper,
+    opt_renderer || new goog.ui.FilterObservingMenuItemRenderer()
+  )
+}
+goog.inherits(goog.ui.FilterObservingMenuItem, goog.ui.MenuItem)
+goog.tagUnsealableClass(goog.ui.FilterObservingMenuItem)
 
 /**
  * Function called when the filter text changes.
  * @type {Function} function(goog.ui.FilterObservingMenuItem, string)
  * @private
  */
-goog.ui.FilterObservingMenuItem.prototype.observer_ = null;
-
+goog.ui.FilterObservingMenuItem.prototype.observer_ = null
 
 /** @override */
 goog.ui.FilterObservingMenuItem.prototype.enterDocument = function() {
-  goog.ui.FilterObservingMenuItem.superClass_.enterDocument.call(this);
-  this.callObserver();
-};
-
+  goog.ui.FilterObservingMenuItem.superClass_.enterDocument.call(this)
+  this.callObserver()
+}
 
 /**
  * Sets the observer functions.
  * @param {Function} f function(goog.ui.FilterObservingMenuItem, string).
  */
 goog.ui.FilterObservingMenuItem.prototype.setObserver = function(f) {
-  this.observer_ = f;
-  this.callObserver();
-};
-
+  this.observer_ = f
+  this.callObserver()
+}
 
 /**
  * Calls the observer function if one has been specified.
@@ -83,16 +85,17 @@ goog.ui.FilterObservingMenuItem.prototype.setObserver = function(f) {
  */
 goog.ui.FilterObservingMenuItem.prototype.callObserver = function(opt_str) {
   if (this.observer_) {
-    this.observer_(this, opt_str || '');
+    this.observer_(this, opt_str || "")
   }
-};
-
+}
 
 // Register a decorator factory function for
 // goog.ui.FilterObservingMenuItemRenderer.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS, function() {
-      // FilterObservingMenuItem defaults to using
-      // FilterObservingMenuItemRenderer.
-      return new goog.ui.FilterObservingMenuItem(null);
-    });
+  goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS,
+  function() {
+    // FilterObservingMenuItem defaults to using
+    // FilterObservingMenuItemRenderer.
+    return new goog.ui.FilterObservingMenuItem(null)
+  }
+)

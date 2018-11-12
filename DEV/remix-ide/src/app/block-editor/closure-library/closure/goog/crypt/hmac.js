@@ -22,12 +22,9 @@
  * @author benyu@google.com (Jige Yu) - port to closure
  */
 
+goog.provide("goog.crypt.Hmac")
 
-goog.provide('goog.crypt.Hmac');
-
-goog.require('goog.crypt.Hash');
-
-
+goog.require("goog.crypt.Hash")
 
 /**
  * @constructor
@@ -43,7 +40,7 @@ goog.require('goog.crypt.Hash');
  * @struct
  */
 goog.crypt.Hmac = function(hasher, key, opt_blockSize) {
-  goog.crypt.Hmac.base(this, 'constructor');
+  goog.crypt.Hmac.base(this, "constructor")
 
   /**
    * The underlying hasher to calculate hash.
@@ -51,9 +48,9 @@ goog.crypt.Hmac = function(hasher, key, opt_blockSize) {
    * @type {!goog.crypt.Hash}
    * @private
    */
-  this.hasher_ = hasher;
+  this.hasher_ = hasher
 
-  this.blockSize = opt_blockSize || hasher.blockSize || 16;
+  this.blockSize = opt_blockSize || hasher.blockSize || 16
 
   /**
    * The outer padding array of hmac
@@ -61,7 +58,7 @@ goog.crypt.Hmac = function(hasher, key, opt_blockSize) {
    * @type {!Array<number>}
    * @private
    */
-  this.keyO_ = new Array(this.blockSize);
+  this.keyO_ = new Array(this.blockSize)
 
   /**
    * The inner padding array of hmac
@@ -69,12 +66,11 @@ goog.crypt.Hmac = function(hasher, key, opt_blockSize) {
    * @type {!Array<number>}
    * @private
    */
-  this.keyI_ = new Array(this.blockSize);
+  this.keyI_ = new Array(this.blockSize)
 
-  this.initialize_(key);
-};
-goog.inherits(goog.crypt.Hmac, goog.crypt.Hash);
-
+  this.initialize_(key)
+}
+goog.inherits(goog.crypt.Hmac, goog.crypt.Hash)
 
 /**
  * Outer padding byte of HMAC algorith, per http://en.wikipedia.org/wiki/HMAC
@@ -82,8 +78,7 @@ goog.inherits(goog.crypt.Hmac, goog.crypt.Hash);
  * @type {number}
  * @private
  */
-goog.crypt.Hmac.OPAD_ = 0x5c;
-
+goog.crypt.Hmac.OPAD_ = 0x5c
 
 /**
  * Inner padding byte of HMAC algorith, per http://en.wikipedia.org/wiki/HMAC
@@ -91,8 +86,7 @@ goog.crypt.Hmac.OPAD_ = 0x5c;
  * @type {number}
  * @private
  */
-goog.crypt.Hmac.IPAD_ = 0x36;
-
+goog.crypt.Hmac.IPAD_ = 0x36
 
 /**
  * Initializes Hmac by precalculating the inner and outer paddings.
@@ -104,48 +98,44 @@ goog.crypt.Hmac.IPAD_ = 0x36;
  */
 goog.crypt.Hmac.prototype.initialize_ = function(key) {
   if (key.length > this.blockSize) {
-    this.hasher_.update(key);
-    key = this.hasher_.digest();
-    this.hasher_.reset();
+    this.hasher_.update(key)
+    key = this.hasher_.digest()
+    this.hasher_.reset()
   }
   // Precalculate padded and xor'd keys.
-  var keyByte;
+  var keyByte
   for (var i = 0; i < this.blockSize; i++) {
     if (i < key.length) {
-      keyByte = key[i];
+      keyByte = key[i]
     } else {
-      keyByte = 0;
+      keyByte = 0
     }
-    this.keyO_[i] = keyByte ^ goog.crypt.Hmac.OPAD_;
-    this.keyI_[i] = keyByte ^ goog.crypt.Hmac.IPAD_;
+    this.keyO_[i] = keyByte ^ goog.crypt.Hmac.OPAD_
+    this.keyI_[i] = keyByte ^ goog.crypt.Hmac.IPAD_
   }
   // Be ready for an immediate update.
-  this.hasher_.update(this.keyI_);
-};
-
+  this.hasher_.update(this.keyI_)
+}
 
 /** @override */
 goog.crypt.Hmac.prototype.reset = function() {
-  this.hasher_.reset();
-  this.hasher_.update(this.keyI_);
-};
-
+  this.hasher_.reset()
+  this.hasher_.update(this.keyI_)
+}
 
 /** @override */
 goog.crypt.Hmac.prototype.update = function(bytes, opt_length) {
-  this.hasher_.update(bytes, opt_length);
-};
-
+  this.hasher_.update(bytes, opt_length)
+}
 
 /** @override */
 goog.crypt.Hmac.prototype.digest = function() {
-  var temp = this.hasher_.digest();
-  this.hasher_.reset();
-  this.hasher_.update(this.keyO_);
-  this.hasher_.update(temp);
-  return this.hasher_.digest();
-};
-
+  var temp = this.hasher_.digest()
+  this.hasher_.reset()
+  this.hasher_.update(this.keyO_)
+  this.hasher_.update(temp)
+  return this.hasher_.digest()
+}
 
 /**
  * Calculates an HMAC for a given message.
@@ -154,7 +144,7 @@ goog.crypt.Hmac.prototype.digest = function() {
  * @return {!Array<number>} the digest of the given message.
  */
 goog.crypt.Hmac.prototype.getHmac = function(message) {
-  this.reset();
-  this.update(message);
-  return this.digest();
-};
+  this.reset()
+  this.update(message)
+  return this.digest()
+}

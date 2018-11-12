@@ -17,9 +17,7 @@
  *
  */
 
-goog.provide('goog.ui.emoji.Emoji');
-
-
+goog.provide("goog.ui.emoji.Emoji")
 
 /**
  * Creates an emoji.
@@ -44,7 +42,7 @@ goog.ui.emoji.Emoji = function(url, id, opt_height, opt_width, opt_altText) {
    * @type {string}
    * @private
    */
-  this.url_ = url;
+  this.url_ = url
 
   /**
    * The id of the emoji
@@ -52,7 +50,7 @@ goog.ui.emoji.Emoji = function(url, id, opt_height, opt_width, opt_altText) {
    * @type {string}
    * @private
    */
-  this.id_ = id;
+  this.id_ = id
 
   /**
    * The height of the emoji
@@ -60,7 +58,7 @@ goog.ui.emoji.Emoji = function(url, id, opt_height, opt_width, opt_altText) {
    * @type {?number}
    * @private
    */
-  this.height_ = opt_height || null;
+  this.height_ = opt_height || null
 
   /**
    * The width of the emoji
@@ -68,7 +66,7 @@ goog.ui.emoji.Emoji = function(url, id, opt_height, opt_width, opt_altText) {
    * @type {?number}
    * @private
    */
-  this.width_ = opt_width || null;
+  this.width_ = opt_width || null
 
   /**
    * The unicode of the emoji
@@ -76,62 +74,55 @@ goog.ui.emoji.Emoji = function(url, id, opt_height, opt_width, opt_altText) {
    * @type {?string}
    * @private
    */
-  this.altText_ = opt_altText || null;
-};
-
+  this.altText_ = opt_altText || null
+}
 
 /**
  * The name of the goomoji attribute, used for emoji image elements.
  * @type {string}
  * @deprecated Use goog.ui.emoji.Emoji.DATA_ATTRIBUTE instead.
  */
-goog.ui.emoji.Emoji.ATTRIBUTE = 'goomoji';
-
+goog.ui.emoji.Emoji.ATTRIBUTE = "goomoji"
 
 /**
  * The name of the goomoji data-attribute, used for emoji image elements. Data
  * attributes are the preferred way in HTML5 to set custom attributes.
  * @type {string}
  */
-goog.ui.emoji.Emoji.DATA_ATTRIBUTE = 'data-' + goog.ui.emoji.Emoji.ATTRIBUTE;
-
+goog.ui.emoji.Emoji.DATA_ATTRIBUTE = "data-" + goog.ui.emoji.Emoji.ATTRIBUTE
 
 /**
  * @return {string} The URL for this emoji.
  */
 goog.ui.emoji.Emoji.prototype.getUrl = function() {
-  return this.url_;
-};
-
+  return this.url_
+}
 
 /**
  * @return {string} The id of this emoji.
  */
 goog.ui.emoji.Emoji.prototype.getId = function() {
-  return this.id_;
-};
-
+  return this.id_
+}
 
 /**
  * @return {?number} The height of this emoji.
  */
 goog.ui.emoji.Emoji.prototype.getHeight = function() {
-  return this.height_;
-};
-
+  return this.height_
+}
 
 /**
  * @return {?number} The width of this emoji.
  */
 goog.ui.emoji.Emoji.prototype.getWidth = function() {
-  return this.width_;
-};
-
+  return this.width_
+}
 
 /**
  * @return {?string} The alt text for the emoji image, eg. the unicode character
  *     representation of the emoji.
  */
 goog.ui.emoji.Emoji.prototype.getAltText = function() {
-  return this.altText_;
-};
+  return this.altText_
+}

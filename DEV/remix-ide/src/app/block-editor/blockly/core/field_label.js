@@ -22,16 +22,15 @@
  * @fileoverview Non-editable text field.  Used for titles, labels, etc.
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.FieldLabel');
+goog.provide("Blockly.FieldLabel")
 
-goog.require('Blockly.Field');
-goog.require('Blockly.Tooltip');
-goog.require('Blockly.utils');
+goog.require("Blockly.Field")
+goog.require("Blockly.Tooltip")
+goog.require("Blockly.utils")
 
-goog.require('goog.math.Size');
-
+goog.require("goog.math.Size")
 
 /**
  * Class for a non-editable field.
@@ -41,11 +40,11 @@ goog.require('goog.math.Size');
  * @constructor
  */
 Blockly.FieldLabel = function(text, opt_class) {
-  this.size_ = new goog.math.Size(0, 17.5);
-  this.class_ = opt_class;
-  this.setValue(text);
-};
-goog.inherits(Blockly.FieldLabel, Blockly.Field);
+  this.size_ = new goog.math.Size(0, 17.5)
+  this.class_ = opt_class
+  this.setValue(text)
+}
+goog.inherits(Blockly.FieldLabel, Blockly.Field)
 
 /**
  * Construct a FieldLabel from a JSON arg object,
@@ -56,14 +55,14 @@ goog.inherits(Blockly.FieldLabel, Blockly.Field);
  * @nocollapse
  */
 Blockly.FieldLabel.fromJson = function(options) {
-  var text = Blockly.utils.replaceMessageReferences(options['text']);
-  return new Blockly.FieldLabel(text, options['class']);
-};
+  var text = Blockly.utils.replaceMessageReferences(options["text"])
+  return new Blockly.FieldLabel(text, options["class"])
+}
 
 /**
  * Editable fields are saved by the XML renderer, non-editable fields are not.
  */
-Blockly.FieldLabel.prototype.EDITABLE = false;
+Blockly.FieldLabel.prototype.EDITABLE = false
 
 /**
  * Install this text on a block.
@@ -71,35 +70,38 @@ Blockly.FieldLabel.prototype.EDITABLE = false;
 Blockly.FieldLabel.prototype.init = function() {
   if (this.textElement_) {
     // Text has already been initialized once.
-    return;
+    return
   }
   // Build the DOM.
-  this.textElement_ = Blockly.utils.createSvgElement('text',
-      {'class': 'blocklyText', 'y': this.size_.height - 5}, null);
+  this.textElement_ = Blockly.utils.createSvgElement(
+    "text",
+    { class: "blocklyText", y: this.size_.height - 5 },
+    null
+  )
   if (this.class_) {
-    Blockly.utils.addClass(this.textElement_, this.class_);
+    Blockly.utils.addClass(this.textElement_, this.class_)
   }
   if (!this.visible_) {
-    this.textElement_.style.display = 'none';
+    this.textElement_.style.display = "none"
   }
-  this.sourceBlock_.getSvgRoot().appendChild(this.textElement_);
+  this.sourceBlock_.getSvgRoot().appendChild(this.textElement_)
 
   // Configure the field to be transparent with respect to tooltips.
-  this.textElement_.tooltip = this.sourceBlock_;
-  Blockly.Tooltip.bindMouseEvents(this.textElement_);
+  this.textElement_.tooltip = this.sourceBlock_
+  Blockly.Tooltip.bindMouseEvents(this.textElement_)
   // Force a render.
-  this.render_();
-};
+  this.render_()
+}
 
 /**
  * Dispose of all DOM objects belonging to this text.
  */
 Blockly.FieldLabel.prototype.dispose = function() {
   if (this.textElement_) {
-    Blockly.utils.removeNode(this.textElement_);
-    this.textElement_ = null;
+    Blockly.utils.removeNode(this.textElement_)
+    this.textElement_ = null
   }
-};
+}
 
 /**
  * Gets the group element for this field.
@@ -107,8 +109,8 @@ Blockly.FieldLabel.prototype.dispose = function() {
  * @return {!Element} The group element.
  */
 Blockly.FieldLabel.prototype.getSvgRoot = function() {
-  return /** @type {!Element} */ (this.textElement_);
-};
+  return /** @type {!Element} */ (this.textElement_)
+}
 
 /**
  * Change the tooltip text for this field.
@@ -116,7 +118,7 @@ Blockly.FieldLabel.prototype.getSvgRoot = function() {
  *     link to for its tooltip.
  */
 Blockly.FieldLabel.prototype.setTooltip = function(newTip) {
-  this.textElement_.tooltip = newTip;
-};
+  this.textElement_.tooltip = newTip
+}
 
-Blockly.Field.register('field_label', Blockly.FieldLabel);
+Blockly.Field.register("field_label", Blockly.FieldLabel)

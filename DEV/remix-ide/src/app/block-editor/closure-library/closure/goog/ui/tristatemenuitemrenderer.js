@@ -18,13 +18,11 @@
  * @author eae@google.com (Emil A Eklund)
  */
 
-goog.provide('goog.ui.TriStateMenuItemRenderer');
+goog.provide("goog.ui.TriStateMenuItemRenderer")
 
-goog.require('goog.asserts');
-goog.require('goog.dom.classlist');
-goog.require('goog.ui.MenuItemRenderer');
-
-
+goog.require("goog.asserts")
+goog.require("goog.dom.classlist")
+goog.require("goog.ui.MenuItemRenderer")
 
 /**
  * Default renderer for {@link goog.ui.TriStateMenuItemRenderer}s. Each item has
@@ -40,19 +38,18 @@ goog.require('goog.ui.MenuItemRenderer');
  * @final
  */
 goog.ui.TriStateMenuItemRenderer = function() {
-  goog.ui.MenuItemRenderer.call(this);
-};
-goog.inherits(goog.ui.TriStateMenuItemRenderer, goog.ui.MenuItemRenderer);
-goog.addSingletonGetter(goog.ui.TriStateMenuItemRenderer);
-
+  goog.ui.MenuItemRenderer.call(this)
+}
+goog.inherits(goog.ui.TriStateMenuItemRenderer, goog.ui.MenuItemRenderer)
+goog.addSingletonGetter(goog.ui.TriStateMenuItemRenderer)
 
 /**
  * CSS class name the renderer applies to menu item elements.
  * @type {string}
  */
-goog.ui.TriStateMenuItemRenderer.CSS_CLASS =
-    goog.getCssName('goog-tristatemenuitem');
-
+goog.ui.TriStateMenuItemRenderer.CSS_CLASS = goog.getCssName(
+  "goog-tristatemenuitem"
+)
 
 /**
  * Overrides {@link goog.ui.ControlRenderer#decorate} by initializing the
@@ -66,30 +63,41 @@ goog.ui.TriStateMenuItemRenderer.CSS_CLASS =
  */
 goog.ui.TriStateMenuItemRenderer.prototype.decorate = function(item, element) {
   element = goog.ui.TriStateMenuItemRenderer.superClass_.decorate.call(
-      this, item, element);
-  this.setCheckable(item, element, true);
+    this,
+    item,
+    element
+  )
+  this.setCheckable(item, element, true)
 
-  goog.asserts.assert(element);
+  goog.asserts.assert(element)
 
-  if (goog.dom.classlist.contains(
-          element, goog.getCssName(this.getCssClass(), 'fully-checked'))) {
-    item.setCheckedState(/** @suppress {missingRequire} */
-        goog.ui.TriStateMenuItem.State.FULLY_CHECKED);
+  if (
+    goog.dom.classlist.contains(
+      element,
+      goog.getCssName(this.getCssClass(), "fully-checked")
+    )
+  ) {
+    item.setCheckedState(
+      /** @suppress {missingRequire} */
+      goog.ui.TriStateMenuItem.State.FULLY_CHECKED
+    )
   } else if (
-      goog.dom.classlist.contains(
-          element, goog.getCssName(this.getCssClass(), 'partially-checked'))) {
+    goog.dom.classlist.contains(
+      element,
+      goog.getCssName(this.getCssClass(), "partially-checked")
+    )
+  ) {
     /** @suppress {missingRequire} */
-    item.setCheckedState(goog.ui.TriStateMenuItem.State.PARTIALLY_CHECKED);
+    item.setCheckedState(goog.ui.TriStateMenuItem.State.PARTIALLY_CHECKED)
   } else {
     /** @suppress {missingRequire} */
-    item.setCheckedState(goog.ui.TriStateMenuItem.State.NOT_CHECKED);
+    item.setCheckedState(goog.ui.TriStateMenuItem.State.NOT_CHECKED)
   }
 
-  return element;
-};
-
+  return element
+}
 
 /** @override */
 goog.ui.TriStateMenuItemRenderer.prototype.getCssClass = function() {
-  return goog.ui.TriStateMenuItemRenderer.CSS_CLASS;
-};
+  return goog.ui.TriStateMenuItemRenderer.CSS_CLASS
+}

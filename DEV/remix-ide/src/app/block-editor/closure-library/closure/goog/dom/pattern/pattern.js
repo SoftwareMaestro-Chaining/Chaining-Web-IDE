@@ -19,9 +19,8 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern');
-goog.provide('goog.dom.pattern.MatchType');
-
+goog.provide("goog.dom.pattern")
+goog.provide("goog.dom.pattern.MatchType")
 
 /**
  * Utility function to match a string against either a string or a regular
@@ -35,13 +34,12 @@ goog.provide('goog.dom.pattern.MatchType');
 goog.dom.pattern.matchStringOrRegex = function(obj, str) {
   if (goog.isString(obj)) {
     // Match a string
-    return str == obj;
+    return str == obj
   } else {
     // Match a regular expression
-    return !!(str && str.match(obj));
+    return !!(str && str.match(obj))
   }
-};
-
+}
 
 /**
  * Utility function to match a DOM attribute against either a string or a
@@ -57,11 +55,14 @@ goog.dom.pattern.matchStringOrRegex = function(obj, str) {
  */
 goog.dom.pattern.matchStringOrRegexMap = function(elem, index, orig) {
   return goog.dom.pattern.matchStringOrRegex(
-      elem, index in this ?
-          this[index] :
-          (this.getAttribute ? this.getAttribute(index) : null));
-};
-
+    elem,
+    index in this
+      ? this[index]
+      : this.getAttribute
+      ? this.getAttribute(index)
+      : null
+  )
+}
 
 /**
  * When matched to a token, a pattern may return any of the following statuses:
@@ -84,4 +85,4 @@ goog.dom.pattern.MatchType = {
   MATCHING: 1,
   MATCH: 2,
   BACKTRACK_MATCH: 3
-};
+}

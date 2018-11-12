@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.async.run');
+goog.provide("goog.async.run")
 
-goog.require('goog.async.WorkQueue');
-goog.require('goog.async.nextTick');
-goog.require('goog.async.throwException');
-
+goog.require("goog.async.WorkQueue")
+goog.require("goog.async.nextTick")
+goog.require("goog.async.throwException")
 
 /**
  * Fires the provided callback just before the current callstack unwinds, or as
@@ -29,17 +28,16 @@ goog.require('goog.async.throwException');
  */
 goog.async.run = function(callback, opt_context) {
   if (!goog.async.run.schedule_) {
-    goog.async.run.initializeRunner_();
+    goog.async.run.initializeRunner_()
   }
   if (!goog.async.run.workQueueScheduled_) {
     // Nothing is currently scheduled, schedule it now.
-    goog.async.run.schedule_();
-    goog.async.run.workQueueScheduled_ = true;
+    goog.async.run.schedule_()
+    goog.async.run.workQueueScheduled_ = true
   }
 
-  goog.async.run.workQueue_.add(callback, opt_context);
-};
-
+  goog.async.run.workQueue_.add(callback, opt_context)
+}
 
 /**
  * Initializes the function to use to process the work queue.
@@ -53,17 +51,16 @@ goog.async.run.initializeRunner_ = function() {
   // confuse the compiler into thinking the polyfill is required when it should
   // be treated as optional.
   if (goog.global.Promise && goog.global.Promise.resolve) {
-    var promise = goog.global.Promise.resolve(undefined);
+    var promise = goog.global.Promise.resolve(undefined)
     goog.async.run.schedule_ = function() {
-      promise.then(goog.async.run.processWorkQueue);
-    };
+      promise.then(goog.async.run.processWorkQueue)
+    }
   } else {
     goog.async.run.schedule_ = function() {
-      goog.async.nextTick(goog.async.run.processWorkQueue);
-    };
+      goog.async.nextTick(goog.async.run.processWorkQueue)
+    }
   }
-};
-
+}
 
 /**
  * Forces goog.async.run to use nextTick instead of Promise.
@@ -80,39 +77,34 @@ goog.async.run.initializeRunner_ = function() {
  */
 goog.async.run.forceNextTick = function(opt_realSetTimeout) {
   goog.async.run.schedule_ = function() {
-    goog.async.nextTick(goog.async.run.processWorkQueue);
+    goog.async.nextTick(goog.async.run.processWorkQueue)
     if (opt_realSetTimeout) {
-      opt_realSetTimeout(goog.async.run.processWorkQueue);
+      opt_realSetTimeout(goog.async.run.processWorkQueue)
     }
-  };
-};
-
+  }
+}
 
 /**
  * The function used to schedule work asynchronousely.
  * @private {function()}
  */
-goog.async.run.schedule_;
-
+goog.async.run.schedule_
 
 /** @private {boolean} */
-goog.async.run.workQueueScheduled_ = false;
-
+goog.async.run.workQueueScheduled_ = false
 
 /** @private {!goog.async.WorkQueue} */
-goog.async.run.workQueue_ = new goog.async.WorkQueue();
-
+goog.async.run.workQueue_ = new goog.async.WorkQueue()
 
 if (goog.DEBUG) {
   /**
    * Reset the work queue. Only available for tests in debug mode.
    */
   goog.async.run.resetQueue = function() {
-    goog.async.run.workQueueScheduled_ = false;
-    goog.async.run.workQueue_ = new goog.async.WorkQueue();
-  };
+    goog.async.run.workQueueScheduled_ = false
+    goog.async.run.workQueue_ = new goog.async.WorkQueue()
+  }
 }
-
 
 /**
  * Run any pending goog.async.run work items. This function is not intended
@@ -121,16 +113,16 @@ if (goog.DEBUG) {
  */
 goog.async.run.processWorkQueue = function() {
   // NOTE: additional work queue items may be added while processing.
-  var item = null;
-  while (item = goog.async.run.workQueue_.remove()) {
+  var item = null
+  while ((item = goog.async.run.workQueue_.remove())) {
     try {
-      item.fn.call(item.scope);
+      item.fn.call(item.scope)
     } catch (e) {
-      goog.async.throwException(e);
+      goog.async.throwException(e)
     }
-    goog.async.run.workQueue_.returnUnused(item);
+    goog.async.run.workQueue_.returnUnused(item)
   }
 
   // There are no more work items, allow processing to be scheduled again.
-  goog.async.run.workQueueScheduled_ = false;
-};
+  goog.async.run.workQueueScheduled_ = false
+}

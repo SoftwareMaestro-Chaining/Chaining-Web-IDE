@@ -12,32 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.MenuSeparatorRendererTest');
-goog.setTestOnly('goog.ui.MenuSeparatorRendererTest');
+goog.provide("goog.ui.MenuSeparatorRendererTest")
+goog.setTestOnly("goog.ui.MenuSeparatorRendererTest")
 
-goog.require('goog.dom');
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.MenuSeparator');
-goog.require('goog.ui.MenuSeparatorRenderer');
+goog.require("goog.dom")
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.MenuSeparator")
+goog.require("goog.ui.MenuSeparatorRenderer")
 
-var sandbox;
-var originalSandbox;
+var sandbox
+var originalSandbox
 
 function setUp() {
-  sandbox = goog.dom.getElement('sandbox');
-  originalSandbox = sandbox.cloneNode(true);
+  sandbox = goog.dom.getElement("sandbox")
+  originalSandbox = sandbox.cloneNode(true)
 }
 
 function tearDown() {
-  sandbox.parentNode.replaceChild(originalSandbox, sandbox);
+  sandbox.parentNode.replaceChild(originalSandbox, sandbox)
 }
 
 function testDecorate() {
-  var separator = new goog.ui.MenuSeparator();
-  var dummyId = 'foo';
-  separator.setId(dummyId);
-  assertEquals(dummyId, separator.getId());
-  var renderer = new goog.ui.MenuSeparatorRenderer();
-  renderer.decorate(separator, goog.dom.getElement('separator'));
-  assertEquals('separator', separator.getId());
+  var separator = new goog.ui.MenuSeparator()
+  var dummyId = "foo"
+  separator.setId(dummyId)
+  assertEquals(dummyId, separator.getId())
+  var renderer = new goog.ui.MenuSeparatorRenderer()
+  renderer.decorate(separator, goog.dom.getElement("separator"))
+  assertEquals("separator", separator.getId())
 }

@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.debugEnhanceErrorTest');
-goog.setTestOnly('goog.debugEnhanceErrorTest');
+goog.provide("goog.debugEnhanceErrorTest")
+goog.setTestOnly("goog.debugEnhanceErrorTest")
 
-goog.require('goog.debug');
-goog.require('goog.testing.jsunit');
+goog.require("goog.debug")
+goog.require("goog.testing.jsunit")
 
-var THROW_STRING = 1;
-var THROW_NPE = 2;
-var THROW_ERROR = 3;
-var THROW_ENHANCED_ERROR = 4;
-var THROW_ENHANCED_STRING = 5;
-var THROW_OBJECT = 6;
+var THROW_STRING = 1
+var THROW_NPE = 2
+var THROW_ERROR = 3
+var THROW_ENHANCED_ERROR = 4
+var THROW_ENHANCED_STRING = 5
+var THROW_OBJECT = 6
 
-if (typeof debug == 'undefined') {
+if (typeof debug == "undefined") {
   function debug(str) {
-    if (window.console) window.console.log(str);
+    if (window.console) window.console.log(str)
   }
 }
 
@@ -35,111 +35,117 @@ function testEnhanceError() {
   // Tests are like this:
   // [test num, expect something in the stack, expect an extra message]
   var tests = [
-    [THROW_STRING], [THROW_OBJECT], [THROW_NPE], [THROW_ERROR],
-    [THROW_ENHANCED_ERROR, 'throwEnhancedError', 'an enhanced error'],
-    [THROW_ENHANCED_STRING, 'throwEnhancedString']
-  ];
+    [THROW_STRING],
+    [THROW_OBJECT],
+    [THROW_NPE],
+    [THROW_ERROR],
+    [THROW_ENHANCED_ERROR, "throwEnhancedError", "an enhanced error"],
+    [THROW_ENHANCED_STRING, "throwEnhancedString"]
+  ]
   for (var i = 0; i < tests.length; ++i) {
-    var test = tests[i];
-    var testNum = test[0];
-    var testInStack = test[1];
-    var testExtraMessage = test[2] || null;
+    var test = tests[i]
+    var testNum = test[0]
+    var testInStack = test[1]
+    var testExtraMessage = test[2] || null
     try {
-      foo(testNum);
+      foo(testNum)
     } catch (e) {
-      debug(goog.debug.expose(e));
-      var s = e.stack.split('\n');
+      debug(goog.debug.expose(e))
+      var s = e.stack.split("\n")
       for (var j = 0; j < s.length; ++j) {
-        debug(s[j]);
+        debug(s[j])
       }
       // 'baz' is always in the stack
-      assertTrue('stack should contain "baz"', e.stack.indexOf('baz') != -1);
+      assertTrue('stack should contain "baz"', e.stack.indexOf("baz") != -1)
 
       if (testInStack) {
         assertTrue(
-            'stack should contain "' + testInStack + '"',
-            e.stack.indexOf(testInStack) != -1);
+          'stack should contain "' + testInStack + '"',
+          e.stack.indexOf(testInStack) != -1
+        )
       }
       if (testExtraMessage) {
         // 2 messages
         assertTrue(
-            'message0 should contain "' + testExtraMessage + '"',
-            e.message0.indexOf(testExtraMessage) != -1);
+          'message0 should contain "' + testExtraMessage + '"',
+          e.message0.indexOf(testExtraMessage) != -1
+        )
         assertTrue(
-            'message1 should contain "message from baz"',
-            e.message1.indexOf('message from baz') != -1);
+          'message1 should contain "message from baz"',
+          e.message1.indexOf("message from baz") != -1
+        )
       } else {
         // 1 message
         assertTrue(
-            'message0 should contain "message from baz"',
-            e.message0.indexOf('message from baz') != -1);
+          'message0 should contain "message from baz"',
+          e.message0.indexOf("message from baz") != -1
+        )
       }
-      continue;
+      continue
     }
-    fail('expected to catch an exception');
+    fail("expected to catch an exception")
   }
 }
 
-
 function foo(testNum) {
-  bar(testNum);
+  bar(testNum)
 }
 
 function bar(testNum) {
-  baz(testNum);
+  baz(testNum)
 }
 
 function baz(testNum) {
   try {
     switch (testNum) {
       case THROW_STRING:
-        throwString();
-        break;
+        throwString()
+        break
       case THROW_NPE:
-        throwNpe();
-        break;
+        throwNpe()
+        break
       case THROW_ERROR:
-        throwError();
-        break;
+        throwError()
+        break
       case THROW_ENHANCED_ERROR:
-        throwEnhancedError();
-        break;
+        throwEnhancedError()
+        break
       case THROW_ENHANCED_STRING:
-        throwEnhancedString();
-        break;
+        throwEnhancedString()
+        break
       case THROW_OBJECT:
-        throwObject();
-        break;
+        throwObject()
+        break
     }
   } catch (e) {
-    throw goog.debug.enhanceError(e, 'message from baz');
+    throw goog.debug.enhanceError(e, "message from baz")
   }
 }
 
 function throwString() {
-  throw 'a string';
+  throw "a string"
 }
 
 function throwNpe() {
-  var nada = null;
-  nada.noSuchFunction();
+  var nada = null
+  nada.noSuchFunction()
 }
 
 function throwError() {
-  throw new Error('an error');
+  throw new Error("an error")
 }
 
 function throwEnhancedError() {
-  throw goog.debug.enhanceError(Error('dang!'), 'an enhanced error');
+  throw goog.debug.enhanceError(Error("dang!"), "an enhanced error")
 }
 
 function throwEnhancedString() {
-  throw goog.debug.enhanceError('oh nos!');
+  throw goog.debug.enhanceError("oh nos!")
 }
 
 /**
  * @throws {*}
  */
 function throwObject() {
-  throw {property: 'value'};
+  throw { property: "value" }
 }

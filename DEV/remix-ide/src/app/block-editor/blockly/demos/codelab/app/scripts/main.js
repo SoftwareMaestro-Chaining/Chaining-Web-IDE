@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- (function() {
-
-  let currentButton;
+;(function() {
+  let currentButton
 
   function handlePlay(event) {
     // Add code for playing sound.
@@ -27,35 +26,34 @@
   }
 
   function handleSave() {
-    document.body.setAttribute('mode', 'edit');
-    save(currentButton);
+    document.body.setAttribute("mode", "edit")
+    save(currentButton)
   }
 
   function enableEditMode() {
-    document.body.setAttribute('mode', 'edit');
-    document.querySelectorAll('.button').forEach(btn => {
-      btn.removeEventListener('click', handlePlay);
-      btn.addEventListener('click', enableBlocklyMode);
-    });
+    document.body.setAttribute("mode", "edit")
+    document.querySelectorAll(".button").forEach(btn => {
+      btn.removeEventListener("click", handlePlay)
+      btn.addEventListener("click", enableBlocklyMode)
+    })
   }
 
   function enableMakerMode() {
-    document.body.setAttribute('mode', 'maker');
-    document.querySelectorAll('.button').forEach(btn => {
-      btn.addEventListener('click', handlePlay);
-      btn.removeEventListener('click', enableBlocklyMode);
-    });
+    document.body.setAttribute("mode", "maker")
+    document.querySelectorAll(".button").forEach(btn => {
+      btn.addEventListener("click", handlePlay)
+      btn.removeEventListener("click", enableBlocklyMode)
+    })
   }
 
   function enableBlocklyMode(e) {
-    document.body.setAttribute('mode', 'blockly');
-    currentButton = e.target;
+    document.body.setAttribute("mode", "blockly")
+    currentButton = e.target
   }
 
-  document.querySelector('#edit').addEventListener('click', enableEditMode);
-  document.querySelector('#done').addEventListener('click', enableMakerMode);
-  document.querySelector('#save').addEventListener('click', handleSave);
+  document.querySelector("#edit").addEventListener("click", enableEditMode)
+  document.querySelector("#done").addEventListener("click", enableMakerMode)
+  document.querySelector("#save").addEventListener("click", handleSave)
 
-  enableMakerMode();
-
-})();
+  enableMakerMode()
+})()
