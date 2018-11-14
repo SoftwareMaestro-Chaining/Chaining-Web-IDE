@@ -20,15 +20,14 @@ Blockly.Solidity["contract"] = function(block) {
     isIn = " is " + inheritance
   }
 
-  var code =
-    "contract " +
-    block.getFieldValue("NAME") +
-    isIn +
-    " {\n" +
-    states +
-    ctor +
-    methods +
-    "}\n"
+  var code = `
+contract ${block.getFieldValue("NAME")}  ${isIn} {
+  ${states}
+  ${ctor}
+  ${methods}
+}
+
+`
 
   return code
 }

@@ -120,8 +120,12 @@ function BlockEditor(opts = {}, localRegistry) {
     toolbox += '<block type="contract_msg"></block>'
     toolbox += '<block type="expression_expr"></block>'
     toolbox += "</category>"
-    toolbox += '<category name="custom" colour="164">'
+    toolbox += '<category name="custom.. ing" colour="164">'
     toolbox += '<block type="user"></block>'
+    toolbox += '<block type="auth"></block>'
+    toolbox += '<block type="advertise"></block>'
+    toolbox += '<block type="is_in_mapping"></block>'
+    toolbox += '<block type="contract_mapping"></block>'
     toolbox += "</category>"
     toolbox += "</xml>"
 

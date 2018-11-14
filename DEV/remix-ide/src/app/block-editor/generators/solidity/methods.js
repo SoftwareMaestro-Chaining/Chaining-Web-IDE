@@ -14,18 +14,24 @@ Blockly.Solidity["contract_method"] = function(block) {
     VIEW: "view"
   }
 
+  var returns = block.getFieldValue("RETURN")
+
+  if (returns != "") {
+    returns = "returns(" + returns + ")"
+  } else {
+    returns = ""
+  }
+
   var params = Blockly.Solidity.statementToCode(block, "PARAMS").trim()
   var branch = Blockly.Solidity.statementToCode(block, "STACK")
-  var code =
-    "function " +
-    block.getFieldValue("NAME") +
-    "(" +
-    params +
-    ") " +
-    types[type] +
-    " {\n" +
-    branch +
-    "}\n"
+  var code = `
+  function ${block.getFieldValue("NAME")} (${params}) public ${
+    types[type]
+  } ${returns} {
+    ${branch}
+  }
+
+  `
 
   return code
 }

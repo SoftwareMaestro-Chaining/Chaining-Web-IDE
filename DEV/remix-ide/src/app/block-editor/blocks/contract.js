@@ -127,7 +127,7 @@ Blockly.Extensions.register("declare_typed_variable", function() {
 Blockly.defineBlocksWithJsonArray([
   {
     type: "contract",
-    message0: "smart contract %1 is %2",
+    message0: "contract name %1 is %2",
     args0: [
       {
         type: "field_input",
@@ -142,7 +142,7 @@ Blockly.defineBlocksWithJsonArray([
         text: ""
       }
     ],
-    message1: "states %1",
+    message1: "state %1",
     args1: [
       {
         type: "input_statement",
@@ -160,7 +160,7 @@ Blockly.defineBlocksWithJsonArray([
         align: "RIGHT"
       }
     ],
-    message3: "methods %1 ",
+    message3: "function %1 ",
     args3: [
       {
         type: "input_statement",
@@ -193,17 +193,17 @@ Blockly.Blocks["contract_state"] = {
     var nameField = new Blockly.FieldTextInput("myVar")
     var valueField = new Blockly.FieldTextInput("")
     this.appendDummyInput()
-      .appendField("let")
+      .appendField("type")
       .appendField(
         new Blockly.FieldDropdown([
           ["bool", "TYPE_BOOL"],
-          ["int", "TYPE_INT"],
-          ["uint", "TYPE_UINT"],
+          ["int", "TYPE_UINT"],
           ["address", "TYPE_ADDRESS"],
           ["string", "TYPE_STRING"]
         ]),
         "TYPE"
       )
+      .appendField("name")
       .appendField(nameField, "NAME")
       .appendField("being set to")
       .appendField(valueField, "VALUE")
@@ -357,7 +357,7 @@ Blockly.Blocks["contract_method_parameter_get"] = {
 Blockly.Blocks["contract_method"] = {
   init: function() {
     this.jsonInit({
-      message0: "method %1 payable %2",
+      message0: "method %1 payable %2 returns %3",
       args0: [
         {
           type: "field_input",
@@ -368,6 +368,12 @@ Blockly.Blocks["contract_method"] = {
           type: "field_dropdown",
           name: "PAY",
           options: [["none", "EMPTY"], ["view", "VIEW"], ["payable", "PAY"]]
+        },
+        {
+          type: "field_input",
+          name: "RETURN",
+          text: "",
+          align: "RIGHT"
         }
       ],
       message1: "parameters %1",
@@ -512,9 +518,129 @@ Blockly.defineBlocksWithJsonArray([
 
 Blockly.defineBlocksWithJsonArray([
   {
-    type: "user"
+    type: "user",
+    message0: "User Block %1 is %2",
+    args0: [
+      {
+        type: "field_input",
+        name: "Name",
+        text: "User"
+      },
+      {
+        type: "field_input",
+        name: "INHERITANCE",
+        check: "String",
+        text: ""
+      }
+    ],
+    message1: "Custom Code %1",
+    args1: [
+      {
+        type: "input_statement",
+        name: "Code"
+      }
+    ]
   }
 ])
+
+Blockly.defineBlocksWithJsonArray([
+  {
+    type: "auth",
+    message0: "Auth Block %1",
+    args0: [
+      {
+        type: "field_input",
+        name: "Name",
+        text: "Auth"
+      }
+    ],
+    message1: "Custom Code %1",
+    args1: [
+      {
+        type: "input_statement",
+        name: "Code"
+      }
+    ]
+  }
+])
+
+Blockly.defineBlocksWithJsonArray([
+  {
+    type: "advertise",
+    message0: "Advertisement Block %1",
+    args0: [
+      {
+        type: "field_input",
+        name: "Name",
+        text: "Advertise"
+      }
+    ],
+    message1: "Custom Code %1",
+    args1: [
+      {
+        type: "input_statement",
+        name: "Code"
+      }
+    ]
+  }
+])
+
+Blockly.Blocks["contract_mapping"] = {
+  init: function() {
+    this.jsonInit({
+      message0: "%1 mapping %2 name %3",
+      args0: [
+        {
+          type: "field_dropdown",
+          name: "Key",
+          options: [["int", "정수"], ["address", "주소"], ["string", "문자열"]]
+        },
+        {
+          type: "field_input",
+          name: "Value"
+        },
+        {
+          type: "field_input",
+          name: "Name",
+          text: "map"
+        }
+      ],
+      previousStatement: null,
+      nextStatement: null
+    })
+  }
+}
+
+Blockly.Blocks["is_in_mapping"] = {
+  init: function() {
+    this.jsonInit({
+      message0: "mapping name %1 One Dimensonal %2 Two Dimensonal %3",
+      args0: [
+        {
+          type: "field_input",
+          name: "NAME"
+        },
+        {
+          type: "field_input",
+          name: "ONE"
+        },
+        {
+          type: "field_input",
+          name: "TWO"
+        }
+      ],
+      message1: "logic %1",
+      args1: [
+        {
+          type: "input_statement",
+          name: "Code"
+        }
+      ],
+      previousStatement: null,
+      nextStatement: null
+    })
+  }
+}
 
 Blockly.Blocks["controls_for"] = {
   init: function() {
@@ -646,10 +772,7 @@ Blockly.Blocks["expression_expr"] = {
   init: function() {
     this.appendDummyInput()
       .appendField("code")
-      .appendField(
-        new Blockly.FieldTextArea(".......\n.......\n.......\n"),
-        "expr"
-      )
+      .appendField(new Blockly.FieldTextArea(""), "expr")
     this.setPreviousStatement(true)
     this.setColour(210)
   }
