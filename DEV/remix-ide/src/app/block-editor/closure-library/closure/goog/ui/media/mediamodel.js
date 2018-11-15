@@ -17,23 +17,21 @@
  * RSS specification {@link http://search.yahoo.com/mrss/}.
  */
 
-goog.provide('goog.ui.media.MediaModel');
-goog.provide('goog.ui.media.MediaModel.Category');
-goog.provide('goog.ui.media.MediaModel.Credit');
-goog.provide('goog.ui.media.MediaModel.Credit.Role');
-goog.provide('goog.ui.media.MediaModel.Credit.Scheme');
-goog.provide('goog.ui.media.MediaModel.Medium');
-goog.provide('goog.ui.media.MediaModel.MimeType');
-goog.provide('goog.ui.media.MediaModel.Player');
-goog.provide('goog.ui.media.MediaModel.SubTitle');
-goog.provide('goog.ui.media.MediaModel.Thumbnail');
+goog.provide("goog.ui.media.MediaModel")
+goog.provide("goog.ui.media.MediaModel.Category")
+goog.provide("goog.ui.media.MediaModel.Credit")
+goog.provide("goog.ui.media.MediaModel.Credit.Role")
+goog.provide("goog.ui.media.MediaModel.Credit.Scheme")
+goog.provide("goog.ui.media.MediaModel.Medium")
+goog.provide("goog.ui.media.MediaModel.MimeType")
+goog.provide("goog.ui.media.MediaModel.Player")
+goog.provide("goog.ui.media.MediaModel.SubTitle")
+goog.provide("goog.ui.media.MediaModel.Thumbnail")
 
-goog.require('goog.array');
-goog.require('goog.html.TrustedResourceUrl');
+goog.require("goog.array")
+goog.require("goog.html.TrustedResourceUrl")
 
-goog.forwardDeclare('goog.math.Size');
-
-
+goog.forwardDeclare("goog.math.Size")
 
 /**
  * An base data value class for all media data models.
@@ -58,63 +56,70 @@ goog.forwardDeclare('goog.math.Size');
  * @constructor
  */
 goog.ui.media.MediaModel = function(
-    opt_url, opt_caption, opt_description, opt_type, opt_medium, opt_duration,
-    opt_width, opt_height) {
+  opt_url,
+  opt_caption,
+  opt_description,
+  opt_type,
+  opt_medium,
+  opt_duration,
+  opt_width,
+  opt_height
+) {
   /**
    * The URL of the media.
    * @type {string|undefined}
    * @private
    */
-  this.url_ = opt_url;
+  this.url_ = opt_url
 
   /**
    * The caption of the media.
    * @type {string|undefined}
    * @private
    */
-  this.caption_ = opt_caption;
+  this.caption_ = opt_caption
 
   /**
    * A description of the media, typically user generated comments about it.
    * @type {string|undefined}
    * @private
    */
-  this.description_ = opt_description;
+  this.description_ = opt_description
 
   /**
    * The mime type of the media.
    * @type {goog.ui.media.MediaModel.MimeType|undefined}
    * @private
    */
-  this.type_ = opt_type;
+  this.type_ = opt_type
 
   /**
    * The medium of the media.
    * @type {goog.ui.media.MediaModel.Medium|undefined}
    * @private
    */
-  this.medium_ = opt_medium;
+  this.medium_ = opt_medium
 
   /**
    * The duration of the media in seconds.
    * @type {number|undefined}
    * @private
    */
-  this.duration_ = opt_duration;
+  this.duration_ = opt_duration
 
   /**
    * The width of the media in pixels.
    * @type {number|undefined}
    * @private
    */
-  this.width_ = opt_width;
+  this.width_ = opt_width
 
   /**
    * The height of the media in pixels.
    * @type {number|undefined}
    * @private
    */
-  this.height_ = opt_height;
+  this.height_ = opt_height
 
   /**
    * A list of thumbnails representations of the media (eg different sizes of
@@ -122,30 +127,29 @@ goog.ui.media.MediaModel = function(
    * @type {Array<goog.ui.media.MediaModel.Thumbnail>}
    * @private
    */
-  this.thumbnails_ = [];
+  this.thumbnails_ = []
 
   /**
    * The list of categories that are applied to this media.
    * @type {Array<goog.ui.media.MediaModel.Category>}
    * @private
    */
-  this.categories_ = [];
+  this.categories_ = []
 
   /**
    * The list of credits that pertain to this media object.
    * @type {!Array<goog.ui.media.MediaModel.Credit>}
    * @private
    */
-  this.credits_ = [];
+  this.credits_ = []
 
   /**
    * The list of subtitles for the media object.
    * @type {Array<goog.ui.media.MediaModel.SubTitle>}
    * @private
    */
-  this.subTitles_ = [];
-};
-
+  this.subTitles_ = []
+}
 
 /**
  * The supported media mime types, a subset of the media types found here:
@@ -154,14 +158,13 @@ goog.ui.media.MediaModel = function(
  * @enum {string}
  */
 goog.ui.media.MediaModel.MimeType = {
-  HTML: 'text/html',
-  PLAIN: 'text/plain',
-  FLASH: 'application/x-shockwave-flash',
-  JPEG: 'image/jpeg',
-  GIF: 'image/gif',
-  PNG: 'image/png'
-};
-
+  HTML: "text/html",
+  PLAIN: "text/plain",
+  FLASH: "application/x-shockwave-flash",
+  JPEG: "image/jpeg",
+  GIF: "image/gif",
+  PNG: "image/png"
+}
 
 /**
  * Supported mediums, found here:
@@ -169,30 +172,27 @@ goog.ui.media.MediaModel.MimeType = {
  * @enum {string}
  */
 goog.ui.media.MediaModel.Medium = {
-  IMAGE: 'image',
-  AUDIO: 'audio',
-  VIDEO: 'video',
-  DOCUMENT: 'document',
-  EXECUTABLE: 'executable'
-};
-
+  IMAGE: "image",
+  AUDIO: "audio",
+  VIDEO: "video",
+  DOCUMENT: "document",
+  EXECUTABLE: "executable"
+}
 
 /**
  * The media player.
  * @type {goog.ui.media.MediaModel.Player}
  * @private
  */
-goog.ui.media.MediaModel.prototype.player_;
-
+goog.ui.media.MediaModel.prototype.player_
 
 /**
  * Gets the URL of this media.
  * @return {string|undefined} The URL of the media.
  */
 goog.ui.media.MediaModel.prototype.getUrl = function() {
-  return this.url_;
-};
-
+  return this.url_
+}
 
 /**
  * Sets the URL of this media.
@@ -200,19 +200,17 @@ goog.ui.media.MediaModel.prototype.getUrl = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setUrl = function(url) {
-  this.url_ = url;
-  return this;
-};
-
+  this.url_ = url
+  return this
+}
 
 /**
  * Gets the caption of this media.
  * @return {string|undefined} The caption of the media.
  */
 goog.ui.media.MediaModel.prototype.getCaption = function() {
-  return this.caption_;
-};
-
+  return this.caption_
+}
 
 /**
  * Sets the caption of this media.
@@ -220,19 +218,17 @@ goog.ui.media.MediaModel.prototype.getCaption = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setCaption = function(caption) {
-  this.caption_ = caption;
-  return this;
-};
-
+  this.caption_ = caption
+  return this
+}
 
 /**
  * Gets the media mime type.
  * @return {goog.ui.media.MediaModel.MimeType|undefined} The media mime type.
  */
 goog.ui.media.MediaModel.prototype.getType = function() {
-  return this.type_;
-};
-
+  return this.type_
+}
 
 /**
  * Sets the media mime type.
@@ -240,19 +236,17 @@ goog.ui.media.MediaModel.prototype.getType = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setType = function(type) {
-  this.type_ = type;
-  return this;
-};
-
+  this.type_ = type
+  return this
+}
 
 /**
  * Gets the media medium.
  * @return {goog.ui.media.MediaModel.Medium|undefined} The media medium.
  */
 goog.ui.media.MediaModel.prototype.getMedium = function() {
-  return this.medium_;
-};
-
+  return this.medium_
+}
 
 /**
  * Sets the media medium.
@@ -260,19 +254,17 @@ goog.ui.media.MediaModel.prototype.getMedium = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setMedium = function(medium) {
-  this.medium_ = medium;
-  return this;
-};
-
+  this.medium_ = medium
+  return this
+}
 
 /**
  * Gets the description of this media.
  * @return {string|undefined} The description of the media.
  */
 goog.ui.media.MediaModel.prototype.getDescription = function() {
-  return this.description_;
-};
-
+  return this.description_
+}
 
 /**
  * Sets the description of this media.
@@ -280,19 +272,17 @@ goog.ui.media.MediaModel.prototype.getDescription = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setDescription = function(description) {
-  this.description_ = description;
-  return this;
-};
-
+  this.description_ = description
+  return this
+}
 
 /**
  * Gets the thumbnail urls.
  * @return {Array<goog.ui.media.MediaModel.Thumbnail>} The list of thumbnails.
  */
 goog.ui.media.MediaModel.prototype.getThumbnails = function() {
-  return this.thumbnails_;
-};
-
+  return this.thumbnails_
+}
 
 /**
  * Sets the thumbnail list.
@@ -301,19 +291,17 @@ goog.ui.media.MediaModel.prototype.getThumbnails = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setThumbnails = function(thumbnails) {
-  this.thumbnails_ = thumbnails;
-  return this;
-};
-
+  this.thumbnails_ = thumbnails
+  return this
+}
 
 /**
  * Gets the duration of the media.
  * @return {number|undefined} The duration in seconds.
  */
 goog.ui.media.MediaModel.prototype.getDuration = function() {
-  return this.duration_;
-};
-
+  return this.duration_
+}
 
 /**
  * Sets duration of the media.
@@ -321,19 +309,17 @@ goog.ui.media.MediaModel.prototype.getDuration = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setDuration = function(duration) {
-  this.duration_ = duration;
-  return this;
-};
-
+  this.duration_ = duration
+  return this
+}
 
 /**
  * Gets the width of the media in pixels.
  * @return {number|undefined} The width in pixels.
  */
 goog.ui.media.MediaModel.prototype.getWidth = function() {
-  return this.width_;
-};
-
+  return this.width_
+}
 
 /**
  * Sets the width of the media.
@@ -341,19 +327,17 @@ goog.ui.media.MediaModel.prototype.getWidth = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setWidth = function(width) {
-  this.width_ = width;
-  return this;
-};
-
+  this.width_ = width
+  return this
+}
 
 /**
  * Gets the height of the media in pixels.
  * @return {number|undefined} The height in pixels.
  */
 goog.ui.media.MediaModel.prototype.getHeight = function() {
-  return this.height_;
-};
-
+  return this.height_
+}
 
 /**
  * Sets the height of the media.
@@ -361,19 +345,17 @@ goog.ui.media.MediaModel.prototype.getHeight = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setHeight = function(height) {
-  this.height_ = height;
-  return this;
-};
-
+  this.height_ = height
+  return this
+}
 
 /**
  * Gets the player data.
  * @return {goog.ui.media.MediaModel.Player|undefined} The media player data.
  */
 goog.ui.media.MediaModel.prototype.getPlayer = function() {
-  return this.player_;
-};
-
+  return this.player_
+}
 
 /**
  * Sets the player data.
@@ -381,10 +363,9 @@ goog.ui.media.MediaModel.prototype.getPlayer = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setPlayer = function(player) {
-  this.player_ = player;
-  return this;
-};
-
+  this.player_ = player
+  return this
+}
 
 /**
  * Gets the categories of the media.
@@ -392,9 +373,8 @@ goog.ui.media.MediaModel.prototype.setPlayer = function(player) {
  *     media.
  */
 goog.ui.media.MediaModel.prototype.getCategories = function() {
-  return this.categories_;
-};
-
+  return this.categories_
+}
 
 /**
  * Sets the categories of the media
@@ -403,10 +383,9 @@ goog.ui.media.MediaModel.prototype.getCategories = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setCategories = function(categories) {
-  this.categories_ = categories;
-  return this;
-};
-
+  this.categories_ = categories
+  return this
+}
 
 /**
  * Finds the first category with the given scheme.
@@ -416,23 +395,21 @@ goog.ui.media.MediaModel.prototype.setCategories = function(categories) {
  */
 goog.ui.media.MediaModel.prototype.findCategoryWithScheme = function(scheme) {
   if (!this.categories_) {
-    return null;
+    return null
   }
   var category = goog.array.find(this.categories_, function(category) {
-    return category ? (scheme == category.getScheme()) : false;
-  });
-  return /** @type {goog.ui.media.MediaModel.Category} */ (category);
-};
-
+    return category ? scheme == category.getScheme() : false
+  })
+  return /** @type {goog.ui.media.MediaModel.Category} */ (category)
+}
 
 /**
  * Gets the credits of the media.
  * @return {!Array<goog.ui.media.MediaModel.Credit>} The credits of the media.
  */
 goog.ui.media.MediaModel.prototype.getCredits = function() {
-  return this.credits_;
-};
-
+  return this.credits_
+}
 
 /**
  * Sets the credits of the media
@@ -441,10 +418,9 @@ goog.ui.media.MediaModel.prototype.getCredits = function() {
  * @return {!goog.ui.media.MediaModel} The object itself, used for chaining.
  */
 goog.ui.media.MediaModel.prototype.setCredits = function(credits) {
-  this.credits_ = credits;
-  return this;
-};
-
+  this.credits_ = credits
+  return this
+}
 
 /**
  * Finds all credits with the given role.
@@ -453,20 +429,19 @@ goog.ui.media.MediaModel.prototype.setCredits = function(credits) {
  *     with the given role. May be empty.
  */
 goog.ui.media.MediaModel.prototype.findCreditsWithRole = function(role) {
-  var credits = goog.array.filter(
-      this.credits_, function(credit) { return role == credit.getRole(); });
-  return /** @type {!Array<!goog.ui.media.MediaModel.Credit>} */ (credits);
-};
-
+  var credits = goog.array.filter(this.credits_, function(credit) {
+    return role == credit.getRole()
+  })
+  return /** @type {!Array<!goog.ui.media.MediaModel.Credit>} */ (credits)
+}
 
 /**
  * Gets the subtitles for the media.
  * @return {Array<goog.ui.media.MediaModel.SubTitle>} The subtitles.
  */
 goog.ui.media.MediaModel.prototype.getSubTitles = function() {
-  return this.subTitles_;
-};
-
+  return this.subTitles_
+}
 
 /**
  * Sets the subtitles for the media
@@ -474,11 +449,9 @@ goog.ui.media.MediaModel.prototype.getSubTitles = function() {
  * @return {!goog.ui.media.MediaModel} The object itself.
  */
 goog.ui.media.MediaModel.prototype.setSubTitles = function(subtitles) {
-  this.subTitles_ = subtitles;
-  return this;
-};
-
-
+  this.subTitles_ = subtitles
+  return this
+}
 
 /**
  * Constructs a thumbnail containing details of the thumbnail's image URL and
@@ -494,25 +467,23 @@ goog.ui.media.MediaModel.Thumbnail = function(url, opt_size) {
    * @type {string}
    * @private
    */
-  this.url_ = url;
+  this.url_ = url
 
   /**
    * The size of the thumbnail's image if known.
    * @type {goog.math.Size}
    * @private
    */
-  this.size_ = opt_size || null;
-};
-
+  this.size_ = opt_size || null
+}
 
 /**
  * Gets the thumbnail URL.
  * @return {string} The thumbnail's image URL.
  */
 goog.ui.media.MediaModel.Thumbnail.prototype.getUrl = function() {
-  return this.url_;
-};
-
+  return this.url_
+}
 
 /**
  * Sets the thumbnail URL.
@@ -521,19 +492,17 @@ goog.ui.media.MediaModel.Thumbnail.prototype.getUrl = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Thumbnail.prototype.setUrl = function(url) {
-  this.url_ = url;
-  return this;
-};
-
+  this.url_ = url
+  return this
+}
 
 /**
  * Gets the thumbnail size.
  * @return {goog.math.Size} The size of the thumbnail's image if known.
  */
 goog.ui.media.MediaModel.Thumbnail.prototype.getSize = function() {
-  return this.size_;
-};
-
+  return this.size_
+}
 
 /**
  * Sets the thumbnail size.
@@ -542,11 +511,9 @@ goog.ui.media.MediaModel.Thumbnail.prototype.getSize = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Thumbnail.prototype.setSize = function(size) {
-  this.size_ = size;
-  return this;
-};
-
-
+  this.size_ = size
+  return this
+}
 
 /**
  * Constructs a player containing details of the player's URL and
@@ -563,41 +530,38 @@ goog.ui.media.MediaModel.Player = function(url, opt_vars, opt_size) {
    * @type {!goog.html.TrustedResourceUrl}
    * @private
    */
-  this.trustedResourceUrl_ = url;
+  this.trustedResourceUrl_ = url
 
   /**
    * Player arguments, typically flash arguments.
    * @type {Object}
    * @private
    */
-  this.vars_ = opt_vars || null;
+  this.vars_ = opt_vars || null
 
   /**
    * The size of the player if known.
    * @type {goog.math.Size}
    * @private
    */
-  this.size_ = opt_size || null;
-};
-
+  this.size_ = opt_size || null
+}
 
 /**
  * Gets the player URL.
  * @return {!goog.html.TrustedResourceUrl} The player's URL.
  */
 goog.ui.media.MediaModel.Player.prototype.getTrustedResourceUrl = function() {
-  return this.trustedResourceUrl_;
-};
-
+  return this.trustedResourceUrl_
+}
 
 /**
  * Gets the player URL.
  * @return {string} The player's URL.
  */
 goog.ui.media.MediaModel.Player.prototype.getUrl = function() {
-  return this.trustedResourceUrl_.getTypedStringValue();
-};
-
+  return this.trustedResourceUrl_.getTypedStringValue()
+}
 
 /**
  * Sets the player URL.
@@ -606,19 +570,17 @@ goog.ui.media.MediaModel.Player.prototype.getUrl = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Player.prototype.setUrl = function(url) {
-  this.trustedResourceUrl_ = url;
-  return this;
-};
-
+  this.trustedResourceUrl_ = url
+  return this
+}
 
 /**
  * Gets the player arguments.
  * @return {Object} The media player arguments.
  */
 goog.ui.media.MediaModel.Player.prototype.getVars = function() {
-  return this.vars_;
-};
-
+  return this.vars_
+}
 
 /**
  * Sets the player arguments.
@@ -627,19 +589,17 @@ goog.ui.media.MediaModel.Player.prototype.getVars = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Player.prototype.setVars = function(vars) {
-  this.vars_ = vars;
-  return this;
-};
-
+  this.vars_ = vars
+  return this
+}
 
 /**
  * Gets the size of the player.
  * @return {goog.math.Size} The size of the player if known.
  */
 goog.ui.media.MediaModel.Player.prototype.getSize = function() {
-  return this.size_;
-};
-
+  return this.size_
+}
 
 /**
  * Sets the size of the player.
@@ -648,11 +608,9 @@ goog.ui.media.MediaModel.Player.prototype.getSize = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Player.prototype.setSize = function(size) {
-  this.size_ = size;
-  return this;
-};
-
-
+  this.size_ = size
+  return this
+}
 
 /**
  * A taxonomy to be set that gives an indication of the type of media content,
@@ -670,32 +628,30 @@ goog.ui.media.MediaModel.Category = function(scheme, value, opt_label) {
    * @type {string}
    * @private
    */
-  this.scheme_ = scheme;
+  this.scheme_ = scheme
 
   /**
    * The value of the category.
    * @type {string}
    * @private
    */
-  this.value_ = value;
+  this.value_ = value
 
   /**
    * The human readable label that can be displayed in end user applications.
    * @type {string}
    * @private
    */
-  this.label_ = opt_label || '';
-};
-
+  this.label_ = opt_label || ""
+}
 
 /**
  * Gets the category scheme.
  * @return {string} The category scheme URI.
  */
 goog.ui.media.MediaModel.Category.prototype.getScheme = function() {
-  return this.scheme_;
-};
-
+  return this.scheme_
+}
 
 /**
  * Sets the category scheme.
@@ -704,19 +660,17 @@ goog.ui.media.MediaModel.Category.prototype.getScheme = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Category.prototype.setScheme = function(scheme) {
-  this.scheme_ = scheme;
-  return this;
-};
-
+  this.scheme_ = scheme
+  return this
+}
 
 /**
  * Gets the categor's value.
  * @return {string} The category's value.
  */
 goog.ui.media.MediaModel.Category.prototype.getValue = function() {
-  return this.value_;
-};
-
+  return this.value_
+}
 
 /**
  * Sets the category value.
@@ -725,19 +679,17 @@ goog.ui.media.MediaModel.Category.prototype.getValue = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Category.prototype.setValue = function(value) {
-  this.value_ = value;
-  return this;
-};
-
+  this.value_ = value
+  return this
+}
 
 /**
  * Gets the label of the category.
  * @return {string} The label of the category.
  */
 goog.ui.media.MediaModel.Category.prototype.getLabel = function() {
-  return this.label_;
-};
-
+  return this.label_
+}
 
 /**
  * Sets the label of the category.
@@ -746,11 +698,9 @@ goog.ui.media.MediaModel.Category.prototype.getLabel = function() {
  *     chaining.
  */
 goog.ui.media.MediaModel.Category.prototype.setLabel = function(label) {
-  this.label_ = label;
-  return this;
-};
-
-
+  this.label_ = label
+  return this
+}
 
 /**
  * Indicates an entity that has contributed to a media object. Based on
@@ -769,53 +719,49 @@ goog.ui.media.MediaModel.Credit = function(value, opt_role, opt_scheme) {
    * @type {string}
    * @private
    */
-  this.value_ = value;
+  this.value_ = value
 
   /**
    * The role the entity played.
    * @type {goog.ui.media.MediaModel.Credit.Role|undefined}
    * @private
    */
-  this.role_ = opt_role;
+  this.role_ = opt_role
 
   /**
    * The URI that identifies the role scheme
    * @type {goog.ui.media.MediaModel.Credit.Scheme|undefined}
    * @private
    */
-  this.scheme_ = opt_scheme;
-};
-
+  this.scheme_ = opt_scheme
+}
 
 /**
  * The types of known roles.
  * @enum {string}
  */
 goog.ui.media.MediaModel.Credit.Role = {
-  UPLOADER: 'uploader',
-  OWNER: 'owner'
-};
-
+  UPLOADER: "uploader",
+  OWNER: "owner"
+}
 
 /**
  * The types of known schemes.
  * @enum {string}
  */
 goog.ui.media.MediaModel.Credit.Scheme = {
-  EUROPEAN_BROADCASTING: 'urn:ebu',
-  YAHOO: 'urn:yvs',
-  YOUTUBE: 'urn:youtube'
-};
-
+  EUROPEAN_BROADCASTING: "urn:ebu",
+  YAHOO: "urn:yvs",
+  YOUTUBE: "urn:youtube"
+}
 
 /**
  * Gets the name of the entity being credited.
  * @return {string} The name of the entity.
  */
 goog.ui.media.MediaModel.Credit.prototype.getValue = function() {
-  return this.value_;
-};
-
+  return this.value_
+}
 
 /**
  * Sets the value of the credit object.
@@ -823,10 +769,9 @@ goog.ui.media.MediaModel.Credit.prototype.getValue = function() {
  * @return {!goog.ui.media.MediaModel.Credit} The object itself.
  */
 goog.ui.media.MediaModel.Credit.prototype.setValue = function(value) {
-  this.value_ = value;
-  return this;
-};
-
+  this.value_ = value
+  return this
+}
 
 /**
  * Gets the role of the entity being credited.
@@ -834,9 +779,8 @@ goog.ui.media.MediaModel.Credit.prototype.setValue = function(value) {
  *     entity.
  */
 goog.ui.media.MediaModel.Credit.prototype.getRole = function() {
-  return this.role_;
-};
-
+  return this.role_
+}
 
 /**
  * Sets the role of the credit object.
@@ -844,10 +788,9 @@ goog.ui.media.MediaModel.Credit.prototype.getRole = function() {
  * @return {!goog.ui.media.MediaModel.Credit} The object itself.
  */
 goog.ui.media.MediaModel.Credit.prototype.setRole = function(role) {
-  this.role_ = role;
-  return this;
-};
-
+  this.role_ = role
+  return this
+}
 
 /**
  * Gets the scheme of the credit object.
@@ -855,9 +798,8 @@ goog.ui.media.MediaModel.Credit.prototype.setRole = function(role) {
  *     identifies the role scheme.
  */
 goog.ui.media.MediaModel.Credit.prototype.getScheme = function() {
-  return this.scheme_;
-};
-
+  return this.scheme_
+}
 
 /**
  * Sets the scheme of the credit object.
@@ -865,11 +807,9 @@ goog.ui.media.MediaModel.Credit.prototype.getScheme = function() {
  * @return {!goog.ui.media.MediaModel.Credit} The object itself.
  */
 goog.ui.media.MediaModel.Credit.prototype.setScheme = function(scheme) {
-  this.scheme_ = scheme;
-  return this;
-};
-
-
+  this.scheme_ = scheme
+  return this
+}
 
 /**
  * A reference to the subtitle URI for a media object.
@@ -888,23 +828,22 @@ goog.ui.media.MediaModel.SubTitle = function(href, lang, type) {
    * @type {string}
    * @private
    */
-  this.href_ = href;
+  this.href_ = href
 
   /**
    * The RFC 3066 language.
    * @type {string}
    * @private
    */
-  this.lang_ = lang;
+  this.lang_ = lang
 
   /**
    * The MIME type of the resource.
    * @type {string}
    * @private
    */
-  this.type_ = type;
-};
-
+  this.type_ = type
+}
 
 /**
  * Sets the href for the subtitle object.
@@ -912,19 +851,17 @@ goog.ui.media.MediaModel.SubTitle = function(href, lang, type) {
  * @return {!goog.ui.media.MediaModel.SubTitle} The object itself.
  */
 goog.ui.media.MediaModel.SubTitle.prototype.setHref = function(href) {
-  this.href_ = href;
-  return this;
-};
-
+  this.href_ = href
+  return this
+}
 
 /**
  * Get the href for the subtitle object.
  * @return {string} href The subtitle's URI.
  */
 goog.ui.media.MediaModel.SubTitle.prototype.getHref = function() {
-  return this.href_;
-};
-
+  return this.href_
+}
 
 /**
  * Sets the language for the subtitle object.
@@ -932,19 +869,17 @@ goog.ui.media.MediaModel.SubTitle.prototype.getHref = function() {
  * @return {!goog.ui.media.MediaModel.SubTitle} The object itself.
  */
 goog.ui.media.MediaModel.SubTitle.prototype.setLang = function(lang) {
-  this.lang_ = lang;
-  return this;
-};
-
+  this.lang_ = lang
+  return this
+}
 
 /**
  * Get the lang for the subtitle object.
  * @return {string} lang The RFC 3066 language.
  */
 goog.ui.media.MediaModel.SubTitle.prototype.getLang = function() {
-  return this.lang_;
-};
-
+  return this.lang_
+}
 
 /**
  * Sets the type for the subtitle object.
@@ -952,15 +887,14 @@ goog.ui.media.MediaModel.SubTitle.prototype.getLang = function() {
  * @return {!goog.ui.media.MediaModel.SubTitle} The object itself.
  */
 goog.ui.media.MediaModel.SubTitle.prototype.setType = function(type) {
-  this.type_ = type;
-  return this;
-};
-
+  this.type_ = type
+  return this
+}
 
 /**
  * Get the type for the subtitle object.
  * @return {string} type The MIME type.
  */
 goog.ui.media.MediaModel.SubTitle.prototype.getType = function() {
-  return this.type_;
-};
+  return this.type_
+}

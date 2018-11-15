@@ -19,16 +19,13 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.Matcher');
+goog.provide("goog.dom.pattern.Matcher")
 
-goog.require('goog.dom.TagIterator');
-goog.require('goog.dom.pattern.MatchType');
-goog.require('goog.iter');
-
+goog.require("goog.dom.TagIterator")
+goog.require("goog.dom.pattern.MatchType")
+goog.require("goog.iter")
 
 // TODO(robbyw): Allow for backtracks of size > 1.
-
-
 
 /**
  * Given a set of patterns and a root node, this class tests the patterns in
@@ -53,7 +50,7 @@ goog.dom.pattern.Matcher = function() {
    *
    * @private {Array<goog.dom.pattern.AbstractPattern>}
    */
-  this.patterns_ = [];
+  this.patterns_ = []
 
   /**
    * Array of callbacks to call when a pattern is matched.  The indexing is the
@@ -61,9 +58,8 @@ goog.dom.pattern.Matcher = function() {
    *
    * @private {Array<Function>}
    */
-  this.callbacks_ = [];
-};
-
+  this.callbacks_ = []
+}
 
 /**
  * Adds a pattern to be matched.  The callback can return an object whose keys
@@ -74,10 +70,9 @@ goog.dom.pattern.Matcher = function() {
  *     the above semantics.
  */
 goog.dom.pattern.Matcher.prototype.addPattern = function(pattern, callback) {
-  this.patterns_.push(pattern);
-  this.callbacks_.push(callback);
-};
-
+  this.patterns_.push(pattern)
+  this.callbacks_.push(callback)
+}
 
 /**
  * Resets all the patterns.
@@ -86,10 +81,9 @@ goog.dom.pattern.Matcher.prototype.addPattern = function(pattern, callback) {
  */
 goog.dom.pattern.Matcher.prototype.reset_ = function() {
   for (var i = 0, len = this.patterns_.length; i < len; i++) {
-    this.patterns_[i].reset();
+    this.patterns_[i].reset()
   }
-};
-
+}
 
 /**
  * Test the given node against all patterns.
@@ -102,27 +96,26 @@ goog.dom.pattern.Matcher.prototype.reset_ = function() {
  */
 goog.dom.pattern.Matcher.prototype.matchToken_ = function(position) {
   for (var i = 0, len = this.patterns_.length; i < len; i++) {
-    var pattern = this.patterns_[i];
+    var pattern = this.patterns_[i]
     switch (pattern.matchToken(position.node, position.tagType)) {
       case goog.dom.pattern.MatchType.MATCH:
       case goog.dom.pattern.MatchType.BACKTRACK_MATCH:
-        var callback = this.callbacks_[i];
+        var callback = this.callbacks_[i]
 
         // Callbacks are allowed to modify the current position, but must
         // return true if the do.
         if (callback(pattern.matchedNode, position, pattern)) {
-          return true;
+          return true
         }
 
       default:
         // Do nothing.
-        break;
+        break
     }
   }
 
-  return false;
-};
-
+  return false
+}
 
 /**
  * Match the set of patterns against a match tree.
@@ -130,15 +123,19 @@ goog.dom.pattern.Matcher.prototype.matchToken_ = function(position) {
  * @param {Node} node The root node of the tree to match.
  */
 goog.dom.pattern.Matcher.prototype.match = function(node) {
-  var position = new goog.dom.TagIterator(node);
+  var position = new goog.dom.TagIterator(node)
 
-  this.reset_();
+  this.reset_()
 
-  goog.iter.forEach(position, function() {
-    while (this.matchToken_(position)) {
-      // Since we've moved, our old pattern statuses don't make sense any more.
-      // Reset them.
-      this.reset_();
-    }
-  }, this);
-};
+  goog.iter.forEach(
+    position,
+    function() {
+      while (this.matchToken_(position)) {
+        // Since we've moved, our old pattern statuses don't make sense any more.
+        // Reset them.
+        this.reset_()
+      }
+    },
+    this
+  )
+}

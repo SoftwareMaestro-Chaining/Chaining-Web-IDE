@@ -19,8 +19,7 @@
  * @author doughtie@google.com (Gavin Doughtie)
  */
 
-goog.provide('goog.ui.ButtonSide');
-
+goog.provide("goog.ui.ButtonSide")
 
 /**
  * Constants for button sides, see {@link goog.ui.Button.prototype.setCollapsed}
@@ -36,4 +35,4 @@ goog.ui.ButtonSide = {
   END: 2,
   /** Both sides. */
   BOTH: 3
-};
+}

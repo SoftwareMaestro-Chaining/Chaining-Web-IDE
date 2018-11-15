@@ -18,26 +18,24 @@
  *
  */
 
-goog.provide('goog.debug.ErrorReporter');
-goog.provide('goog.debug.ErrorReporter.ExceptionEvent');
+goog.provide("goog.debug.ErrorReporter")
+goog.provide("goog.debug.ErrorReporter.ExceptionEvent")
 
-goog.require('goog.asserts');
-goog.require('goog.debug');
-goog.require('goog.debug.Error');
-goog.require('goog.debug.ErrorHandler');
-goog.require('goog.debug.entryPointRegistry');
-goog.require('goog.debug.errorcontext');
-goog.require('goog.events');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventTarget');
-goog.require('goog.log');
-goog.require('goog.net.XhrIo');
-goog.require('goog.object');
-goog.require('goog.string');
-goog.require('goog.uri.utils');
-goog.require('goog.userAgent');
-
-
+goog.require("goog.asserts")
+goog.require("goog.debug")
+goog.require("goog.debug.Error")
+goog.require("goog.debug.ErrorHandler")
+goog.require("goog.debug.entryPointRegistry")
+goog.require("goog.debug.errorcontext")
+goog.require("goog.events")
+goog.require("goog.events.Event")
+goog.require("goog.events.EventTarget")
+goog.require("goog.log")
+goog.require("goog.net.XhrIo")
+goog.require("goog.object")
+goog.require("goog.string")
+goog.require("goog.uri.utils")
+goog.require("goog.userAgent")
 
 /**
  * Constructs an error reporter. Internal Use Only. To install an error
@@ -56,41 +54,44 @@ goog.require('goog.userAgent');
  * @extends {goog.events.EventTarget}
  */
 goog.debug.ErrorReporter = function(
-    handlerUrl, opt_contextProvider, opt_noAutoProtect) {
-  goog.debug.ErrorReporter.base(this, 'constructor');
+  handlerUrl,
+  opt_contextProvider,
+  opt_noAutoProtect
+) {
+  goog.debug.ErrorReporter.base(this, "constructor")
 
   /**
    * Context provider, if one was provided.
    * @type {?function(!Error, !Object<string, string>)}
    * @private
    */
-  this.contextProvider_ = opt_contextProvider || null;
+  this.contextProvider_ = opt_contextProvider || null
 
   /**
    * The string prefix of any optional context parameters logged with the error.
    * @private {string}
    */
-  this.contextPrefix_ = 'context.';
+  this.contextPrefix_ = "context."
 
   /**
    * The number of bytes after which the ErrorReporter truncates the POST body.
    * If null, the ErrorReporter won't truncate the body.
    * @private {?number}
    */
-  this.truncationLimit_ = null;
+  this.truncationLimit_ = null
 
   /**
    * Additional arguments to append to URL before sending XHR.
    * @private {!Object<string,string>}
    */
-  this.additionalArguments_ = {};
+  this.additionalArguments_ = {}
 
   /**
    * XHR sender.
    * @type {function(string, string, string, (Object|goog.structs.Map)=)}
    * @private
    */
-  this.xhrSender_ = goog.debug.ErrorReporter.defaultXhrSender;
+  this.xhrSender_ = goog.debug.ErrorReporter.defaultXhrSender
 
   /**
    * The URL at which all errors caught by this handler will be logged.
@@ -98,7 +99,7 @@ goog.debug.ErrorReporter = function(
    * @type {string}
    * @private
    */
-  this.handlerUrl_ = handlerUrl;
+  this.handlerUrl_ = handlerUrl
 
   if (goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT) {
     if (!opt_noAutoProtect) {
@@ -107,20 +108,20 @@ goog.debug.ErrorReporter = function(
        *
        * @private {goog.debug.ErrorHandler}
        */
-      this.errorHandler_ = null;
+      this.errorHandler_ = null
 
-      this.setup_();
+      this.setup_()
     }
   } else if (!opt_noAutoProtect) {
     goog.asserts.fail(
-        'opt_noAutoProtect cannot be false while ' +
-        'goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT is false.  Setting ' +
-        'ALLOW_AUTO_PROTECT to false removes the necessary auto-protect code ' +
-        'in compiled/optimized mode.');
+      "opt_noAutoProtect cannot be false while " +
+        "goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT is false.  Setting " +
+        "ALLOW_AUTO_PROTECT to false removes the necessary auto-protect code " +
+        "in compiled/optimized mode."
+    )
   }
-};
-goog.inherits(goog.debug.ErrorReporter, goog.events.EventTarget);
-
+}
+goog.inherits(goog.debug.ErrorReporter, goog.events.EventTarget)
 
 /**
  * @define {boolean} If true, the code that provides additional entry point
@@ -128,9 +129,7 @@ goog.inherits(goog.debug.ErrorReporter, goog.events.EventTarget);
  *     bringing in a lot of code from ErrorHandler and entryPointRegistry in
  *     compiled mode.
  */
-goog.define('goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT', true);
-
-
+goog.define("goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT", true)
 
 /**
  * Event broadcast when an exception is logged.
@@ -142,38 +141,36 @@ goog.define('goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT', true);
  * @final
  */
 goog.debug.ErrorReporter.ExceptionEvent = function(error, context) {
-  goog.events.Event.call(this, goog.debug.ErrorReporter.ExceptionEvent.TYPE);
+  goog.events.Event.call(this, goog.debug.ErrorReporter.ExceptionEvent.TYPE)
 
   /**
    * The error that was reported.
    * @type {Error}
    */
-  this.error = error;
+  this.error = error
 
   /**
    * Context values sent to the server alongside this report.
    * @type {!Object<string, string>}
    */
-  this.context = context;
-};
-goog.inherits(goog.debug.ErrorReporter.ExceptionEvent, goog.events.Event);
-
+  this.context = context
+}
+goog.inherits(goog.debug.ErrorReporter.ExceptionEvent, goog.events.Event)
 
 /**
  * Event type for notifying of a logged exception.
  * @type {string}
  */
-goog.debug.ErrorReporter.ExceptionEvent.TYPE =
-    goog.events.getUniqueId('exception');
-
+goog.debug.ErrorReporter.ExceptionEvent.TYPE = goog.events.getUniqueId(
+  "exception"
+)
 
 /**
  * Extra headers for the error-reporting XHR.
  * @type {Object|goog.structs.Map|undefined}
  * @private
  */
-goog.debug.ErrorReporter.prototype.extraHeaders_;
-
+goog.debug.ErrorReporter.prototype.extraHeaders_
 
 /**
  * Logging object.
@@ -181,9 +178,9 @@ goog.debug.ErrorReporter.prototype.extraHeaders_;
  * @type {goog.log.Logger}
  * @private
  */
-goog.debug.ErrorReporter.logger_ =
-    goog.log.getLogger('goog.debug.ErrorReporter');
-
+goog.debug.ErrorReporter.logger_ = goog.log.getLogger(
+  "goog.debug.ErrorReporter"
+)
 
 /**
  * Installs an error reporter to catch all JavaScript errors raised.
@@ -201,12 +198,17 @@ goog.debug.ErrorReporter.logger_ =
  * @return {!goog.debug.ErrorReporter} The error reporter.
  */
 goog.debug.ErrorReporter.install = function(
-    loggingUrl, opt_contextProvider, opt_noAutoProtect) {
+  loggingUrl,
+  opt_contextProvider,
+  opt_noAutoProtect
+) {
   var instance = new goog.debug.ErrorReporter(
-      loggingUrl, opt_contextProvider, opt_noAutoProtect);
-  return instance;
-};
-
+    loggingUrl,
+    opt_contextProvider,
+    opt_noAutoProtect
+  )
+  return instance
+}
 
 /**
  * Default implementation of XHR sender interface.
@@ -218,10 +220,13 @@ goog.debug.ErrorReporter.install = function(
  *     request.
  */
 goog.debug.ErrorReporter.defaultXhrSender = function(
-    uri, method, content, opt_headers) {
-  goog.net.XhrIo.send(uri, null, method, content, opt_headers);
-};
-
+  uri,
+  method,
+  content,
+  opt_headers
+) {
+  goog.net.XhrIo.send(uri, null, method, content, opt_headers)
+}
 
 /**
  * Installs exception protection for an entry point function in addition
@@ -234,20 +239,22 @@ goog.debug.ErrorReporter.defaultXhrSender = function(
  * @return {Function} A protected wrapper function that calls the entry point
  *     function or null if the entry point could not be protected.
  */
-goog.debug.ErrorReporter.prototype.protectAdditionalEntryPoint =
-    goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT ? function(fn) {
+goog.debug.ErrorReporter.prototype.protectAdditionalEntryPoint = goog.debug
+  .ErrorReporter.ALLOW_AUTO_PROTECT
+  ? function(fn) {
       if (this.errorHandler_) {
-        return this.errorHandler_.protectEntryPoint(fn);
+        return this.errorHandler_.protectEntryPoint(fn)
       }
-      return null;
-    } : function(fn) {
+      return null
+    }
+  : function(fn) {
       goog.asserts.fail(
-          'Cannot call protectAdditionalEntryPoint while ALLOW_AUTO_PROTECT ' +
-          'is false.  If ALLOW_AUTO_PROTECT is false, the necessary ' +
-          'auto-protect code in compiled/optimized mode is removed.');
-      return null;
-    };
-
+        "Cannot call protectAdditionalEntryPoint while ALLOW_AUTO_PROTECT " +
+          "is false.  If ALLOW_AUTO_PROTECT is false, the necessary " +
+          "auto-protect code in compiled/optimized mode is removed."
+      )
+      return null
+    }
 
 if (goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT) {
   /**
@@ -256,24 +263,23 @@ if (goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT) {
    * @private
    */
   goog.debug.ErrorReporter.prototype.setup_ = function() {
-    if (goog.userAgent.IE && !goog.userAgent.isVersionOrHigher('10')) {
+    if (goog.userAgent.IE && !goog.userAgent.isVersionOrHigher("10")) {
       // Use "onerror" because caught exceptions in IE don't provide line
       // number.
-      goog.debug.catchErrors(
-          goog.bind(this.handleException, this), false, null);
+      goog.debug.catchErrors(goog.bind(this.handleException, this), false, null)
     } else {
       // "onerror" doesn't work with FF2 or Chrome
-      this.errorHandler_ =
-          new goog.debug.ErrorHandler(goog.bind(this.handleException, this));
+      this.errorHandler_ = new goog.debug.ErrorHandler(
+        goog.bind(this.handleException, this)
+      )
 
-      this.errorHandler_.protectWindowSetTimeout();
-      this.errorHandler_.protectWindowSetInterval();
-      this.errorHandler_.protectWindowRequestAnimationFrame();
-      goog.debug.entryPointRegistry.monitorAll(this.errorHandler_);
+      this.errorHandler_.protectWindowSetTimeout()
+      this.errorHandler_.protectWindowSetInterval()
+      this.errorHandler_.protectWindowRequestAnimationFrame()
+      goog.debug.entryPointRegistry.monitorAll(this.errorHandler_)
     }
-  };
+  }
 }
-
 
 /**
  * Add headers to the logging url.
@@ -281,10 +287,10 @@ if (goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT) {
  *     to the logging URL.
  */
 goog.debug.ErrorReporter.prototype.setLoggingHeaders = function(
-    loggingHeaders) {
-  this.extraHeaders_ = loggingHeaders;
-};
-
+  loggingHeaders
+) {
+  this.extraHeaders_ = loggingHeaders
+}
 
 /**
  * Set the function used to send error reports to the server.
@@ -295,9 +301,8 @@ goog.debug.ErrorReporter.prototype.setLoggingHeaders = function(
  *     added.
  */
 goog.debug.ErrorReporter.prototype.setXhrSender = function(xhrSender) {
-  this.xhrSender_ = xhrSender;
-};
-
+  this.xhrSender_ = xhrSender
+}
 
 /**
  * Handler for caught exceptions. Sends report to the LoggingServlet and
@@ -312,44 +317,51 @@ goog.debug.ErrorReporter.prototype.handleException = function(e, opt_context) {
   // goog.debug.catchErrors passes the actual error object (in some browsers) in
   // the error property. If we have that, use that instead of the incomplete set
   // of random properties passed to window.onerror.
-  e = e.error || e;
+  e = e.error || e
   // Construct the context, possibly from the one provided in the argument, and
   // pass it to the context provider if there is one.
-  var context = opt_context ? goog.object.clone(opt_context) : {};
+  var context = opt_context ? goog.object.clone(opt_context) : {}
   if (e instanceof Error) {
     goog.object.extend(
-        context,
-        goog.debug.errorcontext.getErrorContext(/** @type {!Error} */ (e)));
+      context,
+      goog.debug.errorcontext.getErrorContext(/** @type {!Error} */ (e))
+    )
   }
 
-  var error = /** @type {!Error} */ (goog.debug.normalizeErrorObject(e));
+  var error = /** @type {!Error} */ (goog.debug.normalizeErrorObject(e))
 
   if (this.contextProvider_) {
     try {
-      this.contextProvider_(error, context);
+      this.contextProvider_(error, context)
     } catch (err) {
       goog.log.error(
-          goog.debug.ErrorReporter.logger_,
-          'Context provider threw an exception: ' + err.message);
+        goog.debug.ErrorReporter.logger_,
+        "Context provider threw an exception: " + err.message
+      )
     }
   }
   // Truncate message to a reasonable length, since it will be sent in the URL.
   // The entire URL length historically needed to be 2,083 or less, so leave
   // some room for the rest of the URL.
-  var message = error.message.substring(0, 1900);
+  var message = error.message.substring(0, 1900)
   if (!(e instanceof goog.debug.Error) || e.reportErrorToServer) {
     this.sendErrorReport(
-        message, error.fileName, error.lineNumber, error.stack, context);
+      message,
+      error.fileName,
+      error.lineNumber,
+      error.stack,
+      context
+    )
   }
 
   try {
     this.dispatchEvent(
-        new goog.debug.ErrorReporter.ExceptionEvent(error, context));
+      new goog.debug.ErrorReporter.ExceptionEvent(error, context)
+    )
   } catch (ex) {
     // Swallow exception to avoid infinite recursion.
   }
-};
-
+}
 
 /**
  * Sends an error report to the logging URL.  This will not consult the context
@@ -363,55 +375,77 @@ goog.debug.ErrorReporter.prototype.handleException = function(e, opt_context) {
  *     in the request.
  */
 goog.debug.ErrorReporter.prototype.sendErrorReport = function(
-    message, fileName, line, opt_trace, opt_context) {
+  message,
+  fileName,
+  line,
+  opt_trace,
+  opt_context
+) {
   try {
     // Create the logging URL.
     var requestUrl = goog.uri.utils.appendParams(
-        this.handlerUrl_, 'script', fileName, 'error', message, 'line', line);
+      this.handlerUrl_,
+      "script",
+      fileName,
+      "error",
+      message,
+      "line",
+      line
+    )
 
     if (!goog.object.isEmpty(this.additionalArguments_)) {
       requestUrl = goog.uri.utils.appendParamsFromMap(
-          requestUrl, this.additionalArguments_);
+        requestUrl,
+        this.additionalArguments_
+      )
     }
 
-    var queryMap = {};
-    queryMap['trace'] = opt_trace;
+    var queryMap = {}
+    queryMap["trace"] = opt_trace
 
     // Copy context into query data map
     if (opt_context) {
       for (var entry in opt_context) {
-        queryMap[this.contextPrefix_ + entry] = opt_context[entry];
+        queryMap[this.contextPrefix_ + entry] = opt_context[entry]
       }
     }
 
     // Copy query data map into request.
-    var queryData = goog.uri.utils.buildQueryDataFromMap(queryMap);
+    var queryData = goog.uri.utils.buildQueryDataFromMap(queryMap)
 
     // Truncate if truncationLimit set.
     if (goog.isNumber(this.truncationLimit_)) {
-      queryData = queryData.substring(0, this.truncationLimit_);
+      queryData = queryData.substring(0, this.truncationLimit_)
     }
 
     // Send the request with the contents of the error.
-    this.xhrSender_(requestUrl, 'POST', queryData, this.extraHeaders_);
+    this.xhrSender_(requestUrl, "POST", queryData, this.extraHeaders_)
   } catch (e) {
     var logMessage = goog.string.buildString(
-        'Error occurred in sending an error report.\n\n', 'script:', fileName,
-        '\n', 'line:', line, '\n', 'error:', message, '\n', 'trace:',
-        opt_trace);
-    goog.log.info(goog.debug.ErrorReporter.logger_, logMessage);
+      "Error occurred in sending an error report.\n\n",
+      "script:",
+      fileName,
+      "\n",
+      "line:",
+      line,
+      "\n",
+      "error:",
+      message,
+      "\n",
+      "trace:",
+      opt_trace
+    )
+    goog.log.info(goog.debug.ErrorReporter.logger_, logMessage)
   }
-};
-
+}
 
 /**
  * @param {string} prefix The prefix to appear prepended to all context
  *     variables in the error report body.
  */
 goog.debug.ErrorReporter.prototype.setContextPrefix = function(prefix) {
-  this.contextPrefix_ = prefix;
-};
-
+  this.contextPrefix_ = prefix
+}
 
 /**
  * @param {?number} limit Size in bytes to begin truncating POST body.  Set to
@@ -419,25 +453,24 @@ goog.debug.ErrorReporter.prototype.setContextPrefix = function(prefix) {
  */
 goog.debug.ErrorReporter.prototype.setTruncationLimit = function(limit) {
   goog.asserts.assert(
-      !goog.isNumber(limit) || limit >= 0,
-      'Body limit must be valid number >= 0 or null');
-  this.truncationLimit_ = limit;
-};
-
+    !goog.isNumber(limit) || limit >= 0,
+    "Body limit must be valid number >= 0 or null"
+  )
+  this.truncationLimit_ = limit
+}
 
 /**
  * @param {!Object<string,string>} urlArgs Set of key-value pairs to append
  *     to handlerUrl_ before sending XHR.
  */
 goog.debug.ErrorReporter.prototype.setAdditionalArguments = function(urlArgs) {
-  this.additionalArguments_ = urlArgs;
-};
-
+  this.additionalArguments_ = urlArgs
+}
 
 /** @override */
 goog.debug.ErrorReporter.prototype.disposeInternal = function() {
   if (goog.debug.ErrorReporter.ALLOW_AUTO_PROTECT) {
-    goog.dispose(this.errorHandler_);
+    goog.dispose(this.errorHandler_)
   }
-  goog.debug.ErrorReporter.base(this, 'disposeInternal');
-};
+  goog.debug.ErrorReporter.base(this, "disposeInternal")
+}

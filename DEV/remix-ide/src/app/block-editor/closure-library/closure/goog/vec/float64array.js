@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview Supplies a Float64Array implementation that implements
  * most of the Float64Array spec and that can be used when a built-in
@@ -25,9 +24,7 @@
  * since this vector math library only needs Float32Array and Float64Array.
  *
  */
-goog.provide('goog.vec.Float64Array');
-
-
+goog.provide("goog.vec.Float64Array")
 
 /**
  * Constructs a new Float64Array. The new array is initialized to all zeros.
@@ -41,21 +38,11 @@ goog.provide('goog.vec.Float64Array');
  */
 goog.vec.Float64Array = function(p0) {
   /** @type {number} */
-  this.length = /** @type {number} */ (p0.length || p0);
+  this.length = /** @type {number} */ (p0.length || p0)
   for (var i = 0; i < this.length; i++) {
-    this[i] = p0[i] || 0;
+    this[i] = p0[i] || 0
   }
-};
-
-
-/**
- * The number of bytes in an element (as defined by the Typed Array
- * specification).
- *
- * @type {number}
- */
-goog.vec.Float64Array.BYTES_PER_ELEMENT = 8;
-
+}
 
 /**
  * The number of bytes in an element (as defined by the Typed Array
@@ -63,8 +50,15 @@ goog.vec.Float64Array.BYTES_PER_ELEMENT = 8;
  *
  * @type {number}
  */
-goog.vec.Float64Array.prototype.BYTES_PER_ELEMENT = 8;
+goog.vec.Float64Array.BYTES_PER_ELEMENT = 8
 
+/**
+ * The number of bytes in an element (as defined by the Typed Array
+ * specification).
+ *
+ * @type {number}
+ */
+goog.vec.Float64Array.prototype.BYTES_PER_ELEMENT = 8
 
 /**
  * Sets elements of the array.
@@ -72,20 +66,18 @@ goog.vec.Float64Array.prototype.BYTES_PER_ELEMENT = 8;
  * @param {number=} opt_offset The offset in this array to start.
  */
 goog.vec.Float64Array.prototype.set = function(values, opt_offset) {
-  opt_offset = opt_offset || 0;
+  opt_offset = opt_offset || 0
   for (var i = 0; i < values.length && opt_offset + i < this.length; i++) {
-    this[opt_offset + i] = values[i];
+    this[opt_offset + i] = values[i]
   }
-};
-
+}
 
 /**
  * Creates a string representation of this array.
  * @return {string} The string version of this array.
  * @override
  */
-goog.vec.Float64Array.prototype.toString = Array.prototype.join;
-
+goog.vec.Float64Array.prototype.toString = Array.prototype.join
 
 /**
  * Note that we cannot implement the subarray() or (deprecated) slice()
@@ -95,16 +87,17 @@ goog.vec.Float64Array.prototype.toString = Array.prototype.join;
  * in a javascript error since we leave them undefined.
  */
 
-
 /**
  * If no existing Float64Array implementation is found then we export
  * goog.vec.Float64Array as Float64Array.
  */
-if (typeof Float64Array == 'undefined') {
+if (typeof Float64Array == "undefined") {
   try {
     goog.exportProperty(
-        goog.vec.Float64Array, 'BYTES_PER_ELEMENT',
-        goog.vec.Float64Array.BYTES_PER_ELEMENT);
+      goog.vec.Float64Array,
+      "BYTES_PER_ELEMENT",
+      goog.vec.Float64Array.BYTES_PER_ELEMENT
+    )
   } catch (float64ArrayError) {
     // Do nothing.  This code is in place to fix b/7225850, in which an error
     // is incorrectly thrown for Google TV on an old Chrome.
@@ -112,13 +105,19 @@ if (typeof Float64Array == 'undefined') {
   }
 
   goog.exportProperty(
-      goog.vec.Float64Array.prototype, 'BYTES_PER_ELEMENT',
-      goog.vec.Float64Array.prototype.BYTES_PER_ELEMENT);
+    goog.vec.Float64Array.prototype,
+    "BYTES_PER_ELEMENT",
+    goog.vec.Float64Array.prototype.BYTES_PER_ELEMENT
+  )
   goog.exportProperty(
-      goog.vec.Float64Array.prototype, 'set',
-      goog.vec.Float64Array.prototype.set);
+    goog.vec.Float64Array.prototype,
+    "set",
+    goog.vec.Float64Array.prototype.set
+  )
   goog.exportProperty(
-      goog.vec.Float64Array.prototype, 'toString',
-      goog.vec.Float64Array.prototype.toString);
-  goog.exportSymbol('Float64Array', goog.vec.Float64Array);
+    goog.vec.Float64Array.prototype,
+    "toString",
+    goog.vec.Float64Array.prototype.toString
+  )
+  goog.exportSymbol("Float64Array", goog.vec.Float64Array)
 }

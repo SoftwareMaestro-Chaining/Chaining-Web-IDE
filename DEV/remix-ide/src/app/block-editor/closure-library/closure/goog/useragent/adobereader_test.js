@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.userAgent.adobeReaderTest');
-goog.setTestOnly('goog.userAgent.adobeReaderTest');
+goog.provide("goog.userAgent.adobeReaderTest")
+goog.setTestOnly("goog.userAgent.adobeReaderTest")
 
-goog.require('goog.testing.jsunit');
-goog.require('goog.userAgent.adobeReader');
+goog.require("goog.testing.jsunit")
+goog.require("goog.userAgent.adobeReader")
 
 // For now, just test that the variables exist, the test runner will
 // pick up any runtime errors.
 // TODO(chrisn): Mock out each browser implementation and test the code path
 // correctly detects the version for each case.
 function testAdobeReader() {
-  assertNotUndefined(goog.userAgent.adobeReader.HAS_READER);
-  assertNotUndefined(goog.userAgent.adobeReader.VERSION);
-  assertNotUndefined(goog.userAgent.adobeReader.SILENT_PRINT);
+  assertNotUndefined(goog.userAgent.adobeReader.HAS_READER)
+  assertNotUndefined(goog.userAgent.adobeReader.VERSION)
+  assertNotUndefined(goog.userAgent.adobeReader.SILENT_PRINT)
 }

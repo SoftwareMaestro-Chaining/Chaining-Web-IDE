@@ -55,19 +55,16 @@
  * @supported IE6+, FF2+, Chrome, Safari. Requires flash to actually work.
  */
 
+goog.provide("goog.ui.media.GoogleVideo")
+goog.provide("goog.ui.media.GoogleVideoModel")
 
-goog.provide('goog.ui.media.GoogleVideo');
-goog.provide('goog.ui.media.GoogleVideoModel');
-
-goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.string');
-goog.require('goog.string.Const');
-goog.require('goog.ui.media.FlashObject');
-goog.require('goog.ui.media.Media');
-goog.require('goog.ui.media.MediaModel');
-goog.require('goog.ui.media.MediaRenderer');
-
-
+goog.require("goog.html.TrustedResourceUrl")
+goog.require("goog.string")
+goog.require("goog.string.Const")
+goog.require("goog.ui.media.FlashObject")
+goog.require("goog.ui.media.Media")
+goog.require("goog.ui.media.MediaModel")
+goog.require("goog.ui.media.MediaRenderer")
 
 /**
  * Subclasses a goog.ui.media.MediaRenderer to provide a GoogleVideo specific
@@ -91,11 +88,10 @@ goog.require('goog.ui.media.MediaRenderer');
  * @final
  */
 goog.ui.media.GoogleVideo = function() {
-  goog.ui.media.MediaRenderer.call(this);
-};
-goog.inherits(goog.ui.media.GoogleVideo, goog.ui.media.MediaRenderer);
-goog.addSingletonGetter(goog.ui.media.GoogleVideo);
-
+  goog.ui.media.MediaRenderer.call(this)
+}
+goog.inherits(goog.ui.media.GoogleVideo, goog.ui.media.MediaRenderer)
+goog.addSingletonGetter(goog.ui.media.GoogleVideo)
 
 /**
  * A static convenient method to construct a goog.ui.media.Media control out of
@@ -112,13 +108,15 @@ goog.addSingletonGetter(goog.ui.media.GoogleVideo);
  */
 goog.ui.media.GoogleVideo.newControl = function(dataModel, opt_domHelper) {
   var control = new goog.ui.media.Media(
-      dataModel, goog.ui.media.GoogleVideo.getInstance(), opt_domHelper);
+    dataModel,
+    goog.ui.media.GoogleVideo.getInstance(),
+    opt_domHelper
+  )
   // GoogleVideo videos don't have any thumbnail for now, so we show the
   // "selected" version of the UI at the start, which is the flash player.
-  control.setSelected(true);
-  return control;
-};
-
+  control.setSelected(true)
+  return control
+}
 
 /**
  * Default CSS class to be applied to the root element of components rendered
@@ -126,9 +124,9 @@ goog.ui.media.GoogleVideo.newControl = function(dataModel, opt_domHelper) {
  *
  * @type {string}
  */
-goog.ui.media.GoogleVideo.CSS_CLASS =
-    goog.getCssName('goog-ui-media-googlevideo');
-
+goog.ui.media.GoogleVideo.CSS_CLASS = goog.getCssName(
+  "goog-ui-media-googlevideo"
+)
 
 /**
  * Creates the initial DOM structure of the GoogleVideo video, which is
@@ -139,19 +137,19 @@ goog.ui.media.GoogleVideo.CSS_CLASS =
  * @override
  */
 goog.ui.media.GoogleVideo.prototype.createDom = function(c) {
-  var control = /** @type {goog.ui.media.Media} */ (c);
-  var div = goog.ui.media.GoogleVideo.base(this, 'createDom', control);
+  var control = /** @type {goog.ui.media.Media} */ (c)
+  var div = goog.ui.media.GoogleVideo.base(this, "createDom", control)
 
-  var dataModel =
-      /** @type {goog.ui.media.GoogleVideoModel} */ (control.getDataModel());
+  var dataModel = /** @type {goog.ui.media.GoogleVideoModel} */ (control.getDataModel())
 
   var flash = new goog.ui.media.FlashObject(
-      dataModel.getPlayer().getTrustedResourceUrl(), control.getDomHelper());
-  flash.render(div);
+    dataModel.getPlayer().getTrustedResourceUrl(),
+    control.getDomHelper()
+  )
+  flash.render(div)
 
-  return div;
-};
-
+  return div
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -161,10 +159,8 @@ goog.ui.media.GoogleVideo.prototype.createDom = function(c) {
  * @override
  */
 goog.ui.media.GoogleVideo.prototype.getCssClass = function() {
-  return goog.ui.media.GoogleVideo.CSS_CLASS;
-};
-
-
+  return goog.ui.media.GoogleVideo.CSS_CLASS
+}
 
 /**
  * The `goog.ui.media.GoogleVideo` media data model. It stores a required
@@ -181,24 +177,33 @@ goog.ui.media.GoogleVideo.prototype.getCssClass = function() {
  * @final
  */
 goog.ui.media.GoogleVideoModel = function(
-    videoId, opt_caption, opt_description, opt_autoplay) {
+  videoId,
+  opt_caption,
+  opt_description,
+  opt_autoplay
+) {
   goog.ui.media.MediaModel.call(
-      this, goog.ui.media.GoogleVideoModel.buildUrl(videoId), opt_caption,
-      opt_description, goog.ui.media.MediaModel.MimeType.FLASH);
+    this,
+    goog.ui.media.GoogleVideoModel.buildUrl(videoId),
+    opt_caption,
+    opt_description,
+    goog.ui.media.MediaModel.MimeType.FLASH
+  )
 
   /**
    * The GoogleVideo video id.
    * @type {string}
    * @private
    */
-  this.videoId_ = videoId;
+  this.videoId_ = videoId
 
   this.setPlayer(
-      new goog.ui.media.MediaModel.Player(
-          goog.ui.media.GoogleVideoModel.buildFlashUrl(videoId, opt_autoplay)));
-};
-goog.inherits(goog.ui.media.GoogleVideoModel, goog.ui.media.MediaModel);
-
+    new goog.ui.media.MediaModel.Player(
+      goog.ui.media.GoogleVideoModel.buildFlashUrl(videoId, opt_autoplay)
+    )
+  )
+}
+goog.inherits(goog.ui.media.GoogleVideoModel, goog.ui.media.MediaModel)
 
 /**
  * Regular expression used to extract the GoogleVideo video id (docid) out of
@@ -208,9 +213,7 @@ goog.inherits(goog.ui.media.GoogleVideoModel, goog.ui.media.MediaModel);
  * @private
  * @const
  */
-goog.ui.media.GoogleVideoModel.MATCHER_ =
-    /^https?:\/\/(?:www\.)?video\.google\.com\/videoplay.*[\?#]docid=(-?[0-9]+)#?$/i;
-
+goog.ui.media.GoogleVideoModel.MATCHER_ = /^https?:\/\/(?:www\.)?video\.google\.com\/videoplay.*[\?#]docid=(-?[0-9]+)#?$/i
 
 /**
  * A auxiliary static method that parses a GoogleVideo URL, extracting the ID of
@@ -227,17 +230,25 @@ goog.ui.media.GoogleVideoModel.MATCHER_ =
  * @throws Error in case the parsing fails.
  */
 goog.ui.media.GoogleVideoModel.newInstance = function(
-    googleVideoUrl, opt_caption, opt_description, opt_autoplay) {
+  googleVideoUrl,
+  opt_caption,
+  opt_description,
+  opt_autoplay
+) {
   if (goog.ui.media.GoogleVideoModel.MATCHER_.test(googleVideoUrl)) {
-    var data = goog.ui.media.GoogleVideoModel.MATCHER_.exec(googleVideoUrl);
+    var data = goog.ui.media.GoogleVideoModel.MATCHER_.exec(googleVideoUrl)
     return new goog.ui.media.GoogleVideoModel(
-        data[1], opt_caption, opt_description, opt_autoplay);
+      data[1],
+      opt_caption,
+      opt_description,
+      opt_autoplay
+    )
   }
 
   throw new Error(
-      'failed to parse video id from GoogleVideo url: ' + googleVideoUrl);
-};
-
+    "failed to parse video id from GoogleVideo url: " + googleVideoUrl
+  )
+}
 
 /**
  * The opposite of `goog.ui.media.GoogleVideo.newInstance`: it takes a
@@ -247,10 +258,10 @@ goog.ui.media.GoogleVideoModel.newInstance = function(
  * @return {string} The GoogleVideo URL.
  */
 goog.ui.media.GoogleVideoModel.buildUrl = function(videoId) {
-  return 'https://video.google.com/videoplay?docid=' +
-      goog.string.urlEncode(videoId);
-};
-
+  return (
+    "https://video.google.com/videoplay?docid=" + goog.string.urlEncode(videoId)
+  )
+}
 
 /**
  * An auxiliary method that builds URL of the flash movie to be embedded,
@@ -264,20 +275,21 @@ goog.ui.media.GoogleVideoModel.buildUrl = function(videoId) {
  */
 goog.ui.media.GoogleVideoModel.buildFlashUrl = function(videoId, opt_autoplay) {
   return goog.html.TrustedResourceUrl.format(
-      goog.string.Const.from(
-          'https://video.google.com/googleplayer.swf?docid=%{docid}' +
-          '&hl=en&fs=true%{autoplay}'),
-      {
-        'docid': videoId,
-        'autoplay': opt_autoplay ? goog.string.Const.from('&autoplay=1') : ''
-      });
-};
-
+    goog.string.Const.from(
+      "https://video.google.com/googleplayer.swf?docid=%{docid}" +
+        "&hl=en&fs=true%{autoplay}"
+    ),
+    {
+      docid: videoId,
+      autoplay: opt_autoplay ? goog.string.Const.from("&autoplay=1") : ""
+    }
+  )
+}
 
 /**
  * Gets the GoogleVideo video id.
  * @return {string} The GoogleVideo video id.
  */
 goog.ui.media.GoogleVideoModel.prototype.getVideoId = function() {
-  return this.videoId_;
-};
+  return this.videoId_
+}

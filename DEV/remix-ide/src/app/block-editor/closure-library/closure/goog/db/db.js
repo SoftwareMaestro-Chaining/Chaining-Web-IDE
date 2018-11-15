@@ -41,17 +41,15 @@
  *
  */
 
+goog.provide("goog.db")
+goog.provide("goog.db.BlockedCallback")
+goog.provide("goog.db.UpgradeNeededCallback")
 
-goog.provide('goog.db');
-goog.provide('goog.db.BlockedCallback');
-goog.provide('goog.db.UpgradeNeededCallback');
-
-goog.require('goog.asserts');
-goog.require('goog.async.Deferred');
-goog.require('goog.db.Error');
-goog.require('goog.db.IndexedDb');
-goog.require('goog.db.Transaction');
-
+goog.require("goog.asserts")
+goog.require("goog.async.Deferred")
+goog.require("goog.db.Error")
+goog.require("goog.db.IndexedDb")
+goog.require("goog.db.Transaction")
 
 /**
  * The IndexedDB factory object.
@@ -59,9 +57,11 @@ goog.require('goog.db.Transaction');
  * @type {!IDBFactory|undefined}
  * @private
  */
-goog.db.indexedDb_ = goog.global.indexedDB || goog.global.mozIndexedDB ||
-    goog.global.webkitIndexedDB || goog.global.moz_indexedDB;
-
+goog.db.indexedDb_ =
+  goog.global.indexedDB ||
+  goog.global.mozIndexedDB ||
+  goog.global.webkitIndexedDB ||
+  goog.global.moz_indexedDB
 
 /**
  * A callback that's called if a blocked event is received. When a database is
@@ -79,8 +79,7 @@ goog.db.indexedDb_ = goog.global.indexedDB || goog.global.mozIndexedDB ||
  *
  * @typedef {function(!goog.db.IndexedDb.VersionChangeEvent)}
  */
-goog.db.BlockedCallback;
-
+goog.db.BlockedCallback
 
 /**
  * A callback that's called when opening a database whose internal version is
@@ -101,8 +100,7 @@ goog.db.BlockedCallback;
  *                    !goog.db.IndexedDb,
  *                    !goog.db.Transaction)}
  */
-goog.db.UpgradeNeededCallback;
-
+goog.db.UpgradeNeededCallback
 
 /**
  * Opens a database connection and wraps it.
@@ -120,40 +118,47 @@ goog.db.UpgradeNeededCallback;
  * @return {!goog.async.Deferred} The deferred database object.
  */
 goog.db.openDatabase = function(
-    name, opt_version, opt_onUpgradeNeeded, opt_onBlocked) {
+  name,
+  opt_version,
+  opt_onUpgradeNeeded,
+  opt_onBlocked
+) {
   goog.asserts.assert(
-      goog.isDef(opt_version) == goog.isDef(opt_onUpgradeNeeded),
-      'opt_version must be passed to goog.db.openDatabase if and only if ' +
-          'opt_onUpgradeNeeded is also passed');
+    goog.isDef(opt_version) == goog.isDef(opt_onUpgradeNeeded),
+    "opt_version must be passed to goog.db.openDatabase if and only if " +
+      "opt_onUpgradeNeeded is also passed"
+  )
 
-  var d = new goog.async.Deferred();
-  var openRequest = opt_version ? goog.db.indexedDb_.open(name, opt_version) :
-                                  goog.db.indexedDb_.open(name);
+  var d = new goog.async.Deferred()
+  var openRequest = opt_version
+    ? goog.db.indexedDb_.open(name, opt_version)
+    : goog.db.indexedDb_.open(name)
   openRequest.onsuccess = function(ev) {
-    var db = new goog.db.IndexedDb(ev.target.result);
-    d.callback(db);
-  };
+    var db = new goog.db.IndexedDb(ev.target.result)
+    d.callback(db)
+  }
   openRequest.onerror = function(ev) {
-    var msg = 'opening database ' + name;
-    d.errback(goog.db.Error.fromRequest(ev.target, msg));
-  };
+    var msg = "opening database " + name
+    d.errback(goog.db.Error.fromRequest(ev.target, msg))
+  }
   openRequest.onupgradeneeded = function(ev) {
-    if (!opt_onUpgradeNeeded) return;
-    var db = new goog.db.IndexedDb(ev.target.result);
+    if (!opt_onUpgradeNeeded) return
+    var db = new goog.db.IndexedDb(ev.target.result)
     opt_onUpgradeNeeded(
-        new goog.db.IndexedDb.VersionChangeEvent(ev.oldVersion, ev.newVersion),
-        db, new goog.db.Transaction(ev.target.transaction, db));
-  };
+      new goog.db.IndexedDb.VersionChangeEvent(ev.oldVersion, ev.newVersion),
+      db,
+      new goog.db.Transaction(ev.target.transaction, db)
+    )
+  }
   openRequest.onblocked = function(ev) {
     if (opt_onBlocked) {
       opt_onBlocked(
-          new goog.db.IndexedDb.VersionChangeEvent(
-              ev.oldVersion, ev.newVersion));
+        new goog.db.IndexedDb.VersionChangeEvent(ev.oldVersion, ev.newVersion)
+      )
     }
-  };
-  return d;
-};
-
+  }
+  return d
+}
 
 /**
  * Deletes a database once all open connections have been closed.
@@ -165,19 +170,21 @@ goog.db.openDatabase = function(
  *     database is deleted.
  */
 goog.db.deleteDatabase = function(name, opt_onBlocked) {
-  var d = new goog.async.Deferred();
-  var deleteRequest = goog.db.indexedDb_.deleteDatabase(name);
-  deleteRequest.onsuccess = function(ev) { d.callback(); };
+  var d = new goog.async.Deferred()
+  var deleteRequest = goog.db.indexedDb_.deleteDatabase(name)
+  deleteRequest.onsuccess = function(ev) {
+    d.callback()
+  }
   deleteRequest.onerror = function(ev) {
-    var msg = 'deleting database ' + name;
-    d.errback(goog.db.Error.fromRequest(ev.target, msg));
-  };
+    var msg = "deleting database " + name
+    d.errback(goog.db.Error.fromRequest(ev.target, msg))
+  }
   deleteRequest.onblocked = function(ev) {
     if (opt_onBlocked) {
       opt_onBlocked(
-          new goog.db.IndexedDb.VersionChangeEvent(
-              ev.oldVersion, ev.newVersion));
+        new goog.db.IndexedDb.VersionChangeEvent(ev.oldVersion, ev.newVersion)
+      )
     }
-  };
-  return d;
-};
+  }
+  return d
+}

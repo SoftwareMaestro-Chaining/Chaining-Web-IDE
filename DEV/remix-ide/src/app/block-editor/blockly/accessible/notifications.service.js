@@ -23,39 +23,44 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.NotificationsService');
-
+goog.provide("blocklyApp.NotificationsService")
 
 blocklyApp.NotificationsService = ng.core.Class({
-  constructor: [function() {
-    this.currentMessage = '';
-    this.timeouts = [];
-  }],
+  constructor: [
+    function() {
+      this.currentMessage = ""
+      this.timeouts = []
+    }
+  ],
   setDisplayedMessage_: function(newMessage) {
-    this.currentMessage = newMessage;
+    this.currentMessage = newMessage
   },
   getDisplayedMessage: function() {
-    return this.currentMessage;
+    return this.currentMessage
   },
   speak: function(newMessage) {
     // Clear and reset any existing timeouts.
     this.timeouts.forEach(function(timeout) {
-      clearTimeout(timeout);
-    });
-    this.timeouts.length = 0;
+      clearTimeout(timeout)
+    })
+    this.timeouts.length = 0
 
     // Clear the current message, so that if, e.g., two operations of the same
     // type are performed, both messages will be read in succession.
-    this.setDisplayedMessage_('');
+    this.setDisplayedMessage_("")
 
     // We need a non-zero timeout here, otherwise NVDA does not read the
     // notification messages properly.
-    var that = this;
-    this.timeouts.push(setTimeout(function() {
-      that.setDisplayedMessage_(newMessage);
-    }, 20));
-    this.timeouts.push(setTimeout(function() {
-      that.setDisplayedMessage_('');
-    }, 5000));
+    var that = this
+    this.timeouts.push(
+      setTimeout(function() {
+        that.setDisplayedMessage_(newMessage)
+      }, 20)
+    )
+    this.timeouts.push(
+      setTimeout(function() {
+        that.setDisplayedMessage_("")
+      }, 5000)
+    )
   }
-});
+})

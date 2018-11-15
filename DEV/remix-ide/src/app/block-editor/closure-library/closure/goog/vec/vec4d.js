@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 ////////////////////////// NOTE ABOUT EDITING THIS FILE ///////////////////////
 //                                                                           //
 // Any edits to this file must be applied to vec4f.js by running:            //
 //   swap_type.sh vec4d.js > vec4f.js                                        //
 //                                                                           //
 ////////////////////////// NOTE ABOUT EDITING THIS FILE ///////////////////////
-
 
 /**
  * @fileoverview Provides functions for operating on 4 element double (64bit)
@@ -33,14 +31,13 @@
  * (especially related to performance).
  *
  */
-goog.provide('goog.vec.vec4d');
-goog.provide('goog.vec.vec4d.Type');
+goog.provide("goog.vec.vec4d")
+goog.provide("goog.vec.vec4d.Type")
 
 /** @suppress {extraRequire} */
-goog.require('goog.vec');
+goog.require("goog.vec")
 
-/** @typedef {goog.vec.Float64} */ goog.vec.vec4d.Type;
-
+/** @typedef {goog.vec.Float64} */ goog.vec.vec4d.Type
 
 /**
  * Creates a vec4d with all elements initialized to zero.
@@ -48,9 +45,8 @@ goog.require('goog.vec');
  * @return {!goog.vec.vec4d.Type} The new vec4d.
  */
 goog.vec.vec4d.create = function() {
-  return new Float64Array(4);
-};
-
+  return new Float64Array(4)
+}
 
 /**
  * Creates a new vec4d initialized with the value from the given array.
@@ -59,11 +55,10 @@ goog.vec.vec4d.create = function() {
  * @return {!goog.vec.vec4d.Type} The new vec4d.
  */
 goog.vec.vec4d.createFromArray = function(vec) {
-  var newVec = goog.vec.vec4d.create();
-  goog.vec.vec4d.setFromArray(newVec, vec);
-  return newVec;
-};
-
+  var newVec = goog.vec.vec4d.create()
+  goog.vec.vec4d.setFromArray(newVec, vec)
+  return newVec
+}
 
 /**
  * Creates a new vec4d initialized with the supplied values.
@@ -75,11 +70,10 @@ goog.vec.vec4d.createFromArray = function(vec) {
  * @return {!goog.vec.vec4d.Type} The new vector.
  */
 goog.vec.vec4d.createFromValues = function(v0, v1, v2, v3) {
-  var vec = goog.vec.vec4d.create();
-  goog.vec.vec4d.setFromValues(vec, v0, v1, v2, v3);
-  return vec;
-};
-
+  var vec = goog.vec.vec4d.create()
+  goog.vec.vec4d.setFromValues(vec, v0, v1, v2, v3)
+  return vec
+}
 
 /**
  * Creates a clone of the given vec4d.
@@ -88,11 +82,10 @@ goog.vec.vec4d.createFromValues = function(v0, v1, v2, v3) {
  * @return {!goog.vec.vec4d.Type} The new cloned vec4d.
  */
 goog.vec.vec4d.clone = function(vec) {
-  var newVec = goog.vec.vec4d.create();
-  goog.vec.vec4d.setFromVec4d(newVec, vec);
-  return newVec;
-};
-
+  var newVec = goog.vec.vec4d.create()
+  goog.vec.vec4d.setFromVec4d(newVec, vec)
+  return newVec
+}
 
 /**
  * Initializes the vector with the given values.
@@ -106,13 +99,12 @@ goog.vec.vec4d.clone = function(vec) {
  *     chained together.
  */
 goog.vec.vec4d.setFromValues = function(vec, v0, v1, v2, v3) {
-  vec[0] = v0;
-  vec[1] = v1;
-  vec[2] = v2;
-  vec[3] = v3;
-  return vec;
-};
-
+  vec[0] = v0
+  vec[1] = v1
+  vec[2] = v2
+  vec[3] = v3
+  return vec
+}
 
 /**
  * Initializes vec4d vec from vec4d src.
@@ -123,13 +115,12 @@ goog.vec.vec4d.setFromValues = function(vec, v0, v1, v2, v3) {
  *     chained together.
  */
 goog.vec.vec4d.setFromVec4d = function(vec, src) {
-  vec[0] = src[0];
-  vec[1] = src[1];
-  vec[2] = src[2];
-  vec[3] = src[3];
-  return vec;
-};
-
+  vec[0] = src[0]
+  vec[1] = src[1]
+  vec[2] = src[2]
+  vec[3] = src[3]
+  return vec
+}
 
 /**
  * Initializes vec4d vec from vec4f src (typed as a Float32Array to
@@ -141,13 +132,12 @@ goog.vec.vec4d.setFromVec4d = function(vec, src) {
  *     chained together.
  */
 goog.vec.vec4d.setFromVec4f = function(vec, src) {
-  vec[0] = src[0];
-  vec[1] = src[1];
-  vec[2] = src[2];
-  vec[3] = src[3];
-  return vec;
-};
-
+  vec[0] = src[0]
+  vec[1] = src[1]
+  vec[2] = src[2]
+  vec[3] = src[3]
+  return vec
+}
 
 /**
  * Initializes vec4d vec from Array src.
@@ -158,13 +148,12 @@ goog.vec.vec4d.setFromVec4f = function(vec, src) {
  *     chained together.
  */
 goog.vec.vec4d.setFromArray = function(vec, src) {
-  vec[0] = src[0];
-  vec[1] = src[1];
-  vec[2] = src[2];
-  vec[3] = src[3];
-  return vec;
-};
-
+  vec[0] = src[0]
+  vec[1] = src[1]
+  vec[2] = src[2]
+  vec[3] = src[3]
+  return vec
+}
 
 /**
  * Performs a component-wise addition of vec0 and vec1 together storing the
@@ -178,13 +167,12 @@ goog.vec.vec4d.setFromArray = function(vec, src) {
  *     chained together.
  */
 goog.vec.vec4d.add = function(vec0, vec1, resultVec) {
-  resultVec[0] = vec0[0] + vec1[0];
-  resultVec[1] = vec0[1] + vec1[1];
-  resultVec[2] = vec0[2] + vec1[2];
-  resultVec[3] = vec0[3] + vec1[3];
-  return resultVec;
-};
-
+  resultVec[0] = vec0[0] + vec1[0]
+  resultVec[1] = vec0[1] + vec1[1]
+  resultVec[2] = vec0[2] + vec1[2]
+  resultVec[3] = vec0[3] + vec1[3]
+  return resultVec
+}
 
 /**
  * Performs a component-wise subtraction of vec1 from vec0 storing the
@@ -198,13 +186,12 @@ goog.vec.vec4d.add = function(vec0, vec1, resultVec) {
  *     chained together.
  */
 goog.vec.vec4d.subtract = function(vec0, vec1, resultVec) {
-  resultVec[0] = vec0[0] - vec1[0];
-  resultVec[1] = vec0[1] - vec1[1];
-  resultVec[2] = vec0[2] - vec1[2];
-  resultVec[3] = vec0[3] - vec1[3];
-  return resultVec;
-};
-
+  resultVec[0] = vec0[0] - vec1[0]
+  resultVec[1] = vec0[1] - vec1[1]
+  resultVec[2] = vec0[2] - vec1[2]
+  resultVec[3] = vec0[3] - vec1[3]
+  return resultVec
+}
 
 /**
  * Negates vec0, storing the result into resultVec.
@@ -216,13 +203,12 @@ goog.vec.vec4d.subtract = function(vec0, vec1, resultVec) {
  *     chained together.
  */
 goog.vec.vec4d.negate = function(vec0, resultVec) {
-  resultVec[0] = -vec0[0];
-  resultVec[1] = -vec0[1];
-  resultVec[2] = -vec0[2];
-  resultVec[3] = -vec0[3];
-  return resultVec;
-};
-
+  resultVec[0] = -vec0[0]
+  resultVec[1] = -vec0[1]
+  resultVec[2] = -vec0[2]
+  resultVec[3] = -vec0[3]
+  return resultVec
+}
 
 /**
  * Takes the absolute value of each component of vec0 storing the result in
@@ -235,13 +221,12 @@ goog.vec.vec4d.negate = function(vec0, resultVec) {
  *     chained together.
  */
 goog.vec.vec4d.abs = function(vec0, resultVec) {
-  resultVec[0] = Math.abs(vec0[0]);
-  resultVec[1] = Math.abs(vec0[1]);
-  resultVec[2] = Math.abs(vec0[2]);
-  resultVec[3] = Math.abs(vec0[3]);
-  return resultVec;
-};
-
+  resultVec[0] = Math.abs(vec0[0])
+  resultVec[1] = Math.abs(vec0[1])
+  resultVec[2] = Math.abs(vec0[2])
+  resultVec[3] = Math.abs(vec0[3])
+  return resultVec
+}
 
 /**
  * Multiplies each component of vec0 with scalar storing the product into
@@ -255,13 +240,12 @@ goog.vec.vec4d.abs = function(vec0, resultVec) {
  *     chained together.
  */
 goog.vec.vec4d.scale = function(vec0, scalar, resultVec) {
-  resultVec[0] = vec0[0] * scalar;
-  resultVec[1] = vec0[1] * scalar;
-  resultVec[2] = vec0[2] * scalar;
-  resultVec[3] = vec0[3] * scalar;
-  return resultVec;
-};
-
+  resultVec[0] = vec0[0] * scalar
+  resultVec[1] = vec0[1] * scalar
+  resultVec[2] = vec0[2] * scalar
+  resultVec[3] = vec0[3] * scalar
+  return resultVec
+}
 
 /**
  * Returns the magnitudeSquared of the given vector.
@@ -270,10 +254,12 @@ goog.vec.vec4d.scale = function(vec0, scalar, resultVec) {
  * @return {number} The magnitude of the vector.
  */
 goog.vec.vec4d.magnitudeSquared = function(vec0) {
-  var x = vec0[0], y = vec0[1], z = vec0[2], w = vec0[3];
-  return x * x + y * y + z * z + w * w;
-};
-
+  var x = vec0[0],
+    y = vec0[1],
+    z = vec0[2],
+    w = vec0[3]
+  return x * x + y * y + z * z + w * w
+}
 
 /**
  * Returns the magnitude of the given vector.
@@ -282,10 +268,12 @@ goog.vec.vec4d.magnitudeSquared = function(vec0) {
  * @return {number} The magnitude of the vector.
  */
 goog.vec.vec4d.magnitude = function(vec0) {
-  var x = vec0[0], y = vec0[1], z = vec0[2], w = vec0[3];
-  return Math.sqrt(x * x + y * y + z * z + w * w);
-};
-
+  var x = vec0[0],
+    y = vec0[1],
+    z = vec0[2],
+    w = vec0[3]
+  return Math.sqrt(x * x + y * y + z * z + w * w)
+}
 
 /**
  * Normalizes the given vector storing the result into resultVec.
@@ -297,15 +285,17 @@ goog.vec.vec4d.magnitude = function(vec0) {
  *     chained together.
  */
 goog.vec.vec4d.normalize = function(vec0, resultVec) {
-  var x = vec0[0], y = vec0[1], z = vec0[2], w = vec0[3];
-  var ilen = 1 / Math.sqrt(x * x + y * y + z * z + w * w);
-  resultVec[0] = x * ilen;
-  resultVec[1] = y * ilen;
-  resultVec[2] = z * ilen;
-  resultVec[3] = w * ilen;
-  return resultVec;
-};
-
+  var x = vec0[0],
+    y = vec0[1],
+    z = vec0[2],
+    w = vec0[3]
+  var ilen = 1 / Math.sqrt(x * x + y * y + z * z + w * w)
+  resultVec[0] = x * ilen
+  resultVec[1] = y * ilen
+  resultVec[2] = z * ilen
+  resultVec[3] = w * ilen
+  return resultVec
+}
 
 /**
  * Returns the scalar product of vectors v0 and v1.
@@ -315,9 +305,8 @@ goog.vec.vec4d.normalize = function(vec0, resultVec) {
  * @return {number} The scalar product.
  */
 goog.vec.vec4d.dot = function(v0, v1) {
-  return v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2] + v0[3] * v1[3];
-};
-
+  return v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2] + v0[3] * v1[3]
+}
 
 /**
  * Linearly interpolate from v0 to v1 according to f. The value of f should be
@@ -332,14 +321,16 @@ goog.vec.vec4d.dot = function(v0, v1) {
  *     chained together.
  */
 goog.vec.vec4d.lerp = function(v0, v1, f, resultVec) {
-  var x = v0[0], y = v0[1], z = v0[2], w = v0[3];
-  resultVec[0] = (v1[0] - x) * f + x;
-  resultVec[1] = (v1[1] - y) * f + y;
-  resultVec[2] = (v1[2] - z) * f + z;
-  resultVec[3] = (v1[3] - w) * f + w;
-  return resultVec;
-};
-
+  var x = v0[0],
+    y = v0[1],
+    z = v0[2],
+    w = v0[3]
+  resultVec[0] = (v1[0] - x) * f + x
+  resultVec[1] = (v1[1] - y) * f + y
+  resultVec[2] = (v1[2] - z) * f + z
+  resultVec[3] = (v1[3] - w) * f + w
+  return resultVec
+}
 
 /**
  * Compares the components of vec0 with the components of another vector or
@@ -354,19 +345,18 @@ goog.vec.vec4d.lerp = function(v0, v1, f, resultVec) {
  */
 goog.vec.vec4d.max = function(vec0, limit, resultVec) {
   if (goog.isNumber(limit)) {
-    resultVec[0] = Math.max(vec0[0], limit);
-    resultVec[1] = Math.max(vec0[1], limit);
-    resultVec[2] = Math.max(vec0[2], limit);
-    resultVec[3] = Math.max(vec0[3], limit);
+    resultVec[0] = Math.max(vec0[0], limit)
+    resultVec[1] = Math.max(vec0[1], limit)
+    resultVec[2] = Math.max(vec0[2], limit)
+    resultVec[3] = Math.max(vec0[3], limit)
   } else {
-    resultVec[0] = Math.max(vec0[0], limit[0]);
-    resultVec[1] = Math.max(vec0[1], limit[1]);
-    resultVec[2] = Math.max(vec0[2], limit[2]);
-    resultVec[3] = Math.max(vec0[3], limit[3]);
+    resultVec[0] = Math.max(vec0[0], limit[0])
+    resultVec[1] = Math.max(vec0[1], limit[1])
+    resultVec[2] = Math.max(vec0[2], limit[2])
+    resultVec[3] = Math.max(vec0[3], limit[3])
   }
-  return resultVec;
-};
-
+  return resultVec
+}
 
 /**
  * Compares the components of vec0 with the components of another vector or
@@ -381,19 +371,18 @@ goog.vec.vec4d.max = function(vec0, limit, resultVec) {
  */
 goog.vec.vec4d.min = function(vec0, limit, resultVec) {
   if (goog.isNumber(limit)) {
-    resultVec[0] = Math.min(vec0[0], limit);
-    resultVec[1] = Math.min(vec0[1], limit);
-    resultVec[2] = Math.min(vec0[2], limit);
-    resultVec[3] = Math.min(vec0[3], limit);
+    resultVec[0] = Math.min(vec0[0], limit)
+    resultVec[1] = Math.min(vec0[1], limit)
+    resultVec[2] = Math.min(vec0[2], limit)
+    resultVec[3] = Math.min(vec0[3], limit)
   } else {
-    resultVec[0] = Math.min(vec0[0], limit[0]);
-    resultVec[1] = Math.min(vec0[1], limit[1]);
-    resultVec[2] = Math.min(vec0[2], limit[2]);
-    resultVec[3] = Math.min(vec0[3], limit[3]);
+    resultVec[0] = Math.min(vec0[0], limit[0])
+    resultVec[1] = Math.min(vec0[1], limit[1])
+    resultVec[2] = Math.min(vec0[2], limit[2])
+    resultVec[3] = Math.min(vec0[3], limit[3])
   }
-  return resultVec;
-};
-
+  return resultVec
+}
 
 /**
  * Returns true if the components of v0 are equal to the components of v1.
@@ -403,6 +392,11 @@ goog.vec.vec4d.min = function(vec0, limit, resultVec) {
  * @return {boolean} True if the vectors are equal, false otherwise.
  */
 goog.vec.vec4d.equals = function(v0, v1) {
-  return v0.length == v1.length && v0[0] == v1[0] && v0[1] == v1[1] &&
-      v0[2] == v1[2] && v0[3] == v1[3];
-};
+  return (
+    v0.length == v1.length &&
+    v0[0] == v1[0] &&
+    v0[1] == v1[1] &&
+    v0[2] == v1[2] &&
+    v0[3] == v1[3]
+  )
+}

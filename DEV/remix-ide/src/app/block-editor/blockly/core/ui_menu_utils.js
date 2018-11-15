@@ -22,14 +22,13 @@
  * @fileoverview Utility methods for working with the closure menu (goog.ui.menu).
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+"use strict"
 
 /**
  * @name Blockly.utils.uiMenu
  * @namespace
  **/
-goog.provide('Blockly.utils.uiMenu');
-
+goog.provide("Blockly.utils.uiMenu")
 
 /**
  * Get the size of a rendered goog.ui.Menu.
@@ -38,12 +37,12 @@ goog.provide('Blockly.utils.uiMenu');
  * @package
  */
 Blockly.utils.uiMenu.getSize = function(menu) {
-  var menuDom = menu.getElement();
-  var menuSize = goog.style.getSize(menuDom);
+  var menuDom = menu.getElement()
+  var menuSize = goog.style.getSize(menuDom)
   // Recalculate height for the total content, not only box height.
-  menuSize.height = menuDom.scrollHeight;
-  return menuSize;
-};
+  menuSize.height = menuDom.scrollHeight
+  return menuSize
+}
 
 /**
  * Adjust the bounding boxes used to position the widget div to deal with RTL
@@ -59,10 +58,13 @@ Blockly.utils.uiMenu.getSize = function(menu) {
  *     widget div, in window coordinates.
  * @package
  */
-Blockly.utils.uiMenu.adjustBBoxesForRTL = function(viewportBBox, anchorBBox,
-    menuSize) {
-  anchorBBox.left += menuSize.width;
-  anchorBBox.right += menuSize.width;
-  viewportBBox.left += menuSize.width;
-  viewportBBox.right += menuSize.width;
-};
+Blockly.utils.uiMenu.adjustBBoxesForRTL = function(
+  viewportBBox,
+  anchorBBox,
+  menuSize
+) {
+  anchorBBox.left += menuSize.width
+  anchorBBox.right += menuSize.width
+  viewportBBox.left += menuSize.width
+  viewportBBox.right += menuSize.width
+}

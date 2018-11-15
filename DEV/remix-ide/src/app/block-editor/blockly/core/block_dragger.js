@@ -22,16 +22,15 @@
  * @fileoverview Methods for dragging a block visually.
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.BlockDragger');
+goog.provide("Blockly.BlockDragger")
 
-goog.require('Blockly.BlockAnimations');
-goog.require('Blockly.DraggedConnectionManager');
-goog.require('Blockly.Events.BlockMove');
+goog.require("Blockly.BlockAnimations")
+goog.require("Blockly.DraggedConnectionManager")
+goog.require("Blockly.Events.BlockMove")
 
-goog.require('goog.math.Coordinate');
-
+goog.require("goog.math.Coordinate")
 
 /**
  * Class for a block dragger.  It moves blocks around the workspace when they
@@ -46,14 +45,14 @@ Blockly.BlockDragger = function(block, workspace) {
    * @type {!Blockly.BlockSvg}
    * @private
    */
-  this.draggingBlock_ = block;
+  this.draggingBlock_ = block
 
   /**
    * The workspace on which the block is being dragged.
    * @type {!Blockly.WorkspaceSvg}
    * @private
    */
-  this.workspace_ = workspace;
+  this.workspace_ = workspace
 
   /**
    * Object that keeps track of connections on dragged blocks.
@@ -61,7 +60,8 @@ Blockly.BlockDragger = function(block, workspace) {
    * @private
    */
   this.draggedConnectionManager_ = new Blockly.DraggedConnectionManager(
-      this.draggingBlock_);
+    this.draggingBlock_
+  )
 
   /**
    * Which delete area the mouse pointer is over, if any.
@@ -70,14 +70,14 @@ Blockly.BlockDragger = function(block, workspace) {
    * @type {?number}
    * @private
    */
-  this.deleteArea_ = null;
+  this.deleteArea_ = null
 
   /**
    * Whether the block would be deleted if dropped immediately.
    * @type {boolean}
    * @private
    */
-  this.wouldDeleteBlock_ = false;
+  this.wouldDeleteBlock_ = false
 
   /**
    * The location of the top left corner of the dragging block at the beginning
@@ -85,7 +85,7 @@ Blockly.BlockDragger = function(block, workspace) {
    * @type {!goog.math.Coordinate}
    * @private
    */
-  this.startXY_ = this.draggingBlock_.getRelativeToSurfaceXY();
+  this.startXY_ = this.draggingBlock_.getRelativeToSurfaceXY()
 
   /**
    * A list of all of the icons (comment, warning, and mutator) that are
@@ -94,24 +94,24 @@ Blockly.BlockDragger = function(block, workspace) {
    * @type {Array.<!Object>}
    * @private
    */
-  this.dragIconData_ = Blockly.BlockDragger.initIconData_(block);
-};
+  this.dragIconData_ = Blockly.BlockDragger.initIconData_(block)
+}
 
 /**
  * Sever all links from this object.
  * @package
  */
 Blockly.BlockDragger.prototype.dispose = function() {
-  this.draggingBlock_ = null;
-  this.workspace_ = null;
-  this.startWorkspace_ = null;
-  this.dragIconData_.length = 0;
+  this.draggingBlock_ = null
+  this.workspace_ = null
+  this.startWorkspace_ = null
+  this.dragIconData_.length = 0
 
   if (this.draggedConnectionManager_) {
-    this.draggedConnectionManager_.dispose();
-    this.draggedConnectionManager_ = null;
+    this.draggedConnectionManager_.dispose()
+    this.draggedConnectionManager_ = null
   }
-};
+}
 
 /**
  * Make a list of all of the icons (comment, warning, and mutator) that are
@@ -123,22 +123,22 @@ Blockly.BlockDragger.prototype.dispose = function() {
  */
 Blockly.BlockDragger.initIconData_ = function(block) {
   // Build a list of icons that need to be moved and where they started.
-  var dragIconData = [];
-  var descendants = block.getDescendants(false);
-  for (var i = 0, descendant; descendant = descendants[i]; i++) {
-    var icons = descendant.getIcons();
+  var dragIconData = []
+  var descendants = block.getDescendants(false)
+  for (var i = 0, descendant; (descendant = descendants[i]); i++) {
+    var icons = descendant.getIcons()
     for (var j = 0; j < icons.length; j++) {
       var data = {
         // goog.math.Coordinate with x and y properties (workspace coordinates).
         location: icons[j].getIconLocation(),
         // Blockly.Icon
         icon: icons[j]
-      };
-      dragIconData.push(data);
+      }
+      dragIconData.push(data)
     }
   }
-  return dragIconData;
-};
+  return dragIconData
+}
 
 /**
  * Start dragging a block.  This includes moving it to the drag surface.
@@ -147,44 +147,51 @@ Blockly.BlockDragger.initIconData_ = function(block) {
  * @param {boolean} healStack whether or not to heal the stack after disconnecting
  * @package
  */
-Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY, healStack) {
+Blockly.BlockDragger.prototype.startBlockDrag = function(
+  currentDragDeltaXY,
+  healStack
+) {
   if (!Blockly.Events.getGroup()) {
-    Blockly.Events.setGroup(true);
+    Blockly.Events.setGroup(true)
   }
 
   // Mutators don't have the same type of z-ordering as the normal workspace during a drag.
   // They have to rely on the order of the blocks in the svg. For performance reasons that
   // usually happens at the end of a drag, but do it at the beginning for mutators.
   if (this.workspace_.isMutator) {
-    this.draggingBlock_.bringToFront();
+    this.draggingBlock_.bringToFront()
   }
 
-  this.workspace_.setResizesEnabled(false);
-  Blockly.BlockAnimations.disconnectUiStop();
+  this.workspace_.setResizesEnabled(false)
+  Blockly.BlockAnimations.disconnectUiStop()
 
-  if (this.draggingBlock_.getParent() ||
-      (healStack && this.draggingBlock_.nextConnection &&
-      this.draggingBlock_.nextConnection.targetBlock())) {
-    this.draggingBlock_.unplug(healStack);
-    var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY);
-    var newLoc = goog.math.Coordinate.sum(this.startXY_, delta);
+  if (
+    this.draggingBlock_.getParent() ||
+    (healStack &&
+      this.draggingBlock_.nextConnection &&
+      this.draggingBlock_.nextConnection.targetBlock())
+  ) {
+    this.draggingBlock_.unplug(healStack)
+    var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY)
+    var newLoc = goog.math.Coordinate.sum(this.startXY_, delta)
 
-    this.draggingBlock_.translate(newLoc.x, newLoc.y);
-    Blockly.BlockAnimations.disconnectUiEffect(this.draggingBlock_);
+    this.draggingBlock_.translate(newLoc.x, newLoc.y)
+    Blockly.BlockAnimations.disconnectUiEffect(this.draggingBlock_)
   }
-  this.draggingBlock_.setDragging(true);
+  this.draggingBlock_.setDragging(true)
   // For future consideration: we may be able to put moveToDragSurface inside
   // the block dragger, which would also let the block not track the block drag
   // surface.
-  this.draggingBlock_.moveToDragSurface_();
+  this.draggingBlock_.moveToDragSurface_()
 
-  var toolbox = this.workspace_.getToolbox();
+  var toolbox = this.workspace_.getToolbox()
   if (toolbox) {
-    var style = this.draggingBlock_.isDeletable() ? 'blocklyToolboxDelete' :
-        'blocklyToolboxGrab';
-    toolbox.addStyle(style);
+    var style = this.draggingBlock_.isDeletable()
+      ? "blocklyToolboxDelete"
+      : "blocklyToolboxGrab"
+    toolbox.addStyle(style)
   }
-};
+}
 
 /**
  * Execute a step of block dragging, based on the given event.  Update the
@@ -195,17 +202,17 @@ Blockly.BlockDragger.prototype.startBlockDrag = function(currentDragDeltaXY, hea
  * @package
  */
 Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
-  var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY);
-  var newLoc = goog.math.Coordinate.sum(this.startXY_, delta);
+  var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY)
+  var newLoc = goog.math.Coordinate.sum(this.startXY_, delta)
 
-  this.draggingBlock_.moveDuringDrag(newLoc);
-  this.dragIcons_(delta);
+  this.draggingBlock_.moveDuringDrag(newLoc)
+  this.dragIcons_(delta)
 
-  this.deleteArea_ = this.workspace_.isDeleteArea(e);
-  this.draggedConnectionManager_.update(delta, this.deleteArea_);
+  this.deleteArea_ = this.workspace_.isDeleteArea(e)
+  this.draggedConnectionManager_.update(delta, this.deleteArea_)
 
-  this.updateCursorDuringBlockDrag_();
-};
+  this.updateCursorDuringBlockDrag_()
+}
 
 /**
  * Finish a block drag and put the block back on the workspace.
@@ -216,50 +223,51 @@ Blockly.BlockDragger.prototype.dragBlock = function(e, currentDragDeltaXY) {
  */
 Blockly.BlockDragger.prototype.endBlockDrag = function(e, currentDragDeltaXY) {
   // Make sure internal state is fresh.
-  this.dragBlock(e, currentDragDeltaXY);
-  this.dragIconData_ = [];
+  this.dragBlock(e, currentDragDeltaXY)
+  this.dragIconData_ = []
 
-  Blockly.BlockAnimations.disconnectUiStop();
+  Blockly.BlockAnimations.disconnectUiStop()
 
-  var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY);
-  var newLoc = goog.math.Coordinate.sum(this.startXY_, delta);
-  this.draggingBlock_.moveOffDragSurface_(newLoc);
+  var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY)
+  var newLoc = goog.math.Coordinate.sum(this.startXY_, delta)
+  this.draggingBlock_.moveOffDragSurface_(newLoc)
 
-  var deleted = this.maybeDeleteBlock_();
+  var deleted = this.maybeDeleteBlock_()
   if (!deleted) {
     // These are expensive and don't need to be done if we're deleting.
-    this.draggingBlock_.moveConnections_(delta.x, delta.y);
-    this.draggingBlock_.setDragging(false);
-    this.fireMoveEvent_();
+    this.draggingBlock_.moveConnections_(delta.x, delta.y)
+    this.draggingBlock_.setDragging(false)
+    this.fireMoveEvent_()
     if (this.draggedConnectionManager_.wouldConnectBlock()) {
       // Applying connections also rerenders the relevant blocks.
-      this.draggedConnectionManager_.applyConnections();
+      this.draggedConnectionManager_.applyConnections()
     } else {
-      this.draggingBlock_.render();
+      this.draggingBlock_.render()
     }
-    this.draggingBlock_.scheduleSnapAndBump();
+    this.draggingBlock_.scheduleSnapAndBump()
   }
-  this.workspace_.setResizesEnabled(true);
+  this.workspace_.setResizesEnabled(true)
 
-  var toolbox = this.workspace_.getToolbox();
+  var toolbox = this.workspace_.getToolbox()
   if (toolbox) {
-    var style = this.draggingBlock_.isDeletable() ? 'blocklyToolboxDelete' :
-        'blocklyToolboxGrab';
-    toolbox.removeStyle(style);
+    var style = this.draggingBlock_.isDeletable()
+      ? "blocklyToolboxDelete"
+      : "blocklyToolboxGrab"
+    toolbox.removeStyle(style)
   }
-  Blockly.Events.setGroup(false);
-};
+  Blockly.Events.setGroup(false)
+}
 
 /**
  * Fire a move event at the end of a block drag.
  * @private
  */
 Blockly.BlockDragger.prototype.fireMoveEvent_ = function() {
-  var event = new Blockly.Events.BlockMove(this.draggingBlock_);
-  event.oldCoordinate = this.startXY_;
-  event.recordNew();
-  Blockly.Events.fire(event);
-};
+  var event = new Blockly.Events.BlockMove(this.draggingBlock_)
+  event.oldCoordinate = this.startXY_
+  event.recordNew()
+  Blockly.Events.fire(event)
+}
 
 /**
  * Shut the trash can and, if necessary, delete the dragging block.
@@ -268,21 +276,21 @@ Blockly.BlockDragger.prototype.fireMoveEvent_ = function() {
  * @private
  */
 Blockly.BlockDragger.prototype.maybeDeleteBlock_ = function() {
-  var trashcan = this.workspace_.trashcan;
+  var trashcan = this.workspace_.trashcan
 
   if (this.wouldDeleteBlock_) {
     if (trashcan) {
-      setTimeout(trashcan.close.bind(trashcan), 100);
+      setTimeout(trashcan.close.bind(trashcan), 100)
     }
     // Fire a move event, so we know where to go back to for an undo.
-    this.fireMoveEvent_();
-    this.draggingBlock_.dispose(false, true);
+    this.fireMoveEvent_()
+    this.draggingBlock_.dispose(false, true)
   } else if (trashcan) {
     // Make sure the trash can is closed.
-    trashcan.close();
+    trashcan.close()
   }
-  return this.wouldDeleteBlock_;
-};
+  return this.wouldDeleteBlock_
+}
 
 /**
  * Update the cursor (and possibly the trash can lid) to reflect whether the
@@ -290,20 +298,20 @@ Blockly.BlockDragger.prototype.maybeDeleteBlock_ = function() {
  * @private
  */
 Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function() {
-  this.wouldDeleteBlock_ = this.draggedConnectionManager_.wouldDeleteBlock();
-  var trashcan = this.workspace_.trashcan;
+  this.wouldDeleteBlock_ = this.draggedConnectionManager_.wouldDeleteBlock()
+  var trashcan = this.workspace_.trashcan
   if (this.wouldDeleteBlock_) {
-    this.draggingBlock_.setDeleteStyle(true);
+    this.draggingBlock_.setDeleteStyle(true)
     if (this.deleteArea_ == Blockly.DELETE_AREA_TRASH && trashcan) {
-      trashcan.setOpen_(true);
+      trashcan.setOpen_(true)
     }
   } else {
-    this.draggingBlock_.setDeleteStyle(false);
+    this.draggingBlock_.setDeleteStyle(false)
     if (trashcan) {
-      trashcan.setOpen_(false);
+      trashcan.setOpen_(false)
     }
   }
-};
+}
 
 /**
  * Convert a coordinate object from pixels to workspace units, including a
@@ -317,18 +325,20 @@ Blockly.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function() {
  * @private
  */
 Blockly.BlockDragger.prototype.pixelsToWorkspaceUnits_ = function(pixelCoord) {
-  var result = new goog.math.Coordinate(pixelCoord.x / this.workspace_.scale,
-      pixelCoord.y / this.workspace_.scale);
+  var result = new goog.math.Coordinate(
+    pixelCoord.x / this.workspace_.scale,
+    pixelCoord.y / this.workspace_.scale
+  )
   if (this.workspace_.isMutator) {
     // If we're in a mutator, its scale is always 1, purely because of some
     // oddities in our rendering optimizations.  The actual scale is the same as
     // the scale on the parent workspace.
     // Fix that for dragging.
-    var mainScale = this.workspace_.options.parentWorkspace.scale;
-    result = result.scale(1 / mainScale);
+    var mainScale = this.workspace_.options.parentWorkspace.scale
+    result = result.scale(1 / mainScale)
   }
-  return result;
-};
+  return result
+}
 
 /**
  * Move all of the icons connected to this drag.
@@ -339,7 +349,7 @@ Blockly.BlockDragger.prototype.pixelsToWorkspaceUnits_ = function(pixelCoord) {
 Blockly.BlockDragger.prototype.dragIcons_ = function(dxy) {
   // Moving icons moves their associated bubbles.
   for (var i = 0; i < this.dragIconData_.length; i++) {
-    var data = this.dragIconData_[i];
-    data.icon.setIconLocation(goog.math.Coordinate.sum(data.location, dxy));
+    var data = this.dragIconData_[i]
+    data.icon.setIconLocation(goog.math.Coordinate.sum(data.location, dxy))
   }
-};
+}

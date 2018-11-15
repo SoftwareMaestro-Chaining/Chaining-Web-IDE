@@ -23,40 +23,42 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.BlockOptionsModalService');
-
+goog.provide("blocklyApp.BlockOptionsModalService")
 
 blocklyApp.BlockOptionsModalService = ng.core.Class({
-  constructor: [function() {
-    this.actionButtonsInfo = [];
-    // The aim of the pre-show hook is to populate the modal component with the
-    // information it needs to display the modal (e.g., which action buttons to
-    // display).
-    this.preShowHook = function() {
-      throw Error(
-          'A pre-show hook must be defined for the block options modal ' +
-          'before it can be shown.');
-    };
-    this.modalIsShown = false;
-    this.onDismissCallback = null;
-  }],
+  constructor: [
+    function() {
+      this.actionButtonsInfo = []
+      // The aim of the pre-show hook is to populate the modal component with the
+      // information it needs to display the modal (e.g., which action buttons to
+      // display).
+      this.preShowHook = function() {
+        throw Error(
+          "A pre-show hook must be defined for the block options modal " +
+            "before it can be shown."
+        )
+      }
+      this.modalIsShown = false
+      this.onDismissCallback = null
+    }
+  ],
   registerPreShowHook: function(preShowHook) {
-    var that = this;
+    var that = this
     this.preShowHook = function() {
-      preShowHook(that.actionButtonsInfo, that.onDismissCallback);
-    };
+      preShowHook(that.actionButtonsInfo, that.onDismissCallback)
+    }
   },
   isModalShown: function() {
-    return this.modalIsShown;
+    return this.modalIsShown
   },
   showModal: function(actionButtonsInfo, onDismissCallback) {
-    this.actionButtonsInfo = actionButtonsInfo;
-    this.onDismissCallback = onDismissCallback;
+    this.actionButtonsInfo = actionButtonsInfo
+    this.onDismissCallback = onDismissCallback
 
-    this.preShowHook();
-    this.modalIsShown = true;
+    this.preShowHook()
+    this.modalIsShown = true
   },
   hideModal: function() {
-    this.modalIsShown = false;
+    this.modalIsShown = false
   }
-});
+})

@@ -22,13 +22,11 @@
  * treecontrol.js.
  */
 
-goog.provide('goog.ui.tree.TreeNode');
+goog.provide("goog.ui.tree.TreeNode")
 
-goog.require('goog.ui.tree.BaseNode');
+goog.require("goog.ui.tree.BaseNode")
 
-goog.forwardDeclare('goog.ui.tree.TreeControl');  // circular
-
-
+goog.forwardDeclare("goog.ui.tree.TreeControl") // circular
 
 /**
  * A single node in the tree.
@@ -42,10 +40,9 @@ goog.forwardDeclare('goog.ui.tree.TreeControl');  // circular
  * @extends {goog.ui.tree.BaseNode}
  */
 goog.ui.tree.TreeNode = function(content, opt_config, opt_domHelper) {
-  goog.ui.tree.BaseNode.call(this, content, opt_config, opt_domHelper);
-};
-goog.inherits(goog.ui.tree.TreeNode, goog.ui.tree.BaseNode);
-
+  goog.ui.tree.BaseNode.call(this, content, opt_config, opt_domHelper)
+}
+goog.inherits(goog.ui.tree.TreeNode, goog.ui.tree.BaseNode)
 
 /**
  * Returns the tree.
@@ -54,19 +51,18 @@ goog.inherits(goog.ui.tree.TreeNode, goog.ui.tree.BaseNode);
  */
 goog.ui.tree.TreeNode.prototype.getTree = function() {
   if (this.tree) {
-    return this.tree;
+    return this.tree
   }
-  var parent = this.getParent();
+  var parent = this.getParent()
   if (parent) {
-    var tree = parent.getTree();
+    var tree = parent.getTree()
     if (tree) {
-      this.setTreeInternal(tree);
-      return tree;
+      this.setTreeInternal(tree)
+      return tree
     }
   }
-  return null;
-};
-
+  return null
+}
 
 /**
  * Returns the source for the icon.
@@ -74,28 +70,28 @@ goog.ui.tree.TreeNode.prototype.getTree = function() {
  * @override
  */
 goog.ui.tree.TreeNode.prototype.getCalculatedIconClass = function() {
-  var expanded = this.getExpanded();
-  var expandedIconClass = this.getExpandedIconClass();
+  var expanded = this.getExpanded()
+  var expandedIconClass = this.getExpandedIconClass()
   if (expanded && expandedIconClass) {
-    return expandedIconClass;
+    return expandedIconClass
   }
-  var iconClass = this.getIconClass();
+  var iconClass = this.getIconClass()
   if (!expanded && iconClass) {
-    return iconClass;
+    return iconClass
   }
 
   // fall back on default icons
-  var config = this.getConfig();
+  var config = this.getConfig()
   if (this.hasChildren()) {
     if (expanded && config.cssExpandedFolderIcon) {
-      return config.cssTreeIcon + ' ' + config.cssExpandedFolderIcon;
+      return config.cssTreeIcon + " " + config.cssExpandedFolderIcon
     } else if (!expanded && config.cssCollapsedFolderIcon) {
-      return config.cssTreeIcon + ' ' + config.cssCollapsedFolderIcon;
+      return config.cssTreeIcon + " " + config.cssCollapsedFolderIcon
     }
   } else {
     if (config.cssFileIcon) {
-      return config.cssTreeIcon + ' ' + config.cssFileIcon;
+      return config.cssTreeIcon + " " + config.cssFileIcon
     }
   }
-  return '';
-};
+  return ""
+}

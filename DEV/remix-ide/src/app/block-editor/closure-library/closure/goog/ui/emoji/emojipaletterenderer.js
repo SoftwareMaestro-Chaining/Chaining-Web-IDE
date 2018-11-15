@@ -17,21 +17,19 @@
  *
  */
 
-goog.provide('goog.ui.emoji.EmojiPaletteRenderer');
+goog.provide("goog.ui.emoji.EmojiPaletteRenderer")
 
-goog.require('goog.a11y.aria');
-goog.require('goog.asserts');
-goog.require('goog.dom.NodeType');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.style');
-goog.require('goog.ui.PaletteRenderer');
-goog.require('goog.ui.emoji.Emoji');
+goog.require("goog.a11y.aria")
+goog.require("goog.asserts")
+goog.require("goog.dom.NodeType")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.style")
+goog.require("goog.ui.PaletteRenderer")
+goog.require("goog.ui.emoji.Emoji")
 
-goog.forwardDeclare('goog.ui.Palette');
-goog.forwardDeclare('goog.ui.emoji.SpriteInfo');
-
-
+goog.forwardDeclare("goog.ui.Palette")
+goog.forwardDeclare("goog.ui.emoji.SpriteInfo")
 
 /**
  * Renders an emoji palette.
@@ -43,20 +41,18 @@ goog.forwardDeclare('goog.ui.emoji.SpriteInfo');
  * @extends {goog.ui.PaletteRenderer}
  */
 goog.ui.emoji.EmojiPaletteRenderer = function(defaultImgUrl) {
-  goog.ui.PaletteRenderer.call(this);
+  goog.ui.PaletteRenderer.call(this)
 
-  this.defaultImgUrl_ = defaultImgUrl;
-};
-goog.inherits(goog.ui.emoji.EmojiPaletteRenderer, goog.ui.PaletteRenderer);
-
+  this.defaultImgUrl_ = defaultImgUrl
+}
+goog.inherits(goog.ui.emoji.EmojiPaletteRenderer, goog.ui.PaletteRenderer)
 
 /**
  * Globally unique ID sequence for cells rendered by this renderer class.
  * @type {number}
  * @private
  */
-goog.ui.emoji.EmojiPaletteRenderer.cellId_ = 0;
-
+goog.ui.emoji.EmojiPaletteRenderer.cellId_ = 0
 
 /**
  * Url of the img that should be used for cells in the emoji palette that are
@@ -66,14 +62,12 @@ goog.ui.emoji.EmojiPaletteRenderer.cellId_ = 0;
  * @type {?string}
  * @private
  */
-goog.ui.emoji.EmojiPaletteRenderer.prototype.defaultImgUrl_ = null;
-
+goog.ui.emoji.EmojiPaletteRenderer.prototype.defaultImgUrl_ = null
 
 /** @override */
 goog.ui.emoji.EmojiPaletteRenderer.getCssClass = function() {
-  return goog.getCssName('goog-ui-emojipalette');
-};
-
+  return goog.getCssName("goog-ui-emojipalette")
+}
 
 /**
  * Creates a palette item from the given emoji data.
@@ -86,27 +80,33 @@ goog.ui.emoji.EmojiPaletteRenderer.getCssClass = function() {
  * @return {!HTMLDivElement} The palette item for this emoji.
  */
 goog.ui.emoji.EmojiPaletteRenderer.prototype.createPaletteItem = function(
-    dom, id, spriteInfo, displayUrl) {
-  var el;
+  dom,
+  id,
+  spriteInfo,
+  displayUrl
+) {
+  var el
 
   if (spriteInfo) {
-    var cssClass = spriteInfo.getCssClass();
+    var cssClass = spriteInfo.getCssClass()
     if (cssClass) {
-      el = dom.createDom(goog.dom.TagName.DIV, cssClass);
+      el = dom.createDom(goog.dom.TagName.DIV, cssClass)
     } else {
-      el = this.buildElementFromSpriteMetadata(dom, spriteInfo, displayUrl);
+      el = this.buildElementFromSpriteMetadata(dom, spriteInfo, displayUrl)
     }
   } else {
-    el = dom.createDom(goog.dom.TagName.IMG, {'src': displayUrl});
+    el = dom.createDom(goog.dom.TagName.IMG, { src: displayUrl })
   }
 
   var outerdiv = dom.createDom(
-      goog.dom.TagName.DIV, goog.getCssName('goog-palette-cell-wrapper'), el);
-  outerdiv.setAttribute(goog.ui.emoji.Emoji.ATTRIBUTE, id);
-  outerdiv.setAttribute(goog.ui.emoji.Emoji.DATA_ATTRIBUTE, id);
-  return /** @type {!HTMLDivElement} */ (outerdiv);
-};
-
+    goog.dom.TagName.DIV,
+    goog.getCssName("goog-palette-cell-wrapper"),
+    el
+  )
+  outerdiv.setAttribute(goog.ui.emoji.Emoji.ATTRIBUTE, id)
+  outerdiv.setAttribute(goog.ui.emoji.Emoji.DATA_ATTRIBUTE, id)
+  return /** @type {!HTMLDivElement} */ (outerdiv)
+}
 
 /**
  * Modifies a palette item containing an animated emoji, in response to the
@@ -115,29 +115,30 @@ goog.ui.emoji.EmojiPaletteRenderer.prototype.createPaletteItem = function(
  * @param {Element} item The palette item to update.
  * @param {Image} animatedImg An Image object containing the animated emoji.
  */
-goog.ui.emoji.EmojiPaletteRenderer.prototype.updateAnimatedPaletteItem =
-    function(item, animatedImg) {
+goog.ui.emoji.EmojiPaletteRenderer.prototype.updateAnimatedPaletteItem = function(
+  item,
+  animatedImg
+) {
   // An animated emoji is one that had sprite info for a static version and is
   // now being updated. See createPaletteItem for the structure of the palette
   // items we're modifying.
 
-  var inner = /** @type {Element} */ (item.firstChild);
-  goog.asserts.assert(inner);
+  var inner = /** @type {Element} */ (item.firstChild)
+  goog.asserts.assert(inner)
   // The first case is a palette item with a CSS class representing the sprite,
   // and an animated emoji.
-  var classes = goog.dom.classlist.get(inner);
+  var classes = goog.dom.classlist.get(inner)
   if (classes && classes.length == 1) {
-    inner.className = '';
+    inner.className = ""
   }
 
   goog.style.setStyle(inner, {
-    'width': animatedImg.width,
-    'height': animatedImg.height,
-    'background-image': 'url(' + animatedImg.src + ')',
-    'background-position': '0 0'
-  });
-};
-
+    width: animatedImg.width,
+    height: animatedImg.height,
+    "background-image": "url(" + animatedImg.src + ")",
+    "background-position": "0 0"
+  })
+}
 
 /**
  * Builds the inner contents of a palette item out of sprite metadata.
@@ -148,25 +149,27 @@ goog.ui.emoji.EmojiPaletteRenderer.prototype.updateAnimatedPaletteItem =
  * @param {string} displayUrl The URL of the image for this cell.
  * @return {HTMLDivElement} The inner element for a palette item.
  */
-goog.ui.emoji.EmojiPaletteRenderer.prototype.buildElementFromSpriteMetadata =
-    function(dom, spriteInfo, displayUrl) {
-  var width = spriteInfo.getWidthCssValue();
-  var height = spriteInfo.getHeightCssValue();
-  var x = spriteInfo.getXOffsetCssValue();
-  var y = spriteInfo.getYOffsetCssValue();
+goog.ui.emoji.EmojiPaletteRenderer.prototype.buildElementFromSpriteMetadata = function(
+  dom,
+  spriteInfo,
+  displayUrl
+) {
+  var width = spriteInfo.getWidthCssValue()
+  var height = spriteInfo.getHeightCssValue()
+  var x = spriteInfo.getXOffsetCssValue()
+  var y = spriteInfo.getYOffsetCssValue()
 
-  var el = dom.createDom(goog.dom.TagName.DIV);
+  var el = dom.createDom(goog.dom.TagName.DIV)
   goog.style.setStyle(el, {
-    'width': width,
-    'height': height,
-    'background-image': 'url(' + displayUrl + ')',
-    'background-repeat': 'no-repeat',
-    'background-position': x + ' ' + y
-  });
+    width: width,
+    height: height,
+    "background-image": "url(" + displayUrl + ")",
+    "background-repeat": "no-repeat",
+    "background-position": x + " " + y
+  })
 
-  return /** @type {!HTMLDivElement} */ (el);
-};
-
+  return /** @type {!HTMLDivElement} */ (el)
+}
 
 /** @override */
 goog.ui.emoji.EmojiPaletteRenderer.prototype.createCell = function(node, dom) {
@@ -174,26 +177,31 @@ goog.ui.emoji.EmojiPaletteRenderer.prototype.createCell = function(node, dom) {
   // prevent jitter in the table. If there's no default img url, just create an
   // empty div, to prevent trying to fetch a null url.
   if (!node) {
-    var elem = this.defaultImgUrl_ ?
-        dom.createDom(goog.dom.TagName.IMG, {src: this.defaultImgUrl_}) :
-        dom.createDom(goog.dom.TagName.DIV);
+    var elem = this.defaultImgUrl_
+      ? dom.createDom(goog.dom.TagName.IMG, { src: this.defaultImgUrl_ })
+      : dom.createDom(goog.dom.TagName.DIV)
     node = dom.createDom(
-        goog.dom.TagName.DIV, goog.getCssName('goog-palette-cell-wrapper'),
-        elem);
+      goog.dom.TagName.DIV,
+      goog.getCssName("goog-palette-cell-wrapper"),
+      elem
+    )
   }
 
   var cell = dom.createDom(
-      goog.dom.TagName.TD, {
-        'class': goog.getCssName(this.getCssClass(), 'cell'),
-        // Cells must have an ID, for accessibility, so we generate one here.
-        'id': this.getCssClass() + '-cell-' +
-            goog.ui.emoji.EmojiPaletteRenderer.cellId_++
-      },
-      node);
-  goog.a11y.aria.setRole(cell, 'gridcell');
-  return cell;
-};
-
+    goog.dom.TagName.TD,
+    {
+      class: goog.getCssName(this.getCssClass(), "cell"),
+      // Cells must have an ID, for accessibility, so we generate one here.
+      id:
+        this.getCssClass() +
+        "-cell-" +
+        goog.ui.emoji.EmojiPaletteRenderer.cellId_++
+    },
+    node
+  )
+  goog.a11y.aria.setRole(cell, "gridcell")
+  return cell
+}
 
 /**
  * Returns the item corresponding to the given node, or null if the node is
@@ -204,14 +212,16 @@ goog.ui.emoji.EmojiPaletteRenderer.prototype.createCell = function(node, dom) {
  * @override
  */
 goog.ui.emoji.EmojiPaletteRenderer.prototype.getContainingItem = function(
-    palette, node) {
-  var root = palette.getElement();
+  palette,
+  node
+) {
+  var root = palette.getElement()
   while (node && node.nodeType == goog.dom.NodeType.ELEMENT && node != root) {
     if (node.tagName == goog.dom.TagName.TD) {
-      return node.firstChild;
+      return node.firstChild
     }
-    node = node.parentNode;
+    node = node.parentNode
   }
 
-  return null;
-};
+  return null
+}

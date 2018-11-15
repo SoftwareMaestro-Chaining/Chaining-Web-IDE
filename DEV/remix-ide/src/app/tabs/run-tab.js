@@ -22,6 +22,8 @@ var css = require('./styles/run-tab-styles')
 var MultiParamManager = require('../../multiParamManager')
 var modalDialog = require('../ui/modaldialog')
 
+// tutorial
+
 function runTab (opts, localRegistry) {
   /* -------------------------
             VARIABLES
@@ -58,7 +60,7 @@ function runTab (opts, localRegistry) {
         } else if (selectedUnit === 'wei') {
           unit = 'wei'
         }
-        cb(null, executionContext.web3().utils.toWei(number, unit))
+        cb(null, executionContext.web3().toWei(number, unit))
       } catch (e) {
         cb(e)
       }
@@ -76,7 +78,8 @@ function runTab (opts, localRegistry) {
     fileManager: self._components.registry.get('filemanager').api,
     editor: self._components.registry.get('editor').api,
     logCallback: self._components.registry.get('logCallback').api,
-    filePanel: self._components.registry.get('filepanel').api
+    filePanel: self._components.registry.get('filepanel').api,
+    tutorialTab: self._components.registry.get('tutorialtab').api
   }
   self._deps.udapp.resetAPI(self._components.transactionContextAPI)
   self._view.recorderCount = yo`<span>0</span>`

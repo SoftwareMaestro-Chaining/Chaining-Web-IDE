@@ -19,14 +19,12 @@
  * @see ../../demos/autocompleteremote.html
  */
 
-goog.provide('goog.ui.ac.Remote');
+goog.provide("goog.ui.ac.Remote")
 
-goog.require('goog.ui.ac.AutoComplete');
-goog.require('goog.ui.ac.InputHandler');
-goog.require('goog.ui.ac.RemoteArrayMatcher');
-goog.require('goog.ui.ac.Renderer');
-
-
+goog.require("goog.ui.ac.AutoComplete")
+goog.require("goog.ui.ac.InputHandler")
+goog.require("goog.ui.ac.RemoteArrayMatcher")
+goog.require("goog.ui.ac.Renderer")
 
 /**
  * Factory class for building a remote autocomplete widget that autocompletes
@@ -41,57 +39,53 @@ goog.require('goog.ui.ac.Renderer');
  * @extends {goog.ui.ac.AutoComplete}
  */
 goog.ui.ac.Remote = function(url, input, opt_multi, opt_useSimilar) {
-  var matcher = new goog.ui.ac.RemoteArrayMatcher(url, !opt_useSimilar);
-  this.matcher_ = matcher;
+  var matcher = new goog.ui.ac.RemoteArrayMatcher(url, !opt_useSimilar)
+  this.matcher_ = matcher
 
-  var renderer = new goog.ui.ac.Renderer();
+  var renderer = new goog.ui.ac.Renderer()
 
-  var inputhandler = new goog.ui.ac.InputHandler(null, null, !!opt_multi, 300);
+  var inputhandler = new goog.ui.ac.InputHandler(null, null, !!opt_multi, 300)
 
-  goog.ui.ac.AutoComplete.call(this, matcher, renderer, inputhandler);
+  goog.ui.ac.AutoComplete.call(this, matcher, renderer, inputhandler)
 
-  inputhandler.attachAutoComplete(this);
-  inputhandler.attachInputs(input);
-};
-goog.inherits(goog.ui.ac.Remote, goog.ui.ac.AutoComplete);
-
+  inputhandler.attachAutoComplete(this)
+  inputhandler.attachInputs(input)
+}
+goog.inherits(goog.ui.ac.Remote, goog.ui.ac.AutoComplete)
 
 /**
  * Set whether or not standard highlighting should be used when rendering rows.
  * @param {boolean} useStandardHighlighting true if standard highlighting used.
  */
 goog.ui.ac.Remote.prototype.setUseStandardHighlighting = function(
-    useStandardHighlighting) {
-  this.renderer_.setUseStandardHighlighting(useStandardHighlighting);
-};
-
+  useStandardHighlighting
+) {
+  this.renderer_.setUseStandardHighlighting(useStandardHighlighting)
+}
 
 /**
  * Gets the attached InputHandler object.
  * @return {goog.ui.ac.InputHandler} The input handler.
  */
 goog.ui.ac.Remote.prototype.getInputHandler = function() {
-  return /** @type {goog.ui.ac.InputHandler} */ (this.selectionHandler_);
-};
-
+  return /** @type {goog.ui.ac.InputHandler} */ (this.selectionHandler_)
+}
 
 /**
  * Set the send method ("GET", "POST") for the matcher.
  * @param {string} method The send method; default: GET.
  */
 goog.ui.ac.Remote.prototype.setMethod = function(method) {
-  this.matcher_.setMethod(method);
-};
-
+  this.matcher_.setMethod(method)
+}
 
 /**
  * Set the post data for the matcher.
  * @param {string} content Post data.
  */
 goog.ui.ac.Remote.prototype.setContent = function(content) {
-  this.matcher_.setContent(content);
-};
-
+  this.matcher_.setContent(content)
+}
 
 /**
  * Set the HTTP headers for the matcher.
@@ -99,9 +93,8 @@ goog.ui.ac.Remote.prototype.setContent = function(content) {
  *     request.
  */
 goog.ui.ac.Remote.prototype.setHeaders = function(headers) {
-  this.matcher_.setHeaders(headers);
-};
-
+  this.matcher_.setHeaders(headers)
+}
 
 /**
  * Set the timeout interval for the matcher.
@@ -109,5 +102,5 @@ goog.ui.ac.Remote.prototype.setHeaders = function(headers) {
  *     incomplete request will be aborted; 0 means no timeout is set.
  */
 goog.ui.ac.Remote.prototype.setTimeoutInterval = function(interval) {
-  this.matcher_.setTimeoutInterval(interval);
-};
+  this.matcher_.setTimeoutInterval(interval)
+}

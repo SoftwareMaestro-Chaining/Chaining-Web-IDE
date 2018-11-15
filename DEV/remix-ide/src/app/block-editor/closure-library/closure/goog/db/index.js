@@ -17,16 +17,13 @@
  *
  */
 
+goog.provide("goog.db.Index")
 
-goog.provide('goog.db.Index');
-
-goog.require('goog.async.Deferred');
-goog.require('goog.db.Cursor');
-goog.require('goog.db.Error');
-goog.require('goog.db.KeyRange');
-goog.require('goog.debug');
-
-
+goog.require("goog.async.Deferred")
+goog.require("goog.db.Cursor")
+goog.require("goog.db.Error")
+goog.require("goog.db.KeyRange")
+goog.require("goog.debug")
 
 /**
  * Creates an IDBIndex wrapper object. Indexes are associated with object
@@ -46,34 +43,30 @@ goog.db.Index = function(index) {
    * @type {!IDBIndex}
    * @private
    */
-  this.index_ = index;
-};
-
+  this.index_ = index
+}
 
 /**
  * @return {string} Name of the index.
  */
 goog.db.Index.prototype.getName = function() {
-  return this.index_.name;
-};
-
+  return this.index_.name
+}
 
 /**
  * @return {*} Key path of the index.
  */
 goog.db.Index.prototype.getKeyPath = function() {
-  return this.index_.keyPath;
-};
-
+  return this.index_.keyPath
+}
 
 /**
  * @return {boolean} True if the index enforces that there is only one object
  *     for each unique value it indexes on.
  */
 goog.db.Index.prototype.isUnique = function() {
-  return this.index_.unique;
-};
-
+  return this.index_.unique
+}
 
 /**
  * Helper function for get and getKey.
@@ -85,23 +78,24 @@ goog.db.Index.prototype.isUnique = function() {
  * @private
  */
 goog.db.Index.prototype.get_ = function(fn, msg, key) {
-  var d = new goog.async.Deferred();
-  var request;
+  var d = new goog.async.Deferred()
+  var request
   try {
-    request = this.index_[fn](key);
+    request = this.index_[fn](key)
   } catch (err) {
-    msg += ' with key ' + goog.debug.deepExpose(key);
-    d.errback(goog.db.Error.fromException(err, msg));
-    return d;
+    msg += " with key " + goog.debug.deepExpose(key)
+    d.errback(goog.db.Error.fromException(err, msg))
+    return d
   }
-  request.onsuccess = function(ev) { d.callback(ev.target.result); };
+  request.onsuccess = function(ev) {
+    d.callback(ev.target.result)
+  }
   request.onerror = function(ev) {
-    msg += ' with key ' + goog.debug.deepExpose(key);
-    d.errback(goog.db.Error.fromRequest(ev.target, msg));
-  };
-  return d;
-};
-
+    msg += " with key " + goog.debug.deepExpose(key)
+    d.errback(goog.db.Error.fromRequest(ev.target, msg))
+  }
+  return d
+}
 
 /**
  * Fetches a single object from the object store. Even if there are multiple
@@ -111,9 +105,8 @@ goog.db.Index.prototype.get_ = function(fn, msg, key) {
  * @return {!goog.async.Deferred} The deferred object for the given record.
  */
 goog.db.Index.prototype.get = function(key) {
-  return this.get_('get', 'getting from index ' + this.getName(), key);
-};
-
+  return this.get_("get", "getting from index " + this.getName(), key)
+}
 
 /**
  * Looks up a single object from the object store and gives back the key that
@@ -125,9 +118,8 @@ goog.db.Index.prototype.get = function(key) {
  *     the key.
  */
 goog.db.Index.prototype.getKey = function(key) {
-  return this.get_('getKey', 'getting key from index ' + this.getName(), key);
-};
-
+  return this.get_("getKey", "getting key from index " + this.getName(), key)
+}
 
 /**
  * Helper function for getAll and getAllKeys.
@@ -141,47 +133,46 @@ goog.db.Index.prototype.getKey = function(key) {
 goog.db.Index.prototype.getAll_ = function(fn, msg, opt_key) {
   // This is the most common use of IDBKeyRange. If more specific uses of
   // cursors are needed then a full wrapper should be created.
-  var IDBKeyRange = goog.global.IDBKeyRange || goog.global.webkitIDBKeyRange;
-  var d = new goog.async.Deferred();
-  var request;
+  var IDBKeyRange = goog.global.IDBKeyRange || goog.global.webkitIDBKeyRange
+  var d = new goog.async.Deferred()
+  var request
   try {
     if (opt_key) {
-      request = this.index_[fn](IDBKeyRange.only(opt_key));
+      request = this.index_[fn](IDBKeyRange.only(opt_key))
     } else {
-      request = this.index_[fn]();
+      request = this.index_[fn]()
     }
   } catch (err) {
     if (opt_key) {
-      msg += ' for key ' + goog.debug.deepExpose(opt_key);
+      msg += " for key " + goog.debug.deepExpose(opt_key)
     }
-    d.errback(goog.db.Error.fromException(err, msg));
-    return d;
+    d.errback(goog.db.Error.fromException(err, msg))
+    return d
   }
-  var result = [];
+  var result = []
   request.onsuccess = function(ev) {
-    var cursor = ev.target.result;
+    var cursor = ev.target.result
     if (cursor) {
-      if (fn == 'openKeyCursor') {
+      if (fn == "openKeyCursor") {
         // openKeyCursor returns a cursor with undefined key/value. See
         // https://w3c.github.io/IndexedDB/#dom-idbobjectstore-openkeycursor.
-        result.push(cursor.primaryKey);
+        result.push(cursor.primaryKey)
       } else {
-        result.push(cursor.value);
+        result.push(cursor.value)
       }
-      cursor['continue']();
+      cursor["continue"]()
     } else {
-      d.callback(result);
+      d.callback(result)
     }
-  };
+  }
   request.onerror = function(ev) {
     if (opt_key) {
-      msg += ' for key ' + goog.debug.deepExpose(opt_key);
+      msg += " for key " + goog.debug.deepExpose(opt_key)
     }
-    d.errback(goog.db.Error.fromRequest(ev.target, msg));
-  };
-  return d;
-};
-
+    d.errback(goog.db.Error.fromRequest(ev.target, msg))
+  }
+  return d
+}
 
 /**
  * Gets all indexed objects. If the key is provided, gets all indexed objects
@@ -193,9 +184,11 @@ goog.db.Index.prototype.getAll_ = function(fn, msg, opt_key) {
  */
 goog.db.Index.prototype.getAll = function(opt_key) {
   return this.getAll_(
-      'openCursor', 'getting all from index ' + this.getName(), opt_key);
-};
-
+    "openCursor",
+    "getting all from index " + this.getName(),
+    opt_key
+  )
+}
 
 /**
  * Gets the keys to look up all the indexed objects. If the key is provided,
@@ -207,10 +200,11 @@ goog.db.Index.prototype.getAll = function(opt_key) {
  */
 goog.db.Index.prototype.getAllKeys = function(opt_key) {
   return this.getAll_(
-      'openKeyCursor', 'getting all keys from index ' + this.getName(),
-      opt_key);
-};
-
+    "openKeyCursor",
+    "getting all keys from index " + this.getName(),
+    opt_key
+  )
+}
 
 /**
  * Opens a cursor over the specified key range. Returns a cursor object which is
@@ -244,5 +238,5 @@ goog.db.Index.prototype.getAllKeys = function(opt_key) {
  * @throws {goog.db.Error} If there was a problem opening the cursor.
  */
 goog.db.Index.prototype.openCursor = function(opt_range, opt_direction) {
-  return goog.db.Cursor.openCursor(this.index_, opt_range, opt_direction);
-};
+  return goog.db.Cursor.openCursor(this.index_, opt_range, opt_direction)
+}

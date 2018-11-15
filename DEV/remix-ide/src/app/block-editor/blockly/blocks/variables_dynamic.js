@@ -27,58 +27,61 @@
  * exception is end-of-line comments, which the scraper will remove.
  * @author duzc2dtw@gmail.com (Du Tian Wei)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Constants.VariablesDynamic');
+goog.provide("Blockly.Constants.VariablesDynamic")
 
-goog.require('Blockly.Blocks');
-goog.require('Blockly');
-
+goog.require("Blockly.Blocks")
+goog.require("Blockly")
 
 /**
  * Unused constant for the common HSV hue for all blocks in this category.
  * @deprecated Use Blockly.Msg['VARIABLES_DYNAMIC_HUE']. (2018 April 5)
  */
-Blockly.Constants.VariablesDynamic.HUE = 310;
+Blockly.Constants.VariablesDynamic.HUE = 310
 
-Blockly.defineBlocksWithJsonArray([ // BEGIN JSON EXTRACT
+Blockly.defineBlocksWithJsonArray([
+  // BEGIN JSON EXTRACT
   // Block for variable getter.
   {
-    "type": "variables_get_dynamic",
-    "message0": "%1",
-    "args0": [{
-      "type": "field_variable",
-      "name": "VAR",
-      "variable": "%{BKY_VARIABLES_DEFAULT_NAME}"
-    }],
-    "output": null,
-    "colour": "%{BKY_VARIABLES_DYNAMIC_HUE}",
-    "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
-    "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
-    "extensions": ["contextMenu_variableDynamicSetterGetter"]
+    type: "variables_get_dynamic",
+    message0: "%1",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
+      }
+    ],
+    output: null,
+    colour: "%{BKY_VARIABLES_DYNAMIC_HUE}",
+    helpUrl: "%{BKY_VARIABLES_GET_HELPURL}",
+    tooltip: "%{BKY_VARIABLES_GET_TOOLTIP}",
+    extensions: ["contextMenu_variableDynamicSetterGetter"]
   },
   // Block for variable setter.
   {
-    "type": "variables_set_dynamic",
-    "message0": "%{BKY_VARIABLES_SET}",
-    "args0": [{
-      "type": "field_variable",
-      "name": "VAR",
-      "variable": "%{BKY_VARIABLES_DEFAULT_NAME}"
-    },
-    {
-      "type": "input_value",
-      "name": "VALUE"
-    }
+    type: "variables_set_dynamic",
+    message0: "%{BKY_VARIABLES_SET}",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
+      },
+      {
+        type: "input_value",
+        name: "VALUE"
+      }
     ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour": "%{BKY_VARIABLES_DYNAMIC_HUE}",
-    "tooltip": "%{BKY_VARIABLES_SET_TOOLTIP}",
-    "helpUrl": "%{BKY_VARIABLES_SET_HELPURL}",
-    "extensions": ["contextMenu_variableDynamicSetterGetter"]
+    previousStatement: null,
+    nextStatement: null,
+    colour: "%{BKY_VARIABLES_DYNAMIC_HUE}",
+    tooltip: "%{BKY_VARIABLES_SET_TOOLTIP}",
+    helpUrl: "%{BKY_VARIABLES_SET_HELPURL}",
+    extensions: ["contextMenu_variableDynamicSetterGetter"]
   }
-]); // END JSON EXTRACT (Do not delete this comment.)
+]) // END JSON EXTRACT (Do not delete this comment.)
 
 /**
  * Mixin to add context menu items to create getter/setter blocks for this
@@ -98,40 +101,43 @@ Blockly.Constants.VariablesDynamic.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MI
   customContextMenu: function(options) {
     // Getter blocks have the option to create a setter block, and vice versa.
     if (this.isInFlyout) {
-      return;
+      return
     }
-    var opposite_type;
-    var contextMenuMsg;
-    if (this.type == 'variables_get_dynamic') {
-      opposite_type = 'variables_set_dynamic';
-      contextMenuMsg = Blockly.Msg['VARIABLES_GET_CREATE_SET'];
+    var opposite_type
+    var contextMenuMsg
+    if (this.type == "variables_get_dynamic") {
+      opposite_type = "variables_set_dynamic"
+      contextMenuMsg = Blockly.Msg["VARIABLES_GET_CREATE_SET"]
     } else {
-      opposite_type = 'variables_get_dynamic';
-      contextMenuMsg = Blockly.Msg['VARIABLES_SET_CREATE_GET'];
+      opposite_type = "variables_get_dynamic"
+      contextMenuMsg = Blockly.Msg["VARIABLES_SET_CREATE_GET"]
     }
 
-    var option = {enabled: this.workspace.remainingCapacity() > 0};
-    var name = this.getField('VAR').getText();
-    option.text = contextMenuMsg.replace('%1', name);
-    var xmlField = document.createElement('field');
-    xmlField.setAttribute('name', 'VAR');
-    xmlField.appendChild(document.createTextNode(name));
-    var xmlBlock = document.createElement('block');
-    xmlBlock.setAttribute('type', opposite_type);
-    xmlBlock.appendChild(xmlField);
-    option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
-    options.push(option);
+    var option = { enabled: this.workspace.remainingCapacity() > 0 }
+    var name = this.getField("VAR").getText()
+    option.text = contextMenuMsg.replace("%1", name)
+    var xmlField = document.createElement("field")
+    xmlField.setAttribute("name", "VAR")
+    xmlField.appendChild(document.createTextNode(name))
+    var xmlBlock = document.createElement("block")
+    xmlBlock.setAttribute("type", opposite_type)
+    xmlBlock.appendChild(xmlField)
+    option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock)
+    options.push(option)
   },
   onchange: function() {
-    var id = this.getFieldValue('VAR');
-    var variableModel = this.workspace.getVariableById(id);
-    if (this.type == 'variables_get_dynamic') {
-      this.outputConnection.setCheck(variableModel.type);
+    var id = this.getFieldValue("VAR")
+    var variableModel = this.workspace.getVariableById(id)
+    if (this.type == "variables_get_dynamic") {
+      this.outputConnection.setCheck(variableModel.type)
     } else {
-      this.getInput('VALUE').connection.setCheck(variableModel.type);
+      this.getInput("VALUE").connection.setCheck(variableModel.type)
     }
   }
-};
+}
 
-Blockly.Extensions.registerMixin('contextMenu_variableDynamicSetterGetter',
-    Blockly.Constants.VariablesDynamic.CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN);
+Blockly.Extensions.registerMixin(
+  "contextMenu_variableDynamicSetterGetter",
+  Blockly.Constants.VariablesDynamic
+    .CUSTOM_CONTEXT_MENU_VARIABLE_GETTER_SETTER_MIXIN
+)

@@ -37,15 +37,13 @@
  * @see ../demos/twothumbslider.html
  */
 
-goog.provide('goog.ui.TwoThumbSlider');
+goog.provide("goog.ui.TwoThumbSlider")
 
-goog.require('goog.a11y.aria');
-goog.require('goog.a11y.aria.Role');
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.ui.SliderBase');
-
-
+goog.require("goog.a11y.aria")
+goog.require("goog.a11y.aria.Role")
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.ui.SliderBase")
 
 /**
  * This creates a TwoThumbSlider object.
@@ -54,45 +52,45 @@ goog.require('goog.ui.SliderBase');
  * @extends {goog.ui.SliderBase}
  */
 goog.ui.TwoThumbSlider = function(opt_domHelper) {
-  goog.ui.SliderBase.call(this, opt_domHelper);
-  this.rangeModel.setValue(this.getMinimum());
-  this.rangeModel.setExtent(this.getMaximum() - this.getMinimum());
-};
-goog.inherits(goog.ui.TwoThumbSlider, goog.ui.SliderBase);
-goog.tagUnsealableClass(goog.ui.TwoThumbSlider);
-
+  goog.ui.SliderBase.call(this, opt_domHelper)
+  this.rangeModel.setValue(this.getMinimum())
+  this.rangeModel.setExtent(this.getMaximum() - this.getMinimum())
+}
+goog.inherits(goog.ui.TwoThumbSlider, goog.ui.SliderBase)
+goog.tagUnsealableClass(goog.ui.TwoThumbSlider)
 
 /**
  * The prefix we use for the CSS class names for the slider and its elements.
  * @type {string}
  */
-goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX =
-    goog.getCssName('goog-twothumbslider');
-
+goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX = goog.getCssName("goog-twothumbslider")
 
 /**
  * CSS class name for the value thumb element.
  * @type {string}
  */
-goog.ui.TwoThumbSlider.VALUE_THUMB_CSS_CLASS =
-    goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, 'value-thumb');
-
+goog.ui.TwoThumbSlider.VALUE_THUMB_CSS_CLASS = goog.getCssName(
+  goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX,
+  "value-thumb"
+)
 
 /**
  * CSS class name for the extent thumb element.
  * @type {string}
  */
-goog.ui.TwoThumbSlider.EXTENT_THUMB_CSS_CLASS =
-    goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, 'extent-thumb');
-
+goog.ui.TwoThumbSlider.EXTENT_THUMB_CSS_CLASS = goog.getCssName(
+  goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX,
+  "extent-thumb"
+)
 
 /**
  * CSS class name for the range highlight element.
  * @type {string}
  */
-goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS =
-    goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, 'rangehighlight');
-
+goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS = goog.getCssName(
+  goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX,
+  "rangehighlight"
+)
 
 /**
  * @param {goog.ui.SliderBase.Orientation} orient orientation of the slider.
@@ -101,11 +99,10 @@ goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS =
  * @override
  */
 goog.ui.TwoThumbSlider.prototype.getCssClass = function(orient) {
-  return orient == goog.ui.SliderBase.Orientation.VERTICAL ?
-      goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, 'vertical') :
-      goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, 'horizontal');
-};
-
+  return orient == goog.ui.SliderBase.Orientation.VERTICAL
+    ? goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, "vertical")
+    : goog.getCssName(goog.ui.TwoThumbSlider.CSS_CLASS_PREFIX, "horizontal")
+}
 
 /**
  * This creates a thumb element with the specified CSS class name.
@@ -114,11 +111,10 @@ goog.ui.TwoThumbSlider.prototype.getCssClass = function(orient) {
  * @private
  */
 goog.ui.TwoThumbSlider.prototype.createThumb_ = function(cs) {
-  var thumb = this.getDomHelper().createDom(goog.dom.TagName.DIV, cs);
-  goog.a11y.aria.setRole(thumb, goog.a11y.aria.Role.BUTTON);
-  return /** @type {!HTMLDivElement} */ (thumb);
-};
-
+  var thumb = this.getDomHelper().createDom(goog.dom.TagName.DIV, cs)
+  goog.a11y.aria.setRole(thumb, goog.a11y.aria.Role.BUTTON)
+  return /** @type {!HTMLDivElement} */ (thumb)
+}
 
 /**
  * Creates the thumb members for a twothumbslider. If the
@@ -132,30 +128,39 @@ goog.ui.TwoThumbSlider.prototype.createThumb_ = function(cs) {
 goog.ui.TwoThumbSlider.prototype.createThumbs = function() {
   // find range highlight and thumbs
   var valueThumb = goog.dom.getElementsByTagNameAndClass(
-      null, goog.ui.TwoThumbSlider.VALUE_THUMB_CSS_CLASS, this.getElement())[0];
+    null,
+    goog.ui.TwoThumbSlider.VALUE_THUMB_CSS_CLASS,
+    this.getElement()
+  )[0]
   var extentThumb = goog.dom.getElementsByTagNameAndClass(
-      null, goog.ui.TwoThumbSlider.EXTENT_THUMB_CSS_CLASS,
-      this.getElement())[0];
+    null,
+    goog.ui.TwoThumbSlider.EXTENT_THUMB_CSS_CLASS,
+    this.getElement()
+  )[0]
   var rangeHighlight = goog.dom.getElementsByTagNameAndClass(
-      null, goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS,
-      this.getElement())[0];
+    null,
+    goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS,
+    this.getElement()
+  )[0]
   if (!valueThumb) {
-    valueThumb =
-        this.createThumb_(goog.ui.TwoThumbSlider.VALUE_THUMB_CSS_CLASS);
-    this.getElement().appendChild(valueThumb);
+    valueThumb = this.createThumb_(goog.ui.TwoThumbSlider.VALUE_THUMB_CSS_CLASS)
+    this.getElement().appendChild(valueThumb)
   }
   if (!extentThumb) {
-    extentThumb =
-        this.createThumb_(goog.ui.TwoThumbSlider.EXTENT_THUMB_CSS_CLASS);
-    this.getElement().appendChild(extentThumb);
+    extentThumb = this.createThumb_(
+      goog.ui.TwoThumbSlider.EXTENT_THUMB_CSS_CLASS
+    )
+    this.getElement().appendChild(extentThumb)
   }
   if (!rangeHighlight) {
     rangeHighlight = this.getDomHelper().createDom(
-        goog.dom.TagName.DIV, goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS);
+      goog.dom.TagName.DIV,
+      goog.ui.TwoThumbSlider.RANGE_HIGHLIGHT_CSS_CLASS
+    )
     // Insert highlight before value thumb so that it renders under the thumbs.
-    this.getDomHelper().insertSiblingBefore(rangeHighlight, valueThumb);
+    this.getDomHelper().insertSiblingBefore(rangeHighlight, valueThumb)
   }
-  this.valueThumb = /** @type {!HTMLDivElement} */ (valueThumb);
-  this.extentThumb = /** @type {!HTMLDivElement} */ (extentThumb);
-  this.rangeHighlight = /** @type {!HTMLDivElement} */ (rangeHighlight);
-};
+  this.valueThumb = /** @type {!HTMLDivElement} */ (valueThumb)
+  this.extentThumb = /** @type {!HTMLDivElement} */ (extentThumb)
+  this.rangeHighlight = /** @type {!HTMLDivElement} */ (rangeHighlight)
+}

@@ -17,21 +17,18 @@
  *
  */
 
+goog.provide("goog.ds.JsonDataSource")
 
-goog.provide('goog.ds.JsonDataSource');
-
-goog.require('goog.Uri');
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.safe');
-goog.require('goog.ds.DataManager');
-goog.require('goog.ds.JsDataSource');
-goog.require('goog.ds.LoadState');
-goog.require('goog.ds.logger');
-goog.require('goog.html.legacyconversions');
-goog.require('goog.log');
-
-
+goog.require("goog.Uri")
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.safe")
+goog.require("goog.ds.DataManager")
+goog.require("goog.ds.JsDataSource")
+goog.require("goog.ds.LoadState")
+goog.require("goog.ds.logger")
+goog.require("goog.html.legacyconversions")
+goog.require("goog.log")
 
 /**
  * Data source whose backing is a JSON-like service, in which
@@ -61,11 +58,11 @@ goog.require('goog.log');
  * @final
  */
 goog.ds.JsonDataSource = function(uri, name, opt_callbackParamName) {
-  goog.ds.JsDataSource.call(this, null, name, null);
+  goog.ds.JsDataSource.call(this, null, name, null)
   if (uri) {
-    this.uri_ = new goog.Uri(uri);
+    this.uri_ = new goog.Uri(uri)
   } else {
-    this.uri_ = null;
+    this.uri_ = null
   }
 
   /**
@@ -73,25 +70,21 @@ goog.ds.JsonDataSource = function(uri, name, opt_callbackParamName) {
    * @type {string}
    * @private
    */
-  this.callbackParamName_ = opt_callbackParamName || 'callback';
-
-};
-goog.inherits(goog.ds.JsonDataSource, goog.ds.JsDataSource);
-
+  this.callbackParamName_ = opt_callbackParamName || "callback"
+}
+goog.inherits(goog.ds.JsonDataSource, goog.ds.JsDataSource)
 
 /**
  * Default load state is NOT_LOADED
  * @private
  */
-goog.ds.JsonDataSource.prototype.loadState_ = goog.ds.LoadState.NOT_LOADED;
-
+goog.ds.JsonDataSource.prototype.loadState_ = goog.ds.LoadState.NOT_LOADED
 
 /**
  * Map of all data sources, needed for callbacks
  * Doesn't work unless dataSources is exported (not renamed)
  */
-goog.ds.JsonDataSource['dataSources'] = {};
-
+goog.ds.JsonDataSource["dataSources"] = {}
 
 /**
  * Load or reload the backing data for this node.
@@ -103,33 +96,43 @@ goog.ds.JsonDataSource.prototype.load = function() {
     // NOTE: "dataSources" is expose above by name so that it will not be
     // renamed.  It should therefore be accessed via array notation here so
     // that it also doesn't get renamed and stops the compiler from complaining
-    goog.ds.JsonDataSource['dataSources'][this.dataName_] = this;
+    goog.ds.JsonDataSource["dataSources"][this.dataName_] = this
     goog.log.info(
-        goog.ds.logger, 'Sending JS request for DataSource ' +
-            this.getDataName() + ' to ' + this.uri_);
+      goog.ds.logger,
+      "Sending JS request for DataSource " +
+        this.getDataName() +
+        " to " +
+        this.uri_
+    )
 
-    this.loadState_ = goog.ds.LoadState.LOADING;
+    this.loadState_ = goog.ds.LoadState.LOADING
 
-    var uriToCall = new goog.Uri(this.uri_);
+    var uriToCall = new goog.Uri(this.uri_)
     uriToCall.setParameterValue(
-        this.callbackParamName_, 'JsonReceive.' + this.dataName_);
+      this.callbackParamName_,
+      "JsonReceive." + this.dataName_
+    )
 
-    goog.global['JsonReceive'][this.dataName_] =
-        goog.bind(this.receiveData, this);
+    goog.global["JsonReceive"][this.dataName_] = goog.bind(
+      this.receiveData,
+      this
+    )
 
-    var scriptEl = goog.dom.createDom(goog.dom.TagName.SCRIPT);
+    var scriptEl = goog.dom.createDom(goog.dom.TagName.SCRIPT)
     goog.dom.safe.setScriptSrc(
-        scriptEl,
-        goog.html.legacyconversions.trustedResourceUrlFromString(
-            uriToCall.toString()));
-    goog.dom.getElementsByTagNameAndClass(goog.dom.TagName.HEAD)[0].appendChild(
-        scriptEl);
+      scriptEl,
+      goog.html.legacyconversions.trustedResourceUrlFromString(
+        uriToCall.toString()
+      )
+    )
+    goog.dom
+      .getElementsByTagNameAndClass(goog.dom.TagName.HEAD)[0]
+      .appendChild(scriptEl)
   } else {
-    this.root_ = {};
-    this.loadState_ = goog.ds.LoadState.NOT_LOADED;
+    this.root_ = {}
+    this.loadState_ = goog.ds.LoadState.NOT_LOADED
   }
-};
-
+}
 
 /**
  * Gets the state of the backing data for this node
@@ -137,23 +140,21 @@ goog.ds.JsonDataSource.prototype.load = function() {
  * @override
  */
 goog.ds.JsonDataSource.prototype.getLoadState = function() {
-  return this.loadState_;
-};
-
+  return this.loadState_
+}
 
 /**
  * Receives data from a Json request
  * @param {Object} obj The JSON data.
  */
 goog.ds.JsonDataSource.prototype.receiveData = function(obj) {
-  this.setRoot(obj);
-  this.loadState_ = goog.ds.LoadState.LOADED;
-  goog.ds.DataManager.getInstance().fireDataChange(this.getDataName());
-};
-
+  this.setRoot(obj)
+  this.loadState_ = goog.ds.LoadState.LOADED
+  goog.ds.DataManager.getInstance().fireDataChange(this.getDataName())
+}
 
 /**
-* Temp variable to hold callbacks
-* until BUILD supports multiple externs.js files
-*/
-goog.global['JsonReceive'] = {};
+ * Temp variable to hold callbacks
+ * until BUILD supports multiple externs.js files
+ */
+goog.global["JsonReceive"] = {}

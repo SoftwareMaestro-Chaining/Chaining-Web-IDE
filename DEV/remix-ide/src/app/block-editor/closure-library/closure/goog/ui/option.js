@@ -18,13 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.Option');
+goog.provide("goog.ui.Option")
 
-goog.require('goog.ui.Component');
-goog.require('goog.ui.MenuItem');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Component")
+goog.require("goog.ui.MenuItem")
+goog.require("goog.ui.registry")
 
 /**
  * Class representing a menu option.  This is just a convenience class that
@@ -40,11 +38,10 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.MenuItem}
  */
 goog.ui.Option = function(content, opt_model, opt_domHelper) {
-  goog.ui.MenuItem.call(this, content, opt_model, opt_domHelper);
-  this.setSelectable(true);
-};
-goog.inherits(goog.ui.Option, goog.ui.MenuItem);
-
+  goog.ui.MenuItem.call(this, content, opt_model, opt_domHelper)
+  this.setSelectable(true)
+}
+goog.inherits(goog.ui.Option, goog.ui.MenuItem)
 
 /**
  * Performs the appropriate action when the option is activated by the user.
@@ -56,13 +53,14 @@ goog.inherits(goog.ui.Option, goog.ui.MenuItem);
  * @override
  */
 goog.ui.Option.prototype.performActionInternal = function(e) {
-  return this.dispatchEvent(goog.ui.Component.EventType.ACTION);
-};
-
+  return this.dispatchEvent(goog.ui.Component.EventType.ACTION)
+}
 
 // Register a decorator factory function for goog.ui.Options.
 goog.ui.registry.setDecoratorByClassName(
-    goog.getCssName('goog-option'), function() {
-      // Option defaults to using MenuItemRenderer.
-      return new goog.ui.Option(null);
-    });
+  goog.getCssName("goog-option"),
+  function() {
+    // Option defaults to using MenuItemRenderer.
+    return new goog.ui.Option(null)
+  }
+)

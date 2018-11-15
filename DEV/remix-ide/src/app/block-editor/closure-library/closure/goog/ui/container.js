@@ -24,25 +24,23 @@
 // TODO(attila):  Fix code/logic duplication between this and goog.ui.Control.
 // TODO(attila):  Maybe pull common stuff all the way up into Component...?
 
-goog.provide('goog.ui.Container');
-goog.provide('goog.ui.Container.EventType');
-goog.provide('goog.ui.Container.Orientation');
+goog.provide("goog.ui.Container")
+goog.provide("goog.ui.Container.EventType")
+goog.provide("goog.ui.Container.Orientation")
 
-goog.require('goog.a11y.aria');
-goog.require('goog.a11y.aria.State');
-goog.require('goog.asserts');
-goog.require('goog.dom');
-goog.require('goog.events.EventType');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.events.KeyHandler');
-goog.require('goog.object');
-goog.require('goog.style');
-goog.require('goog.ui.Component');
-goog.require('goog.ui.ComponentUtil');
-goog.require('goog.ui.ContainerRenderer');
-goog.require('goog.ui.Control');
-
-
+goog.require("goog.a11y.aria")
+goog.require("goog.a11y.aria.State")
+goog.require("goog.asserts")
+goog.require("goog.dom")
+goog.require("goog.events.EventType")
+goog.require("goog.events.KeyCodes")
+goog.require("goog.events.KeyHandler")
+goog.require("goog.object")
+goog.require("goog.style")
+goog.require("goog.ui.Component")
+goog.require("goog.ui.ComponentUtil")
+goog.require("goog.ui.ContainerRenderer")
+goog.require("goog.ui.Control")
 
 /**
  * Base class for containers.  Extends {@link goog.ui.Component} by adding
@@ -64,13 +62,12 @@ goog.require('goog.ui.Control');
  * @constructor
  */
 goog.ui.Container = function(opt_orientation, opt_renderer, opt_domHelper) {
-  goog.ui.Component.call(this, opt_domHelper);
-  this.renderer_ = opt_renderer || goog.ui.ContainerRenderer.getInstance();
-  this.orientation_ = opt_orientation || this.renderer_.getDefaultOrientation();
-};
-goog.inherits(goog.ui.Container, goog.ui.Component);
-goog.tagUnsealableClass(goog.ui.Container);
-
+  goog.ui.Component.call(this, opt_domHelper)
+  this.renderer_ = opt_renderer || goog.ui.ContainerRenderer.getInstance()
+  this.orientation_ = opt_orientation || this.renderer_.getDefaultOrientation()
+}
+goog.inherits(goog.ui.Container, goog.ui.Component)
+goog.tagUnsealableClass(goog.ui.Container)
 
 /**
  * Container-specific events.
@@ -85,24 +82,22 @@ goog.ui.Container.EventType = {
    * BEFORE_SHOW event for a long time, and too much code relies on that old
    * behavior to fix it now.
    */
-  AFTER_SHOW: 'aftershow',
+  AFTER_SHOW: "aftershow",
 
   /**
    * Dispatched after a goog.ui.Container becomes invisible. Non-cancellable.
    */
-  AFTER_HIDE: 'afterhide'
-};
-
+  AFTER_HIDE: "afterhide"
+}
 
 /**
  * Container orientation constants.
  * @enum {string}
  */
 goog.ui.Container.Orientation = {
-  HORIZONTAL: 'horizontal',
-  VERTICAL: 'vertical'
-};
-
+  HORIZONTAL: "horizontal",
+  VERTICAL: "vertical"
+}
 
 /**
  * Allows an alternative element to be set to receive key events, otherwise
@@ -110,40 +105,35 @@ goog.ui.Container.Orientation = {
  * @type {Element|undefined}
  * @private
  */
-goog.ui.Container.prototype.keyEventTarget_ = null;
-
+goog.ui.Container.prototype.keyEventTarget_ = null
 
 /**
  * Keyboard event handler.
  * @type {goog.events.KeyHandler?}
  * @private
  */
-goog.ui.Container.prototype.keyHandler_ = null;
-
+goog.ui.Container.prototype.keyHandler_ = null
 
 /**
  * Renderer for the container.  Defaults to {@link goog.ui.ContainerRenderer}.
  * @type {goog.ui.ContainerRenderer?}
  * @private
  */
-goog.ui.Container.prototype.renderer_ = null;
-
+goog.ui.Container.prototype.renderer_ = null
 
 /**
  * Container orientation; determines layout and default keyboard navigation.
  * @type {?goog.ui.Container.Orientation}
  * @private
  */
-goog.ui.Container.prototype.orientation_ = null;
-
+goog.ui.Container.prototype.orientation_ = null
 
 /**
  * Whether the container is set to be visible.  Defaults to true.
  * @type {boolean}
  * @private
  */
-goog.ui.Container.prototype.visible_ = true;
-
+goog.ui.Container.prototype.visible_ = true
 
 /**
  * Whether the container is enabled and reacting to keyboard and mouse events.
@@ -151,8 +141,7 @@ goog.ui.Container.prototype.visible_ = true;
  * @type {boolean}
  * @private
  */
-goog.ui.Container.prototype.enabled_ = true;
-
+goog.ui.Container.prototype.enabled_ = true
 
 /**
  * Whether the container supports keyboard focus.  Defaults to true.  Focusable
@@ -160,8 +149,7 @@ goog.ui.Container.prototype.enabled_ = true;
  * @type {boolean}
  * @private
  */
-goog.ui.Container.prototype.focusable_ = true;
-
+goog.ui.Container.prototype.focusable_ = true
 
 /**
  * The 0-based index of the currently highlighted control in the container
@@ -169,16 +157,14 @@ goog.ui.Container.prototype.focusable_ = true;
  * @type {number}
  * @private
  */
-goog.ui.Container.prototype.highlightedIndex_ = -1;
-
+goog.ui.Container.prototype.highlightedIndex_ = -1
 
 /**
  * The currently open (expanded) control in the container (null if none).
  * @type {goog.ui.Control?}
  * @private
  */
-goog.ui.Container.prototype.openItem_ = null;
-
+goog.ui.Container.prototype.openItem_ = null
 
 /**
  * Whether the mouse button is held down.  Defaults to false.  This flag is set
@@ -187,8 +173,7 @@ goog.ui.Container.prototype.openItem_ = null;
  * @type {boolean}
  * @private
  */
-goog.ui.Container.prototype.mouseButtonPressed_ = false;
-
+goog.ui.Container.prototype.mouseButtonPressed_ = false
 
 /**
  * Whether focus of child components should be allowed.  Only effective if
@@ -196,16 +181,14 @@ goog.ui.Container.prototype.mouseButtonPressed_ = false;
  * @type {boolean}
  * @private
  */
-goog.ui.Container.prototype.allowFocusableChildren_ = false;
-
+goog.ui.Container.prototype.allowFocusableChildren_ = false
 
 /**
  * Whether highlighting a child component should also open it.
  * @type {boolean}
  * @private
  */
-goog.ui.Container.prototype.openFollowsHighlight_ = true;
-
+goog.ui.Container.prototype.openFollowsHighlight_ = true
 
 /**
  * Map of DOM IDs to child controls.  Each key is the DOM ID of a child
@@ -215,11 +198,9 @@ goog.ui.Container.prototype.openFollowsHighlight_ = true;
  * @type {Object}
  * @private
  */
-goog.ui.Container.prototype.childElementIdMap_ = null;
-
+goog.ui.Container.prototype.childElementIdMap_ = null
 
 // Event handler and renderer management.
-
 
 /**
  * Returns the DOM element on which the container is listening for keyboard
@@ -229,9 +210,8 @@ goog.ui.Container.prototype.childElementIdMap_ = null;
  */
 goog.ui.Container.prototype.getKeyEventTarget = function() {
   // Delegate to renderer, unless we've set an explicit target.
-  return this.keyEventTarget_ || this.renderer_.getKeyEventTarget(this);
-};
-
+  return this.keyEventTarget_ || this.renderer_.getKeyEventTarget(this)
+}
 
 /**
  * Attaches an element on which to listen for key events.
@@ -240,30 +220,30 @@ goog.ui.Container.prototype.getKeyEventTarget = function() {
  */
 goog.ui.Container.prototype.setKeyEventTarget = function(element) {
   if (this.focusable_) {
-    var oldTarget = this.getKeyEventTarget();
-    var inDocument = this.isInDocument();
+    var oldTarget = this.getKeyEventTarget()
+    var inDocument = this.isInDocument()
 
-    this.keyEventTarget_ = element;
-    var newTarget = this.getKeyEventTarget();
+    this.keyEventTarget_ = element
+    var newTarget = this.getKeyEventTarget()
 
     if (inDocument) {
       // Unlisten for events on the old key target.  Requires us to reset
       // key target state temporarily.
-      this.keyEventTarget_ = oldTarget;
-      this.enableFocusHandling_(false);
-      this.keyEventTarget_ = element;
+      this.keyEventTarget_ = oldTarget
+      this.enableFocusHandling_(false)
+      this.keyEventTarget_ = element
 
       // Listen for events on the new key target.
-      this.getKeyHandler().attach(newTarget);
-      this.enableFocusHandling_(true);
+      this.getKeyHandler().attach(newTarget)
+      this.enableFocusHandling_(true)
     }
   } else {
     throw new Error(
-        'Can\'t set key event target for container ' +
-        'that doesn\'t support keyboard focus!');
+      "Can't set key event target for container " +
+        "that doesn't support keyboard focus!"
+    )
   }
-};
-
+}
 
 /**
  * Returns the keyboard event handler for this container, lazily created the
@@ -273,10 +253,11 @@ goog.ui.Container.prototype.setKeyEventTarget = function(element) {
  * @return {!goog.events.KeyHandler} Keyboard event handler for this container.
  */
 goog.ui.Container.prototype.getKeyHandler = function() {
-  return this.keyHandler_ ||
-      (this.keyHandler_ = new goog.events.KeyHandler(this.getKeyEventTarget()));
-};
-
+  return (
+    this.keyHandler_ ||
+    (this.keyHandler_ = new goog.events.KeyHandler(this.getKeyEventTarget()))
+  )
+}
 
 /**
  * Returns the renderer used by this container to render itself or to decorate
@@ -284,9 +265,8 @@ goog.ui.Container.prototype.getKeyHandler = function() {
  * @return {goog.ui.ContainerRenderer} Renderer used by the container.
  */
 goog.ui.Container.prototype.getRenderer = function() {
-  return this.renderer_;
-};
-
+  return this.renderer_
+}
 
 /**
  * Registers the given renderer with the container.  Changing renderers after
@@ -296,15 +276,13 @@ goog.ui.Container.prototype.getRenderer = function() {
 goog.ui.Container.prototype.setRenderer = function(renderer) {
   if (this.getElement()) {
     // Too late.
-    throw new Error(goog.ui.Component.Error.ALREADY_RENDERED);
+    throw new Error(goog.ui.Component.Error.ALREADY_RENDERED)
   }
 
-  this.renderer_ = renderer;
-};
-
+  this.renderer_ = renderer
+}
 
 // Standard goog.ui.Component implementation.
-
 
 /**
  * Creates the container's DOM.
@@ -312,9 +290,8 @@ goog.ui.Container.prototype.setRenderer = function(renderer) {
  */
 goog.ui.Container.prototype.createDom = function() {
   // Delegate to renderer.
-  this.setElementInternal(this.renderer_.createDom(this));
-};
-
+  this.setElementInternal(this.renderer_.createDom(this))
+}
 
 /**
  * Returns the DOM element into which child components are to be rendered,
@@ -325,9 +302,8 @@ goog.ui.Container.prototype.createDom = function() {
  */
 goog.ui.Container.prototype.getContentElement = function() {
   // Delegate to renderer.
-  return this.renderer_.getContentElement(this.getElement());
-};
-
+  return this.renderer_.getContentElement(this.getElement())
+}
 
 /**
  * Returns true if the given element can be decorated by this container.
@@ -338,9 +314,8 @@ goog.ui.Container.prototype.getContentElement = function() {
  */
 goog.ui.Container.prototype.canDecorate = function(element) {
   // Delegate to renderer.
-  return this.renderer_.canDecorate(element);
-};
-
+  return this.renderer_.canDecorate(element)
+}
 
 /**
  * Decorates the given element with this container. Overrides {@link
@@ -350,13 +325,12 @@ goog.ui.Container.prototype.canDecorate = function(element) {
  */
 goog.ui.Container.prototype.decorateInternal = function(element) {
   // Delegate to renderer.
-  this.setElementInternal(this.renderer_.decorate(this, element));
+  this.setElementInternal(this.renderer_.decorate(this, element))
   // Check whether the decorated element is explicitly styled to be invisible.
-  if (element.style.display == 'none') {
-    this.visible_ = false;
+  if (element.style.display == "none") {
+    this.visible_ = false
   }
-};
-
+}
 
 /**
  * Configures the container after its DOM has been rendered, and sets up event
@@ -364,78 +338,88 @@ goog.ui.Container.prototype.decorateInternal = function(element) {
  * @override
  */
 goog.ui.Container.prototype.enterDocument = function() {
-  goog.ui.Container.superClass_.enterDocument.call(this);
+  goog.ui.Container.superClass_.enterDocument.call(this)
 
   this.forEachChild(function(child) {
     if (child.isInDocument()) {
-      this.registerChildId_(child);
+      this.registerChildId_(child)
     }
-  }, this);
+  }, this)
 
-  var elem = this.getElement();
+  var elem = this.getElement()
 
   // Call the renderer's initializeDom method to initialize the container's DOM.
-  this.renderer_.initializeDom(this);
+  this.renderer_.initializeDom(this)
 
   // Initialize visibility (opt_force = true, so we don't dispatch events).
-  this.setVisible(this.visible_, true);
+  this.setVisible(this.visible_, true)
 
-  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this);
+  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this)
 
   // Handle events dispatched by child controls.
   this.getHandler()
-      .listen(this, goog.ui.Component.EventType.ENTER, this.handleEnterItem)
-      .listen(
-          this, goog.ui.Component.EventType.HIGHLIGHT, this.handleHighlightItem)
-      .listen(
-          this, goog.ui.Component.EventType.UNHIGHLIGHT,
-          this.handleUnHighlightItem)
-      .listen(this, goog.ui.Component.EventType.OPEN, this.handleOpenItem)
-      .listen(this, goog.ui.Component.EventType.CLOSE, this.handleCloseItem)
+    .listen(this, goog.ui.Component.EventType.ENTER, this.handleEnterItem)
+    .listen(
+      this,
+      goog.ui.Component.EventType.HIGHLIGHT,
+      this.handleHighlightItem
+    )
+    .listen(
+      this,
+      goog.ui.Component.EventType.UNHIGHLIGHT,
+      this.handleUnHighlightItem
+    )
+    .listen(this, goog.ui.Component.EventType.OPEN, this.handleOpenItem)
+    .listen(this, goog.ui.Component.EventType.CLOSE, this.handleCloseItem)
 
-      // Handle mouse events.
-      .listen(elem, MouseEventType.MOUSEDOWN, this.handleMouseDown)
-      .listen(
-          goog.dom.getOwnerDocument(elem),
-          [MouseEventType.MOUSEUP, MouseEventType.MOUSECANCEL],
-          this.handleDocumentMouseUp)
+    // Handle mouse events.
+    .listen(elem, MouseEventType.MOUSEDOWN, this.handleMouseDown)
+    .listen(
+      goog.dom.getOwnerDocument(elem),
+      [MouseEventType.MOUSEUP, MouseEventType.MOUSECANCEL],
+      this.handleDocumentMouseUp
+    )
 
-      // Handle mouse events on behalf of controls in the container.
-      .listen(
-          elem,
-          [
-            MouseEventType.MOUSEDOWN, MouseEventType.MOUSEUP,
-            MouseEventType.MOUSECANCEL, goog.events.EventType.MOUSEOVER,
-            goog.events.EventType.MOUSEOUT, goog.events.EventType.CONTEXTMENU
-          ],
-          this.handleChildMouseEvents);
+    // Handle mouse events on behalf of controls in the container.
+    .listen(
+      elem,
+      [
+        MouseEventType.MOUSEDOWN,
+        MouseEventType.MOUSEUP,
+        MouseEventType.MOUSECANCEL,
+        goog.events.EventType.MOUSEOVER,
+        goog.events.EventType.MOUSEOUT,
+        goog.events.EventType.CONTEXTMENU
+      ],
+      this.handleChildMouseEvents
+    )
 
   if (this.pointerEventsEnabled()) {
     // Prevent pointer events from capturing the target element so they behave
     // more like mouse events.
     this.getHandler().listen(
-        elem, goog.events.EventType.GOTPOINTERCAPTURE,
-        this.preventPointerCapture_);
+      elem,
+      goog.events.EventType.GOTPOINTERCAPTURE,
+      this.preventPointerCapture_
+    )
   }
 
   // If the container is focusable, set up keyboard event handling.
   if (this.isFocusable()) {
-    this.enableFocusHandling_(true);
+    this.enableFocusHandling_(true)
   }
-};
-
+}
 
 /**
  * @param {!goog.events.BrowserEvent} e Event to handle.
  * @private
  */
 goog.ui.Container.prototype.preventPointerCapture_ = function(e) {
-  var elem = /** @type {!Element} */ (e.target);
+  var elem = /** @type {!Element} */ (e.target)
   if (!!elem.releasePointerCapture) {
-    elem.releasePointerCapture(e.pointerId);
+    elem.releasePointerCapture(e.pointerId)
   }
-};
-
+}
 
 /**
  * Sets up listening for events applicable to focusable containers.
@@ -443,23 +427,28 @@ goog.ui.Container.prototype.preventPointerCapture_ = function(e) {
  * @private
  */
 goog.ui.Container.prototype.enableFocusHandling_ = function(enable) {
-  var handler = this.getHandler();
-  var keyTarget = this.getKeyEventTarget();
+  var handler = this.getHandler()
+  var keyTarget = this.getKeyEventTarget()
   if (enable) {
-    handler.listen(keyTarget, goog.events.EventType.FOCUS, this.handleFocus)
-        .listen(keyTarget, goog.events.EventType.BLUR, this.handleBlur)
-        .listen(
-            this.getKeyHandler(), goog.events.KeyHandler.EventType.KEY,
-            this.handleKeyEvent);
+    handler
+      .listen(keyTarget, goog.events.EventType.FOCUS, this.handleFocus)
+      .listen(keyTarget, goog.events.EventType.BLUR, this.handleBlur)
+      .listen(
+        this.getKeyHandler(),
+        goog.events.KeyHandler.EventType.KEY,
+        this.handleKeyEvent
+      )
   } else {
-    handler.unlisten(keyTarget, goog.events.EventType.FOCUS, this.handleFocus)
-        .unlisten(keyTarget, goog.events.EventType.BLUR, this.handleBlur)
-        .unlisten(
-            this.getKeyHandler(), goog.events.KeyHandler.EventType.KEY,
-            this.handleKeyEvent);
+    handler
+      .unlisten(keyTarget, goog.events.EventType.FOCUS, this.handleFocus)
+      .unlisten(keyTarget, goog.events.EventType.BLUR, this.handleBlur)
+      .unlisten(
+        this.getKeyHandler(),
+        goog.events.KeyHandler.EventType.KEY,
+        this.handleKeyEvent
+      )
   }
-};
-
+}
 
 /**
  * Cleans up the container before its DOM is removed from the document, and
@@ -469,36 +458,33 @@ goog.ui.Container.prototype.enableFocusHandling_ = function(enable) {
 goog.ui.Container.prototype.exitDocument = function() {
   // {@link #setHighlightedIndex} has to be called before
   // {@link goog.ui.Component#exitDocument}, otherwise it has no effect.
-  this.setHighlightedIndex(-1);
+  this.setHighlightedIndex(-1)
 
   if (this.openItem_) {
-    this.openItem_.setOpen(false);
+    this.openItem_.setOpen(false)
   }
 
-  this.mouseButtonPressed_ = false;
+  this.mouseButtonPressed_ = false
 
-  goog.ui.Container.superClass_.exitDocument.call(this);
-};
-
+  goog.ui.Container.superClass_.exitDocument.call(this)
+}
 
 /** @override */
 goog.ui.Container.prototype.disposeInternal = function() {
-  goog.ui.Container.superClass_.disposeInternal.call(this);
+  goog.ui.Container.superClass_.disposeInternal.call(this)
 
   if (this.keyHandler_) {
-    this.keyHandler_.dispose();
-    this.keyHandler_ = null;
+    this.keyHandler_.dispose()
+    this.keyHandler_ = null
   }
 
-  this.keyEventTarget_ = null;
-  this.childElementIdMap_ = null;
-  this.openItem_ = null;
-  this.renderer_ = null;
-};
-
+  this.keyEventTarget_ = null
+  this.childElementIdMap_ = null
+  this.openItem_ = null
+  this.renderer_ = null
+}
 
 // Default event handlers.
-
 
 /**
  * Handles ENTER events raised by child controls when they are navigated to.
@@ -508,9 +494,8 @@ goog.ui.Container.prototype.disposeInternal = function() {
  */
 goog.ui.Container.prototype.handleEnterItem = function(e) {
   // Allow the Control to highlight itself.
-  return true;
-};
-
+  return true
+}
 
 /**
  * Handles HIGHLIGHT events dispatched by items in the container when
@@ -518,46 +503,52 @@ goog.ui.Container.prototype.handleEnterItem = function(e) {
  * @param {goog.events.Event} e Highlight event to handle.
  */
 goog.ui.Container.prototype.handleHighlightItem = function(e) {
-  var index = this.indexOfChild(/** @type {goog.ui.Control} */ (e.target));
+  var index = this.indexOfChild(/** @type {goog.ui.Control} */ (e.target))
   if (index > -1 && index != this.highlightedIndex_) {
-    var item = this.getHighlighted();
+    var item = this.getHighlighted()
     if (item) {
       // Un-highlight previously highlighted item.
-      item.setHighlighted(false);
+      item.setHighlighted(false)
     }
 
-    this.highlightedIndex_ = index;
-    item = this.getHighlighted();
+    this.highlightedIndex_ = index
+    item = this.getHighlighted()
 
     if (this.isMouseButtonPressed()) {
       // Activate item when mouse button is pressed, to allow MacOS-style
       // dragging to choose menu items.  Although this should only truly
       // happen if the highlight is due to mouse movements, there is little
       // harm in doing it for keyboard or programmatic highlights.
-      item.setActive(true);
+      item.setActive(true)
     }
 
     // Update open item if open item needs follow highlight.
-    if (this.openFollowsHighlight_ && this.openItem_ &&
-        item != this.openItem_) {
+    if (
+      this.openFollowsHighlight_ &&
+      this.openItem_ &&
+      item != this.openItem_
+    ) {
       if (item.isSupportedState(goog.ui.Component.State.OPENED)) {
-        item.setOpen(true);
+        item.setOpen(true)
       } else {
-        this.openItem_.setOpen(false);
+        this.openItem_.setOpen(false)
       }
     }
   }
 
-  var element = this.getElement();
+  var element = this.getElement()
   goog.asserts.assert(
-      element, 'The DOM element for the container cannot be null.');
+    element,
+    "The DOM element for the container cannot be null."
+  )
   if (e.target.getElement() != null) {
     goog.a11y.aria.setState(
-        element, goog.a11y.aria.State.ACTIVEDESCENDANT,
-        e.target.getElement().id);
+      element,
+      goog.a11y.aria.State.ACTIVEDESCENDANT,
+      e.target.getElement().id
+    )
   }
-};
-
+}
 
 /**
  * Handles UNHIGHLIGHT events dispatched by items in the container when
@@ -566,16 +557,17 @@ goog.ui.Container.prototype.handleHighlightItem = function(e) {
  */
 goog.ui.Container.prototype.handleUnHighlightItem = function(e) {
   if (e.target == this.getHighlighted()) {
-    this.highlightedIndex_ = -1;
+    this.highlightedIndex_ = -1
   }
-  var element = this.getElement();
+  var element = this.getElement()
   goog.asserts.assert(
-      element, 'The DOM element for the container cannot be null.');
+    element,
+    "The DOM element for the container cannot be null."
+  )
   // Setting certain ARIA attributes to empty strings is problematic.
   // Just remove the attribute instead.
-  goog.a11y.aria.removeState(element, goog.a11y.aria.State.ACTIVEDESCENDANT);
-};
-
+  goog.a11y.aria.removeState(element, goog.a11y.aria.State.ACTIVEDESCENDANT)
+}
 
 /**
  * Handles OPEN events dispatched by items in the container when they are
@@ -583,15 +575,14 @@ goog.ui.Container.prototype.handleUnHighlightItem = function(e) {
  * @param {goog.events.Event} e Open event to handle.
  */
 goog.ui.Container.prototype.handleOpenItem = function(e) {
-  var item = /** @type {goog.ui.Control} */ (e.target);
+  var item = /** @type {goog.ui.Control} */ (e.target)
   if (item && item != this.openItem_ && item.getParent() == this) {
     if (this.openItem_) {
-      this.openItem_.setOpen(false);
+      this.openItem_.setOpen(false)
     }
-    this.openItem_ = item;
+    this.openItem_ = item
   }
-};
-
+}
 
 /**
  * Handles CLOSE events dispatched by items in the container when they are
@@ -600,19 +591,18 @@ goog.ui.Container.prototype.handleOpenItem = function(e) {
  */
 goog.ui.Container.prototype.handleCloseItem = function(e) {
   if (e.target == this.openItem_) {
-    this.openItem_ = null;
+    this.openItem_ = null
   }
 
-  var element = this.getElement();
-  var targetEl = e.target.getElement();
+  var element = this.getElement()
+  var targetEl = e.target.getElement()
   // Set the active descendant to the menu item when its submenu is closed and
   // it is still highlighted. This can sometimes be called when the menuitem is
   // unhighlighted because the focus moved elsewhere, do nothing at that point.
   if (element && e.target.isHighlighted() && targetEl) {
-    goog.a11y.aria.setActiveDescendant(element, targetEl);
+    goog.a11y.aria.setActiveDescendant(element, targetEl)
   }
-};
-
+}
 
 /**
  * Handles mousedown events over the container.  The default implementation
@@ -622,20 +612,19 @@ goog.ui.Container.prototype.handleCloseItem = function(e) {
  */
 goog.ui.Container.prototype.handleMouseDown = function(e) {
   if (this.enabled_) {
-    this.setMouseButtonPressed(true);
+    this.setMouseButtonPressed(true)
   }
 
-  var keyTarget = this.getKeyEventTarget();
+  var keyTarget = this.getKeyEventTarget()
   if (keyTarget && goog.dom.isFocusableTabIndex(keyTarget)) {
     // The container is configured to receive keyboard focus.
-    keyTarget.focus();
+    keyTarget.focus()
   } else {
     // The control isn't configured to receive keyboard focus; prevent it
     // from stealing focus or destroying the selection.
-    e.preventDefault();
+    e.preventDefault()
   }
-};
-
+}
 
 /**
  * Handles mouseup events over the document.  The default implementation
@@ -643,9 +632,8 @@ goog.ui.Container.prototype.handleMouseDown = function(e) {
  * @param {goog.events.BrowserEvent} e Mouseup event to handle.
  */
 goog.ui.Container.prototype.handleDocumentMouseUp = function(e) {
-  this.setMouseButtonPressed(false);
-};
-
+  this.setMouseButtonPressed(false)
+}
 
 /**
  * Handles mouse events originating from nodes belonging to the controls hosted
@@ -654,32 +642,31 @@ goog.ui.Container.prototype.handleDocumentMouseUp = function(e) {
  * @param {goog.events.BrowserEvent} e Mouse event to handle.
  */
 goog.ui.Container.prototype.handleChildMouseEvents = function(e) {
-  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this);
+  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this)
 
-  var control = this.getOwnerControl(/** @type {Node} */ (e.target));
+  var control = this.getOwnerControl(/** @type {Node} */ (e.target))
   if (control) {
     // Child control identified; forward the event.
     switch (e.type) {
       case MouseEventType.MOUSEDOWN:
-        control.handleMouseDown(e);
-        break;
+        control.handleMouseDown(e)
+        break
       case MouseEventType.MOUSEUP:
       case MouseEventType.MOUSECANCEL:
-        control.handleMouseUp(e);
-        break;
+        control.handleMouseUp(e)
+        break
       case goog.events.EventType.MOUSEOVER:
-        control.handleMouseOver(e);
-        break;
+        control.handleMouseOver(e)
+        break
       case goog.events.EventType.MOUSEOUT:
-        control.handleMouseOut(e);
-        break;
+        control.handleMouseOut(e)
+        break
       case goog.events.EventType.CONTEXTMENU:
-        control.handleContextMenu(e);
-        break;
+        control.handleContextMenu(e)
+        break
     }
   }
-};
-
+}
 
 /**
  * Returns the child control that owns the given DOM node, or null if no such
@@ -693,21 +680,20 @@ goog.ui.Container.prototype.getOwnerControl = function(node) {
   // Ensure that this container actually has child controls before
   // looking up the owner.
   if (this.childElementIdMap_) {
-    var elem = this.getElement();
+    var elem = this.getElement()
     // See http://b/2964418 . IE9 appears to evaluate '!=' incorrectly, so
     // using '!==' instead.
     // TODO(user): Possibly revert this change if/when IE9 fixes the issue.
     while (node && node !== elem) {
-      var id = node.id;
+      var id = node.id
       if (id in this.childElementIdMap_) {
-        return this.childElementIdMap_[id];
+        return this.childElementIdMap_[id]
       }
-      node = node.parentNode;
+      node = node.parentNode
     }
   }
-  return null;
-};
-
+  return null
+}
 
 /**
  * Handles focus events raised when the container's key event target receives
@@ -716,8 +702,7 @@ goog.ui.Container.prototype.getOwnerControl = function(node) {
  */
 goog.ui.Container.prototype.handleFocus = function(e) {
   // No-op in the base class.
-};
-
+}
 
 /**
  * Handles blur events raised when the container's key event target loses
@@ -725,14 +710,13 @@ goog.ui.Container.prototype.handleFocus = function(e) {
  * @param {goog.events.BrowserEvent} e Blur event to handle.
  */
 goog.ui.Container.prototype.handleBlur = function(e) {
-  this.setHighlightedIndex(-1);
-  this.setMouseButtonPressed(false);
+  this.setHighlightedIndex(-1)
+  this.setMouseButtonPressed(false)
   // If the container loses focus, and one of its children is open, close it.
   if (this.openItem_) {
-    this.openItem_.setOpen(false);
+    this.openItem_.setOpen(false)
   }
-};
-
+}
 
 /**
  * Attempts to handle a keyboard event, if the control is enabled, by calling
@@ -742,16 +726,18 @@ goog.ui.Container.prototype.handleBlur = function(e) {
  * @return {boolean} Whether the key event was handled.
  */
 goog.ui.Container.prototype.handleKeyEvent = function(e) {
-  if (this.isEnabled() && this.isVisible() &&
-      (this.getChildCount() != 0 || this.keyEventTarget_) &&
-      this.handleKeyEventInternal(e)) {
-    e.preventDefault();
-    e.stopPropagation();
-    return true;
+  if (
+    this.isEnabled() &&
+    this.isVisible() &&
+    (this.getChildCount() != 0 || this.keyEventTarget_) &&
+    this.handleKeyEventInternal(e)
+  ) {
+    e.preventDefault()
+    e.stopPropagation()
+    return true
   }
-  return false;
-};
-
+  return false
+}
 
 /**
  * Attempts to handle a keyboard event; returns true if the event was handled,
@@ -764,22 +750,28 @@ goog.ui.Container.prototype.handleKeyEvent = function(e) {
  */
 goog.ui.Container.prototype.handleKeyEventInternal = function(e) {
   // Give the highlighted control the chance to handle the key event.
-  var highlighted = this.getHighlighted();
-  if (highlighted && typeof highlighted.handleKeyEvent == 'function' &&
-      highlighted.handleKeyEvent(e)) {
-    return true;
+  var highlighted = this.getHighlighted()
+  if (
+    highlighted &&
+    typeof highlighted.handleKeyEvent == "function" &&
+    highlighted.handleKeyEvent(e)
+  ) {
+    return true
   }
 
   // Give the open control the chance to handle the key event.
-  if (this.openItem_ && this.openItem_ != highlighted &&
-      typeof this.openItem_.handleKeyEvent == 'function' &&
-      this.openItem_.handleKeyEvent(e)) {
-    return true;
+  if (
+    this.openItem_ &&
+    this.openItem_ != highlighted &&
+    typeof this.openItem_.handleKeyEvent == "function" &&
+    this.openItem_.handleKeyEvent(e)
+  ) {
+    return true
   }
 
   // Do not handle the key event if any modifier key is pressed.
   if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) {
-    return false;
+    return false
   }
 
   // Either nothing is highlighted, or the highlighted control didn't handle
@@ -787,70 +779,68 @@ goog.ui.Container.prototype.handleKeyEventInternal = function(e) {
   switch (e.keyCode) {
     case goog.events.KeyCodes.ESC:
       if (this.isFocusable()) {
-        this.getKeyEventTarget().blur();
+        this.getKeyEventTarget().blur()
       } else {
-        return false;
+        return false
       }
-      break;
+      break
 
     case goog.events.KeyCodes.HOME:
-      this.highlightFirst();
-      break;
+      this.highlightFirst()
+      break
 
     case goog.events.KeyCodes.END:
-      this.highlightLast();
-      break;
+      this.highlightLast()
+      break
 
     case goog.events.KeyCodes.UP:
       if (this.orientation_ == goog.ui.Container.Orientation.VERTICAL) {
-        this.highlightPrevious();
+        this.highlightPrevious()
       } else {
-        return false;
+        return false
       }
-      break;
+      break
 
     case goog.events.KeyCodes.LEFT:
       if (this.orientation_ == goog.ui.Container.Orientation.HORIZONTAL) {
         if (this.isRightToLeft()) {
-          this.highlightNext();
+          this.highlightNext()
         } else {
-          this.highlightPrevious();
+          this.highlightPrevious()
         }
       } else {
-        return false;
+        return false
       }
-      break;
+      break
 
     case goog.events.KeyCodes.DOWN:
       if (this.orientation_ == goog.ui.Container.Orientation.VERTICAL) {
-        this.highlightNext();
+        this.highlightNext()
       } else {
-        return false;
+        return false
       }
-      break;
+      break
 
     case goog.events.KeyCodes.RIGHT:
       if (this.orientation_ == goog.ui.Container.Orientation.HORIZONTAL) {
         if (this.isRightToLeft()) {
-          this.highlightPrevious();
+          this.highlightPrevious()
         } else {
-          this.highlightNext();
+          this.highlightNext()
         }
       } else {
-        return false;
+        return false
       }
-      break;
+      break
 
     default:
-      return false;
+      return false
   }
 
-  return true;
-};
-
+  return true
+}
 
 // Child component management.
-
 
 /**
  * Creates a DOM ID for the child control and registers it to an internal
@@ -861,18 +851,17 @@ goog.ui.Container.prototype.handleKeyEventInternal = function(e) {
  */
 goog.ui.Container.prototype.registerChildId_ = function(child) {
   // Map the DOM ID of the control's root element to the control itself.
-  var childElem = child.getElement();
+  var childElem = child.getElement()
 
   // If the control's root element doesn't have a DOM ID assign one.
-  var id = childElem.id || (childElem.id = child.getId());
+  var id = childElem.id || (childElem.id = child.getId())
 
   // Lazily create the child element ID map on first use.
   if (!this.childElementIdMap_) {
-    this.childElementIdMap_ = {};
+    this.childElementIdMap_ = {}
   }
-  this.childElementIdMap_[id] = child;
-};
-
+  this.childElementIdMap_[id] = child
+}
 
 /**
  * Adds the specified control as the last child of this container.  See
@@ -884,10 +873,12 @@ goog.ui.Container.prototype.registerChildId_ = function(child) {
  */
 goog.ui.Container.prototype.addChild = function(child, opt_render) {
   goog.asserts.assertInstanceof(
-      child, goog.ui.Control, 'The child of a container must be a control');
-  goog.ui.Container.superClass_.addChild.call(this, child, opt_render);
-};
-
+    child,
+    goog.ui.Control,
+    "The child of a container must be a control"
+  )
+  goog.ui.Container.superClass_.addChild.call(this, child, opt_render)
+}
 
 /**
  * Overrides {@link goog.ui.Container#getChild} to make it clear that it
@@ -896,8 +887,7 @@ goog.ui.Container.prototype.addChild = function(child, opt_render) {
  * @return {goog.ui.Control} The child with the given ID; null if none.
  * @override
  */
-goog.ui.Container.prototype.getChild;
-
+goog.ui.Container.prototype.getChild
 
 /**
  * Overrides {@link goog.ui.Container#getChildAt} to make it clear that it
@@ -906,8 +896,7 @@ goog.ui.Container.prototype.getChild;
  * @return {goog.ui.Control} The child with the given ID; null if none.
  * @override
  */
-goog.ui.Container.prototype.getChildAt;
-
+goog.ui.Container.prototype.getChildAt
 
 /**
  * Adds the control as a child of this container at the given 0-based index.
@@ -921,33 +910,35 @@ goog.ui.Container.prototype.getChildAt;
  * @override
  */
 goog.ui.Container.prototype.addChildAt = function(control, index, opt_render) {
-  goog.asserts.assertInstanceof(control, goog.ui.Control);
+  goog.asserts.assertInstanceof(control, goog.ui.Control)
 
   // Make sure the child control dispatches HIGHLIGHT, UNHIGHLIGHT, OPEN, and
   // CLOSE events, and that it doesn't steal keyboard focus.
-  control.setDispatchTransitionEvents(goog.ui.Component.State.HOVER, true);
-  control.setDispatchTransitionEvents(goog.ui.Component.State.OPENED, true);
+  control.setDispatchTransitionEvents(goog.ui.Component.State.HOVER, true)
+  control.setDispatchTransitionEvents(goog.ui.Component.State.OPENED, true)
   if (this.isFocusable() || !this.isFocusableChildrenAllowed()) {
-    control.setSupportedState(goog.ui.Component.State.FOCUSED, false);
+    control.setSupportedState(goog.ui.Component.State.FOCUSED, false)
   }
 
   // Disable mouse event handling by child controls.
-  control.setHandleMouseEvents(false);
+  control.setHandleMouseEvents(false)
 
-  var srcIndex =
-      (control.getParent() == this) ? this.indexOfChild(control) : -1;
+  var srcIndex = control.getParent() == this ? this.indexOfChild(control) : -1
 
   // Let the superclass implementation do the work.
   goog.ui.Container.superClass_.addChildAt.call(
-      this, control, index, opt_render);
+    this,
+    control,
+    index,
+    opt_render
+  )
 
   if (control.isInDocument() && this.isInDocument()) {
-    this.registerChildId_(control);
+    this.registerChildId_(control)
   }
 
-  this.updateHighlightedIndex_(srcIndex, index);
-};
-
+  this.updateHighlightedIndex_(srcIndex, index)
+}
 
 /**
  * Updates the highlighted index when children are added or moved.
@@ -957,24 +948,29 @@ goog.ui.Container.prototype.addChildAt = function(control, index, opt_render) {
  * @private
  */
 goog.ui.Container.prototype.updateHighlightedIndex_ = function(
-    fromIndex, toIndex) {
+  fromIndex,
+  toIndex
+) {
   if (fromIndex == -1) {
-    fromIndex = this.getChildCount();
+    fromIndex = this.getChildCount()
   }
   if (fromIndex == this.highlightedIndex_) {
     // The highlighted element itself was moved.
-    this.highlightedIndex_ = Math.min(this.getChildCount() - 1, toIndex);
+    this.highlightedIndex_ = Math.min(this.getChildCount() - 1, toIndex)
   } else if (
-      fromIndex > this.highlightedIndex_ && toIndex <= this.highlightedIndex_) {
+    fromIndex > this.highlightedIndex_ &&
+    toIndex <= this.highlightedIndex_
+  ) {
     // The control was added or moved behind the highlighted index.
-    this.highlightedIndex_++;
+    this.highlightedIndex_++
   } else if (
-      fromIndex < this.highlightedIndex_ && toIndex > this.highlightedIndex_) {
+    fromIndex < this.highlightedIndex_ &&
+    toIndex > this.highlightedIndex_
+  ) {
     // The control was moved from before to behind the highlighted index.
-    this.highlightedIndex_--;
+    this.highlightedIndex_--
   }
-};
-
+}
 
 /**
  * Removes a child control.  Overrides {@link goog.ui.Component#removeChild} by
@@ -989,49 +985,48 @@ goog.ui.Container.prototype.updateHighlightedIndex_ = function(
  * @override
  */
 goog.ui.Container.prototype.removeChild = function(control, opt_unrender) {
-  control = goog.isString(control) ? this.getChild(control) : control;
-  goog.asserts.assertInstanceof(control, goog.ui.Control);
+  control = goog.isString(control) ? this.getChild(control) : control
+  goog.asserts.assertInstanceof(control, goog.ui.Control)
 
   if (control) {
-    var index = this.indexOfChild(control);
+    var index = this.indexOfChild(control)
     if (index != -1) {
       if (index == this.highlightedIndex_) {
-        control.setHighlighted(false);
-        this.highlightedIndex_ = -1;
+        control.setHighlighted(false)
+        this.highlightedIndex_ = -1
       } else if (index < this.highlightedIndex_) {
-        this.highlightedIndex_--;
+        this.highlightedIndex_--
       }
     }
 
     // Remove the mapping from the child element ID map.
-    var childElem = control.getElement();
+    var childElem = control.getElement()
     if (childElem && childElem.id && this.childElementIdMap_) {
-      goog.object.remove(this.childElementIdMap_, childElem.id);
+      goog.object.remove(this.childElementIdMap_, childElem.id)
     }
   }
 
-  control = /** @type {!goog.ui.Control} */ (
-      goog.ui.Container.superClass_.removeChild.call(
-          this, control, opt_unrender));
+  control = /** @type {!goog.ui.Control} */ (goog.ui.Container.superClass_.removeChild.call(
+    this,
+    control,
+    opt_unrender
+  ))
 
   // Re-enable mouse event handling (in case the control is reused elsewhere).
-  control.setHandleMouseEvents(true);
+  control.setHandleMouseEvents(true)
 
-  return control;
-};
-
+  return control
+}
 
 // Container state management.
-
 
 /**
  * Returns the container's orientation.
  * @return {?goog.ui.Container.Orientation} Container orientation.
  */
 goog.ui.Container.prototype.getOrientation = function() {
-  return this.orientation_;
-};
-
+  return this.orientation_
+}
 
 /**
  * Sets the container's orientation.
@@ -1041,12 +1036,11 @@ goog.ui.Container.prototype.getOrientation = function() {
 goog.ui.Container.prototype.setOrientation = function(orientation) {
   if (this.getElement()) {
     // Too late.
-    throw new Error(goog.ui.Component.Error.ALREADY_RENDERED);
+    throw new Error(goog.ui.Component.Error.ALREADY_RENDERED)
   }
 
-  this.orientation_ = orientation;
-};
-
+  this.orientation_ = orientation
+}
 
 /**
  * Returns true if the container's visibility is set to visible, false if
@@ -1057,9 +1051,8 @@ goog.ui.Container.prototype.setOrientation = function(orientation) {
  * @return {boolean} Whether the container is set to be visible.
  */
 goog.ui.Container.prototype.isVisible = function() {
-  return this.visible_;
-};
-
+  return this.visible_
+}
 
 /**
  * Shows or hides the container.  Does nothing if the container already has
@@ -1071,42 +1064,49 @@ goog.ui.Container.prototype.isVisible = function() {
  * @return {boolean} Whether the visibility was changed.
  */
 goog.ui.Container.prototype.setVisible = function(visible, opt_force) {
-  if (opt_force || (this.visible_ != visible &&
-                    this.dispatchEvent(
-                        visible ? goog.ui.Component.EventType.SHOW :
-                                  goog.ui.Component.EventType.HIDE))) {
-    this.visible_ = visible;
+  if (
+    opt_force ||
+    (this.visible_ != visible &&
+      this.dispatchEvent(
+        visible
+          ? goog.ui.Component.EventType.SHOW
+          : goog.ui.Component.EventType.HIDE
+      ))
+  ) {
+    this.visible_ = visible
 
-    var elem = this.getElement();
+    var elem = this.getElement()
     if (elem) {
-      goog.style.setElementShown(elem, visible);
+      goog.style.setElementShown(elem, visible)
       if (this.isFocusable()) {
         // Enable keyboard access only for enabled & visible containers.
         this.renderer_.enableTabIndex(
-            this.getKeyEventTarget(), this.enabled_ && this.visible_);
+          this.getKeyEventTarget(),
+          this.enabled_ && this.visible_
+        )
       }
       if (!opt_force) {
         this.dispatchEvent(
-            this.visible_ ? goog.ui.Container.EventType.AFTER_SHOW :
-                            goog.ui.Container.EventType.AFTER_HIDE);
+          this.visible_
+            ? goog.ui.Container.EventType.AFTER_SHOW
+            : goog.ui.Container.EventType.AFTER_HIDE
+        )
       }
     }
 
-    return true;
+    return true
   }
 
-  return false;
-};
-
+  return false
+}
 
 /**
  * Returns true if the container is enabled, false otherwise.
  * @return {boolean} Whether the container is enabled.
  */
 goog.ui.Container.prototype.isEnabled = function() {
-  return this.enabled_;
-};
-
+  return this.enabled_
+}
 
 /**
  * Enables/disables the container based on the `enable` argument.
@@ -1116,45 +1116,50 @@ goog.ui.Container.prototype.isEnabled = function() {
  * @param {boolean} enable Whether to enable or disable the container.
  */
 goog.ui.Container.prototype.setEnabled = function(enable) {
-  if (this.enabled_ != enable &&
-      this.dispatchEvent(
-          enable ? goog.ui.Component.EventType.ENABLE :
-                   goog.ui.Component.EventType.DISABLE)) {
+  if (
+    this.enabled_ != enable &&
+    this.dispatchEvent(
+      enable
+        ? goog.ui.Component.EventType.ENABLE
+        : goog.ui.Component.EventType.DISABLE
+    )
+  ) {
     if (enable) {
       // Flag the container as enabled first, then update children.  This is
       // because controls can't be enabled if their parent is disabled.
-      this.enabled_ = true;
+      this.enabled_ = true
       this.forEachChild(function(child) {
         // Enable child control unless it is flagged.
         if (child.wasDisabled) {
-          delete child.wasDisabled;
+          delete child.wasDisabled
         } else {
-          child.setEnabled(true);
+          child.setEnabled(true)
         }
-      });
+      })
     } else {
       // Disable children first, then flag the container as disabled.  This is
       // because controls can't be disabled if their parent is already disabled.
       this.forEachChild(function(child) {
         // Disable child control, or flag it if it's already disabled.
         if (child.isEnabled()) {
-          child.setEnabled(false);
+          child.setEnabled(false)
         } else {
-          child.wasDisabled = true;
+          child.wasDisabled = true
         }
-      });
-      this.enabled_ = false;
-      this.setMouseButtonPressed(false);
+      })
+      this.enabled_ = false
+      this.setMouseButtonPressed(false)
     }
 
     if (this.isFocusable()) {
       // Enable keyboard access only for enabled & visible components.
       this.renderer_.enableTabIndex(
-          this.getKeyEventTarget(), enable && this.visible_);
+        this.getKeyEventTarget(),
+        enable && this.visible_
+      )
     }
   }
-};
-
+}
 
 /**
  * Returns true if the container is focusable, false otherwise.  The default
@@ -1163,9 +1168,8 @@ goog.ui.Container.prototype.setEnabled = function(enable) {
  * @return {boolean} Whether the component is focusable.
  */
 goog.ui.Container.prototype.isFocusable = function() {
-  return this.focusable_;
-};
-
+  return this.focusable_
+}
 
 /**
  * Sets whether the container is focusable.  The default is true.  Focusable
@@ -1175,14 +1179,13 @@ goog.ui.Container.prototype.isFocusable = function() {
  */
 goog.ui.Container.prototype.setFocusable = function(focusable) {
   if (focusable != this.focusable_ && this.isInDocument()) {
-    this.enableFocusHandling_(focusable);
+    this.enableFocusHandling_(focusable)
   }
-  this.focusable_ = focusable;
+  this.focusable_ = focusable
   if (this.enabled_ && this.visible_) {
-    this.renderer_.enableTabIndex(this.getKeyEventTarget(), focusable);
+    this.renderer_.enableTabIndex(this.getKeyEventTarget(), focusable)
   }
-};
-
+}
 
 /**
  * Returns true if the container allows children to be focusable, false
@@ -1190,9 +1193,8 @@ goog.ui.Container.prototype.setFocusable = function(focusable) {
  * @return {boolean} Whether children should be focusable.
  */
 goog.ui.Container.prototype.isFocusableChildrenAllowed = function() {
-  return this.allowFocusableChildren_;
-};
-
+  return this.allowFocusableChildren_
+}
 
 /**
  * Sets whether the container allows children to be focusable, false
@@ -1200,38 +1202,33 @@ goog.ui.Container.prototype.isFocusableChildrenAllowed = function() {
  * @param {boolean} focusable Whether the children should be focusable.
  */
 goog.ui.Container.prototype.setFocusableChildrenAllowed = function(focusable) {
-  this.allowFocusableChildren_ = focusable;
-};
-
+  this.allowFocusableChildren_ = focusable
+}
 
 /**
  * @return {boolean} Whether highlighting a child component should also open it.
  */
 goog.ui.Container.prototype.isOpenFollowsHighlight = function() {
-  return this.openFollowsHighlight_;
-};
-
+  return this.openFollowsHighlight_
+}
 
 /**
  * Sets whether highlighting a child component should also open it.
  * @param {boolean} follow Whether highlighting a child component also opens it.
  */
 goog.ui.Container.prototype.setOpenFollowsHighlight = function(follow) {
-  this.openFollowsHighlight_ = follow;
-};
-
+  this.openFollowsHighlight_ = follow
+}
 
 // Highlight management.
-
 
 /**
  * Returns the index of the currently highlighted item (-1 if none).
  * @return {number} Index of the currently highlighted item.
  */
 goog.ui.Container.prototype.getHighlightedIndex = function() {
-  return this.highlightedIndex_;
-};
-
+  return this.highlightedIndex_
+}
 
 /**
  * Highlights the item at the given 0-based index (if any).  If another item
@@ -1240,14 +1237,13 @@ goog.ui.Container.prototype.getHighlightedIndex = function() {
  *     highlight).
  */
 goog.ui.Container.prototype.setHighlightedIndex = function(index) {
-  var child = this.getChildAt(index);
+  var child = this.getChildAt(index)
   if (child) {
-    child.setHighlighted(true);
+    child.setHighlighted(true)
   } else if (this.highlightedIndex_ > -1) {
-    this.getHighlighted().setHighlighted(false);
+    this.getHighlighted().setHighlighted(false)
   }
-};
-
+}
 
 /**
  * Highlights the given item if it exists and is a child of the container;
@@ -1255,39 +1251,35 @@ goog.ui.Container.prototype.setHighlightedIndex = function(index) {
  * @param {goog.ui.Control} item Item to highlight.
  */
 goog.ui.Container.prototype.setHighlighted = function(item) {
-  this.setHighlightedIndex(this.indexOfChild(item));
-};
-
+  this.setHighlightedIndex(this.indexOfChild(item))
+}
 
 /**
  * Returns the currently highlighted item (if any).
  * @return {goog.ui.Control?} Highlighted item (null if none).
  */
 goog.ui.Container.prototype.getHighlighted = function() {
-  return this.getChildAt(this.highlightedIndex_);
-};
-
+  return this.getChildAt(this.highlightedIndex_)
+}
 
 /**
  * Highlights the first highlightable item in the container
  */
 goog.ui.Container.prototype.highlightFirst = function() {
   this.highlightHelper(function(index, max) {
-    return (index + 1) % max;
-  }, this.getChildCount() - 1);
-};
-
+    return (index + 1) % max
+  }, this.getChildCount() - 1)
+}
 
 /**
  * Highlights the last highlightable item in the container.
  */
 goog.ui.Container.prototype.highlightLast = function() {
   this.highlightHelper(function(index, max) {
-    index--;
-    return index < 0 ? max - 1 : index;
-  }, 0);
-};
-
+    index--
+    return index < 0 ? max - 1 : index
+  }, 0)
+}
 
 /**
  * Highlights the next highlightable item (or the first if nothing is currently
@@ -1295,10 +1287,9 @@ goog.ui.Container.prototype.highlightLast = function() {
  */
 goog.ui.Container.prototype.highlightNext = function() {
   this.highlightHelper(function(index, max) {
-    return (index + 1) % max;
-  }, this.highlightedIndex_);
-};
-
+    return (index + 1) % max
+  }, this.highlightedIndex_)
+}
 
 /**
  * Highlights the previous highlightable item (or the last if nothing is
@@ -1306,11 +1297,10 @@ goog.ui.Container.prototype.highlightNext = function() {
  */
 goog.ui.Container.prototype.highlightPrevious = function() {
   this.highlightHelper(function(index, max) {
-    index--;
-    return index < 0 ? max - 1 : index;
-  }, this.highlightedIndex_);
-};
-
+    index--
+    return index < 0 ? max - 1 : index
+  }, this.highlightedIndex_)
+}
 
 /**
  * Helper function that manages the details of moving the highlight among
@@ -1325,24 +1315,22 @@ goog.ui.Container.prototype.highlightPrevious = function() {
 goog.ui.Container.prototype.highlightHelper = function(fn, startIndex) {
   // If the start index is -1 (meaning there's nothing currently highlighted),
   // try starting from the currently open item, if any.
-  var curIndex =
-      startIndex < 0 ? this.indexOfChild(this.openItem_) : startIndex;
-  var numItems = this.getChildCount();
+  var curIndex = startIndex < 0 ? this.indexOfChild(this.openItem_) : startIndex
+  var numItems = this.getChildCount()
 
-  curIndex = fn.call(this, curIndex, numItems);
-  var visited = 0;
+  curIndex = fn.call(this, curIndex, numItems)
+  var visited = 0
   while (visited <= numItems) {
-    var control = this.getChildAt(curIndex);
+    var control = this.getChildAt(curIndex)
     if (control && this.canHighlightItem(control)) {
-      this.setHighlightedIndexFromKeyEvent(curIndex);
-      return true;
+      this.setHighlightedIndexFromKeyEvent(curIndex)
+      return true
     }
-    visited++;
-    curIndex = fn.call(this, curIndex, numItems);
+    visited++
+    curIndex = fn.call(this, curIndex, numItems)
   }
-  return false;
-};
-
+  return false
+}
 
 /**
  * Returns whether the given item can be highlighted.
@@ -1351,10 +1339,12 @@ goog.ui.Container.prototype.highlightHelper = function(fn, startIndex) {
  * @protected
  */
 goog.ui.Container.prototype.canHighlightItem = function(item) {
-  return item.isVisible() && item.isEnabled() &&
-      item.isSupportedState(goog.ui.Component.State.HOVER);
-};
-
+  return (
+    item.isVisible() &&
+    item.isEnabled() &&
+    item.isSupportedState(goog.ui.Component.State.HOVER)
+  )
+}
 
 /**
  * Helper method that sets the highlighted index to the given index in response
@@ -1365,9 +1355,8 @@ goog.ui.Container.prototype.canHighlightItem = function(item) {
  * @protected
  */
 goog.ui.Container.prototype.setHighlightedIndexFromKeyEvent = function(index) {
-  this.setHighlightedIndex(index);
-};
-
+  this.setHighlightedIndex(index)
+}
 
 /**
  * Returns the currently open (expanded) control in the container (null if
@@ -1375,23 +1364,21 @@ goog.ui.Container.prototype.setHighlightedIndexFromKeyEvent = function(index) {
  * @return {goog.ui.Control?} The currently open control.
  */
 goog.ui.Container.prototype.getOpenItem = function() {
-  return this.openItem_;
-};
-
+  return this.openItem_
+}
 
 /**
  * Returns true if the mouse button is pressed, false otherwise.
  * @return {boolean} Whether the mouse button is pressed.
  */
 goog.ui.Container.prototype.isMouseButtonPressed = function() {
-  return this.mouseButtonPressed_;
-};
-
+  return this.mouseButtonPressed_
+}
 
 /**
  * Sets or clears the "mouse button pressed" flag.
  * @param {boolean} pressed Whether the mouse button is presed.
  */
 goog.ui.Container.prototype.setMouseButtonPressed = function(pressed) {
-  this.mouseButtonPressed_ = pressed;
-};
+  this.mouseButtonPressed_ = pressed
+}

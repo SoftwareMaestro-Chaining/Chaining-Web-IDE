@@ -18,12 +18,10 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.NodeType');
+goog.provide("goog.dom.pattern.NodeType")
 
-goog.require('goog.dom.pattern.AbstractPattern');
-goog.require('goog.dom.pattern.MatchType');
-
-
+goog.require("goog.dom.pattern.AbstractPattern")
+goog.require("goog.dom.pattern.MatchType")
 
 /**
  * Pattern object that matches any node of the given type.
@@ -38,10 +36,9 @@ goog.dom.pattern.NodeType = function(nodeType) {
    * @type {goog.dom.NodeType}
    * @private
    */
-  this.nodeType_ = nodeType;
-};
-goog.inherits(goog.dom.pattern.NodeType, goog.dom.pattern.AbstractPattern);
-
+  this.nodeType_ = nodeType
+}
+goog.inherits(goog.dom.pattern.NodeType, goog.dom.pattern.AbstractPattern)
 
 /**
  * Test whether the given token is a text token which matches the string or
@@ -53,6 +50,7 @@ goog.inherits(goog.dom.pattern.NodeType, goog.dom.pattern.AbstractPattern);
  * @override
  */
 goog.dom.pattern.NodeType.prototype.matchToken = function(token, type) {
-  return token.nodeType == this.nodeType_ ? goog.dom.pattern.MatchType.MATCH :
-                                            goog.dom.pattern.MatchType.NO_MATCH;
-};
+  return token.nodeType == this.nodeType_
+    ? goog.dom.pattern.MatchType.MATCH
+    : goog.dom.pattern.MatchType.NO_MATCH
+}

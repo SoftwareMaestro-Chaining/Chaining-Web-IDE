@@ -1,8 +1,8 @@
-'use strict'
+"use strict"
 
 module.exports = (sources, opts) => {
   return JSON.stringify({
-    language: 'Solidity',
+    language: "Solidity",
     sources: sources,
     settings: {
       optimizer: {
@@ -11,9 +11,19 @@ module.exports = (sources, opts) => {
       },
       libraries: opts.libraries,
       outputSelection: {
-        '*': {
-          '': [ 'legacyAST' ],
-          '*': [ 'abi', 'metadata', 'devdoc', 'userdoc', 'evm.legacyAssembly', 'evm.bytecode', 'evm.deployedBytecode', 'evm.methodIdentifiers', 'evm.gasEstimates' ]
+        "*": {
+          "": ["legacyAST"],
+          "*": [
+            "abi",
+            "metadata",
+            "devdoc",
+            "userdoc",
+            "evm.legacyAssembly",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "evm.gasEstimates"
+          ]
         }
       }
     }

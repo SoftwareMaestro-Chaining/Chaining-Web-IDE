@@ -18,13 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarSelect');
+goog.provide("goog.ui.ToolbarSelect")
 
-goog.require('goog.ui.Select');
-goog.require('goog.ui.ToolbarMenuButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Select")
+goog.require("goog.ui.ToolbarMenuButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A select control for a toolbar.
@@ -41,16 +39,25 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.Select}
  */
 goog.ui.ToolbarSelect = function(
-    caption, opt_menu, opt_renderer, opt_domHelper) {
+  caption,
+  opt_menu,
+  opt_renderer,
+  opt_domHelper
+) {
   goog.ui.Select.call(
-      this, caption, opt_menu,
-      opt_renderer || goog.ui.ToolbarMenuButtonRenderer.getInstance(),
-      opt_domHelper);
-};
-goog.inherits(goog.ui.ToolbarSelect, goog.ui.Select);
-
+    this,
+    caption,
+    opt_menu,
+    opt_renderer || goog.ui.ToolbarMenuButtonRenderer.getInstance(),
+    opt_domHelper
+  )
+}
+goog.inherits(goog.ui.ToolbarSelect, goog.ui.Select)
 
 // Registers a decorator factory function for select controls used in toolbars.
 goog.ui.registry.setDecoratorByClassName(
-    goog.getCssName('goog-toolbar-select'),
-    function() { return new goog.ui.ToolbarSelect(null); });
+  goog.getCssName("goog-toolbar-select"),
+  function() {
+    return new goog.ui.ToolbarSelect(null)
+  }
+)

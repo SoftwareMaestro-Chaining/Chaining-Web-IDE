@@ -1,10 +1,10 @@
-var remixLib = require('remix-lib')
+var remixLib = require("remix-lib")
 var EventManager = remixLib.EventManager
 var traceHelper = remixLib.helpers.trace
-var yo = require('yo-yo')
+var yo = require("yo-yo")
 var init = remixLib.init
-var csjs = require('csjs-inject')
-var styleGuide = require('../../../../ui/styles-guide/theme-chooser')
+var csjs = require("csjs-inject")
+var styleGuide = require("../../../../ui/styles-guide/theme-chooser")
 var styles = styleGuide.chooser()
 
 var css = csjs`
@@ -46,7 +46,7 @@ var css = csjs`
     margin-bottom: 10px;
   }
 `
-function TxBrowser (_parent, opts) {
+function TxBrowser(_parent, opts) {
   this.event = new EventManager()
 
   this.blockNumber
@@ -55,7 +55,7 @@ function TxBrowser (_parent, opts) {
   this.displayConnectionSetting = opts.displayConnectionSetting
   this.web3 = opts.web3
   var self = this
-  _parent.event.register('providerChanged', this, function (provider) {
+  _parent.event.register("providerChanged", this, function(provider) {
     self.setDefaultValues()
     if (self.view) {
       yo.update(self.view, self.render())
@@ -69,78 +69,98 @@ function TxBrowser (_parent, opts) {
 // creation: 0x72908de76f99fca476f9e3a3b5d352f350a98cd77d09cebfc59ffe32a6ecaa0b
 // invokation: 0x20ef65b8b186ca942fcccd634f37074dde49b541c27994fc7596740ef44cfd51
 
-TxBrowser.prototype.setDefaultValues = function () {
-  this.connectInfo = ''
+TxBrowser.prototype.setDefaultValues = function() {
+  this.connectInfo = ""
   if (this.view) {
     yo.update(this.view, this.render())
   }
 }
 
-TxBrowser.prototype.submit = function (tx) {
+TxBrowser.prototype.submit = function(tx) {
   var self = this
-  self.event.trigger('newTxLoading', [this.blockNumber, this.txNumber])
+  self.event.trigger("newTxLoading", [this.blockNumber, this.txNumber])
   if (tx) {
     return self.update(null, tx)
   }
   if (!this.txNumber) {
-    self.update('no tx index or tx hash to look for')
+    self.update("no tx index or tx hash to look for")
     return
   }
   try {
-    if (this.txNumber.indexOf('0x') !== -1) {
-      self.web3.eth.getTransaction(this.txNumber, function (error, result) {
+    if (this.txNumber.indexOf("0x") !== -1) {
+      self.web3.eth.getTransaction(this.txNumber, function(error, result) {
         self.update(error, result)
       })
     } else {
-      self.web3.eth.getTransactionFromBlock(this.blockNumber, this.txNumber, function (error, result) {
-        self.update(error, result)
-      })
+      self.web3.eth.getTransactionFromBlock(
+        this.blockNumber,
+        this.txNumber,
+        function(error, result) {
+          self.update(error, result)
+        }
+      )
     }
   } catch (e) {
     self.update(e.message)
   }
 }
 
-TxBrowser.prototype.update = function (error, tx) {
+TxBrowser.prototype.update = function(error, tx) {
   var info = {}
   if (error) {
-    this.view.querySelector('#error').innerHTML = error
+    this.view.querySelector("#error").innerHTML = error
   } else {
     if (tx) {
-      this.view.querySelector('#error').innerHTML = ''
+      this.view.querySelector("#error").innerHTML = ""
       if (!tx.to) {
-        tx.to = traceHelper.contractCreationToken('0')
+        tx.to = traceHelper.contractCreationToken("0")
       }
       info.from = tx.from
       info.to = tx.to
       info.hash = tx.hash
-      this.event.trigger('newTraceRequested', [this.blockNumber, this.txNumber, tx])
+      this.event.trigger("newTraceRequested", [
+        this.blockNumber,
+        this.txNumber,
+        tx
+      ])
     } else {
-      var mes = '<not found>'
+      var mes = "<not found>"
       info.from = mes
       info.to = mes
       info.hash = mes
-      this.view.querySelector('#error').innerHTML = 'Cannot find transaction with reference. Block number: ' + this.blockNumber + '. Transaction index/hash: ' + this.txNumber
+      this.view.querySelector("#error").innerHTML =
+        "Cannot find transaction with reference. Block number: " +
+        this.blockNumber +
+        ". Transaction index/hash: " +
+        this.txNumber
     }
   }
 }
 
-TxBrowser.prototype.updateWeb3Url = function (newhost) {
+TxBrowser.prototype.updateWeb3Url = function(newhost) {
   init.setProvider(global.web3, newhost)
   var self = this
-  this.checkWeb3(function (error, block) {
+  this.checkWeb3(function(error, block) {
     if (!error) {
-      self.connectInfo = 'Connected to ' + global.web3.currentProvider.host + '. Current block number: ' + block
+      self.connectInfo =
+        "Connected to " +
+        global.web3.currentProvider.host +
+        ". Current block number: " +
+        block
     } else {
-      self.connectInfo = 'Unable to connect to ' + global.web3.currentProvider.host + '. ' + error.message
+      self.connectInfo =
+        "Unable to connect to " +
+        global.web3.currentProvider.host +
+        ". " +
+        error.message
     }
     yo.update(self.view, self.render())
   })
 }
 
-TxBrowser.prototype.checkWeb3 = function (callback) {
+TxBrowser.prototype.checkWeb3 = function(callback) {
   try {
-    global.web3.eth.getBlockNumber(function (error, block) {
+    global.web3.eth.getBlockNumber(function(error, block) {
       callback(error, block)
     })
   } catch (e) {
@@ -149,50 +169,70 @@ TxBrowser.prototype.checkWeb3 = function (callback) {
   }
 }
 
-TxBrowser.prototype.updateBlockN = function (ev) {
+TxBrowser.prototype.updateBlockN = function(ev) {
   this.blockNumber = ev.target.value
 }
 
-TxBrowser.prototype.updateTxN = function (ev) {
+TxBrowser.prototype.updateTxN = function(ev) {
   this.txNumber = ev.target.value
 }
 
-TxBrowser.prototype.load = function (txHash, tx) {
+TxBrowser.prototype.load = function(txHash, tx) {
   this.txNumber = txHash
   this.submit(tx)
 }
 
-TxBrowser.prototype.unload = function (txHash) {
-  this.event.trigger('unloadRequested')
+TxBrowser.prototype.unload = function(txHash) {
+  this.event.trigger("unloadRequested")
   this.init()
 }
 
-TxBrowser.prototype.init = function (ev) {
+TxBrowser.prototype.init = function(ev) {
   this.setDefaultValues()
 }
 
-TxBrowser.prototype.connectionSetting = function () {
+TxBrowser.prototype.connectionSetting = function() {
   if (this.displayConnectionSetting) {
     var self = this
-    return yo`<div class="${css.vmargin}"><span>Node URL: </span><input onkeyup=${function () { self.updateWeb3Url(arguments[0].target.value) }} value=${global.web3.currentProvider ? global.web3.currentProvider.host : ' - none - '} type='text' />
+    return yo`<div class="${
+      css.vmargin
+    }"><span>Node URL: </span><input onkeyup=${function() {
+      self.updateWeb3Url(arguments[0].target.value)
+    }} value=${
+      global.web3.currentProvider
+        ? global.web3.currentProvider.host
+        : " - none - "
+    } type='text' />
               <span>${this.connectInfo}</span></div>`
   } else {
-    return ''
+    return ""
   }
 }
 
-TxBrowser.prototype.render = function () {
+TxBrowser.prototype.render = function() {
   var self = this
   var view = yo`<div class="${css.container}">
         ${this.connectionSetting()}
         <div class="${css.txContainer}">
           <div class="${css.txinputs}">
-            <input class="${css.txinput}" onkeyup=${function () { self.updateBlockN(arguments[0]) }} type='text' placeholder=${'Block number'} />
-            <input class="${css.txinput}" id='txinput' onkeyup=${function () { self.updateTxN(arguments[0]) }} type='text' placeholder=${'Transaction index or hash'} />
+            <input class="${css.txinput}" onkeyup=${function() {
+    self.updateBlockN(arguments[0])
+  }} type='text' placeholder=${"Block number"} />
+            <input class="${css.txinput}" id='txinput' onkeyup=${function() {
+    self.updateTxN(arguments[0])
+  }} type='text' placeholder=${"Transaction index or hash"} />
           </div>
           <div class="${css.txbuttons}">
-            <button id='load' class='${css.txbutton}' title='start debugging' onclick=${function () { self.submit() }}>Start debugging</button>
-            <button id='unload' class='${css.txbutton}' title='stop debugging' onclick=${function () { self.unload() }}>Stop</button>
+            <button id='load' class='${
+              css.txbutton
+            }' title='start debugging' onclick=${function() {
+    self.submit()
+  }}>Start debugging</button>
+            <button id='unload' class='${
+              css.txbutton
+            }' title='stop debugging' onclick=${function() {
+    self.unload()
+  }}>Stop</button>
           </div>
         </div>
         <span id='error'></span>

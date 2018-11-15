@@ -18,18 +18,17 @@
  *
  */
 
-goog.provide('goog.dom.annotate');
-goog.provide('goog.dom.annotate.AnnotateFn');
+goog.provide("goog.dom.annotate")
+goog.provide("goog.dom.annotate.AnnotateFn")
 
-goog.require('goog.array');
-goog.require('goog.asserts');
-goog.require('goog.dom');
-goog.require('goog.dom.NodeType');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.safe');
-goog.require('goog.html.SafeHtml');
-goog.require('goog.object');
-
+goog.require("goog.array")
+goog.require("goog.asserts")
+goog.require("goog.dom")
+goog.require("goog.dom.NodeType")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.safe")
+goog.require("goog.html.SafeHtml")
+goog.require("goog.object")
 
 /**
  * A function that takes:
@@ -38,8 +37,7 @@ goog.require('goog.object');
  * and returns the annotated term as an HTML.
  * @typedef {function(number, !goog.html.SafeHtml): !goog.html.SafeHtml}
  */
-goog.dom.annotate.AnnotateFn;
-
+goog.dom.annotate.AnnotateFn
 
 /**
  * Calls `annotateFn` for each occurrence of a search term in text nodes
@@ -62,17 +60,28 @@ goog.dom.annotate.AnnotateFn;
  * @return {boolean} Whether any terms were annotated.
  */
 goog.dom.annotate.annotateTerms = function(
-    node, terms, annotateFn, opt_ignoreCase, opt_classesToSkip, opt_maxMs) {
+  node,
+  terms,
+  annotateFn,
+  opt_ignoreCase,
+  opt_classesToSkip,
+  opt_maxMs
+) {
   if (opt_ignoreCase) {
-    terms = goog.dom.annotate.lowercaseTerms_(terms);
+    terms = goog.dom.annotate.lowercaseTerms_(terms)
   }
-  var stopTime = +opt_maxMs > 0 ? goog.now() + opt_maxMs : 0;
+  var stopTime = +opt_maxMs > 0 ? goog.now() + opt_maxMs : 0
 
   return goog.dom.annotate.annotateTermsInNode_(
-      node, terms, annotateFn, opt_ignoreCase, opt_classesToSkip || [],
-      stopTime, 0);
-};
-
+    node,
+    terms,
+    annotateFn,
+    opt_ignoreCase,
+    opt_classesToSkip || [],
+    stopTime,
+    0
+  )
+}
 
 /**
  * The maximum recursion depth allowed. Any DOM nodes deeper than this are
@@ -80,16 +89,17 @@ goog.dom.annotate.annotateTerms = function(
  * @type {number}
  * @private
  */
-goog.dom.annotate.MAX_RECURSION_ = 200;
-
+goog.dom.annotate.MAX_RECURSION_ = 200
 
 /**
  * The node types whose descendants should not be affected by annotation.
  * @private {!Object<string, boolean>}
  */
 goog.dom.annotate.NODES_TO_SKIP_ = goog.object.createSet(
-    goog.dom.TagName.SCRIPT, goog.dom.TagName.STYLE, goog.dom.TagName.TEXTAREA);
-
+  goog.dom.TagName.SCRIPT,
+  goog.dom.TagName.STYLE,
+  goog.dom.TagName.TEXTAREA
+)
 
 /**
  * Recursive helper function.
@@ -112,64 +122,82 @@ goog.dom.annotate.NODES_TO_SKIP_ = goog.object.createSet(
  * @private
  */
 goog.dom.annotate.annotateTermsInNode_ = function(
-    node, terms, annotateFn, ignoreCase, classesToSkip, stopTime,
-    recursionLevel) {
-  if ((stopTime > 0 && goog.now() >= stopTime) ||
-      recursionLevel > goog.dom.annotate.MAX_RECURSION_) {
-    return false;
+  node,
+  terms,
+  annotateFn,
+  ignoreCase,
+  classesToSkip,
+  stopTime,
+  recursionLevel
+) {
+  if (
+    (stopTime > 0 && goog.now() >= stopTime) ||
+    recursionLevel > goog.dom.annotate.MAX_RECURSION_
+  ) {
+    return false
   }
 
-  var annotated = false;
+  var annotated = false
 
   if (node.nodeType == goog.dom.NodeType.TEXT) {
     var html = goog.dom.annotate.helpAnnotateText_(
-        node.nodeValue, terms, annotateFn, ignoreCase);
+      node.nodeValue,
+      terms,
+      annotateFn,
+      ignoreCase
+    )
     if (html != null) {
       // Replace the text with the annotated html. First we put the html into
       // a temporary node, to get its DOM structure. To avoid adding a wrapper
       // element as a side effect, we'll only actually use the temporary node's
       // children.
-      var tempNode =
-          goog.dom.getDomHelper(node).createElement(goog.dom.TagName.SPAN);
-      goog.dom.safe.setInnerHtml(tempNode, html);
+      var tempNode = goog.dom
+        .getDomHelper(node)
+        .createElement(goog.dom.TagName.SPAN)
+      goog.dom.safe.setInnerHtml(tempNode, html)
 
-      var parentNode = node.parentNode;
-      var nodeToInsert;
+      var parentNode = node.parentNode
+      var nodeToInsert
       while ((nodeToInsert = tempNode.firstChild) != null) {
         // Each parentNode.insertBefore call removes the inserted node from
         // tempNode's list of children.
-        parentNode.insertBefore(nodeToInsert, node);
+        parentNode.insertBefore(nodeToInsert, node)
       }
 
-      parentNode.removeChild(node);
-      annotated = true;
+      parentNode.removeChild(node)
+      annotated = true
     }
   } else if (
-      node.hasChildNodes() &&
-      !goog.dom.annotate
-           .NODES_TO_SKIP_[/** @type {!Element} */ (node).tagName]) {
-    var classes = /** @type {!Element} */ (node).className.split(/\s+/);
+    node.hasChildNodes() &&
+    !goog.dom.annotate.NODES_TO_SKIP_[/** @type {!Element} */ (node).tagName]
+  ) {
+    var classes = /** @type {!Element} */ (node).className.split(/\s+/)
     var skip = goog.array.some(classes, function(className) {
-      return goog.array.contains(classesToSkip, className);
-    });
+      return goog.array.contains(classesToSkip, className)
+    })
 
     if (!skip) {
-      ++recursionLevel;
-      var curNode = node.firstChild;
+      ++recursionLevel
+      var curNode = node.firstChild
       while (curNode) {
-        var nextNode = curNode.nextSibling;
+        var nextNode = curNode.nextSibling
         var curNodeAnnotated = goog.dom.annotate.annotateTermsInNode_(
-            curNode, terms, annotateFn, ignoreCase, classesToSkip, stopTime,
-            recursionLevel);
-        annotated = annotated || curNodeAnnotated;
-        curNode = nextNode;
+          curNode,
+          terms,
+          annotateFn,
+          ignoreCase,
+          classesToSkip,
+          stopTime,
+          recursionLevel
+        )
+        annotated = annotated || curNodeAnnotated
+        curNode = nextNode
       }
     }
   }
 
-  return annotated;
-};
-
+  return annotated
+}
 
 /**
  * Regular expression that matches non-word characters.
@@ -184,8 +212,7 @@ goog.dom.annotate.annotateTermsInNode_ = function(
  * @type {RegExp}
  * @private
  */
-goog.dom.annotate.NONWORD_RE_ = /\W/;
-
+goog.dom.annotate.NONWORD_RE_ = /\W/
 
 /**
  * Annotates occurrences of query terms in plain text. This process consists of
@@ -206,14 +233,21 @@ goog.dom.annotate.NONWORD_RE_ = /\W/;
  *   annotated, or null if the text did not contain any of the terms.
  */
 goog.dom.annotate.annotateText = function(
-    text, terms, annotateFn, opt_ignoreCase) {
+  text,
+  terms,
+  annotateFn,
+  opt_ignoreCase
+) {
   if (opt_ignoreCase) {
-    terms = goog.dom.annotate.lowercaseTerms_(terms);
+    terms = goog.dom.annotate.lowercaseTerms_(terms)
   }
   return goog.dom.annotate.helpAnnotateText_(
-      text, terms, annotateFn, opt_ignoreCase);
-};
-
+    text,
+    terms,
+    annotateFn,
+    opt_ignoreCase
+  )
+}
 
 /**
  * Annotates occurrences of query terms in plain text. This process consists of
@@ -236,108 +270,117 @@ goog.dom.annotate.annotateText = function(
  * @private
  */
 goog.dom.annotate.helpAnnotateText_ = function(
-    text, terms, annotateFn, ignoreCase) {
-  var hit = false;
-  var textToSearch = ignoreCase ? text.toLowerCase() : text;
-  var textLen = textToSearch.length;
-  var numTerms = terms.length;
+  text,
+  terms,
+  annotateFn,
+  ignoreCase
+) {
+  var hit = false
+  var textToSearch = ignoreCase ? text.toLowerCase() : text
+  var textLen = textToSearch.length
+  var numTerms = terms.length
 
   // Each element will be an array of hit positions for the term.
-  var termHits = new Array(numTerms);
+  var termHits = new Array(numTerms)
 
   // First collect all the hits into allHits.
   for (var i = 0; i < numTerms; i++) {
-    var term = terms[i];
-    var hits = [];
-    var termText = term[0];
-    if (termText != '') {
-      var matchWholeWordOnly = term[1];
-      var termLen = termText.length;
-      var pos = 0;
+    var term = terms[i]
+    var hits = []
+    var termText = term[0]
+    if (termText != "") {
+      var matchWholeWordOnly = term[1]
+      var termLen = termText.length
+      var pos = 0
       // Find each hit for term t and append to termHits.
       while (pos < textLen) {
-        var hitPos = textToSearch.indexOf(termText, pos);
+        var hitPos = textToSearch.indexOf(termText, pos)
         if (hitPos == -1) {
-          break;
+          break
         } else {
-          var prevCharPos = hitPos - 1;
-          var nextCharPos = hitPos + termLen;
-          if (!matchWholeWordOnly ||
-              ((prevCharPos < 0 ||
+          var prevCharPos = hitPos - 1
+          var nextCharPos = hitPos + termLen
+          if (
+            !matchWholeWordOnly ||
+            ((prevCharPos < 0 ||
+              goog.dom.annotate.NONWORD_RE_.test(
+                textToSearch.charAt(prevCharPos)
+              )) &&
+              (nextCharPos >= textLen ||
                 goog.dom.annotate.NONWORD_RE_.test(
-                    textToSearch.charAt(prevCharPos))) &&
-               (nextCharPos >= textLen ||
-                goog.dom.annotate.NONWORD_RE_.test(
-                    textToSearch.charAt(nextCharPos))))) {
-            hits.push(hitPos);
-            hit = true;
+                  textToSearch.charAt(nextCharPos)
+                )))
+          ) {
+            hits.push(hitPos)
+            hit = true
           }
-          pos = hitPos + termLen;
+          pos = hitPos + termLen
         }
       }
     }
-    termHits[i] = hits;
+    termHits[i] = hits
   }
 
   if (hit) {
-    var html = [];
-    var pos = 0;
+    var html = []
+    var pos = 0
 
     while (true) {
       // First determine which of the n terms is the next hit.
-      var termIndexOfNextHit;
-      var posOfNextHit = -1;
+      var termIndexOfNextHit
+      var posOfNextHit = -1
 
       for (var i = 0; i < numTerms; i++) {
-        var hits = termHits[i];
+        var hits = termHits[i]
         // pull off the position of the next hit of term t
         // (it's always the first in the array because we're shifting
         // hits off the front of the array as we process them)
         // this is the next candidate to consider for the next overall hit
         if (!goog.array.isEmpty(hits)) {
-          var hitPos = hits[0];
+          var hitPos = hits[0]
 
           // Discard any hits embedded in the previous hit.
           while (hitPos >= 0 && hitPos < pos) {
-            hits.shift();
-            hitPos = goog.array.isEmpty(hits) ? -1 : hits[0];
+            hits.shift()
+            hitPos = goog.array.isEmpty(hits) ? -1 : hits[0]
           }
 
           if (hitPos >= 0 && (posOfNextHit < 0 || hitPos < posOfNextHit)) {
-            termIndexOfNextHit = i;
-            posOfNextHit = hitPos;
+            termIndexOfNextHit = i
+            posOfNextHit = hitPos
           }
         }
       }
 
       // Quit if there are no more hits.
-      if (posOfNextHit < 0) break;
-      goog.asserts.assertNumber(termIndexOfNextHit);
+      if (posOfNextHit < 0) break
+      goog.asserts.assertNumber(termIndexOfNextHit)
 
       // Remove the next hit from our hit list.
-      termHits[termIndexOfNextHit].shift();
+      termHits[termIndexOfNextHit].shift()
 
       // Append everything from the end of the last hit up to this one.
-      html.push(text.substr(pos, posOfNextHit - pos));
+      html.push(text.substr(pos, posOfNextHit - pos))
 
       // Append the annotated term.
-      var termLen = terms[termIndexOfNextHit][0].length;
-      var termHtml =
-          goog.html.SafeHtml.htmlEscape(text.substr(posOfNextHit, termLen));
+      var termLen = terms[termIndexOfNextHit][0].length
+      var termHtml = goog.html.SafeHtml.htmlEscape(
+        text.substr(posOfNextHit, termLen)
+      )
       html.push(
-          annotateFn(goog.asserts.assertNumber(termIndexOfNextHit), termHtml));
+        annotateFn(goog.asserts.assertNumber(termIndexOfNextHit), termHtml)
+      )
 
-      pos = posOfNextHit + termLen;
+      pos = posOfNextHit + termLen
     }
 
     // Append everything after the last hit.
-    html.push(text.substr(pos));
-    return goog.html.SafeHtml.concat(html);
+    html.push(text.substr(pos))
+    return goog.html.SafeHtml.concat(html)
   } else {
-    return null;
+    return null
   }
-};
-
+}
 
 /**
  * Converts terms to lowercase.
@@ -349,10 +392,10 @@ goog.dom.annotate.helpAnnotateText_ = function(
  * @private
  */
 goog.dom.annotate.lowercaseTerms_ = function(terms) {
-  var lowercaseTerms = [];
+  var lowercaseTerms = []
   for (var i = 0; i < terms.length; ++i) {
-    var term = terms[i];
-    lowercaseTerms[i] = [term[0].toLowerCase(), term[1]];
+    var term = terms[i]
+    lowercaseTerms[i] = [term[0].toLowerCase(), term[1]]
   }
-  return lowercaseTerms;
-};
+  return lowercaseTerms
+}

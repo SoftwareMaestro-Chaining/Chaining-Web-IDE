@@ -12,135 +12,139 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview Unit tests for Closure's base.js's goog.module support.
  */
 
-goog.module('goog.baseModuleTest');
-goog.setTestOnly('goog.baseModuleTest');
-
+goog.module("goog.baseModuleTest")
+goog.setTestOnly("goog.baseModuleTest")
 
 // Used to test dynamic loading works, see testRequire*
-var Timer = goog.require('goog.Timer');
-var Replacer = goog.require('goog.testing.PropertyReplacer');
-var jsunit = goog.require('goog.testing.jsunit');
-var testSuite = goog.require('goog.testing.testSuite');
+var Timer = goog.require("goog.Timer")
+var Replacer = goog.require("goog.testing.PropertyReplacer")
+var jsunit = goog.require("goog.testing.jsunit")
+var testSuite = goog.require("goog.testing.testSuite")
 
-var testModule = goog.require('goog.test_module');
+var testModule = goog.require("goog.test_module")
 
-var stubs = new Replacer();
+var stubs = new Replacer()
 
 function assertProvideFails(namespace) {
   assertThrows(
-      'goog.provide(' + namespace + ') should have failed',
-      goog.partial(goog.provide, namespace));
+    "goog.provide(" + namespace + ") should have failed",
+    goog.partial(goog.provide, namespace)
+  )
 }
 
 function assertModuleFails(namespace) {
   assertThrows(
-      'goog.module(' + namespace + ') should have failed',
-      goog.partial(goog.module, namespace));
+    "goog.module(" + namespace + ") should have failed",
+    goog.partial(goog.module, namespace)
+  )
 }
 
 function assertLoadModule(msg, moduleDef) {
-  assertNotThrows(msg, goog.partial(goog.loadModule, moduleDef));
+  assertNotThrows(msg, goog.partial(goog.loadModule, moduleDef))
 }
 
 testSuite({
-  teardown: function() { stubs.reset(); },
+  teardown: function() {
+    stubs.reset()
+  },
 
   testModuleDecl: function() {
     // assert that goog.module doesn't modify the global namespace
     assertUndefined(
-        'module failed to protect global namespace: ' +
-            'goog.baseModuleTest',
-        goog.baseModuleTest);
+      "module failed to protect global namespace: " + "goog.baseModuleTest",
+      goog.baseModuleTest
+    )
   },
 
   testModuleScoping: function() {
     // assert test functions are not exported to the global namespace
-    assertNotUndefined('module failed: testModule', testModule);
+    assertNotUndefined("module failed: testModule", testModule)
     assertFalse(
-        'module failed: testModule',
-        goog.isFunction(goog.global.testModuleScoping));
+      "module failed: testModule",
+      goog.isFunction(goog.global.testModuleScoping)
+    )
   },
 
   testProvideStrictness1: function() {
-    assertModuleFails('goog.xy');  // not in goog.loadModule
+    assertModuleFails("goog.xy") // not in goog.loadModule
 
-    assertProvideFails('goog.baseModuleTest');  // this file.
+    assertProvideFails("goog.baseModuleTest") // this file.
   },
 
   testProvideStrictness2: function() {
     // goog.module "provides" a namespace
-    assertTrue(goog.isProvided_('goog.baseModuleTest'));
+    assertTrue(goog.isProvided_("goog.baseModuleTest"))
   },
 
   testExportSymbol: function() {
     // Assert that export symbol works from within a goog.module.
-    var date = new Date();
+    var date = new Date()
 
-    assertTrue(typeof nodots == 'undefined');
-    goog.exportSymbol('nodots', date);
-    assertEquals(date, nodots);  // globals are accessible from within a module.
-    nodots = undefined;
+    assertTrue(typeof nodots == "undefined")
+    goog.exportSymbol("nodots", date)
+    assertEquals(date, nodots) // globals are accessible from within a module.
+    nodots = undefined
   },
 
   testLoadModule: function() {
     assertLoadModule(
-        'Loading a module that exports a typedef should succeed',
-        'goog.module(\'goog.test_module_typedef\');' +
-            'var typedef;' +
-            'exports = typedef;');
+      "Loading a module that exports a typedef should succeed",
+      "goog.module('goog.test_module_typedef');" +
+        "var typedef;" +
+        "exports = typedef;"
+    )
   },
 
   //=== tests for Require logic ===
 
   testLegacyRequire: function() {
     // goog.Timer is a legacy module loaded above
-    assertNotUndefined('goog.Timer should be available', goog.Timer);
+    assertNotUndefined("goog.Timer should be available", goog.Timer)
 
     // Verify that a legacy module can be aliases with goog.require
     assertTrue(
-        'Timer should be the goog.Timer namespace object',
-        goog.Timer === Timer);
+      "Timer should be the goog.Timer namespace object",
+      goog.Timer === Timer
+    )
 
     // and its dependencies
     assertNotUndefined(
-        'goog.events.EventTarget should be available',
-        /** @suppress {missingRequire} */ goog.events.EventTarget);
+      "goog.events.EventTarget should be available",
+      /** @suppress {missingRequire} */ goog.events.EventTarget
+    )
   },
 
   testRequireModule: function() {
     assertEquals(
-        'module failed to export legacy namespace: ' +
-            'goog.test_module',
-        testModule, goog.test_module);
+      "module failed to export legacy namespace: " + "goog.test_module",
+      testModule,
+      goog.test_module
+    )
     assertUndefined(
-        'module failed to protect global namespace: ' +
-            'goog.test_module_dep',
-        goog.test_module_dep);
+      "module failed to protect global namespace: " + "goog.test_module_dep",
+      goog.test_module_dep
+    )
 
     // The test module is available under its alias
-    assertNotUndefined('testModule is loaded', testModule);
-    assertTrue('module failed: testModule', goog.isFunction(testModule));
-
+    assertNotUndefined("testModule is loaded", testModule)
+    assertTrue("module failed: testModule", goog.isFunction(testModule))
 
     // Test that any escaping of </script> in test files is correct. Escape the
     // / in </script> here so that any such code does not affect it here.
-    assertEquals('<\/script>', testModule.CLOSING_SCRIPT_TAG);
+    assertEquals("</script>", testModule.CLOSING_SCRIPT_TAG)
   },
 
-  testThisInModule: goog.bind(
-      function() {
-        // IE9 and below don't support "strict" mode and "undefined" gets
-        // coersed to "window".
-        if (!goog.userAgent.IE || goog.userAgent.isVersionOrHigher('10')) {
-          assertEquals(this, undefined);
-        } else {
-          assertEquals(this, goog.global);
-        }
-      },
-      this)
-});
+  testThisInModule: goog.bind(function() {
+    // IE9 and below don't support "strict" mode and "undefined" gets
+    // coersed to "window".
+    if (!goog.userAgent.IE || goog.userAgent.isVersionOrHigher("10")) {
+      assertEquals(this, undefined)
+    } else {
+      assertEquals(this, goog.global)
+    }
+  }, this)
+})

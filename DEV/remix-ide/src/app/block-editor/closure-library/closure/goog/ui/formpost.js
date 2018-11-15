@@ -19,16 +19,14 @@
  * @author dpb@google.com (David P. Baker)
  */
 
-goog.provide('goog.ui.FormPost');
+goog.provide("goog.ui.FormPost")
 
-goog.require('goog.array');
-goog.require('goog.dom.InputType');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.safe');
-goog.require('goog.html.SafeHtml');
-goog.require('goog.ui.Component');
-
-
+goog.require("goog.array")
+goog.require("goog.dom.InputType")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.safe")
+goog.require("goog.html.SafeHtml")
+goog.require("goog.ui.Component")
 
 /**
  * Creates a formpost object.
@@ -38,18 +36,19 @@ goog.require('goog.ui.Component');
  * @final
  */
 goog.ui.FormPost = function(opt_dom) {
-  goog.ui.Component.call(this, opt_dom);
-};
-goog.inherits(goog.ui.FormPost, goog.ui.Component);
-
+  goog.ui.Component.call(this, opt_dom)
+}
+goog.inherits(goog.ui.FormPost, goog.ui.Component)
 
 /** @override */
 goog.ui.FormPost.prototype.createDom = function() {
   this.setElementInternal(
-      this.getDomHelper().createDom(
-          goog.dom.TagName.FORM, {'method': 'POST', 'style': 'display:none'}));
-};
-
+    this.getDomHelper().createDom(goog.dom.TagName.FORM, {
+      method: "POST",
+      style: "display:none"
+    })
+  )
+}
 
 /**
  * Constructs a POST request and directs the browser as if a form were
@@ -63,17 +62,16 @@ goog.ui.FormPost.prototype.createDom = function() {
  *     constructor.
  */
 goog.ui.FormPost.prototype.post = function(parameters, opt_url, opt_target) {
-  var form = this.getElement();
+  var form = this.getElement()
   if (!form) {
-    this.render();
-    form = this.getElement();
+    this.render()
+    form = this.getElement()
   }
-  form.action = opt_url || '';
-  form.target = opt_target || '';
-  this.setParameters_(form, parameters);
-  form.submit();
-};
-
+  form.action = opt_url || ""
+  form.target = opt_target || ""
+  this.setParameters_(form, parameters)
+  form.submit()
+}
 
 /**
  * Creates hidden inputs in a form to match parameters.
@@ -83,20 +81,24 @@ goog.ui.FormPost.prototype.post = function(parameters, opt_url, opt_target) {
  * @private
  */
 goog.ui.FormPost.prototype.setParameters_ = function(form, parameters) {
-  var name, value, html = [];
+  var name,
+    value,
+    html = []
   for (name in parameters) {
-    value = parameters[name];
+    value = parameters[name]
     if (goog.isArrayLike(value)) {
-      goog.array.forEach(value, goog.bind(function(innerValue) {
-        html.push(this.createInput_(name, String(innerValue)));
-      }, this));
+      goog.array.forEach(
+        value,
+        goog.bind(function(innerValue) {
+          html.push(this.createInput_(name, String(innerValue)))
+        }, this)
+      )
     } else {
-      html.push(this.createInput_(name, String(value)));
+      html.push(this.createInput_(name, String(value)))
     }
   }
-  goog.dom.safe.setInnerHtml(form, goog.html.SafeHtml.concat(html));
-};
-
+  goog.dom.safe.setInnerHtml(form, goog.html.SafeHtml.concat(html))
+}
 
 /**
  * Creates a hidden <input> tag.
@@ -106,7 +108,9 @@ goog.ui.FormPost.prototype.setParameters_ = function(form, parameters) {
  * @private
  */
 goog.ui.FormPost.prototype.createInput_ = function(name, value) {
-  return goog.html.SafeHtml.create(
-      'input',
-      {'type': goog.dom.InputType.HIDDEN, 'name': name, 'value': value});
-};
+  return goog.html.SafeHtml.create("input", {
+    type: goog.dom.InputType.HIDDEN,
+    name: name,
+    value: value
+  })
+}

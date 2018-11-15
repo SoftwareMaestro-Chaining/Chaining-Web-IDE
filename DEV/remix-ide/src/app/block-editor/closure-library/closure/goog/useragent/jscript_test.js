@@ -13,49 +13,55 @@
 // limitations under the License.
 
 // Mock JScript functions
-goog.provide('goog.userAgent.jscriptTest');
-goog.setTestOnly('goog.userAgent.jscriptTest');
+goog.provide("goog.userAgent.jscriptTest")
+goog.setTestOnly("goog.userAgent.jscriptTest")
 
-goog.require('goog.testing.jsunit');
-goog.require('goog.userAgent.jscript');
+goog.require("goog.testing.jsunit")
+goog.require("goog.userAgent.jscript")
 
 function ScriptEngine() {
-  return 'JScript';
+  return "JScript"
 }
 
 function ScriptEngineMajorVersion() {
-  return 1;
+  return 1
 }
 
 function ScriptEngineMinorVersion() {
-  return 2;
+  return 2
 }
 
 function ScriptEngineBuildVersion() {
-  return 3456;
+  return 3456
 }
 
 function setUpPage() {
-  goog.userAgent.jscript.init();
+  goog.userAgent.jscript.init()
 }
 
 function testHasJscript() {
-  assertTrue('Should have jscript', goog.userAgent.jscript.HAS_JSCRIPT);
+  assertTrue("Should have jscript", goog.userAgent.jscript.HAS_JSCRIPT)
 }
 
 function testVersion() {
   assertEquals(
-      'Version should be 1.2.3456', '1.2.3456', goog.userAgent.jscript.VERSION);
+    "Version should be 1.2.3456",
+    "1.2.3456",
+    goog.userAgent.jscript.VERSION
+  )
 }
 
 function testIsVersion() {
   assertTrue(
-      'Should be version 1.2.3456 or larger',
-      goog.userAgent.jscript.isVersion('1.2.3456'));
+    "Should be version 1.2.3456 or larger",
+    goog.userAgent.jscript.isVersion("1.2.3456")
+  )
   assertTrue(
-      'Should be version 1.2 or larger',
-      goog.userAgent.jscript.isVersion('1.2'));
+    "Should be version 1.2 or larger",
+    goog.userAgent.jscript.isVersion("1.2")
+  )
   assertFalse(
-      'Should not be version 8.9 or larger',
-      goog.userAgent.jscript.isVersion('8.9'));
+    "Should not be version 8.9 or larger",
+    goog.userAgent.jscript.isVersion("8.9")
+  )
 }

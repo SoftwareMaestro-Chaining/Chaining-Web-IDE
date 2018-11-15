@@ -20,13 +20,13 @@
  * @suppress {extraRequire}
  */
 
-goog.forwardDeclare('goog.Promise');
-goog.forwardDeclare('goog.date.DateLike');
-goog.forwardDeclare('goog.date.DateTime');
-goog.forwardDeclare('goog.events.EventId');
-goog.forwardDeclare('goog.events.Key');
-goog.forwardDeclare('goog.events.KeyCodes');
-goog.forwardDeclare('goog.i18n.TimeZone');
-goog.forwardDeclare('goog.math.Range');
-goog.forwardDeclare('goog.math.Size');
-goog.forwardDeclare('goog.structs.Map');
+goog.forwardDeclare("goog.Promise")
+goog.forwardDeclare("goog.date.DateLike")
+goog.forwardDeclare("goog.date.DateTime")
+goog.forwardDeclare("goog.events.EventId")
+goog.forwardDeclare("goog.events.Key")
+goog.forwardDeclare("goog.events.KeyCodes")
+goog.forwardDeclare("goog.i18n.TimeZone")
+goog.forwardDeclare("goog.math.Range")
+goog.forwardDeclare("goog.math.Size")
+goog.forwardDeclare("goog.structs.Map")

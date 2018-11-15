@@ -18,13 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarColorMenuButton');
+goog.provide("goog.ui.ToolbarColorMenuButton")
 
-goog.require('goog.ui.ColorMenuButton');
-goog.require('goog.ui.ToolbarColorMenuButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.ColorMenuButton")
+goog.require("goog.ui.ToolbarColorMenuButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A color menu button control for a toolbar.
@@ -42,16 +40,25 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.ColorMenuButton}
  */
 goog.ui.ToolbarColorMenuButton = function(
-    content, opt_menu, opt_renderer, opt_domHelper) {
+  content,
+  opt_menu,
+  opt_renderer,
+  opt_domHelper
+) {
   goog.ui.ColorMenuButton.call(
-      this, content, opt_menu,
-      opt_renderer || goog.ui.ToolbarColorMenuButtonRenderer.getInstance(),
-      opt_domHelper);
-};
-goog.inherits(goog.ui.ToolbarColorMenuButton, goog.ui.ColorMenuButton);
-
+    this,
+    content,
+    opt_menu,
+    opt_renderer || goog.ui.ToolbarColorMenuButtonRenderer.getInstance(),
+    opt_domHelper
+  )
+}
+goog.inherits(goog.ui.ToolbarColorMenuButton, goog.ui.ColorMenuButton)
 
 // Registers a decorator factory function for toolbar color menu buttons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.getCssName('goog-toolbar-color-menu-button'),
-    function() { return new goog.ui.ToolbarColorMenuButton(null); });
+  goog.getCssName("goog-toolbar-color-menu-button"),
+  function() {
+    return new goog.ui.ToolbarColorMenuButton(null)
+  }
+)

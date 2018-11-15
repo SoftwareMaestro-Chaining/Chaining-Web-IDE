@@ -26,14 +26,13 @@
  *
  */
 
-goog.provide('goog.crypt.pbkdf2');
+goog.provide("goog.crypt.pbkdf2")
 
-goog.require('goog.array');
-goog.require('goog.asserts');
-goog.require('goog.crypt');
-goog.require('goog.crypt.Hmac');
-goog.require('goog.crypt.Sha1');
-
+goog.require("goog.array")
+goog.require("goog.asserts")
+goog.require("goog.crypt")
+goog.require("goog.crypt.Hmac")
+goog.require("goog.crypt.Sha1")
 
 /**
  * Derives key from password using PBKDF2-SHA1
@@ -46,9 +45,13 @@ goog.require('goog.crypt.Sha1');
  * @return {!Array<number>} Byte array representation of the output key.
  */
 goog.crypt.pbkdf2.deriveKeySha1 = function(
-    password, initialSalt, iterations, keyLength) {
+  password,
+  initialSalt,
+  iterations,
+  keyLength
+) {
   // Length of the HMAC-SHA1 output in bits.
-  var HASH_LENGTH = 160;
+  var HASH_LENGTH = 160
 
   /**
    * Compute each block of the key using HMAC-SHA1.
@@ -59,23 +62,25 @@ goog.crypt.pbkdf2.deriveKeySha1 = function(
   var computeBlock = function(index) {
     // Initialize the result to be array of 0 such that its xor with the first
     // block would be the first block.
-    var result = goog.array.repeat(0, HASH_LENGTH / 8);
+    var result = goog.array.repeat(0, HASH_LENGTH / 8)
     // Initialize the salt of the first iteration to initialSalt || i.
-    var salt = initialSalt.concat(index);
-    var hmac = new goog.crypt.Hmac(new goog.crypt.Sha1(), password, 64);
+    var salt = initialSalt.concat(index)
+    var hmac = new goog.crypt.Hmac(new goog.crypt.Sha1(), password, 64)
     // Compute and XOR each iteration.
     for (var i = 0; i < iterations; i++) {
       // The salt of the next iteration is the result of the current iteration.
-      salt = hmac.getHmac(salt);
-      result = goog.crypt.xorByteArray(result, salt);
+      salt = hmac.getHmac(salt)
+      result = goog.crypt.xorByteArray(result, salt)
     }
-    return result;
-  };
+    return result
+  }
 
   return goog.crypt.pbkdf2.deriveKeyFromPassword_(
-      computeBlock, HASH_LENGTH, keyLength);
-};
-
+    computeBlock,
+    HASH_LENGTH,
+    keyLength
+  )
+}
 
 /**
  * Compute each block of the key using PBKDF2.
@@ -89,27 +94,29 @@ goog.crypt.pbkdf2.deriveKeySha1 = function(
  * @private
  */
 goog.crypt.pbkdf2.deriveKeyFromPassword_ = function(
-    computeBlock, hashLength, keyLength) {
-  goog.asserts.assert(keyLength % 8 == 0, 'invalid output key length');
+  computeBlock,
+  hashLength,
+  keyLength
+) {
+  goog.asserts.assert(keyLength % 8 == 0, "invalid output key length")
 
   // Compute and concactate each block of the output key.
-  var numBlocks = Math.ceil(keyLength / hashLength);
-  goog.asserts.assert(numBlocks >= 1, 'invalid number of blocks');
-  var result = [];
+  var numBlocks = Math.ceil(keyLength / hashLength)
+  goog.asserts.assert(numBlocks >= 1, "invalid number of blocks")
+  var result = []
   for (var i = 1; i <= numBlocks; i++) {
-    var indexBytes = goog.crypt.pbkdf2.integerToByteArray_(i);
-    result = result.concat(computeBlock(indexBytes));
+    var indexBytes = goog.crypt.pbkdf2.integerToByteArray_(i)
+    result = result.concat(computeBlock(indexBytes))
   }
 
   // Trim the last block if needed.
-  var lastBlockSize = keyLength % hashLength;
+  var lastBlockSize = keyLength % hashLength
   if (lastBlockSize != 0) {
-    var desiredBytes = ((numBlocks - 1) * hashLength + lastBlockSize) / 8;
-    result.splice(desiredBytes, (hashLength - lastBlockSize) / 8);
+    var desiredBytes = ((numBlocks - 1) * hashLength + lastBlockSize) / 8
+    result.splice(desiredBytes, (hashLength - lastBlockSize) / 8)
   }
-  return result;
-};
-
+  return result
+}
 
 /**
  * Converts an integer number to a 32-bit big endian byte array.
@@ -119,10 +126,10 @@ goog.crypt.pbkdf2.deriveKeyFromPassword_ = function(
  * @private
  */
 goog.crypt.pbkdf2.integerToByteArray_ = function(n) {
-  var result = new Array(4);
-  result[0] = n >> 24 & 0xFF;
-  result[1] = n >> 16 & 0xFF;
-  result[2] = n >> 8 & 0xFF;
-  result[3] = n & 0xFF;
-  return result;
-};
+  var result = new Array(4)
+  result[0] = (n >> 24) & 0xff
+  result[1] = (n >> 16) & 0xff
+  result[2] = (n >> 8) & 0xff
+  result[3] = n & 0xff
+  return result
+}

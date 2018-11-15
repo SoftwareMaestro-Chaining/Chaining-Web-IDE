@@ -12,50 +12,53 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.acTest');
-goog.setTestOnly('goog.ui.acTest');
+goog.provide("goog.ui.acTest")
+goog.setTestOnly("goog.ui.acTest")
 
-goog.require('goog.asserts');
-goog.require('goog.dom');
-goog.require('goog.dom.NodeType');
-goog.require('goog.dom.classlist');
-goog.require('goog.dom.selection');
-goog.require('goog.events');
-goog.require('goog.events.BrowserEvent');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventType');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.style');
-goog.require('goog.testing.MockClock');
-goog.require('goog.testing.events');
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.ac');
-goog.require('goog.userAgent');
-var autocomplete;
-var data = ['ab', 'aab', 'aaab'];
-var input;
-var mockClock;
+goog.require("goog.asserts")
+goog.require("goog.dom")
+goog.require("goog.dom.NodeType")
+goog.require("goog.dom.classlist")
+goog.require("goog.dom.selection")
+goog.require("goog.events")
+goog.require("goog.events.BrowserEvent")
+goog.require("goog.events.Event")
+goog.require("goog.events.EventType")
+goog.require("goog.events.KeyCodes")
+goog.require("goog.style")
+goog.require("goog.testing.MockClock")
+goog.require("goog.testing.events")
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.ac")
+goog.require("goog.userAgent")
+var autocomplete
+var data = ["ab", "aab", "aaab"]
+var input
+var mockClock
 
 function setUpPage() {
   goog.ui.ac.createSimpleAutoComplete(
-      data, goog.dom.getElement('user'), true, false);
+    data,
+    goog.dom.getElement("user"),
+    true,
+    false
+  )
 }
 
 function setUp() {
-  mockClock = new goog.testing.MockClock(true);
-  input = goog.dom.getElement('input');
-  input.value = '';
-  autocomplete = goog.ui.ac.createSimpleAutoComplete(data, input, true, false);
+  mockClock = new goog.testing.MockClock(true)
+  input = goog.dom.getElement("input")
+  input.value = ""
+  autocomplete = goog.ui.ac.createSimpleAutoComplete(data, input, true, false)
 }
 
 function tearDown() {
-  autocomplete.dispose();
-  mockClock.dispose();
+  autocomplete.dispose()
+  mockClock.dispose()
 }
 
 //=========================================================================
 // Utility methods
-
 
 /**
  * Fire listeners of a given type that are listening to the event's
@@ -64,10 +67,9 @@ function tearDown() {
  * @param {goog.events.BrowserEvent} event
  */
 function simulateEvent(event) {
-  goog.events.fireListeners(event.currentTarget, event.type, true, event);
-  goog.events.fireListeners(event.currentTarget, event.type, false, event);
+  goog.events.fireListeners(event.currentTarget, event.type, true, event)
+  goog.events.fireListeners(event.currentTarget, event.type, false, event)
 }
-
 
 /**
  * Fire all key event listeners that are listening to the input element.
@@ -75,9 +77,8 @@ function simulateEvent(event) {
  * @param {number} keyCode The key code.
  */
 function simulateAllKeyEventsOnInput(keyCode) {
-  goog.testing.events.fireKeySequence(input, keyCode);
+  goog.testing.events.fireKeySequence(input, keyCode)
 }
-
 
 /**
  * @param {string} text
@@ -86,116 +87,129 @@ function simulateAllKeyEventsOnInput(keyCode) {
 function findNodeByInnerText(text) {
   return goog.dom.findNode(document.body, function(node) {
     try {
-      var display = goog.userAgent.IE ?
-          goog.style.getCascadedStyle(node, 'display') :
-          goog.style.getComputedStyle(node, 'display');
+      var display = goog.userAgent.IE
+        ? goog.style.getCascadedStyle(node, "display")
+        : goog.style.getComputedStyle(node, "display")
 
-      return goog.dom.getRawTextContent(node) == text && 'none' != display &&
-          node.nodeType == goog.dom.NodeType.ELEMENT;
+      return (
+        goog.dom.getRawTextContent(node) == text &&
+        "none" != display &&
+        node.nodeType == goog.dom.NodeType.ELEMENT
+      )
     } catch (e) {
-      return false;
+      return false
     }
-  });
+  })
 }
 
 //=========================================================================
 // Tests
 
-
 /**
  * Ensure that the display of the autocompleter works.
  */
 function testBasicDisplay() {
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN);
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN)
 
-  input.value = 'a';
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A);
-  mockClock.tick(500);
+  input.value = "a"
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A)
+  mockClock.tick(500)
 
   var nodes = [
-    findNodeByInnerText(data[0]), findNodeByInnerText(data[1]),
+    findNodeByInnerText(data[0]),
+    findNodeByInnerText(data[1]),
     findNodeByInnerText(data[2])
-  ];
-  assert(!!nodes[0]);
-  assert(!!nodes[1]);
-  assert(!!nodes[2]);
-  assert(goog.style.isUnselectable(nodes[0]));
-  assert(goog.style.isUnselectable(nodes[1]));
-  assert(goog.style.isUnselectable(nodes[2]));
+  ]
+  assert(!!nodes[0])
+  assert(!!nodes[1])
+  assert(!!nodes[2])
+  assert(goog.style.isUnselectable(nodes[0]))
+  assert(goog.style.isUnselectable(nodes[1]))
+  assert(goog.style.isUnselectable(nodes[2]))
 
-  input.value = 'aa';
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A);
-  mockClock.tick(500);
+  input.value = "aa"
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A)
+  mockClock.tick(500)
 
-  assertFalse(!!findNodeByInnerText(data[0]));
-  assert(!!findNodeByInnerText(data[1]));
-  assert(!!findNodeByInnerText(data[2]));
+  assertFalse(!!findNodeByInnerText(data[0]))
+  assert(!!findNodeByInnerText(data[1]))
+  assert(!!findNodeByInnerText(data[2]))
 }
-
 
 /**
  * Ensure that key navigation with multiple inputs work
  */
 function testKeyNavigation() {
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN);
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN)
 
-  input.value = 'c, a';
-  goog.dom.selection.setCursorPosition(input, 'c, a'.length);
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A);
-  mockClock.tick(500);
+  input.value = "c, a"
+  goog.dom.selection.setCursorPosition(input, "c, a".length)
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A)
+  mockClock.tick(500)
 
-  assert(document.body.innerHTML, !!findNodeByInnerText(data[1]));
-  assert(!!findNodeByInnerText(data[2]));
+  assert(document.body.innerHTML, !!findNodeByInnerText(data[1]))
+  assert(!!findNodeByInnerText(data[2]))
 
-  var selected = goog.asserts.assertElement(findNodeByInnerText(data[0]));
+  var selected = goog.asserts.assertElement(findNodeByInnerText(data[0]))
   assertTrue(
-      'Should have new standard active class',
-      goog.dom.classlist.contains(selected, 'ac-active'));
+    "Should have new standard active class",
+    goog.dom.classlist.contains(selected, "ac-active")
+  )
   assertTrue(
-      'Should have legacy active class',
-      goog.dom.classlist.contains(selected, 'active'));
+    "Should have legacy active class",
+    goog.dom.classlist.contains(selected, "active")
+  )
 
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN);
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN)
   assertFalse(
-      goog.dom.classlist.contains(
-          goog.asserts.assertElement(findNodeByInnerText(data[0])),
-          'ac-active'));
+    goog.dom.classlist.contains(
+      goog.asserts.assertElement(findNodeByInnerText(data[0])),
+      "ac-active"
+    )
+  )
   assert(
-      goog.dom.classlist.contains(
-          goog.asserts.assertElement(findNodeByInnerText(data[1])),
-          'ac-active'));
+    goog.dom.classlist.contains(
+      goog.asserts.assertElement(findNodeByInnerText(data[1])),
+      "ac-active"
+    )
+  )
 
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.ENTER);
-  assertEquals('c, aab, ', input.value);
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.ENTER)
+  assertEquals("c, aab, ", input.value)
 }
-
 
 /**
  * Ensure that mouse navigation with multiple inputs works.
  */
 function testMouseNavigation() {
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN);
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.DOWN)
 
-  input.value = 'c, a';
-  goog.dom.selection.setCursorPosition(input, 'c, a'.length);
-  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A);
-  mockClock.tick(500);
+  input.value = "c, a"
+  goog.dom.selection.setCursorPosition(input, "c, a".length)
+  simulateAllKeyEventsOnInput(goog.events.KeyCodes.A)
+  mockClock.tick(500)
 
-  var secondOption = goog.asserts.assertElement(findNodeByInnerText(data[1]));
-  var parent = secondOption.parentNode;
-  assertFalse(goog.dom.classlist.contains(secondOption, 'ac-active'));
+  var secondOption = goog.asserts.assertElement(findNodeByInnerText(data[1]))
+  var parent = secondOption.parentNode
+  assertFalse(goog.dom.classlist.contains(secondOption, "ac-active"))
 
-  var mouseOver =
-      new goog.events.Event(goog.events.EventType.MOUSEOVER, secondOption);
-  simulateEvent(new goog.events.BrowserEvent(mouseOver, parent));
-  assert(goog.dom.classlist.contains(secondOption, 'ac-active'));
+  var mouseOver = new goog.events.Event(
+    goog.events.EventType.MOUSEOVER,
+    secondOption
+  )
+  simulateEvent(new goog.events.BrowserEvent(mouseOver, parent))
+  assert(goog.dom.classlist.contains(secondOption, "ac-active"))
 
-  var mouseDown =
-      new goog.events.Event(goog.events.EventType.MOUSEDOWN, secondOption);
-  simulateEvent(new goog.events.BrowserEvent(mouseDown, parent));
-  var mouseClick =
-      new goog.events.Event(goog.events.EventType.CLICK, secondOption);
-  simulateEvent(new goog.events.BrowserEvent(mouseClick, parent));
+  var mouseDown = new goog.events.Event(
+    goog.events.EventType.MOUSEDOWN,
+    secondOption
+  )
+  simulateEvent(new goog.events.BrowserEvent(mouseDown, parent))
+  var mouseClick = new goog.events.Event(
+    goog.events.EventType.CLICK,
+    secondOption
+  )
+  simulateEvent(new goog.events.BrowserEvent(mouseClick, parent))
 
-  assertEquals('c, aab, ', input.value);
+  assertEquals("c, aab, ", input.value)
 }

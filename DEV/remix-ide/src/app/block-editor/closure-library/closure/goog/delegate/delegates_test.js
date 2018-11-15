@@ -12,55 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.module('goog.delegate.delegatesTest');
-goog.setTestOnly();
+goog.module("goog.delegate.delegatesTest")
+goog.setTestOnly()
 
-const delegates = goog.require('goog.delegate.delegates');
-const recordFunction = goog.require('goog.testing.recordFunction');
-const testSuite = goog.require('goog.testing.testSuite');
-goog.require('goog.testing.jsunit');
+const delegates = goog.require("goog.delegate.delegates")
+const recordFunction = goog.require("goog.testing.recordFunction")
+const testSuite = goog.require("goog.testing.testSuite")
+goog.require("goog.testing.jsunit")
 
 testSuite({
-
   shouldRunTests() {
-    return typeof Array.prototype.map == 'function';
+    return typeof Array.prototype.map == "function"
   },
 
   testFunctionsActuallyCalled() {
     const funcs = [
       recordFunction(),
-      recordFunction(() => ''),
+      recordFunction(() => ""),
       recordFunction(() => 42),
-      recordFunction(),
-    ];
+      recordFunction()
+    ]
     const assertCallCounts = (...counts) => {
-      assertArrayEquals(counts, funcs.map(f => f.getCallCount()));
-      funcs.forEach(f => f.reset());
-    };
+      assertArrayEquals(counts, funcs.map(f => f.getCallCount()))
+      funcs.forEach(f => f.reset())
+    }
 
-    assertUndefined(delegates.callFirst(funcs, f => f()));
-    assertCallCounts(1, 0, 0, 0);
-    assertEquals('', delegates.callUntilDefinedAndNotNull(funcs, f => f()));
-    assertCallCounts(1, 1, 0, 0);
-    assertEquals(42, delegates.callUntilTruthy(funcs, f => f()));
-    assertCallCounts(1, 1, 1, 0);
+    assertUndefined(delegates.callFirst(funcs, f => f()))
+    assertCallCounts(1, 0, 0, 0)
+    assertEquals("", delegates.callUntilDefinedAndNotNull(funcs, f => f()))
+    assertCallCounts(1, 1, 0, 0)
+    assertEquals(42, delegates.callUntilTruthy(funcs, f => f()))
+    assertCallCounts(1, 1, 1, 0)
   },
 
   testResultNeverDefined() {
-    const funcs = [
-      recordFunction(),
-      recordFunction(),
-    ];
+    const funcs = [recordFunction(), recordFunction()]
     const assertCallCounts = (...counts) => {
-      assertArrayEquals(counts, funcs.map(f => f.getCallCount()));
-      funcs.forEach(f => f.reset());
-    };
+      assertArrayEquals(counts, funcs.map(f => f.getCallCount()))
+      funcs.forEach(f => f.reset())
+    }
 
-    assertUndefined(delegates.callFirst(funcs, f => f()));
-    assertCallCounts(1, 0);
-    assertUndefined(delegates.callUntilDefinedAndNotNull(funcs, f => f()));
-    assertCallCounts(1, 1);
-    assertFalse(delegates.callUntilTruthy(funcs, f => f()));
-    assertCallCounts(1, 1);
-  },
-});
+    assertUndefined(delegates.callFirst(funcs, f => f()))
+    assertCallCounts(1, 0)
+    assertUndefined(delegates.callUntilDefinedAndNotNull(funcs, f => f()))
+    assertCallCounts(1, 1)
+    assertFalse(delegates.callUntilTruthy(funcs, f => f()))
+    assertCallCounts(1, 1)
+  }
+})

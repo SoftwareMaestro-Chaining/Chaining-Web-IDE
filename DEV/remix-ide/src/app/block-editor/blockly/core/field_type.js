@@ -18,14 +18,14 @@
  * limitations under the License.
  */
 
-'use strict';
+"use strict"
 
-goog.provide('Blockly.FieldType');
+goog.provide("Blockly.FieldType")
 
-goog.require('Blockly.FieldDropdown');
+goog.require("Blockly.FieldDropdown")
 //goog.require('Blockly.Msg');
-goog.require('Blockly.Types');
-goog.require('goog.string');
+goog.require("Blockly.Types")
+goog.require("goog.string")
 
 /**
  * Function to replace the the 'Any' selection to undefined.
@@ -34,9 +34,8 @@ goog.require('goog.string');
  *     undefined for any type.
  */
 function fixType(type) {
-    if (type == 'Any')
-        type = undefined;
-    return type;
+  if (type == "Any") type = undefined
+  return type
 }
 
 /**
@@ -46,46 +45,47 @@ function fixType(type) {
  * @extends {Blockly.FieldDropdown}
  * @constructor
  */
-Blockly.FieldType = function (opt_changeHandler) {
-    Blockly.FieldType.superClass_.constructor.call(this,
-        Blockly.FieldType.dropdownCreate, function (type) {
-            type = fixType(type);
-            if (opt_changeHandler)
-                return opt_changeHandler(type);
-            return type;
-        });
-};
-goog.inherits(Blockly.FieldType, Blockly.FieldDropdown);
+Blockly.FieldType = function(opt_changeHandler) {
+  Blockly.FieldType.superClass_.constructor.call(
+    this,
+    Blockly.FieldType.dropdownCreate,
+    function(type) {
+      type = fixType(type)
+      if (opt_changeHandler) return opt_changeHandler(type)
+      return type
+    }
+  )
+}
+goog.inherits(Blockly.FieldType, Blockly.FieldDropdown)
 
 /**
  * Get the type
  * @return {(string|undefined)} Current text.
  */
-Blockly.FieldType.prototype.getValue = function () {
-    var type = Blockly.FieldType.superClass_.getValue.call(this);
-    return fixType(type);
-};
+Blockly.FieldType.prototype.getValue = function() {
+  var type = Blockly.FieldType.superClass_.getValue.call(this)
+  return fixType(type)
+}
 
 /**
  * Set the type.
  * @param {(string|undefined)} variable New variable.
  */
-Blockly.FieldType.prototype.setValue = function (type) {
-    Blockly.FieldType.superClass_.setValue.call(this, type || 'Any');
-};
+Blockly.FieldType.prototype.setValue = function(type) {
+  Blockly.FieldType.superClass_.setValue.call(this, type || "Any")
+}
 
 /**
  * Return a sorted list of type names for type dropdown menus.
  * @return {!Array.<string>} Array of type names.
  * @this {!Blockly.FieldType}
  */
-Blockly.FieldType.dropdownCreate = function () {
+Blockly.FieldType.dropdownCreate = function() {
+  var typeList = Blockly.Types.allTypes()
 
-    var typeList = Blockly.Types.allTypes();
-
-    var result = [];
-    for (var i = 0; i < typeList.length; i++) {
-        result[i] = [typeList[i].name, typeList[i].name];
-    }
-    return [['Any', 'Any']].concat(result);
-};
+  var result = []
+  for (var i = 0; i < typeList.length; i++) {
+    result[i] = [typeList[i].name, typeList[i].name]
+  }
+  return [["Any", "Any"]].concat(result)
+}

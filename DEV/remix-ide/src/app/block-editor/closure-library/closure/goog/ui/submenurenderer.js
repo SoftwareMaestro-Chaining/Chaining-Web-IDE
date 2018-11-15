@@ -17,21 +17,19 @@
  *
  */
 
-goog.provide('goog.ui.SubMenuRenderer');
+goog.provide("goog.ui.SubMenuRenderer")
 
-goog.require('goog.a11y.aria');
-goog.require('goog.a11y.aria.State');
-goog.require('goog.asserts');
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.style');
-goog.require('goog.ui.Menu');
-goog.require('goog.ui.MenuItemRenderer');
+goog.require("goog.a11y.aria")
+goog.require("goog.a11y.aria.State")
+goog.require("goog.asserts")
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.style")
+goog.require("goog.ui.Menu")
+goog.require("goog.ui.MenuItemRenderer")
 
-goog.forwardDeclare('goog.ui.SubMenu');
-
-
+goog.forwardDeclare("goog.ui.SubMenu")
 
 /**
  * Default renderer for {@link goog.ui.SubMenu}s.  Each item has the following
@@ -48,28 +46,26 @@ goog.forwardDeclare('goog.ui.SubMenu');
  * @extends {goog.ui.MenuItemRenderer}
  */
 goog.ui.SubMenuRenderer = function() {
-  goog.ui.MenuItemRenderer.call(this);
-};
-goog.inherits(goog.ui.SubMenuRenderer, goog.ui.MenuItemRenderer);
-goog.addSingletonGetter(goog.ui.SubMenuRenderer);
-
+  goog.ui.MenuItemRenderer.call(this)
+}
+goog.inherits(goog.ui.SubMenuRenderer, goog.ui.MenuItemRenderer)
+goog.addSingletonGetter(goog.ui.SubMenuRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.SubMenuRenderer.CSS_CLASS = goog.getCssName('goog-submenu');
-
+goog.ui.SubMenuRenderer.CSS_CLASS = goog.getCssName("goog-submenu")
 
 /**
  * The CSS class for submenus that displays the submenu arrow.
  * @type {string}
  * @private
  */
-goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_ =
-    goog.getCssName('goog-submenu-arrow');
-
+goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_ = goog.getCssName(
+  "goog-submenu-arrow"
+)
 
 /**
  * Overrides {@link goog.ui.MenuItemRenderer#createDom} by adding
@@ -81,15 +77,16 @@ goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_ =
  * @override
  */
 goog.ui.SubMenuRenderer.prototype.createDom = function(control) {
-  var subMenu = /** @type {goog.ui.SubMenu} */ (control);
-  var element =
-      goog.ui.SubMenuRenderer.superClass_.createDom.call(this, subMenu);
-  goog.asserts.assert(element);
-  goog.dom.classlist.add(element, goog.ui.SubMenuRenderer.CSS_CLASS);
-  this.addArrow_(subMenu, element);
-  return element;
-};
-
+  var subMenu = /** @type {goog.ui.SubMenu} */ (control)
+  var element = goog.ui.SubMenuRenderer.superClass_.createDom.call(
+    this,
+    subMenu
+  )
+  goog.asserts.assert(element)
+  goog.dom.classlist.add(element, goog.ui.SubMenuRenderer.CSS_CLASS)
+  this.addArrow_(subMenu, element)
+  return element
+}
 
 /**
  * Overrides {@link goog.ui.MenuItemRenderer#decorate} by adding
@@ -105,29 +102,37 @@ goog.ui.SubMenuRenderer.prototype.createDom = function(control) {
  * @override
  */
 goog.ui.SubMenuRenderer.prototype.decorate = function(control, element) {
-  var subMenu = /** @type {goog.ui.SubMenu} */ (control);
-  element =
-      goog.ui.SubMenuRenderer.superClass_.decorate.call(this, subMenu, element);
-  goog.asserts.assert(element);
-  goog.dom.classlist.add(element, goog.ui.SubMenuRenderer.CSS_CLASS);
-  this.addArrow_(subMenu, element);
+  var subMenu = /** @type {goog.ui.SubMenu} */ (control)
+  element = goog.ui.SubMenuRenderer.superClass_.decorate.call(
+    this,
+    subMenu,
+    element
+  )
+  goog.asserts.assert(element)
+  goog.dom.classlist.add(element, goog.ui.SubMenuRenderer.CSS_CLASS)
+  this.addArrow_(subMenu, element)
 
   // Search for a child menu and decorate it.
   var childMenuEls = goog.dom.getElementsByTagNameAndClass(
-      goog.dom.TagName.DIV, goog.getCssName('goog-menu'), element);
+    goog.dom.TagName.DIV,
+    goog.getCssName("goog-menu"),
+    element
+  )
   if (childMenuEls.length) {
-    var childMenu = new goog.ui.Menu(subMenu.getDomHelper());
-    var childMenuEl = childMenuEls[0];
+    var childMenu = new goog.ui.Menu(subMenu.getDomHelper())
+    var childMenuEl = childMenuEls[0]
     // Hide the menu element before attaching it to the document body; see
     // bug 1089244.
-    goog.style.setElementShown(childMenuEl, false);
-    subMenu.getDomHelper().getDocument().body.appendChild(childMenuEl);
-    childMenu.decorate(childMenuEl);
-    subMenu.setMenu(childMenu, true);
+    goog.style.setElementShown(childMenuEl, false)
+    subMenu
+      .getDomHelper()
+      .getDocument()
+      .body.appendChild(childMenuEl)
+    childMenu.decorate(childMenuEl)
+    subMenu.setMenu(childMenu, true)
   }
-  return element;
-};
-
+  return element
+}
 
 /**
  * Takes a menu item's root element, and sets its content to the given text
@@ -140,19 +145,22 @@ goog.ui.SubMenuRenderer.prototype.decorate = function(control, element) {
  */
 goog.ui.SubMenuRenderer.prototype.setContent = function(element, content) {
   // Save the submenu arrow element, if present.
-  var contentElement = this.getContentElement(element);
-  var arrowElement = contentElement && contentElement.lastChild;
-  goog.ui.SubMenuRenderer.superClass_.setContent.call(this, element, content);
+  var contentElement = this.getContentElement(element)
+  var arrowElement = contentElement && contentElement.lastChild
+  goog.ui.SubMenuRenderer.superClass_.setContent.call(this, element, content)
   // If the arrowElement was there, is no longer there, and really was an arrow,
   // reappend it.
-  if (arrowElement && contentElement.lastChild != arrowElement &&
-      goog.dom.classlist.contains(
-          /** @type {!Element} */ (arrowElement),
-          goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_)) {
-    contentElement.appendChild(arrowElement);
+  if (
+    arrowElement &&
+    contentElement.lastChild != arrowElement &&
+    goog.dom.classlist.contains(
+      /** @type {!Element} */ (arrowElement),
+      goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_
+    )
+  ) {
+    contentElement.appendChild(arrowElement)
   }
-};
-
+}
 
 /**
  * Overrides {@link goog.ui.MenuItemRenderer#initializeDom} to tweak
@@ -167,23 +175,27 @@ goog.ui.SubMenuRenderer.prototype.setContent = function(element, content) {
  * @override
  */
 goog.ui.SubMenuRenderer.prototype.initializeDom = function(control) {
-  var subMenu = /** @type {goog.ui.SubMenu} */ (control);
-  goog.ui.SubMenuRenderer.superClass_.initializeDom.call(this, subMenu);
-  var element = subMenu.getContentElement();
-  var arrow = subMenu.getDomHelper().getElementsByTagNameAndClass(
-      goog.dom.TagName.SPAN, goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_,
-      element)[0];
-  goog.ui.SubMenuRenderer.setArrowTextContent_(subMenu, arrow);
+  var subMenu = /** @type {goog.ui.SubMenu} */ (control)
+  goog.ui.SubMenuRenderer.superClass_.initializeDom.call(this, subMenu)
+  var element = subMenu.getContentElement()
+  var arrow = subMenu
+    .getDomHelper()
+    .getElementsByTagNameAndClass(
+      goog.dom.TagName.SPAN,
+      goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_,
+      element
+    )[0]
+  goog.ui.SubMenuRenderer.setArrowTextContent_(subMenu, arrow)
   if (arrow != element.lastChild) {
-    element.appendChild(arrow);
+    element.appendChild(arrow)
   }
-  var subMenuElement = subMenu.getElement();
+  var subMenuElement = subMenu.getElement()
   goog.asserts.assert(
-      subMenuElement, 'The sub menu DOM element cannot be null.');
-  goog.a11y.aria.setState(
-      subMenuElement, goog.a11y.aria.State.HASPOPUP, 'true');
-};
-
+    subMenuElement,
+    "The sub menu DOM element cannot be null."
+  )
+  goog.a11y.aria.setState(subMenuElement, goog.a11y.aria.State.HASPOPUP, "true")
+}
 
 /**
  * Appends a child node with the class goog.getCssName('goog-submenu-arrow') or
@@ -193,28 +205,25 @@ goog.ui.SubMenuRenderer.prototype.initializeDom = function(control) {
  * @private
  */
 goog.ui.SubMenuRenderer.prototype.addArrow_ = function(subMenu, element) {
-  var arrow = subMenu.getDomHelper().createDom(goog.dom.TagName.SPAN);
-  arrow.className = goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_;
-  goog.ui.SubMenuRenderer.setArrowTextContent_(subMenu, arrow);
-  this.getContentElement(element).appendChild(arrow);
-};
-
+  var arrow = subMenu.getDomHelper().createDom(goog.dom.TagName.SPAN)
+  arrow.className = goog.ui.SubMenuRenderer.CSS_CLASS_SUBMENU_
+  goog.ui.SubMenuRenderer.setArrowTextContent_(subMenu, arrow)
+  this.getContentElement(element).appendChild(arrow)
+}
 
 /**
  * The unicode char for a left arrow.
  * @type {string}
  * @private
  */
-goog.ui.SubMenuRenderer.LEFT_ARROW_ = '\u25C4';
-
+goog.ui.SubMenuRenderer.LEFT_ARROW_ = "\u25C4"
 
 /**
  * The unicode char for a right arrow.
  * @type {string}
  * @private
  */
-goog.ui.SubMenuRenderer.RIGHT_ARROW_ = '\u25BA';
-
+goog.ui.SubMenuRenderer.RIGHT_ARROW_ = "\u25BA"
 
 /**
  * Set the text content of an arrow.
@@ -224,20 +233,24 @@ goog.ui.SubMenuRenderer.RIGHT_ARROW_ = '\u25BA';
  */
 goog.ui.SubMenuRenderer.setArrowTextContent_ = function(subMenu, arrow) {
   // Fix arrow rtl
-  var leftArrow = goog.ui.SubMenuRenderer.LEFT_ARROW_;
-  var rightArrow = goog.ui.SubMenuRenderer.RIGHT_ARROW_;
+  var leftArrow = goog.ui.SubMenuRenderer.LEFT_ARROW_
+  var rightArrow = goog.ui.SubMenuRenderer.RIGHT_ARROW_
 
-  goog.asserts.assert(arrow);
+  goog.asserts.assert(arrow)
 
   if (subMenu.isRightToLeft()) {
-    goog.dom.classlist.add(arrow, goog.getCssName('goog-submenu-arrow-rtl'));
+    goog.dom.classlist.add(arrow, goog.getCssName("goog-submenu-arrow-rtl"))
     // Unicode character - Black left-pointing pointer iff aligned to end.
     goog.dom.setTextContent(
-        arrow, subMenu.isAlignedToEnd() ? leftArrow : rightArrow);
+      arrow,
+      subMenu.isAlignedToEnd() ? leftArrow : rightArrow
+    )
   } else {
-    goog.dom.classlist.remove(arrow, goog.getCssName('goog-submenu-arrow-rtl'));
+    goog.dom.classlist.remove(arrow, goog.getCssName("goog-submenu-arrow-rtl"))
     // Unicode character - Black right-pointing pointer iff aligned to end.
     goog.dom.setTextContent(
-        arrow, subMenu.isAlignedToEnd() ? rightArrow : leftArrow);
+      arrow,
+      subMenu.isAlignedToEnd() ? rightArrow : leftArrow
+    )
   }
-};
+}

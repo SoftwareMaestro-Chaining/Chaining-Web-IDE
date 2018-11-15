@@ -16,19 +16,17 @@
  * @fileoverview Static utility methods for UI components.
  */
 
-goog.provide('goog.ui.ComponentUtil');
+goog.provide("goog.ui.ComponentUtil")
 
-goog.require('goog.events.EventType');
-goog.require('goog.events.PointerAsMouseEventType');
-
-
+goog.require("goog.events.EventType")
+goog.require("goog.events.PointerAsMouseEventType")
 
 /**
  * @param {!goog.ui.Component} component
  * @return {!Object} The mouse event type the given component should listen for.
  */
 goog.ui.ComponentUtil.getMouseEventType = function(component) {
-  return component.pointerEventsEnabled() ?
-      goog.events.PointerAsMouseEventType :
-      goog.events.EventType;
-};
+  return component.pointerEventsEnabled()
+    ? goog.events.PointerAsMouseEventType
+    : goog.events.EventType
+}

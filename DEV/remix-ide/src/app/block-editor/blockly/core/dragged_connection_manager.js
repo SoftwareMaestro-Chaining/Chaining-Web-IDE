@@ -22,15 +22,14 @@
  * @fileoverview Class that controls updates to connections during drags.
  * @author fenichel@google.com (Rachel Fenichel)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.DraggedConnectionManager');
+goog.provide("Blockly.DraggedConnectionManager")
 
-goog.require('Blockly.BlockAnimations');
-goog.require('Blockly.RenderedConnection');
+goog.require("Blockly.BlockAnimations")
+goog.require("Blockly.RenderedConnection")
 
-goog.require('goog.math.Coordinate');
-
+goog.require("goog.math.Coordinate")
 
 /**
  * Class that controls updates to connections during drags.  It is primarily
@@ -40,7 +39,7 @@ goog.require('goog.math.Coordinate');
  * @constructor
  */
 Blockly.DraggedConnectionManager = function(block) {
-  Blockly.selected = block;
+  Blockly.selected = block
 
   /**
    * The top block in the stack being dragged.
@@ -48,7 +47,7 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {!Blockly.Block}
    * @private
    */
-  this.topBlock_ = block;
+  this.topBlock_ = block
 
   /**
    * The workspace on which these connections are being dragged.
@@ -56,7 +55,7 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {!Blockly.WorkspaceSvg}
    * @private
    */
-  this.workspace_ = block.workspace;
+  this.workspace_ = block.workspace
 
   /**
    * The connections on the dragging blocks that are available to connect to
@@ -66,7 +65,7 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {!Array.<!Blockly.RenderedConnection>}
    * @private
    */
-  this.availableConnections_ = this.initAvailableConnections_();
+  this.availableConnections_ = this.initAvailableConnections_()
 
   /**
    * The connection that this block would connect to if released immediately.
@@ -74,7 +73,7 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {Blockly.RenderedConnection}
    * @private
    */
-  this.closestConnection_ = null;
+  this.closestConnection_ = null
 
   /**
    * The connection that would connect to this.closestConnection_ if this block
@@ -83,7 +82,7 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {Blockly.RenderedConnection}
    * @private
    */
-  this.localConnection_ = null;
+  this.localConnection_ = null
 
   /**
    * The distance between this.closestConnection_ and this.localConnection_,
@@ -92,7 +91,7 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {number}
    * @private
    */
-  this.radiusConnection_ = 0;
+  this.radiusConnection_ = 0
 
   /**
    * Whether the block would be deleted if it were dropped immediately.
@@ -100,20 +99,20 @@ Blockly.DraggedConnectionManager = function(block) {
    * @type {boolean}
    * @private
    */
-  this.wouldDeleteBlock_ = false;
-};
+  this.wouldDeleteBlock_ = false
+}
 
 /**
  * Sever all links from this object.
  * @package
  */
 Blockly.DraggedConnectionManager.prototype.dispose = function() {
-  this.topBlock_ = null;
-  this.workspace_ = null;
-  this.availableConnections_.length = 0;
-  this.closestConnection_ = null;
-  this.localConnection_ = null;
-};
+  this.topBlock_ = null
+  this.workspace_ = null
+  this.availableConnections_.length = 0
+  this.closestConnection_ = null
+  this.localConnection_ = null
+}
 
 /**
  * Return whether the block would be deleted if dropped immediately, based on
@@ -122,8 +121,8 @@ Blockly.DraggedConnectionManager.prototype.dispose = function() {
  * @package
  */
 Blockly.DraggedConnectionManager.prototype.wouldDeleteBlock = function() {
-  return this.wouldDeleteBlock_;
-};
+  return this.wouldDeleteBlock_
+}
 
 /**
  * Return whether the block would be connected if dropped immediately, based on
@@ -132,8 +131,8 @@ Blockly.DraggedConnectionManager.prototype.wouldDeleteBlock = function() {
  * @package
  */
 Blockly.DraggedConnectionManager.prototype.wouldConnectBlock = function() {
-  return !!this.closestConnection_;
-};
+  return !!this.closestConnection_
+}
 
 /**
  * Connect to the closest connection and render the results.
@@ -143,21 +142,23 @@ Blockly.DraggedConnectionManager.prototype.wouldConnectBlock = function() {
 Blockly.DraggedConnectionManager.prototype.applyConnections = function() {
   if (this.closestConnection_) {
     // Connect two blocks together.
-    this.localConnection_.connect(this.closestConnection_);
+    this.localConnection_.connect(this.closestConnection_)
     if (this.topBlock_.rendered) {
       // Trigger a connection animation.
       // Determine which connection is inferior (lower in the source stack).
-      var inferiorConnection = this.localConnection_.isSuperior() ?
-          this.closestConnection_ : this.localConnection_;
+      var inferiorConnection = this.localConnection_.isSuperior()
+        ? this.closestConnection_
+        : this.localConnection_
       Blockly.BlockAnimations.connectionUiEffect(
-          inferiorConnection.getSourceBlock());
+        inferiorConnection.getSourceBlock()
+      )
       // Bring the just-edited stack to the front.
-      var rootBlock = this.topBlock_.getRootBlock();
-      rootBlock.bringToFront();
+      var rootBlock = this.topBlock_.getRootBlock()
+      rootBlock.bringToFront()
     }
-    this.removeHighlighting_();
+    this.removeHighlighting_()
   }
-};
+}
 
 /**
  * Update highlighted connections based on the most recent move location.
@@ -168,32 +169,35 @@ Blockly.DraggedConnectionManager.prototype.applyConnections = function() {
  * @package
  */
 Blockly.DraggedConnectionManager.prototype.update = function(dxy, deleteArea) {
-  var oldClosestConnection = this.closestConnection_;
-  var closestConnectionChanged = this.updateClosest_(dxy);
+  var oldClosestConnection = this.closestConnection_
+  var closestConnectionChanged = this.updateClosest_(dxy)
 
   if (closestConnectionChanged && oldClosestConnection) {
-    oldClosestConnection.unhighlight();
+    oldClosestConnection.unhighlight()
   }
 
   // Prefer connecting over dropping into the trash can, but prefer dragging to
   // the toolbox over connecting to other blocks.
-  var wouldConnect = !!this.closestConnection_ &&
-      deleteArea != Blockly.DELETE_AREA_TOOLBOX;
-  var wouldDelete = !!deleteArea && !this.topBlock_.getParent() &&
-      this.topBlock_.isDeletable();
-  this.wouldDeleteBlock_ = wouldDelete && !wouldConnect;
+  var wouldConnect =
+    !!this.closestConnection_ && deleteArea != Blockly.DELETE_AREA_TOOLBOX
+  var wouldDelete =
+    !!deleteArea && !this.topBlock_.getParent() && this.topBlock_.isDeletable()
+  this.wouldDeleteBlock_ = wouldDelete && !wouldConnect
 
   // Get rid of highlighting so we don't sent mixed messages.
   if (wouldDelete && this.closestConnection_) {
-    this.closestConnection_.unhighlight();
-    this.closestConnection_ = null;
+    this.closestConnection_.unhighlight()
+    this.closestConnection_ = null
   }
 
-  if (!this.wouldDeleteBlock_ && closestConnectionChanged &&
-      this.closestConnection_) {
-    this.addHighlighting_();
+  if (
+    !this.wouldDeleteBlock_ &&
+    closestConnectionChanged &&
+    this.closestConnection_
+  ) {
+    this.addHighlighting_()
   }
-};
+}
 
 /**
  * Remove highlighting from the currently highlighted connection, if it exists.
@@ -201,9 +205,9 @@ Blockly.DraggedConnectionManager.prototype.update = function(dxy, deleteArea) {
  */
 Blockly.DraggedConnectionManager.prototype.removeHighlighting_ = function() {
   if (this.closestConnection_) {
-    this.closestConnection_.unhighlight();
+    this.closestConnection_.unhighlight()
   }
-};
+}
 
 /**
  * Add highlighting to the closest connection, if it exists.
@@ -211,9 +215,9 @@ Blockly.DraggedConnectionManager.prototype.removeHighlighting_ = function() {
  */
 Blockly.DraggedConnectionManager.prototype.addHighlighting_ = function() {
   if (this.closestConnection_) {
-    this.closestConnection_.highlight();
+    this.closestConnection_.highlight()
   }
-};
+}
 
 /**
  * Populate the list of available connections on this block stack.  This should
@@ -223,14 +227,14 @@ Blockly.DraggedConnectionManager.prototype.addHighlighting_ = function() {
  * @private
  */
 Blockly.DraggedConnectionManager.prototype.initAvailableConnections_ = function() {
-  var available = this.topBlock_.getConnections_(false);
+  var available = this.topBlock_.getConnections_(false)
   // Also check the last connection on this stack
-  var lastOnStack = this.topBlock_.lastConnectionInStack();
+  var lastOnStack = this.topBlock_.lastConnectionInStack()
   if (lastOnStack && lastOnStack != this.topBlock_.nextConnection) {
-    available.push(lastOnStack);
+    available.push(lastOnStack)
   }
-  return available;
-};
+  return available
+}
 
 /**
  * Find the new closest connection, and update internal state in response.
@@ -240,19 +244,19 @@ Blockly.DraggedConnectionManager.prototype.initAvailableConnections_ = function(
  * @private
  */
 Blockly.DraggedConnectionManager.prototype.updateClosest_ = function(dxy) {
-  var oldClosestConnection = this.closestConnection_;
+  var oldClosestConnection = this.closestConnection_
 
-  this.closestConnection_ = null;
-  this.localConnection_ = null;
-  this.radiusConnection_ = Blockly.SNAP_RADIUS;
+  this.closestConnection_ = null
+  this.localConnection_ = null
+  this.radiusConnection_ = Blockly.SNAP_RADIUS
   for (var i = 0; i < this.availableConnections_.length; i++) {
-    var myConnection = this.availableConnections_[i];
-    var neighbour = myConnection.closest(this.radiusConnection_, dxy);
+    var myConnection = this.availableConnections_[i]
+    var neighbour = myConnection.closest(this.radiusConnection_, dxy)
     if (neighbour.connection) {
-      this.closestConnection_ = neighbour.connection;
-      this.localConnection_ = myConnection;
-      this.radiusConnection_ = neighbour.radius;
+      this.closestConnection_ = neighbour.connection
+      this.localConnection_ = myConnection
+      this.radiusConnection_ = neighbour.radius
     }
   }
-  return oldClosestConnection != this.closestConnection_;
-};
+  return oldClosestConnection != this.closestConnection_
+}

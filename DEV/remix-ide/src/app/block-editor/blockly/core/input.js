@@ -22,13 +22,12 @@
  * @fileoverview Object representing an input (value, statement, or dummy).
  * @author fraser@google.com (Neil Fraser)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Input');
+goog.provide("Blockly.Input")
 
-goog.require('Blockly.Connection');
-goog.require('Blockly.FieldLabel');
-
+goog.require("Blockly.Connection")
+goog.require("Blockly.FieldLabel")
 
 /**
  * Class for an input with an optional field.
@@ -41,35 +40,35 @@ goog.require('Blockly.FieldLabel');
  */
 Blockly.Input = function(type, name, block, connection) {
   if (type != Blockly.DUMMY_INPUT && !name) {
-    throw Error('Value inputs and statement inputs must have non-empty name.');
+    throw Error("Value inputs and statement inputs must have non-empty name.")
   }
   /** @type {number} */
-  this.type = type;
+  this.type = type
   /** @type {string} */
-  this.name = name;
+  this.name = name
   /**
    * @type {!Blockly.Block}
    * @private
    */
-  this.sourceBlock_ = block;
+  this.sourceBlock_ = block
   /** @type {Blockly.Connection} */
-  this.connection = connection;
+  this.connection = connection
   /** @type {!Array.<!Blockly.Field>} */
-  this.fieldRow = [];
-};
+  this.fieldRow = []
+}
 
 /**
  * Alignment of input's fields (left, right or centre).
  * @type {number}
  */
-Blockly.Input.prototype.align = Blockly.ALIGN_LEFT;
+Blockly.Input.prototype.align = Blockly.ALIGN_LEFT
 
 /**
  * Is the input visible?
  * @type {boolean}
  * @private
  */
-Blockly.Input.prototype.visible_ = true;
+Blockly.Input.prototype.visible_ = true
 
 /**
  * Add a field (or label from string), and all prefix and suffix fields, to the
@@ -80,9 +79,9 @@ Blockly.Input.prototype.visible_ = true;
  * @return {!Blockly.Input} The input being append to (to allow chaining).
  */
 Blockly.Input.prototype.appendField = function(field, opt_name) {
-  this.insertFieldAt(this.fieldRow.length, field, opt_name);
-  return this;
-};
+  this.insertFieldAt(this.fieldRow.length, field, opt_name)
+  return this
+}
 
 /**
  * Inserts a field (or label from string), and all prefix and suffix fields, at
@@ -95,42 +94,42 @@ Blockly.Input.prototype.appendField = function(field, opt_name) {
  */
 Blockly.Input.prototype.insertFieldAt = function(index, field, opt_name) {
   if (index < 0 || index > this.fieldRow.length) {
-    throw new Error('index ' + index + ' out of bounds.');
+    throw new Error("index " + index + " out of bounds.")
   }
 
   // Empty string, Null or undefined generates no field, unless field is named.
   if (!field && !opt_name) {
-    return index;
+    return index
   }
   // Generate a FieldLabel when given a plain text field.
-  if (typeof field == 'string') {
-    field = new Blockly.FieldLabel(/** @type {string} */ (field));
+  if (typeof field == "string") {
+    field = new Blockly.FieldLabel(/** @type {string} */ (field))
   }
-  field.setSourceBlock(this.sourceBlock_);
+  field.setSourceBlock(this.sourceBlock_)
   if (this.sourceBlock_.rendered) {
-    field.init();
+    field.init()
   }
-  field.name = opt_name;
+  field.name = opt_name
 
   if (field.prefixField) {
     // Add any prefix.
-    index = this.insertFieldAt(index, field.prefixField);
+    index = this.insertFieldAt(index, field.prefixField)
   }
   // Add the field to the field row.
-  this.fieldRow.splice(index, 0, field);
-  ++index;
+  this.fieldRow.splice(index, 0, field)
+  ++index
   if (field.suffixField) {
     // Add any suffix.
-    index = this.insertFieldAt(index, field.suffixField);
+    index = this.insertFieldAt(index, field.suffixField)
   }
 
   if (this.sourceBlock_.rendered) {
-    this.sourceBlock_.render();
+    this.sourceBlock_.render()
     // Adding a field will cause the block to change shape.
-    this.sourceBlock_.bumpNeighbours_();
+    this.sourceBlock_.bumpNeighbours_()
   }
-  return index;
-};
+  return index
+}
 
 /**
  * Remove a field from this input.
@@ -138,28 +137,28 @@ Blockly.Input.prototype.insertFieldAt = function(index, field, opt_name) {
  * @throws {Error} if the field is not present.
  */
 Blockly.Input.prototype.removeField = function(name) {
-  for (var i = 0, field; field = this.fieldRow[i]; i++) {
+  for (var i = 0, field; (field = this.fieldRow[i]); i++) {
     if (field.name === name) {
-      field.dispose();
-      this.fieldRow.splice(i, 1);
+      field.dispose()
+      this.fieldRow.splice(i, 1)
       if (this.sourceBlock_.rendered) {
-        this.sourceBlock_.render();
+        this.sourceBlock_.render()
         // Removing a field will cause the block to change shape.
-        this.sourceBlock_.bumpNeighbours_();
+        this.sourceBlock_.bumpNeighbours_()
       }
-      return;
+      return
     }
   }
-  throw Error('Field "%s" not found.', name);
-};
+  throw Error('Field "%s" not found.', name)
+}
 
 /**
  * Gets whether this input is visible or not.
  * @return {boolean} True if visible.
  */
 Blockly.Input.prototype.isVisible = function() {
-  return this.visible_;
-};
+  return this.visible_
+}
 
 /**
  * Sets whether this input is visible or not.
@@ -168,33 +167,33 @@ Blockly.Input.prototype.isVisible = function() {
  * @return {!Array.<!Blockly.Block>} List of blocks to render.
  */
 Blockly.Input.prototype.setVisible = function(visible) {
-  var renderList = [];
+  var renderList = []
   if (this.visible_ == visible) {
-    return renderList;
+    return renderList
   }
-  this.visible_ = visible;
+  this.visible_ = visible
 
-  var display = visible ? 'block' : 'none';
-  for (var y = 0, field; field = this.fieldRow[y]; y++) {
-    field.setVisible(visible);
+  var display = visible ? "block" : "none"
+  for (var y = 0, field; (field = this.fieldRow[y]); y++) {
+    field.setVisible(visible)
   }
   if (this.connection) {
     // Has a connection.
     if (visible) {
-      renderList = this.connection.unhideAll();
+      renderList = this.connection.unhideAll()
     } else {
-      this.connection.hideAll();
+      this.connection.hideAll()
     }
-    var child = this.connection.targetBlock();
+    var child = this.connection.targetBlock()
     if (child) {
-      child.getSvgRoot().style.display = display;
+      child.getSvgRoot().style.display = display
       if (!visible) {
-        child.rendered = false;
+        child.rendered = false
       }
     }
   }
-  return renderList;
-};
+  return renderList
+}
 
 /**
  * Change a connection's compatibility.
@@ -204,11 +203,11 @@ Blockly.Input.prototype.setVisible = function(visible) {
  */
 Blockly.Input.prototype.setCheck = function(check) {
   if (!this.connection) {
-    throw Error('This input does not have a connection.');
+    throw Error("This input does not have a connection.")
   }
-  this.connection.setCheck(check);
-  return this;
-};
+  this.connection.setCheck(check)
+  return this
+}
 
 /**
  * Change the alignment of the connection's field(s).
@@ -217,34 +216,34 @@ Blockly.Input.prototype.setCheck = function(check) {
  * @return {!Blockly.Input} The input being modified (to allow chaining).
  */
 Blockly.Input.prototype.setAlign = function(align) {
-  this.align = align;
+  this.align = align
   if (this.sourceBlock_.rendered) {
-    this.sourceBlock_.render();
+    this.sourceBlock_.render()
   }
-  return this;
-};
+  return this
+}
 
 /**
  * Initialize the fields on this input.
  */
 Blockly.Input.prototype.init = function() {
   if (!this.sourceBlock_.workspace.rendered) {
-    return;  // Headless blocks don't need fields initialized.
+    return // Headless blocks don't need fields initialized.
   }
   for (var i = 0; i < this.fieldRow.length; i++) {
-    this.fieldRow[i].init();
+    this.fieldRow[i].init()
   }
-};
+}
 
 /**
  * Sever all links to this input.
  */
 Blockly.Input.prototype.dispose = function() {
-  for (var i = 0, field; field = this.fieldRow[i]; i++) {
-    field.dispose();
+  for (var i = 0, field; (field = this.fieldRow[i]); i++) {
+    field.dispose()
   }
   if (this.connection) {
-    this.connection.dispose();
+    this.connection.dispose()
   }
-  this.sourceBlock_ = null;
-};
+  this.sourceBlock_ = null
+}

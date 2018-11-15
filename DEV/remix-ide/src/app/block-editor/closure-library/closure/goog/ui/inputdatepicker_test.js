@@ -12,59 +12,60 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.InputDatePickerTest');
-goog.setTestOnly('goog.ui.InputDatePickerTest');
+goog.provide("goog.ui.InputDatePickerTest")
+goog.setTestOnly("goog.ui.InputDatePickerTest")
 
-goog.require('goog.dom');
-goog.require('goog.i18n.DateTimeFormat');
-goog.require('goog.i18n.DateTimeParse');
-goog.require('goog.testing.jsunit');
-goog.require('goog.ui.InputDatePicker');
+goog.require("goog.dom")
+goog.require("goog.i18n.DateTimeFormat")
+goog.require("goog.i18n.DateTimeParse")
+goog.require("goog.testing.jsunit")
+goog.require("goog.ui.InputDatePicker")
 
-var dateTimeFormatter = new goog.i18n.DateTimeFormat('MM/dd/yyyy');
-var dateTimeParser = new goog.i18n.DateTimeParse('MM/dd/yyyy');
+var dateTimeFormatter = new goog.i18n.DateTimeFormat("MM/dd/yyyy")
+var dateTimeParser = new goog.i18n.DateTimeParse("MM/dd/yyyy")
 
-var inputDatePicker;
-var popupDatePicker;
+var inputDatePicker
+var popupDatePicker
 
 function setUp() {}
 
 function tearDown() {
   if (inputDatePicker) {
-    inputDatePicker.dispose();
+    inputDatePicker.dispose()
   }
   if (popupDatePicker) {
-    popupDatePicker.dispose();
+    popupDatePicker.dispose()
   }
-  goog.dom.removeChildren(goog.dom.getElement('renderElement'));
-  goog.dom.removeChildren(goog.dom.getElement('popupParent'));
+  goog.dom.removeChildren(goog.dom.getElement("renderElement"))
+  goog.dom.removeChildren(goog.dom.getElement("popupParent"))
 }
-
 
 /**
  * Ensure that if setPopupParentElement is not called, that the
  * PopupDatePicker is parented to the body element.
  */
 function test_setPopupParentElementDefault() {
-  setPopupParentElement_(null);
+  setPopupParentElement_(null)
   assertEquals(
-      'PopupDatePicker should be parented to the body element', document.body,
-      popupDatePicker.getElement().parentNode);
+    "PopupDatePicker should be parented to the body element",
+    document.body,
+    popupDatePicker.getElement().parentNode
+  )
 }
-
 
 /**
  * Ensure that if setPopupParentElement is called, that the
  * PopupDatePicker is parented to the specified element.
  */
 function test_setPopupParentElement() {
-  var popupParentElement = goog.dom.getElement('popupParent');
-  setPopupParentElement_(popupParentElement);
+  var popupParentElement = goog.dom.getElement("popupParent")
+  setPopupParentElement_(popupParentElement)
   assertEquals(
-      'PopupDatePicker should be parented to the popupParent DIV',
-      popupParentElement, popupDatePicker.getElement().parentNode);
+    "PopupDatePicker should be parented to the popupParent DIV",
+    popupParentElement,
+    popupDatePicker.getElement().parentNode
+  )
 }
-
 
 /**
  * Creates a new InputDatePicker and calls setPopupParentElement with the
@@ -75,51 +76,58 @@ function test_setPopupParentElement() {
  * @private
  */
 function setPopupParentElement_(el) {
-  inputDatePicker =
-      new goog.ui.InputDatePicker(dateTimeFormatter, dateTimeParser);
+  inputDatePicker = new goog.ui.InputDatePicker(
+    dateTimeFormatter,
+    dateTimeParser
+  )
 
   if (el) {
-    inputDatePicker.setPopupParentElement(el);
+    inputDatePicker.setPopupParentElement(el)
   }
 
-  inputDatePicker.render(goog.dom.getElement('renderElement'));
-  popupDatePicker = inputDatePicker.popupDatePicker_;
+  inputDatePicker.render(goog.dom.getElement("renderElement"))
+  popupDatePicker = inputDatePicker.popupDatePicker_
 }
 
-
 function test_ItParsesDataCorrectly() {
-  inputDatePicker =
-      new goog.ui.InputDatePicker(dateTimeFormatter, dateTimeParser);
-  inputDatePicker.render(goog.dom.getElement('renderElement'));
+  inputDatePicker = new goog.ui.InputDatePicker(
+    dateTimeFormatter,
+    dateTimeParser
+  )
+  inputDatePicker.render(goog.dom.getElement("renderElement"))
 
-  inputDatePicker.createDom();
-  inputDatePicker.setInputValue('8/9/2009');
+  inputDatePicker.createDom()
+  inputDatePicker.setInputValue("8/9/2009")
 
-  var parsedDate = inputDatePicker.getInputValueAsDate_();
-  assertEquals(2009, parsedDate.getYear());
-  assertEquals(7, parsedDate.getMonth());  // Months start from 0
-  assertEquals(9, parsedDate.getDate());
+  var parsedDate = inputDatePicker.getInputValueAsDate_()
+  assertEquals(2009, parsedDate.getYear())
+  assertEquals(7, parsedDate.getMonth()) // Months start from 0
+  assertEquals(9, parsedDate.getDate())
 }
 
 function test_ItUpdatesItsValueOnPopupShown() {
-  inputDatePicker =
-      new goog.ui.InputDatePicker(dateTimeFormatter, dateTimeParser);
+  inputDatePicker = new goog.ui.InputDatePicker(
+    dateTimeFormatter,
+    dateTimeParser
+  )
 
-  setPopupParentElement_(null);
-  inputDatePicker.setInputValue('1/1/1');
-  inputDatePicker.showForElement(document.body);
-  var inputValue = inputDatePicker.getInputValue();
-  assertEquals('01/01/0001', inputValue);
+  setPopupParentElement_(null)
+  inputDatePicker.setInputValue("1/1/1")
+  inputDatePicker.showForElement(document.body)
+  var inputValue = inputDatePicker.getInputValue()
+  assertEquals("01/01/0001", inputValue)
 }
 
 function test_ItDoesNotClearInputOnPopupShown() {
   // if popup does not have a date set, don't update input value
-  inputDatePicker =
-      new goog.ui.InputDatePicker(dateTimeFormatter, dateTimeParser);
+  inputDatePicker = new goog.ui.InputDatePicker(
+    dateTimeFormatter,
+    dateTimeParser
+  )
 
-  setPopupParentElement_(null);
-  inputDatePicker.setInputValue('i_am_not_a_date');
-  inputDatePicker.showForElement(document.body);
-  var inputValue = inputDatePicker.getInputValue();
-  assertEquals('i_am_not_a_date', inputValue);
+  setPopupParentElement_(null)
+  inputDatePicker.setInputValue("i_am_not_a_date")
+  inputDatePicker.showForElement(document.body)
+  var inputValue = inputDatePicker.getInputValue()
+  assertEquals("i_am_not_a_date", inputValue)
 }

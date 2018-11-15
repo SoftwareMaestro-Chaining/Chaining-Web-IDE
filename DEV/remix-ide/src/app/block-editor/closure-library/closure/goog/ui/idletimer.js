@@ -24,14 +24,12 @@
  *
  */
 
-goog.provide('goog.ui.IdleTimer');
-goog.require('goog.Timer');
-goog.require('goog.events');
-goog.require('goog.events.EventTarget');
-goog.require('goog.structs.Set');
-goog.require('goog.ui.ActivityMonitor');
-
-
+goog.provide("goog.ui.IdleTimer")
+goog.require("goog.Timer")
+goog.require("goog.events")
+goog.require("goog.events.EventTarget")
+goog.require("goog.structs.Set")
+goog.require("goog.ui.ActivityMonitor")
 
 /**
  * Event target that will give notification of state changes between active and
@@ -49,38 +47,36 @@ goog.require('goog.ui.ActivityMonitor');
  * @final
  */
 goog.ui.IdleTimer = function(idleThreshold, opt_activityMonitor) {
-  goog.events.EventTarget.call(this);
+  goog.events.EventTarget.call(this)
 
-  var activityMonitor =
-      opt_activityMonitor || this.getDefaultActivityMonitor_();
+  var activityMonitor = opt_activityMonitor || this.getDefaultActivityMonitor_()
 
   /**
    * The amount of time in ms at which we consider the user has gone idle
    * @type {number}
    * @private
    */
-  this.idleThreshold_ = idleThreshold;
+  this.idleThreshold_ = idleThreshold
 
   /**
    * The activity monitor keeping track of user interaction
    * @type {goog.ui.ActivityMonitor}
    * @private
    */
-  this.activityMonitor_ = activityMonitor;
+  this.activityMonitor_ = activityMonitor
 
   /**
    * Cached onActivityTick_ bound to the object for later use
    * @type {Function}
    * @private
    */
-  this.boundOnActivityTick_ = goog.bind(this.onActivityTick_, this);
+  this.boundOnActivityTick_ = goog.bind(this.onActivityTick_, this)
 
   // Decide whether the user is currently active or idle. This method will
   // check whether it is correct to start with the user in the active state.
-  this.maybeStillActive_();
-};
-goog.inherits(goog.ui.IdleTimer, goog.events.EventTarget);
-
+  this.maybeStillActive_()
+}
+goog.inherits(goog.ui.IdleTimer, goog.events.EventTarget)
 
 /**
  * Whether a listener is currently registered for an idle timer event. On
@@ -88,40 +84,35 @@ goog.inherits(goog.ui.IdleTimer, goog.events.EventTarget);
  * @type {boolean}
  * @private
  */
-goog.ui.IdleTimer.prototype.hasActivityListener_ = false;
-
+goog.ui.IdleTimer.prototype.hasActivityListener_ = false
 
 /**
  * Handle to the timer ID used for checking ongoing activity, or null
  * @type {?number}
  * @private
  */
-goog.ui.IdleTimer.prototype.onActivityTimerId_ = null;
-
+goog.ui.IdleTimer.prototype.onActivityTimerId_ = null
 
 /**
  * Whether the user is currently idle
  * @type {boolean}
  * @private
  */
-goog.ui.IdleTimer.prototype.isIdle_ = false;
-
+goog.ui.IdleTimer.prototype.isIdle_ = false
 
 /**
  * The default activity monitor created by this class, if any
  * @type {goog.ui.ActivityMonitor?}
  * @private
  */
-goog.ui.IdleTimer.defaultActivityMonitor_ = null;
-
+goog.ui.IdleTimer.defaultActivityMonitor_ = null
 
 /**
  * The idle timers that currently reference the default activity monitor
  * @type {goog.structs.Set}
  * @private
  */
-goog.ui.IdleTimer.defaultActivityMonitorReferences_ = new goog.structs.Set();
-
+goog.ui.IdleTimer.defaultActivityMonitorReferences_ = new goog.structs.Set()
 
 /**
  * Event constants for the idle timer event target
@@ -129,11 +120,10 @@ goog.ui.IdleTimer.defaultActivityMonitorReferences_ = new goog.structs.Set();
  */
 goog.ui.IdleTimer.Event = {
   /** Event fired when an idle user transitions into the active state */
-  BECOME_ACTIVE: 'active',
+  BECOME_ACTIVE: "active",
   /** Event fired when an active user transitions into the idle state */
-  BECOME_IDLE: 'idle'
-};
-
+  BECOME_IDLE: "idle"
+}
 
 /**
  * Gets the default activity monitor used by this class. If a default has not
@@ -142,13 +132,12 @@ goog.ui.IdleTimer.Event = {
  * @private
  */
 goog.ui.IdleTimer.prototype.getDefaultActivityMonitor_ = function() {
-  goog.ui.IdleTimer.defaultActivityMonitorReferences_.add(this);
+  goog.ui.IdleTimer.defaultActivityMonitorReferences_.add(this)
   if (goog.ui.IdleTimer.defaultActivityMonitor_ == null) {
-    goog.ui.IdleTimer.defaultActivityMonitor_ = new goog.ui.ActivityMonitor();
+    goog.ui.IdleTimer.defaultActivityMonitor_ = new goog.ui.ActivityMonitor()
   }
-  return goog.ui.IdleTimer.defaultActivityMonitor_;
-};
-
+  return goog.ui.IdleTimer.defaultActivityMonitor_
+}
 
 /**
  * Removes the reference to the default activity monitor. If there are no more
@@ -156,14 +145,15 @@ goog.ui.IdleTimer.prototype.getDefaultActivityMonitor_ = function() {
  * @private
  */
 goog.ui.IdleTimer.prototype.maybeDisposeDefaultActivityMonitor_ = function() {
-  goog.ui.IdleTimer.defaultActivityMonitorReferences_.remove(this);
-  if (goog.ui.IdleTimer.defaultActivityMonitor_ != null &&
-      goog.ui.IdleTimer.defaultActivityMonitorReferences_.isEmpty()) {
-    goog.ui.IdleTimer.defaultActivityMonitor_.dispose();
-    goog.ui.IdleTimer.defaultActivityMonitor_ = null;
+  goog.ui.IdleTimer.defaultActivityMonitorReferences_.remove(this)
+  if (
+    goog.ui.IdleTimer.defaultActivityMonitor_ != null &&
+    goog.ui.IdleTimer.defaultActivityMonitorReferences_.isEmpty()
+  ) {
+    goog.ui.IdleTimer.defaultActivityMonitor_.dispose()
+    goog.ui.IdleTimer.defaultActivityMonitor_ = null
   }
-};
-
+}
 
 /**
  * Checks whether the user is active. If the user is still active, then a timer
@@ -173,18 +163,21 @@ goog.ui.IdleTimer.prototype.maybeDisposeDefaultActivityMonitor_ = function() {
 goog.ui.IdleTimer.prototype.maybeStillActive_ = function() {
   // See how long before the user would go idle. The user is considered idle
   // after the idle time has passed, not exactly when the idle time arrives.
-  var remainingIdleThreshold = this.idleThreshold_ + 1 -
-      (goog.now() - this.activityMonitor_.getLastEventTime());
+  var remainingIdleThreshold =
+    this.idleThreshold_ +
+    1 -
+    (goog.now() - this.activityMonitor_.getLastEventTime())
   if (remainingIdleThreshold > 0) {
     // The user is still active. Check again later.
-    this.onActivityTimerId_ =
-        goog.Timer.callOnce(this.boundOnActivityTick_, remainingIdleThreshold);
+    this.onActivityTimerId_ = goog.Timer.callOnce(
+      this.boundOnActivityTick_,
+      remainingIdleThreshold
+    )
   } else {
     // The user has not been active recently.
-    this.becomeIdle_();
+    this.becomeIdle_()
   }
-};
-
+}
 
 /**
  * Handler for the timeout used for checking ongoing activity
@@ -192,31 +185,33 @@ goog.ui.IdleTimer.prototype.maybeStillActive_ = function() {
  */
 goog.ui.IdleTimer.prototype.onActivityTick_ = function() {
   // The timer has fired.
-  this.onActivityTimerId_ = null;
+  this.onActivityTimerId_ = null
 
   // The maybeStillActive method will restart the timer, if appropriate.
-  this.maybeStillActive_();
-};
-
+  this.maybeStillActive_()
+}
 
 /**
  * Transitions from the active state to the idle state
  * @private
  */
 goog.ui.IdleTimer.prototype.becomeIdle_ = function() {
-  this.isIdle_ = true;
+  this.isIdle_ = true
 
   // The idle timer will send notification when the user does something
   // interactive.
   goog.events.listen(
-      this.activityMonitor_, goog.ui.ActivityMonitor.Event.ACTIVITY,
-      this.onActivity_, false, this);
-  this.hasActivityListener_ = true;
+    this.activityMonitor_,
+    goog.ui.ActivityMonitor.Event.ACTIVITY,
+    this.onActivity_,
+    false,
+    this
+  )
+  this.hasActivityListener_ = true
 
   // Notify clients of the state change.
-  this.dispatchEvent(goog.ui.IdleTimer.Event.BECOME_IDLE);
-};
-
+  this.dispatchEvent(goog.ui.IdleTimer.Event.BECOME_IDLE)
+}
 
 /**
  * Handler for idle timer events when the user does something interactive
@@ -224,27 +219,25 @@ goog.ui.IdleTimer.prototype.becomeIdle_ = function() {
  * @private
  */
 goog.ui.IdleTimer.prototype.onActivity_ = function(e) {
-  this.becomeActive_();
-};
-
+  this.becomeActive_()
+}
 
 /**
  * Transitions from the idle state to the active state
  * @private
  */
 goog.ui.IdleTimer.prototype.becomeActive_ = function() {
-  this.isIdle_ = false;
+  this.isIdle_ = false
 
   // Stop listening to every interactive event.
-  this.removeActivityListener_();
+  this.removeActivityListener_()
 
   // Notify clients of the state change.
-  this.dispatchEvent(goog.ui.IdleTimer.Event.BECOME_ACTIVE);
+  this.dispatchEvent(goog.ui.IdleTimer.Event.BECOME_ACTIVE)
 
   // Periodically check whether the user has gone inactive.
-  this.maybeStillActive_();
-};
-
+  this.maybeStillActive_()
+}
 
 /**
  * Removes the activity listener, if necessary
@@ -253,42 +246,42 @@ goog.ui.IdleTimer.prototype.becomeActive_ = function() {
 goog.ui.IdleTimer.prototype.removeActivityListener_ = function() {
   if (this.hasActivityListener_) {
     goog.events.unlisten(
-        this.activityMonitor_, goog.ui.ActivityMonitor.Event.ACTIVITY,
-        this.onActivity_, false, this);
-    this.hasActivityListener_ = false;
+      this.activityMonitor_,
+      goog.ui.ActivityMonitor.Event.ACTIVITY,
+      this.onActivity_,
+      false,
+      this
+    )
+    this.hasActivityListener_ = false
   }
-};
-
+}
 
 /** @override */
 goog.ui.IdleTimer.prototype.disposeInternal = function() {
-  this.removeActivityListener_();
+  this.removeActivityListener_()
   if (this.onActivityTimerId_ != null) {
-    goog.global.clearTimeout(this.onActivityTimerId_);
-    this.onActivityTimerId_ = null;
+    goog.global.clearTimeout(this.onActivityTimerId_)
+    this.onActivityTimerId_ = null
   }
-  this.maybeDisposeDefaultActivityMonitor_();
-  goog.ui.IdleTimer.superClass_.disposeInternal.call(this);
-};
-
+  this.maybeDisposeDefaultActivityMonitor_()
+  goog.ui.IdleTimer.superClass_.disposeInternal.call(this)
+}
 
 /**
  * @return {number} the amount of time at which we consider the user has gone
  *     idle in ms.
  */
 goog.ui.IdleTimer.prototype.getIdleThreshold = function() {
-  return this.idleThreshold_;
-};
-
+  return this.idleThreshold_
+}
 
 /**
  * @return {goog.ui.ActivityMonitor} the activity monitor keeping track of user
  *     interaction.
  */
 goog.ui.IdleTimer.prototype.getActivityMonitor = function() {
-  return this.activityMonitor_;
-};
-
+  return this.activityMonitor_
+}
 
 /**
  * Returns true if there has been no user action for at least the specified
@@ -296,5 +289,5 @@ goog.ui.IdleTimer.prototype.getActivityMonitor = function() {
  * @return {boolean} true if the user is idle, false otherwise.
  */
 goog.ui.IdleTimer.prototype.isIdle = function() {
-  return this.isIdle_;
-};
+  return this.isIdle_
+}

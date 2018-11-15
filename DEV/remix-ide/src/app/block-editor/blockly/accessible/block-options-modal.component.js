@@ -23,19 +23,19 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.BlockOptionsModalComponent');
+goog.provide("blocklyApp.BlockOptionsModalComponent")
 
-goog.require('blocklyApp.AudioService');
-goog.require('blocklyApp.BlockOptionsModalService');
-goog.require('blocklyApp.KeyboardInputService');
-goog.require('blocklyApp.TranslatePipe');
+goog.require("blocklyApp.AudioService")
+goog.require("blocklyApp.BlockOptionsModalService")
+goog.require("blocklyApp.KeyboardInputService")
+goog.require("blocklyApp.TranslatePipe")
 
-goog.require('Blockly.CommonModal');
+goog.require("Blockly.CommonModal")
 
-
-blocklyApp.BlockOptionsModalComponent = ng.core.Component({
-  selector: 'blockly-block-options-modal',
-  template: `
+blocklyApp.BlockOptionsModalComponent = ng.core
+  .Component({
+    selector: "blockly-block-options-modal",
+    template: `
     <div *ngIf="modalIsVisible" class="blocklyModalCurtain"
          (click)="dismissModal()">
       <!-- $event.stopPropagation() prevents the modal from closing when its
@@ -65,82 +65,88 @@ blocklyApp.BlockOptionsModalComponent = ng.core.Component({
       </div>
     </div>
   `,
-  pipes: [blocklyApp.TranslatePipe]
-})
-.Class({
-  constructor: [
-    blocklyApp.BlockOptionsModalService, blocklyApp.KeyboardInputService,
-    blocklyApp.AudioService,
-    function(blockOptionsModalService_, keyboardInputService_, audioService_) {
-      this.blockOptionsModalService = blockOptionsModalService_;
-      this.keyboardInputService = keyboardInputService_;
-      this.audioService = audioService_;
+    pipes: [blocklyApp.TranslatePipe]
+  })
+  .Class({
+    constructor: [
+      blocklyApp.BlockOptionsModalService,
+      blocklyApp.KeyboardInputService,
+      blocklyApp.AudioService,
+      function(
+        blockOptionsModalService_,
+        keyboardInputService_,
+        audioService_
+      ) {
+        this.blockOptionsModalService = blockOptionsModalService_
+        this.keyboardInputService = keyboardInputService_
+        this.audioService = audioService_
 
-      this.modalIsVisible = false;
-      this.actionButtonsInfo = [];
-      this.activeButtonIndex = -1;
-      this.onDismissCallback = null;
+        this.modalIsVisible = false
+        this.actionButtonsInfo = []
+        this.activeButtonIndex = -1
+        this.onDismissCallback = null
 
-      var that = this;
-      this.blockOptionsModalService.registerPreShowHook(
-        function(newActionButtonsInfo, onDismissCallback) {
-          that.modalIsVisible = true;
-          that.actionButtonsInfo = newActionButtonsInfo;
-          that.activeActionButtonIndex = -1;
-          that.onDismissCallback = onDismissCallback;
+        var that = this
+        this.blockOptionsModalService.registerPreShowHook(function(
+          newActionButtonsInfo,
+          onDismissCallback
+        ) {
+          that.modalIsVisible = true
+          that.actionButtonsInfo = newActionButtonsInfo
+          that.activeActionButtonIndex = -1
+          that.onDismissCallback = onDismissCallback
 
-          Blockly.CommonModal.setupKeyboardOverrides(that);
-          that.keyboardInputService.addOverride('13', function(evt) {
-              evt.preventDefault();
-              evt.stopPropagation();
+          Blockly.CommonModal.setupKeyboardOverrides(that)
+          that.keyboardInputService.addOverride("13", function(evt) {
+            evt.preventDefault()
+            evt.stopPropagation()
 
-              if (that.activeButtonIndex == -1) {
-                return;
-              }
+            if (that.activeButtonIndex == -1) {
+              return
+            }
 
-              var button = document.getElementById(
-                  that.getOptionId(that.activeButtonIndex));
-              if (that.activeButtonIndex <
-                  that.actionButtonsInfo.length) {
-                that.actionButtonsInfo[that.activeButtonIndex].action();
-              } else {
-                that.dismissModal();
-              }
+            var button = document.getElementById(
+              that.getOptionId(that.activeButtonIndex)
+            )
+            if (that.activeButtonIndex < that.actionButtonsInfo.length) {
+              that.actionButtonsInfo[that.activeButtonIndex].action()
+            } else {
+              that.dismissModal()
+            }
 
-              that.hideModal();
-            });
+            that.hideModal()
+          })
 
           setTimeout(function() {
-            document.getElementById('blockOptionsModal').focus();
-          }, 150);
-        }
-      );
+            document.getElementById("blockOptionsModal").focus()
+          }, 150)
+        })
+      }
+    ],
+    focusOnOption: function(index) {
+      var button = document.getElementById(this.getOptionId(index))
+      button.focus()
+    },
+    // Counts the number of interactive elements for the modal.
+    numInteractiveElements: function() {
+      return this.actionButtonsInfo.length + 1
+    },
+    // Returns the ID for the corresponding option button.
+    getOptionId: function(index) {
+      return "block-options-modal-option-" + index
+    },
+    // Returns the ID for the "cancel" option button.
+    getCancelOptionId: function() {
+      return this.getOptionId(this.actionButtonsInfo.length)
+    },
+    dismissModal: function() {
+      this.onDismissCallback()
+      this.hideModal()
+    },
+    // Closes the modal.
+    hideModal: function() {
+      this.modalIsVisible = false
+      this.keyboardInputService.clearOverride()
+      this.blockOptionsModalService.hideModal()
     }
-  ],
-  focusOnOption: function(index) {
-    var button = document.getElementById(this.getOptionId(index));
-    button.focus();
-  },
-  // Counts the number of interactive elements for the modal.
-  numInteractiveElements: function() {
-    return this.actionButtonsInfo.length + 1;
-  },
-  // Returns the ID for the corresponding option button.
-  getOptionId: function(index) {
-    return 'block-options-modal-option-' + index;
-  },
-  // Returns the ID for the "cancel" option button.
-  getCancelOptionId: function() {
-    return this.getOptionId(this.actionButtonsInfo.length);
-  },
-  dismissModal: function() {
-    this.onDismissCallback();
-    this.hideModal();
-  },
-  // Closes the modal.
-  hideModal: function() {
-    this.modalIsVisible = false;
-    this.keyboardInputService.clearOverride();
-    this.blockOptionsModalService.hideModal();
-  }
-});
+  })

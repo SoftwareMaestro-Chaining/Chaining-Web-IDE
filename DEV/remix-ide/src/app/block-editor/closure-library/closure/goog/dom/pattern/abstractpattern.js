@@ -18,12 +18,10 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.AbstractPattern');
+goog.provide("goog.dom.pattern.AbstractPattern")
 
-goog.require('goog.dom.TagWalkType');
-goog.require('goog.dom.pattern.MatchType');
-
-
+goog.require("goog.dom.TagWalkType")
+goog.require("goog.dom.pattern.MatchType")
 
 /**
  * Base pattern class for DOM matching.
@@ -35,17 +33,15 @@ goog.dom.pattern.AbstractPattern = function() {
    * The first node matched by this pattern.
    * @type {Node}
    */
-  this.matchedNode = null;
-};
-
+  this.matchedNode = null
+}
 
 /**
  * Reset any internal state this pattern keeps.
  */
 goog.dom.pattern.AbstractPattern.prototype.reset = function() {
   // The base implementation does nothing.
-};
-
+}
 
 /**
  * Test whether this pattern matches the given token.
@@ -55,5 +51,5 @@ goog.dom.pattern.AbstractPattern.prototype.reset = function() {
  * @return {goog.dom.pattern.MatchType} `MATCH` if the pattern matches.
  */
 goog.dom.pattern.AbstractPattern.prototype.matchToken = function(token, type) {
-  return goog.dom.pattern.MatchType.NO_MATCH;
-};
+  return goog.dom.pattern.MatchType.NO_MATCH
+}

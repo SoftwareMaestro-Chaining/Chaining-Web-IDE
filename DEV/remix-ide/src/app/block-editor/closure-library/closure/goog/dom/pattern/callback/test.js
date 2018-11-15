@@ -18,11 +18,9 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.callback.Test');
+goog.provide("goog.dom.pattern.callback.Test")
 
-goog.require('goog.iter.StopIteration');
-
-
+goog.require("goog.iter.StopIteration")
 
 /**
  * Callback class for testing for at least one match.
@@ -35,16 +33,15 @@ goog.dom.pattern.callback.Test = function() {
    *
    * @type {boolean}
    */
-  this.matched = false;
+  this.matched = false
 
   /**
    * The callback function.  Suitable as a callback for
    * {@link goog.dom.pattern.Matcher}.
    * @private {Function}
    */
-  this.callback_ = null;
-};
-
+  this.callback_ = null
+}
 
 /**
  * Get a bound callback function that is suitable as a callback for
@@ -56,19 +53,18 @@ goog.dom.pattern.callback.Test.prototype.getCallback = function() {
   if (!this.callback_) {
     this.callback_ = goog.bind(function(node, position) {
       // Mark our match.
-      this.matched = true;
+      this.matched = true
 
       // Stop searching.
-      throw goog.iter.StopIteration;
-    }, this);
+      throw goog.iter.StopIteration
+    }, this)
   }
-  return this.callback_;
-};
-
+  return this.callback_
+}
 
 /**
  * Reset the counter.
  */
 goog.dom.pattern.callback.Test.prototype.reset = function() {
-  this.matched = false;
-};
+  this.matched = false
+}

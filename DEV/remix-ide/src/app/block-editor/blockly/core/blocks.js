@@ -22,16 +22,16 @@
  * @fileoverview A mapping of block type names to block prototype objects.
  * @author spertus@google.com (Ellen Spertus)
  */
-'use strict';
+"use strict"
 
 /**
  * A mapping of block type names to block prototype objects.
  * @name Blockly.Blocks
  */
-goog.provide('Blockly.Blocks');
+goog.provide("Blockly.Blocks")
 
 /*
  * A mapping of block type names to block prototype objects.
  * @type {!Object.<string,Object>}
  */
-Blockly.Blocks = new Object(null);
+Blockly.Blocks = new Object(null)

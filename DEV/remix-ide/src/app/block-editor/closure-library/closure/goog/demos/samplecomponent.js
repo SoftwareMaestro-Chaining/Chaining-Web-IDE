@@ -16,17 +16,15 @@
  * @fileoverview A simple, sample component.
  *
  */
-goog.provide('goog.demos.SampleComponent');
+goog.provide("goog.demos.SampleComponent")
 
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.events.EventType');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.events.KeyHandler');
-goog.require('goog.ui.Component');
-
-
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.events.EventType")
+goog.require("goog.events.KeyCodes")
+goog.require("goog.events.KeyHandler")
+goog.require("goog.ui.Component")
 
 /**
  * A simple box that changes colour when clicked. This class demonstrates the
@@ -42,21 +40,21 @@ goog.require('goog.ui.Component');
  * @final
  */
 goog.demos.SampleComponent = function(opt_label, opt_domHelper) {
-  goog.demos.SampleComponent.base(this, 'constructor', opt_domHelper);
+  goog.demos.SampleComponent.base(this, "constructor", opt_domHelper)
 
   /**
    * The label to display.
    * @type {string}
    * @private
    */
-  this.initialLabel_ = opt_label || 'Click Me';
+  this.initialLabel_ = opt_label || "Click Me"
 
   /**
    * The current color.
    * @type {string}
    * @private
    */
-  this.color_ = 'red';
+  this.color_ = "red"
 
   /**
    * Keyboard handler for this object. This object is created once the
@@ -65,35 +63,32 @@ goog.demos.SampleComponent = function(opt_label, opt_domHelper) {
    * @type {goog.events.KeyHandler?}
    * @private
    */
-  this.kh_ = null;
-};
-goog.inherits(goog.demos.SampleComponent, goog.ui.Component);
-
+  this.kh_ = null
+}
+goog.inherits(goog.demos.SampleComponent, goog.ui.Component)
 
 /**
  * Changes the color of the element.
  * @private
  */
 goog.demos.SampleComponent.prototype.changeColor_ = function() {
-  if (this.color_ == 'red') {
-    this.color_ = 'green';
-  } else if (this.color_ == 'green') {
-    this.color_ = 'blue';
+  if (this.color_ == "red") {
+    this.color_ = "green"
+  } else if (this.color_ == "green") {
+    this.color_ = "blue"
   } else {
-    this.color_ = 'red';
+    this.color_ = "red"
   }
-  this.getElement().style.backgroundColor = this.color_;
-};
-
+  this.getElement().style.backgroundColor = this.color_
+}
 
 /**
  * Creates an initial DOM representation for the component.
  * @override
  */
 goog.demos.SampleComponent.prototype.createDom = function() {
-  this.decorateInternal(this.dom_.createElement(goog.dom.TagName.DIV));
-};
-
+  this.decorateInternal(this.dom_.createElement(goog.dom.TagName.DIV))
+}
 
 /**
  * Decorates an existing HTML DIV element as a SampleComponent.
@@ -103,41 +98,44 @@ goog.demos.SampleComponent.prototype.createDom = function() {
  * @override
  */
 goog.demos.SampleComponent.prototype.decorateInternal = function(element) {
-  goog.demos.SampleComponent.base(this, 'decorateInternal', element);
+  goog.demos.SampleComponent.base(this, "decorateInternal", element)
   if (!this.getLabelText()) {
-    this.setLabelText(this.initialLabel_);
+    this.setLabelText(this.initialLabel_)
   }
 
-  var elem = this.getElement();
-  goog.dom.classlist.add(elem, goog.getCssName('goog-sample-component'));
-  elem.style.backgroundColor = this.color_;
-  elem.tabIndex = 0;
+  var elem = this.getElement()
+  goog.dom.classlist.add(elem, goog.getCssName("goog-sample-component"))
+  elem.style.backgroundColor = this.color_
+  elem.tabIndex = 0
 
-  this.kh_ = new goog.events.KeyHandler(elem);
+  this.kh_ = new goog.events.KeyHandler(elem)
   this.getHandler().listen(
-      this.kh_, goog.events.KeyHandler.EventType.KEY, this.onKey_);
-};
-
+    this.kh_,
+    goog.events.KeyHandler.EventType.KEY,
+    this.onKey_
+  )
+}
 
 /** @override */
 goog.demos.SampleComponent.prototype.disposeInternal = function() {
-  goog.demos.SampleComponent.base(this, 'disposeInternal');
+  goog.demos.SampleComponent.base(this, "disposeInternal")
   if (this.kh_) {
-    this.kh_.dispose();
+    this.kh_.dispose()
   }
-};
-
+}
 
 /**
  * Called when component's element is known to be in the document.
  * @override
  */
 goog.demos.SampleComponent.prototype.enterDocument = function() {
-  goog.demos.SampleComponent.base(this, 'enterDocument');
+  goog.demos.SampleComponent.base(this, "enterDocument")
   this.getHandler().listen(
-      this.getElement(), goog.events.EventType.CLICK, this.onDivClicked_);
-};
-
+    this.getElement(),
+    goog.events.EventType.CLICK,
+    this.onDivClicked_
+  )
+}
 
 /**
  * Gets the current label text.
@@ -147,11 +145,10 @@ goog.demos.SampleComponent.prototype.enterDocument = function() {
  */
 goog.demos.SampleComponent.prototype.getLabelText = function() {
   if (!this.getElement()) {
-    return '';
+    return ""
   }
-  return goog.dom.getTextContent(this.getElement());
-};
-
+  return goog.dom.getTextContent(this.getElement())
+}
 
 /**
  * Handles DIV element clicks, causing the DIV's colour to change.
@@ -159,9 +156,8 @@ goog.demos.SampleComponent.prototype.getLabelText = function() {
  * @private
  */
 goog.demos.SampleComponent.prototype.onDivClicked_ = function(event) {
-  this.changeColor_();
-};
-
+  this.changeColor_()
+}
 
 /**
  * Fired when user presses a key while the DIV has focus. If the user presses
@@ -170,12 +166,11 @@ goog.demos.SampleComponent.prototype.onDivClicked_ = function(event) {
  * @private
  */
 goog.demos.SampleComponent.prototype.onKey_ = function(event) {
-  var keyCodes = goog.events.KeyCodes;
+  var keyCodes = goog.events.KeyCodes
   if (event.keyCode == keyCodes.SPACE || event.keyCode == keyCodes.ENTER) {
-    this.changeColor_();
+    this.changeColor_()
   }
-};
-
+}
 
 /**
  * Sets the current label text. Has no effect if component is not rendered.
@@ -184,6 +179,6 @@ goog.demos.SampleComponent.prototype.onKey_ = function(event) {
  */
 goog.demos.SampleComponent.prototype.setLabelText = function(text) {
   if (this.getElement()) {
-    goog.dom.setTextContent(this.getElement(), text);
+    goog.dom.setTextContent(this.getElement(), text)
   }
-};
+}

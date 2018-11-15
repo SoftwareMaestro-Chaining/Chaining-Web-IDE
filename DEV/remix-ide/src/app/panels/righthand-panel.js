@@ -1,31 +1,34 @@
-const yo = require('yo-yo')
-const csjs = require('csjs-inject')
-const remixLib = require('remix-lib')
+const yo = require("yo-yo")
+const csjs = require("csjs-inject")
+const remixLib = require("remix-lib")
 
-var globalRegistry = require('../../global/registry')
+var globalRegistry = require("../../global/registry")
 
-const styleguide = require('../ui/styles-guide/theme-chooser')
-const PluginManager = require('../plugin/pluginManager')
-const TabbedMenu = require('../tabs/tabbed-menu')
-const CompileTab = require('../tabs/compile-tab')
-const SettingsTab = require('../tabs/settings-tab')
-const AnalysisTab = require('../tabs/analysis-tab')
-const DebuggerTab = require('../tabs/debugger-tab')
-const SupportTab = require('../tabs/support-tab')
-const PluginTab = require('../tabs/plugin-tab')
-const TestTab = require('../tabs/test-tab')
-const RunTab = require('../tabs/run-tab')
-const DraggableContent = require('../ui/draggableContent')
+const styleguide = require("../ui/styles-guide/theme-chooser")
+const PluginManager = require("../plugin/pluginManager")
+const TabbedMenu = require("../tabs/tabbed-menu")
+const CompileTab = require("../tabs/compile-tab")
+const SettingsTab = require("../tabs/settings-tab")
+const AnalysisTab = require("../tabs/analysis-tab")
+const DebuggerTab = require("../tabs/debugger-tab")
+const SupportTab = require("../tabs/support-tab")
+const PluginTab = require("../tabs/plugin-tab")
+const TestTab = require("../tabs/test-tab")
+const RunTab = require("../tabs/run-tab")
+const DraggableContent = require("../ui/draggableContent")
+
+// tutorial
+const TutorialTab = require("../tabs/tutorial-tab")
 
 const EventManager = remixLib.EventManager
 const styles = styleguide.chooser()
 
 module.exports = class RighthandPanel {
-  constructor (localRegistry) {
+  constructor(localRegistry) {
     const self = this
     self._components = {}
     self._components.registry = localRegistry || globalRegistry
-    self._components.registry.put({api: this, name: 'righthandpanel'})
+    self._components.registry.put({ api: this, name: "righthandpanel" })
     self.event = new EventManager()
     self._view = {
       element: null,
@@ -34,13 +37,17 @@ module.exports = class RighthandPanel {
       dragbar: null
     }
 
+    var tutorialTab = new TutorialTab(self._components.registry)
+
+    self._components.registry.put({ api: tutorialTab, name: "tutorialtab" })
+
     self._deps = {
-      fileProviders: self._components.registry.get('fileproviders').api,
-      fileManager: self._components.registry.get('filemanager').api,
-      compiler: self._components.registry.get('compiler').api,
-      udapp: self._components.registry.get('udapp').api,
-      app: self._components.registry.get('app').api,
-      txlistener: self._components.registry.get('txlistener').api
+      fileProviders: self._components.registry.get("fileproviders").api,
+      fileManager: self._components.registry.get("filemanager").api,
+      compiler: self._components.registry.get("compiler").api,
+      udapp: self._components.registry.get("udapp").api,
+      app: self._components.registry.get("app").api,
+      txlistener: self._components.registry.get("txlistener").api
     }
 
     var tabbedMenu = new TabbedMenu(self._components.registry)
@@ -52,10 +59,15 @@ module.exports = class RighthandPanel {
       self._deps.fileProviders,
       self._deps.fileManager,
       self._deps.udapp
-   )
+    )
 
     var analysisTab = new AnalysisTab(self._components.registry)
-    analysisTab.event.register('newStaticAnaysisWarningMessage', (msg, settings) => { self._components.compile.addWarning(msg, settings) })
+    analysisTab.event.register(
+      "newStaticAnaysisWarningMessage",
+      (msg, settings) => {
+        self._components.compile.addWarning(msg, settings)
+      }
+    )
 
     self._components.debuggerTab = new DebuggerTab(self._components.registry)
 
@@ -68,20 +80,24 @@ module.exports = class RighthandPanel {
       analysis: analysisTab,
       debug: self._components.debuggerTab,
       support: new SupportTab(self._components.registry),
-      test: new TestTab(self._components.registry)
+      test: new TestTab(self._components.registry),
+      // tutorial
+      tutorial: self._components.registry.get("tutorialtab").api
     }
 
-    self._components.settings.event.register('plugin-loadRequest', json => {
+    self._components.settings.event.register("plugin-loadRequest", json => {
       self.loadPlugin(json)
     })
 
-    self.loadPlugin = function (json) {
+    self.loadPlugin = function(json) {
       var modal = new DraggableContent(() => {
         self._components.pluginManager.unregister(json)
       })
       var tab = new PluginTab(json)
       var content = tab.render()
-      document.querySelector('body').appendChild(modal.render(json.title, content))
+      document
+        .querySelector("body")
+        .appendChild(modal.render(json.title, content))
       self._components.pluginManager.register(json, modal, content)
     }
 
@@ -95,75 +111,109 @@ module.exports = class RighthandPanel {
         </div>
       </div>`
 
-    const { compile, run, settings, analysis, debug, support, test } = self._components
-    self._components.tabbedMenu.addTab('Compile', 'compileView', compile.render())
-    self._components.tabbedMenu.addTab('Run', 'runView', run.render())
-    self._components.tabbedMenu.addTab('Analysis', 'staticanalysisView', analysis.render())
-    self._components.tabbedMenu.addTab('Testing', 'testView', test.render())
-    self._components.tabbedMenu.addTab('Debugger', 'debugView', debug.render())
-    self._components.tabbedMenu.addTab('Settings', 'settingsView', settings.render())
-    self._components.tabbedMenu.addTab('Support', 'supportView', support.render())
-    self._components.tabbedMenu.selectTabByTitle('Compile')
+    const {
+      compile,
+      run,
+      tutorial,
+      settings,
+      analysis,
+      debug,
+      support,
+      test
+    } = self._components
+    self._components.tabbedMenu.addTab(
+      "Compile",
+      "compileView",
+      compile.render()
+    )
+    self._components.tabbedMenu.addTab("Run", "runView", run.render())
+    self._components.tabbedMenu.addTab(
+      "Tutorial",
+      "tutorialView",
+      tutorial.render()
+    )
+    self._components.tabbedMenu.addTab(
+      "Analysis",
+      "staticanalysisView",
+      analysis.render()
+    )
+    self._components.tabbedMenu.addTab("Testing", "testView", test.render())
+    self._components.tabbedMenu.addTab("Debugger", "debugView", debug.render())
+    self._components.tabbedMenu.addTab(
+      "Settings",
+      "settingsView",
+      settings.render()
+    )
+    self._components.tabbedMenu.addTab(
+      "Support",
+      "supportView",
+      support.render()
+    )
+    self._components.tabbedMenu.selectTabByTitle("Compile")
   }
   // showDebugger () {
   //   const self = this
   //   if (!self._components.tabbedMenu) return
   //   self._components.tabbedMenu.selectTab(self._view.el.querySelector('li.debugView'))
   // }
-  render () {
+  render() {
     const self = this
     if (self._view.element) return self._view.element
     return self._view.element
   }
 
-  debugger () {
+  debugger() {
     return this._components.debug.debugger()
   }
 
-  focusOn (x) {
-    if (this._components.tabbedMenu) this._components.tabbedMenu.selectTabByClassName(x)
+  focusOn(x) {
+    if (this._components.tabbedMenu)
+      this._components.tabbedMenu.selectTabByClassName(x)
   }
 
-  init () {
+  init() {
     // @TODO: init is for resizable drag bar only and should be refactored in the future
     const self = this
     const limit = 60
-    self._view.dragbar.addEventListener('mousedown', mousedown)
+    self._view.dragbar.addEventListener("mousedown", mousedown)
     const ghostbar = yo`<div class=${css.ghostbar}></div>`
-    function mousedown (event) {
+    function mousedown(event) {
       event.preventDefault()
       if (event.which === 1) {
         moveGhostbar(event)
         document.body.appendChild(ghostbar)
-        document.addEventListener('mousemove', moveGhostbar)
-        document.addEventListener('mouseup', removeGhostbar)
-        document.addEventListener('keydown', cancelGhostbar)
+        document.addEventListener("mousemove", moveGhostbar)
+        document.addEventListener("mouseup", removeGhostbar)
+        document.addEventListener("keydown", cancelGhostbar)
       }
     }
-    function cancelGhostbar (event) {
+    function cancelGhostbar(event) {
       if (event.keyCode === 27) {
         document.body.removeChild(ghostbar)
-        document.removeEventListener('mousemove', moveGhostbar)
-        document.removeEventListener('mouseup', removeGhostbar)
-        document.removeEventListener('keydown', cancelGhostbar)
+        document.removeEventListener("mousemove", moveGhostbar)
+        document.removeEventListener("mouseup", removeGhostbar)
+        document.removeEventListener("keydown", cancelGhostbar)
       }
     }
-    function getPosition (event) {
-      const lhp = window['filepanel'].offsetWidth
+    function getPosition(event) {
+      const lhp = window["filepanel"].offsetWidth
       const max = document.body.offsetWidth - limit
-      var newpos = (event.pageX > max) ? max : event.pageX
-      newpos = (newpos > (lhp + limit)) ? newpos : lhp + limit
+      var newpos = event.pageX > max ? max : event.pageX
+      newpos = newpos > lhp + limit ? newpos : lhp + limit
       return newpos
     }
-    function moveGhostbar (event) { // @NOTE VERTICAL ghostbar
-      ghostbar.style.left = getPosition(event) + 'px'
+    function moveGhostbar(event) {
+      // @NOTE VERTICAL ghostbar
+      ghostbar.style.left = getPosition(event) + "px"
     }
-    function removeGhostbar (event) {
+    function removeGhostbar(event) {
       document.body.removeChild(ghostbar)
-      document.removeEventListener('mousemove', moveGhostbar)
-      document.removeEventListener('mouseup', removeGhostbar)
-      document.removeEventListener('keydown', cancelGhostbar)
-      self.event.trigger('resize', [document.body.offsetWidth - getPosition(event)])
+      document.removeEventListener("mousemove", moveGhostbar)
+      document.removeEventListener("mouseup", removeGhostbar)
+      document.removeEventListener("keydown", cancelGhostbar)
+      self.event.trigger("resize", [
+        document.body.offsetWidth - getPosition(event)
+      ])
     }
   }
 }

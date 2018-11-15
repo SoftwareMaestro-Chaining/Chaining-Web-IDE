@@ -18,14 +18,12 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.dom.pattern.Text');
+goog.provide("goog.dom.pattern.Text")
 
-goog.require('goog.dom.NodeType');
-goog.require('goog.dom.pattern');
-goog.require('goog.dom.pattern.AbstractPattern');
-goog.require('goog.dom.pattern.MatchType');
-
-
+goog.require("goog.dom.NodeType")
+goog.require("goog.dom.pattern")
+goog.require("goog.dom.pattern.AbstractPattern")
+goog.require("goog.dom.pattern.MatchType")
 
 /**
  * Pattern object that matches text by exact matching or regular expressions.
@@ -41,10 +39,9 @@ goog.dom.pattern.Text = function(match) {
    *
    * @private {string|RegExp}
    */
-  this.match_ = match;
-};
-goog.inherits(goog.dom.pattern.Text, goog.dom.pattern.AbstractPattern);
-
+  this.match_ = match
+}
+goog.inherits(goog.dom.pattern.Text, goog.dom.pattern.AbstractPattern)
 
 /**
  * Test whether the given token is a text token which matches the string or
@@ -57,11 +54,13 @@ goog.inherits(goog.dom.pattern.Text, goog.dom.pattern.AbstractPattern);
  * @override
  */
 goog.dom.pattern.Text.prototype.matchToken = function(token, type) {
-  if (token.nodeType == goog.dom.NodeType.TEXT &&
-      goog.dom.pattern.matchStringOrRegex(this.match_, token.nodeValue)) {
-    this.matchedNode = token;
-    return goog.dom.pattern.MatchType.MATCH;
+  if (
+    token.nodeType == goog.dom.NodeType.TEXT &&
+    goog.dom.pattern.matchStringOrRegex(this.match_, token.nodeValue)
+  ) {
+    this.matchedNode = token
+    return goog.dom.pattern.MatchType.MATCH
   }
 
-  return goog.dom.pattern.MatchType.NO_MATCH;
-};
+  return goog.dom.pattern.MatchType.NO_MATCH
+}

@@ -21,19 +21,17 @@
  * @see ../demos/dimensionpicker_rtl.html
  */
 
-goog.provide('goog.ui.DimensionPicker');
+goog.provide("goog.ui.DimensionPicker")
 
-goog.require('goog.events.BrowserEvent.PointerType');
-goog.require('goog.events.EventType');
-goog.require('goog.events.KeyCodes');
-goog.require('goog.math.Size');
-goog.require('goog.ui.Component');
-goog.require('goog.ui.ComponentUtil');
-goog.require('goog.ui.Control');
-goog.require('goog.ui.DimensionPickerRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.events.BrowserEvent.PointerType")
+goog.require("goog.events.EventType")
+goog.require("goog.events.KeyCodes")
+goog.require("goog.math.Size")
+goog.require("goog.ui.Component")
+goog.require("goog.ui.ComponentUtil")
+goog.require("goog.ui.Control")
+goog.require("goog.ui.DimensionPickerRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A dimension picker allows the user to visually select a row and column
@@ -54,110 +52,110 @@ goog.require('goog.ui.registry');
  */
 goog.ui.DimensionPicker = function(opt_renderer, opt_domHelper) {
   goog.ui.Control.call(
-      this, null, opt_renderer || goog.ui.DimensionPickerRenderer.getInstance(),
-      opt_domHelper);
+    this,
+    null,
+    opt_renderer || goog.ui.DimensionPickerRenderer.getInstance(),
+    opt_domHelper
+  )
 
-  this.size_ = new goog.math.Size(this.minColumns, this.minRows);
-};
-goog.inherits(goog.ui.DimensionPicker, goog.ui.Control);
-
+  this.size_ = new goog.math.Size(this.minColumns, this.minRows)
+}
+goog.inherits(goog.ui.DimensionPicker, goog.ui.Control)
 
 /**
  * Minimum number of columns to show in the grid.
  * @type {number}
  */
-goog.ui.DimensionPicker.prototype.minColumns = 5;
-
+goog.ui.DimensionPicker.prototype.minColumns = 5
 
 /**
  * Minimum number of rows to show in the grid.
  * @type {number}
  */
-goog.ui.DimensionPicker.prototype.minRows = 5;
-
+goog.ui.DimensionPicker.prototype.minRows = 5
 
 /**
  * Maximum number of columns to show in the grid.
  * @type {number}
  */
-goog.ui.DimensionPicker.prototype.maxColumns = 20;
-
+goog.ui.DimensionPicker.prototype.maxColumns = 20
 
 /**
  * Maximum number of rows to show in the grid.
  * @type {number}
  */
-goog.ui.DimensionPicker.prototype.maxRows = 20;
-
+goog.ui.DimensionPicker.prototype.maxRows = 20
 
 /**
  * Palette dimensions (columns x rows).
  * @type {goog.math.Size}
  * @private
  */
-goog.ui.DimensionPicker.prototype.size_;
-
+goog.ui.DimensionPicker.prototype.size_
 
 /**
  * Currently highlighted row count.
  * @type {number}
  * @private
  */
-goog.ui.DimensionPicker.prototype.highlightedRows_ = 1;
-
+goog.ui.DimensionPicker.prototype.highlightedRows_ = 1
 
 /**
  * Currently highlighted column count.
  * @type {number}
  * @private
  */
-goog.ui.DimensionPicker.prototype.highlightedColumns_ = 1;
-
+goog.ui.DimensionPicker.prototype.highlightedColumns_ = 1
 
 /** @override */
 goog.ui.DimensionPicker.prototype.enterDocument = function() {
-  goog.ui.DimensionPicker.superClass_.enterDocument.call(this);
+  goog.ui.DimensionPicker.superClass_.enterDocument.call(this)
 
-  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this);
+  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this)
 
-  var handler = this.getHandler();
+  var handler = this.getHandler()
   handler
-      .listen(
-          this.getRenderer().getMouseMoveElement(this),
-          MouseEventType.MOUSEMOVE, this.handleMouseMove)
-      .listen(
-          this.getDomHelper().getWindow(), goog.events.EventType.RESIZE,
-          this.handleWindowResize);
+    .listen(
+      this.getRenderer().getMouseMoveElement(this),
+      MouseEventType.MOUSEMOVE,
+      this.handleMouseMove
+    )
+    .listen(
+      this.getDomHelper().getWindow(),
+      goog.events.EventType.RESIZE,
+      this.handleWindowResize
+    )
 
-  var parent = this.getParent();
+  var parent = this.getParent()
   if (parent) {
-    handler.listen(parent, goog.ui.Component.EventType.SHOW, this.handleShow_);
+    handler.listen(parent, goog.ui.Component.EventType.SHOW, this.handleShow_)
   }
-};
-
+}
 
 /** @override */
 goog.ui.DimensionPicker.prototype.exitDocument = function() {
-  goog.ui.DimensionPicker.superClass_.exitDocument.call(this);
+  goog.ui.DimensionPicker.superClass_.exitDocument.call(this)
 
-  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this);
+  var MouseEventType = goog.ui.ComponentUtil.getMouseEventType(this)
 
-  var handler = this.getHandler();
+  var handler = this.getHandler()
   handler
-      .unlisten(
-          this.getRenderer().getMouseMoveElement(this),
-          MouseEventType.MOUSEMOVE, this.handleMouseMove)
-      .unlisten(
-          this.getDomHelper().getWindow(), goog.events.EventType.RESIZE,
-          this.handleWindowResize);
+    .unlisten(
+      this.getRenderer().getMouseMoveElement(this),
+      MouseEventType.MOUSEMOVE,
+      this.handleMouseMove
+    )
+    .unlisten(
+      this.getDomHelper().getWindow(),
+      goog.events.EventType.RESIZE,
+      this.handleWindowResize
+    )
 
-  var parent = this.getParent();
+  var parent = this.getParent()
   if (parent) {
-    handler.unlisten(
-        parent, goog.ui.Component.EventType.SHOW, this.handleShow_);
+    handler.unlisten(parent, goog.ui.Component.EventType.SHOW, this.handleShow_)
   }
-};
-
+}
 
 /**
  * Resets the highlighted size when the picker is shown.
@@ -165,20 +163,17 @@ goog.ui.DimensionPicker.prototype.exitDocument = function() {
  */
 goog.ui.DimensionPicker.prototype.handleShow_ = function() {
   if (this.isVisible()) {
-    this.setValue(1, 1);
+    this.setValue(1, 1)
   }
-};
-
+}
 
 /** @override */
 goog.ui.DimensionPicker.prototype.disposeInternal = function() {
-  goog.ui.DimensionPicker.superClass_.disposeInternal.call(this);
-  delete this.size_;
-};
-
+  goog.ui.DimensionPicker.superClass_.disposeInternal.call(this)
+  delete this.size_
+}
 
 // Palette event handling.
-
 
 /**
  * Handles mousemove events. Determines which palette size was moused over and
@@ -188,14 +183,15 @@ goog.ui.DimensionPicker.prototype.disposeInternal = function() {
  */
 goog.ui.DimensionPicker.prototype.handleMouseMove = function(e) {
   var highlightedSizeX = this.getRenderer().getGridOffsetX(
-      this, this.isRightToLeft() ?
-          /** @type {!HTMLElement} */ (e.target).offsetWidth - e.offsetX :
-          e.offsetX);
-  var highlightedSizeY = this.getRenderer().getGridOffsetY(this, e.offsetY);
+    this,
+    this.isRightToLeft()
+      ? /** @type {!HTMLElement} */ (e.target).offsetWidth - e.offsetX
+      : e.offsetX
+  )
+  var highlightedSizeY = this.getRenderer().getGridOffsetY(this, e.offsetY)
 
-  this.setValue(highlightedSizeX, highlightedSizeY);
-};
-
+  this.setValue(highlightedSizeX, highlightedSizeY)
+}
 
 /**
  * Override `handleMouseDown` for pointer events.
@@ -205,19 +201,18 @@ goog.ui.DimensionPicker.prototype.handleMouseDown = function(e) {
   // For touch events, check for intersection with the grid element to prevent
   // taps on the invisible mouse catcher element from performing an action.
   if (goog.ui.DimensionPicker.isTouchEvent_(e) && !this.isEventOnGrid_(e)) {
-    return;
+    return
   }
 
-  goog.ui.DimensionPicker.base(this, 'handleMouseDown', e);
+  goog.ui.DimensionPicker.base(this, "handleMouseDown", e)
 
   // For touch events, delegate to `handleMouseMove` to update the highlight
   // state immediately. Not needed for mouse since we assume hover mousemove
   // events have already taken care of this.
   if (goog.ui.DimensionPicker.isTouchEvent_(e)) {
-    this.handleMouseMove(/** @type {?goog.events.BrowserEvent} */ (e));
+    this.handleMouseMove(/** @type {?goog.events.BrowserEvent} */ (e))
   }
-};
-
+}
 
 /**
  * Override `handleMouseUp` for pointer events.
@@ -227,12 +222,11 @@ goog.ui.DimensionPicker.prototype.handleMouseUp = function(e) {
   // For touch events, check for intersection with the grid element to prevent
   // taps on the invisible mouse catcher element from performing an action.
   if (goog.ui.DimensionPicker.isTouchEvent_(e) && !this.isEventOnGrid_(e)) {
-    return;
+    return
   }
 
-  goog.ui.DimensionPicker.base(this, 'handleMouseUp', e);
-};
-
+  goog.ui.DimensionPicker.base(this, "handleMouseUp", e)
+}
 
 /**
  * Handles window resize events.  Ensures no scrollbars are introduced by the
@@ -241,9 +235,8 @@ goog.ui.DimensionPicker.prototype.handleMouseUp = function(e) {
  * @protected
  */
 goog.ui.DimensionPicker.prototype.handleWindowResize = function(e) {
-  this.getRenderer().positionMouseCatcher(this);
-};
-
+  this.getRenderer().positionMouseCatcher(this)
+}
 
 /**
  * Handle key events if supported, so the user can use the keyboard to
@@ -253,65 +246,61 @@ goog.ui.DimensionPicker.prototype.handleWindowResize = function(e) {
  * @override
  */
 goog.ui.DimensionPicker.prototype.handleKeyEvent = function(e) {
-  var rows = this.highlightedRows_;
-  var columns = this.highlightedColumns_;
+  var rows = this.highlightedRows_
+  var columns = this.highlightedColumns_
   switch (e.keyCode) {
     case goog.events.KeyCodes.DOWN:
-      rows++;
-      break;
+      rows++
+      break
     case goog.events.KeyCodes.UP:
-      rows--;
-      break;
+      rows--
+      break
     case goog.events.KeyCodes.LEFT:
       if (this.isRightToLeft()) {
-        columns++;
+        columns++
       } else {
         if (columns == 1) {
           // Delegate to parent.
-          return false;
+          return false
         } else {
-          columns--;
+          columns--
         }
       }
-      break;
+      break
     case goog.events.KeyCodes.RIGHT:
       if (this.isRightToLeft()) {
         if (columns == 1) {
           // Delegate to parent.
-          return false;
+          return false
         } else {
-          columns--;
+          columns--
         }
       } else {
-        columns++;
+        columns++
       }
-      break;
+      break
     default:
-      return goog.ui.DimensionPicker.superClass_.handleKeyEvent.call(this, e);
+      return goog.ui.DimensionPicker.superClass_.handleKeyEvent.call(this, e)
   }
-  this.setValue(columns, rows);
-  return true;
-};
-
+  this.setValue(columns, rows)
+  return true
+}
 
 // Palette management.
-
 
 /**
  * @return {goog.math.Size} Current table size shown (columns x rows).
  */
 goog.ui.DimensionPicker.prototype.getSize = function() {
-  return this.size_;
-};
-
+  return this.size_
+}
 
 /**
  * @return {!goog.math.Size} size The currently highlighted dimensions.
  */
 goog.ui.DimensionPicker.prototype.getValue = function() {
-  return new goog.math.Size(this.highlightedColumns_, this.highlightedRows_);
-};
-
+  return new goog.math.Size(this.highlightedColumns_, this.highlightedRows_)
+}
 
 /**
  * Sets the currently highlighted dimensions. If the dimensions are not valid
@@ -324,37 +313,42 @@ goog.ui.DimensionPicker.prototype.getValue = function() {
  */
 goog.ui.DimensionPicker.prototype.setValue = function(columns, opt_rows) {
   if (!goog.isDef(opt_rows)) {
-    columns = /** @type {!goog.math.Size} */ (columns);
-    opt_rows = columns.height;
-    columns = columns.width;
+    columns = /** @type {!goog.math.Size} */ (columns)
+    opt_rows = columns.height
+    columns = columns.width
   } else {
-    columns = /** @type {number} */ (columns);
+    columns = /** @type {number} */ (columns)
   }
 
   // Ensure that the row and column values are within the minimum value (1) and
   // maxmimum values.
-  columns = Math.max(1, columns);
-  opt_rows = Math.max(1, opt_rows);
-  columns = Math.min(this.maxColumns, columns);
-  opt_rows = Math.min(this.maxRows, opt_rows);
+  columns = Math.max(1, columns)
+  opt_rows = Math.max(1, opt_rows)
+  columns = Math.min(this.maxColumns, columns)
+  opt_rows = Math.min(this.maxRows, opt_rows)
 
-  if (this.highlightedColumns_ != columns ||
-      this.highlightedRows_ != opt_rows) {
-    var renderer = this.getRenderer();
+  if (
+    this.highlightedColumns_ != columns ||
+    this.highlightedRows_ != opt_rows
+  ) {
+    var renderer = this.getRenderer()
     // Show one more row/column than highlighted so the user understands the
     // palette can grow.
-    this.size_.width =
-        Math.max(Math.min(columns + 1, this.maxColumns), this.minColumns);
-    this.size_.height =
-        Math.max(Math.min(opt_rows + 1, this.maxRows), this.minRows);
-    renderer.updateSize(this, this.getElement());
+    this.size_.width = Math.max(
+      Math.min(columns + 1, this.maxColumns),
+      this.minColumns
+    )
+    this.size_.height = Math.max(
+      Math.min(opt_rows + 1, this.maxRows),
+      this.minRows
+    )
+    renderer.updateSize(this, this.getElement())
 
-    this.highlightedColumns_ = columns;
-    this.highlightedRows_ = opt_rows;
-    renderer.setHighlightedSize(this, columns, opt_rows);
+    this.highlightedColumns_ = columns
+    this.highlightedRows_ = opt_rows
+    renderer.setHighlightedSize(this, columns, opt_rows)
   }
-};
-
+}
 
 /**
  * Returns whether the given event intersects the grid element.
@@ -363,12 +357,15 @@ goog.ui.DimensionPicker.prototype.setValue = function(columns, opt_rows) {
  * @private
  */
 goog.ui.DimensionPicker.prototype.isEventOnGrid_ = function(e) {
-  var gridEl = this.getRenderer().getMouseMoveElement(this);
-  var gridBounds = gridEl.getBoundingClientRect();
-  return e.clientX >= gridBounds.left && e.clientX <= gridBounds.right &&
-      e.clientY >= gridBounds.top && e.clientY <= gridBounds.bottom;
-};
-
+  var gridEl = this.getRenderer().getMouseMoveElement(this)
+  var gridBounds = gridEl.getBoundingClientRect()
+  return (
+    e.clientX >= gridBounds.left &&
+    e.clientX <= gridBounds.right &&
+    e.clientY >= gridBounds.top &&
+    e.clientY <= gridBounds.bottom
+  )
+}
 
 /**
  * @param {?goog.events.Event} e Mouse or pointer event to handle.
@@ -376,14 +373,17 @@ goog.ui.DimensionPicker.prototype.isEventOnGrid_ = function(e) {
  * @private
  */
 goog.ui.DimensionPicker.isTouchEvent_ = function(e) {
-  return e.pointerType &&
-      e.pointerType != goog.events.BrowserEvent.PointerType.MOUSE;
-};
-
+  return (
+    e.pointerType && e.pointerType != goog.events.BrowserEvent.PointerType.MOUSE
+  )
+}
 
 /**
  * Register this control so it can be created from markup
  */
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.DimensionPickerRenderer.CSS_CLASS,
-    function() { return new goog.ui.DimensionPicker(); });
+  goog.ui.DimensionPickerRenderer.CSS_CLASS,
+  function() {
+    return new goog.ui.DimensionPicker()
+  }
+)

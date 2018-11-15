@@ -27,15 +27,13 @@
  *
  */
 
-goog.provide('goog.crypt.BlobHasher');
-goog.provide('goog.crypt.BlobHasher.EventType');
+goog.provide("goog.crypt.BlobHasher")
+goog.provide("goog.crypt.BlobHasher.EventType")
 
-goog.require('goog.asserts');
-goog.require('goog.events.EventTarget');
-goog.require('goog.fs');
-goog.require('goog.log');
-
-
+goog.require("goog.asserts")
+goog.require("goog.events.EventTarget")
+goog.require("goog.fs")
+goog.require("goog.log")
 
 /**
  * Construct the hash computer.
@@ -48,96 +46,93 @@ goog.require('goog.log');
  * @final
  */
 goog.crypt.BlobHasher = function(hashFn, opt_blockSize) {
-  goog.crypt.BlobHasher.base(this, 'constructor');
+  goog.crypt.BlobHasher.base(this, "constructor")
 
   /**
    * The actual hash function.
    * @type {!goog.crypt.Hash}
    * @private
    */
-  this.hashFn_ = hashFn;
+  this.hashFn_ = hashFn
 
   /**
    * The blob being processed or null if no blob is being processed.
    * @type {Blob}
    * @private
    */
-  this.blob_ = null;
+  this.blob_ = null
 
   /**
    * Computed hash value.
    * @type {Array<number>}
    * @private
    */
-  this.hashVal_ = null;
+  this.hashVal_ = null
 
   /**
    * Number of bytes already processed.
    * @type {number}
    * @private
    */
-  this.bytesProcessed_ = 0;
+  this.bytesProcessed_ = 0
 
   /**
    * The number of bytes to hash or Infinity for no limit.
    * @type {number}
    * @private
    */
-  this.hashingLimit_ = Infinity;
+  this.hashingLimit_ = Infinity
 
   /**
    * Processing block size.
    * @type {number}
    * @private
    */
-  this.blockSize_ = opt_blockSize || 5000000;
+  this.blockSize_ = opt_blockSize || 5000000
 
   /**
    * File reader object. Will be null if no chunk is currently being read.
    * @type {FileReader}
    * @private
    */
-  this.fileReader_ = null;
+  this.fileReader_ = null
 
   /**
    * The logger used by this object.
    * @type {goog.log.Logger}
    * @private
    */
-  this.logger_ = goog.log.getLogger('goog.crypt.BlobHasher');
-};
-goog.inherits(goog.crypt.BlobHasher, goog.events.EventTarget);
-
+  this.logger_ = goog.log.getLogger("goog.crypt.BlobHasher")
+}
+goog.inherits(goog.crypt.BlobHasher, goog.events.EventTarget)
 
 /**
  * Event names for hash computation events
  * @enum {string}
  */
 goog.crypt.BlobHasher.EventType = {
-  STARTED: 'started',
-  PROGRESS: 'progress',
-  THROTTLED: 'throttled',
-  COMPLETE: 'complete',
-  ABORT: 'abort',
-  ERROR: 'error'
-};
-
+  STARTED: "started",
+  PROGRESS: "progress",
+  THROTTLED: "throttled",
+  COMPLETE: "complete",
+  ABORT: "abort",
+  ERROR: "error"
+}
 
 /**
  * Start the hash computation.
  * @param {!Blob} blob The blob of data to compute the hash for.
  */
 goog.crypt.BlobHasher.prototype.hash = function(blob) {
-  this.abort();
-  this.hashFn_.reset();
-  this.blob_ = blob;
-  this.hashVal_ = null;
-  this.bytesProcessed_ = 0;
-  this.dispatchEvent(goog.crypt.BlobHasher.EventType.STARTED);
+  this.abort()
+  this.hashFn_.reset()
+  this.blob_ = blob
+  this.hashVal_ = null
+  this.bytesProcessed_ = 0
+  this.dispatchEvent(goog.crypt.BlobHasher.EventType.STARTED)
 
-  this.processNextBlock_();
-};
-
+  this.processNextBlock_()
+}
 
 /**
  * Sets the maximum number of bytes to hash or Infinity for no limit. Can be
@@ -151,48 +146,44 @@ goog.crypt.BlobHasher.prototype.hash = function(blob) {
  *     values are not allowed.
  */
 goog.crypt.BlobHasher.prototype.setHashingLimit = function(byteOffset) {
-  goog.asserts.assert(byteOffset >= 0, 'Hashing limit must be non-negative.');
-  this.hashingLimit_ = byteOffset;
+  goog.asserts.assert(byteOffset >= 0, "Hashing limit must be non-negative.")
+  this.hashingLimit_ = byteOffset
 
   // Resume processing if a blob is currently being hashed, but no block read
   // is currently in progress.
   if (this.blob_ && !this.fileReader_) {
-    this.processNextBlock_();
+    this.processNextBlock_()
   }
-};
-
+}
 
 /**
  * Abort hash computation.
  */
 goog.crypt.BlobHasher.prototype.abort = function() {
   if (this.fileReader_) {
-    this.fileReader_.abort();
-    this.fileReader_ = null;
+    this.fileReader_.abort()
+    this.fileReader_ = null
   }
 
   if (this.blob_) {
-    this.blob_ = null;
-    this.dispatchEvent(goog.crypt.BlobHasher.EventType.ABORT);
+    this.blob_ = null
+    this.dispatchEvent(goog.crypt.BlobHasher.EventType.ABORT)
   }
-};
-
+}
 
 /**
  * @return {number} Number of bytes processed so far.
  */
 goog.crypt.BlobHasher.prototype.getBytesProcessed = function() {
-  return this.bytesProcessed_;
-};
-
+  return this.bytesProcessed_
+}
 
 /**
  * @return {Array<number>} The computed hash value or null if not ready.
  */
 goog.crypt.BlobHasher.prototype.getHash = function() {
-  return this.hashVal_;
-};
-
+  return this.hashVal_
+}
 
 /**
  * Helper function setting up the processing for the next block, or finalizing
@@ -200,85 +191,90 @@ goog.crypt.BlobHasher.prototype.getHash = function() {
  * @private
  */
 goog.crypt.BlobHasher.prototype.processNextBlock_ = function() {
-  goog.asserts.assert(this.blob_, 'A hash computation must be in progress.');
+  goog.asserts.assert(this.blob_, "A hash computation must be in progress.")
 
   if (this.bytesProcessed_ < this.blob_.size) {
     if (this.hashingLimit_ <= this.bytesProcessed_) {
       // Throttle limit reached. Wait until we are allowed to hash more bytes.
-      this.dispatchEvent(goog.crypt.BlobHasher.EventType.THROTTLED);
-      return;
+      this.dispatchEvent(goog.crypt.BlobHasher.EventType.THROTTLED)
+      return
     }
 
     // We have to reset the FileReader every time, otherwise it fails on
     // Chrome, including the latest Chrome 12 beta.
     // http://code.google.com/p/chromium/issues/detail?id=82346
-    this.fileReader_ = new FileReader();
-    this.fileReader_.onload = goog.bind(this.onLoad_, this);
-    this.fileReader_.onerror = goog.bind(this.onError_, this);
+    this.fileReader_ = new FileReader()
+    this.fileReader_.onload = goog.bind(this.onLoad_, this)
+    this.fileReader_.onerror = goog.bind(this.onError_, this)
 
-    var endOffset = Math.min(this.hashingLimit_, this.blob_.size);
-    var size = Math.min(endOffset - this.bytesProcessed_, this.blockSize_);
+    var endOffset = Math.min(this.hashingLimit_, this.blob_.size)
+    var size = Math.min(endOffset - this.bytesProcessed_, this.blockSize_)
     var chunk = goog.fs.sliceBlob(
-        this.blob_, this.bytesProcessed_, this.bytesProcessed_ + size);
+      this.blob_,
+      this.bytesProcessed_,
+      this.bytesProcessed_ + size
+    )
     if (!chunk || chunk.size != size) {
-      goog.log.error(this.logger_, 'Failed slicing the blob');
-      this.onError_();
-      return;
+      goog.log.error(this.logger_, "Failed slicing the blob")
+      this.onError_()
+      return
     }
 
     if (this.fileReader_.readAsArrayBuffer) {
-      this.fileReader_.readAsArrayBuffer(chunk);
+      this.fileReader_.readAsArrayBuffer(chunk)
     } else if (this.fileReader_.readAsBinaryString) {
-      this.fileReader_.readAsBinaryString(chunk);
+      this.fileReader_.readAsBinaryString(chunk)
     } else {
-      goog.log.error(this.logger_, 'Failed calling the chunk reader');
-      this.onError_();
+      goog.log.error(this.logger_, "Failed calling the chunk reader")
+      this.onError_()
     }
   } else {
-    this.hashVal_ = this.hashFn_.digest();
-    this.blob_ = null;
-    this.dispatchEvent(goog.crypt.BlobHasher.EventType.COMPLETE);
+    this.hashVal_ = this.hashFn_.digest()
+    this.blob_ = null
+    this.dispatchEvent(goog.crypt.BlobHasher.EventType.COMPLETE)
   }
-};
-
+}
 
 /**
  * Handle processing block loaded.
  * @private
  */
 goog.crypt.BlobHasher.prototype.onLoad_ = function() {
-  goog.log.info(this.logger_, 'Successfully loaded a chunk');
+  goog.log.info(this.logger_, "Successfully loaded a chunk")
 
-  var array = null;
-  if (this.fileReader_.result instanceof Array ||
-      goog.isString(this.fileReader_.result)) {
-    array = this.fileReader_.result;
+  var array = null
+  if (
+    this.fileReader_.result instanceof Array ||
+    goog.isString(this.fileReader_.result)
+  ) {
+    array = this.fileReader_.result
   } else if (
-      goog.global['ArrayBuffer'] && goog.global['Uint8Array'] &&
-      this.fileReader_.result instanceof ArrayBuffer) {
-    array = new Uint8Array(this.fileReader_.result);
+    goog.global["ArrayBuffer"] &&
+    goog.global["Uint8Array"] &&
+    this.fileReader_.result instanceof ArrayBuffer
+  ) {
+    array = new Uint8Array(this.fileReader_.result)
   }
   if (!array) {
-    goog.log.error(this.logger_, 'Failed reading the chunk');
-    this.onError_();
-    return;
+    goog.log.error(this.logger_, "Failed reading the chunk")
+    this.onError_()
+    return
   }
 
-  this.hashFn_.update(array);
-  this.bytesProcessed_ += array.length;
-  this.fileReader_ = null;
-  this.dispatchEvent(goog.crypt.BlobHasher.EventType.PROGRESS);
+  this.hashFn_.update(array)
+  this.bytesProcessed_ += array.length
+  this.fileReader_ = null
+  this.dispatchEvent(goog.crypt.BlobHasher.EventType.PROGRESS)
 
-  this.processNextBlock_();
-};
-
+  this.processNextBlock_()
+}
 
 /**
  * Handles error.
  * @private
  */
 goog.crypt.BlobHasher.prototype.onError_ = function() {
-  this.fileReader_ = null;
-  this.blob_ = null;
-  this.dispatchEvent(goog.crypt.BlobHasher.EventType.ERROR);
-};
+  this.fileReader_ = null
+  this.blob_ = null
+  this.dispatchEvent(goog.crypt.BlobHasher.EventType.ERROR)
+}

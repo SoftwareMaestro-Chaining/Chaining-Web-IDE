@@ -21,13 +21,11 @@
  * @see helloworld.html
  */
 
-goog.provide('goog.demos.editor.HelloWorld');
+goog.provide("goog.demos.editor.HelloWorld")
 
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.editor.Plugin');
-
-
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.editor.Plugin")
 
 /**
  * Plugin to insert 'Hello World!' into an editable field.
@@ -36,31 +34,27 @@ goog.require('goog.editor.Plugin');
  * @final
  */
 goog.demos.editor.HelloWorld = function() {
-  goog.editor.Plugin.call(this);
-};
-goog.inherits(goog.demos.editor.HelloWorld, goog.editor.Plugin);
-
+  goog.editor.Plugin.call(this)
+}
+goog.inherits(goog.demos.editor.HelloWorld, goog.editor.Plugin)
 
 /** @override */
 goog.demos.editor.HelloWorld.prototype.getTrogClassId = function() {
-  return 'HelloWorld';
-};
-
+  return "HelloWorld"
+}
 
 /**
  * Commands implemented by this plugin.
  * @enum {string}
  */
 goog.demos.editor.HelloWorld.COMMAND = {
-  HELLO_WORLD: '+helloWorld'
-};
-
+  HELLO_WORLD: "+helloWorld"
+}
 
 /** @override */
 goog.demos.editor.HelloWorld.prototype.isSupportedCommand = function(command) {
-  return command == goog.demos.editor.HelloWorld.COMMAND.HELLO_WORLD;
-};
-
+  return command == goog.demos.editor.HelloWorld.COMMAND.HELLO_WORLD
+}
 
 /**
  * Executes a command. Does not fire any BEFORECHANGE, CHANGE, or
@@ -71,10 +65,9 @@ goog.demos.editor.HelloWorld.prototype.isSupportedCommand = function(command) {
  * @protected
  */
 goog.demos.editor.HelloWorld.prototype.execCommandInternal = function(command) {
-  var domHelper = this.getFieldObject().getEditableDomHelper();
-  var range = this.getFieldObject().getRange();
-  range.removeContents();
-  var newNode =
-      domHelper.createDom(goog.dom.TagName.SPAN, null, 'Hello World!');
-  range.insertNode(newNode, false);
-};
+  var domHelper = this.getFieldObject().getEditableDomHelper()
+  var range = this.getFieldObject().getRange()
+  range.removeContents()
+  var newNode = domHelper.createDom(goog.dom.TagName.SPAN, null, "Hello World!")
+  range.insertNode(newNode, false)
+}

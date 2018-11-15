@@ -23,20 +23,20 @@
  * @author madeeha@google.com (Madeeha Ghori)
  */
 
-goog.provide('blocklyApp.WorkspaceBlockComponent');
+goog.provide("blocklyApp.WorkspaceBlockComponent")
 
-goog.require('blocklyApp.UtilsService');
+goog.require("blocklyApp.UtilsService")
 
-goog.require('blocklyApp.AudioService');
-goog.require('blocklyApp.BlockConnectionService');
-goog.require('blocklyApp.FieldSegmentComponent');
-goog.require('blocklyApp.TranslatePipe');
-goog.require('blocklyApp.TreeService');
+goog.require("blocklyApp.AudioService")
+goog.require("blocklyApp.BlockConnectionService")
+goog.require("blocklyApp.FieldSegmentComponent")
+goog.require("blocklyApp.TranslatePipe")
+goog.require("blocklyApp.TreeService")
 
-
-blocklyApp.WorkspaceBlockComponent = ng.core.Component({
-  selector: 'blockly-workspace-block',
-  template: `
+blocklyApp.WorkspaceBlockComponent = ng.core
+  .Component({
+    selector: "blockly-workspace-block",
+    template: `
     <li [id]="componentIds.blockRoot" role="treeitem"
         [attr.aria-labelledBy]="generateAriaLabelledByAttr(componentIds.blockSummary, 'blockly-translate-workspace-block')"
         [attr.aria-level]="level">
@@ -85,132 +85,150 @@ blocklyApp.WorkspaceBlockComponent = ng.core.Component({
                              [level]="level" [tree]="tree">
     </blockly-workspace-block>
   `,
-  directives: [blocklyApp.FieldSegmentComponent, ng.core.forwardRef(function() {
-    return blocklyApp.WorkspaceBlockComponent;
-  })],
-  inputs: ['block', 'level', 'tree'],
-  pipes: [blocklyApp.TranslatePipe]
-})
-.Class({
-  constructor: [
-    blocklyApp.AudioService,
-    blocklyApp.BlockConnectionService,
-    blocklyApp.TreeService,
-    blocklyApp.UtilsService,
-    function(audioService, blockConnectionService, treeService, utilsService) {
-      this.audioService = audioService;
-      this.blockConnectionService = blockConnectionService;
-      this.treeService = treeService;
-      this.utilsService = utilsService;
-      this.cachedBlockId = null;
-    }
-  ],
-  ngDoCheck: function() {
-    // The block ID can change if, for example, a block is spliced between two
-    // linked blocks. We need to refresh the fields and component IDs when this
-    // happens.
-    if (this.cachedBlockId != this.block.id) {
-      this.cachedBlockId = this.block.id;
-
-      var SUPPORTED_FIELDS = [Blockly.FieldTextInput, Blockly.FieldDropdown];
-      this.inputListAsFieldSegments = this.block.inputList.map(function(input) {
-        // Converts the input list to an array of field segments. Each field
-        // segment represents a user-editable field, prefixed by an arbitrary
-        // number of non-editable fields.
-        var fieldSegments = [];
-
-        var bufferedFields = [];
-        input.fieldRow.forEach(function(field) {
-          var fieldIsSupported = SUPPORTED_FIELDS.some(function(fieldType) {
-            return (field instanceof fieldType);
-          });
-
-          if (fieldIsSupported) {
-            var fieldSegment = {
-              prefixFields: [],
-              mainField: field
-            };
-            bufferedFields.forEach(function(bufferedField) {
-              fieldSegment.prefixFields.push(bufferedField);
-            });
-            fieldSegments.push(fieldSegment);
-            bufferedFields = [];
-          } else {
-            bufferedFields.push(field);
-          }
-        });
-
-        // Handle leftover text at the end.
-        if (bufferedFields.length) {
-          fieldSegments.push({
-            prefixFields: bufferedFields,
-            mainField: null
-          });
-        }
-
-        return fieldSegments;
-      });
-
-      // Generate unique IDs for elements in this component.
-      this.componentIds = {};
-      this.componentIds.blockRoot =
-          this.block.id + blocklyApp.BLOCK_ROOT_ID_SUFFIX;
-      this.componentIds.blockSummary = this.block.id + '-blockSummary';
-
-      var that = this;
-      this.componentIds.inputs = this.block.inputList.map(function(input, i) {
-        var idsToGenerate = ['inputLi', 'fieldLabel'];
-        if (input.connection && !input.connection.targetBlock()) {
-          idsToGenerate.push('actionButtonLi', 'actionButton', 'buttonLabel');
-        }
-
-        var inputIds = {};
-        idsToGenerate.forEach(function(idBaseString) {
-          inputIds[idBaseString] = [that.block.id, i, idBaseString].join('-');
-        });
-
-        return inputIds;
-      });
-    }
-  },
-  ngAfterViewInit: function() {
-    // If this is a top-level tree in the workspace, ensure that it has an
-    // active descendant. (Note that a timeout is needed here in order to
-    // trigger Angular change detection.)
-    var that = this;
-    setTimeout(function() {
-      if (that.level === 0 && !that.treeService.getActiveDescId(that.tree.id)) {
-        that.treeService.setActiveDesc(
-            that.componentIds.blockRoot, that.tree.id);
+    directives: [
+      blocklyApp.FieldSegmentComponent,
+      ng.core.forwardRef(function() {
+        return blocklyApp.WorkspaceBlockComponent
+      })
+    ],
+    inputs: ["block", "level", "tree"],
+    pipes: [blocklyApp.TranslatePipe]
+  })
+  .Class({
+    constructor: [
+      blocklyApp.AudioService,
+      blocklyApp.BlockConnectionService,
+      blocklyApp.TreeService,
+      blocklyApp.UtilsService,
+      function(
+        audioService,
+        blockConnectionService,
+        treeService,
+        utilsService
+      ) {
+        this.audioService = audioService
+        this.blockConnectionService = blockConnectionService
+        this.treeService = treeService
+        this.utilsService = utilsService
+        this.cachedBlockId = null
       }
-    });
-  },
-  addInteriorLink: function(connection) {
-    this.blockConnectionService.markConnection(connection);
-  },
-  getBlockDescription: function() {
-    var blockDescription = this.utilsService.getBlockDescription(this.block);
+    ],
+    ngDoCheck: function() {
+      // The block ID can change if, for example, a block is spliced between two
+      // linked blocks. We need to refresh the fields and component IDs when this
+      // happens.
+      if (this.cachedBlockId != this.block.id) {
+        this.cachedBlockId = this.block.id
 
-    var parentBlock = this.block.getSurroundParent();
-    if (parentBlock) {
-      var fullDescription = blockDescription + ' inside ' +
-          this.utilsService.getBlockDescription(parentBlock);
-      return fullDescription;
-    } else {
-      return blockDescription;
+        var SUPPORTED_FIELDS = [Blockly.FieldTextInput, Blockly.FieldDropdown]
+        this.inputListAsFieldSegments = this.block.inputList.map(function(
+          input
+        ) {
+          // Converts the input list to an array of field segments. Each field
+          // segment represents a user-editable field, prefixed by an arbitrary
+          // number of non-editable fields.
+          var fieldSegments = []
+
+          var bufferedFields = []
+          input.fieldRow.forEach(function(field) {
+            var fieldIsSupported = SUPPORTED_FIELDS.some(function(fieldType) {
+              return field instanceof fieldType
+            })
+
+            if (fieldIsSupported) {
+              var fieldSegment = {
+                prefixFields: [],
+                mainField: field
+              }
+              bufferedFields.forEach(function(bufferedField) {
+                fieldSegment.prefixFields.push(bufferedField)
+              })
+              fieldSegments.push(fieldSegment)
+              bufferedFields = []
+            } else {
+              bufferedFields.push(field)
+            }
+          })
+
+          // Handle leftover text at the end.
+          if (bufferedFields.length) {
+            fieldSegments.push({
+              prefixFields: bufferedFields,
+              mainField: null
+            })
+          }
+
+          return fieldSegments
+        })
+
+        // Generate unique IDs for elements in this component.
+        this.componentIds = {}
+        this.componentIds.blockRoot =
+          this.block.id + blocklyApp.BLOCK_ROOT_ID_SUFFIX
+        this.componentIds.blockSummary = this.block.id + "-blockSummary"
+
+        var that = this
+        this.componentIds.inputs = this.block.inputList.map(function(input, i) {
+          var idsToGenerate = ["inputLi", "fieldLabel"]
+          if (input.connection && !input.connection.targetBlock()) {
+            idsToGenerate.push("actionButtonLi", "actionButton", "buttonLabel")
+          }
+
+          var inputIds = {}
+          idsToGenerate.forEach(function(idBaseString) {
+            inputIds[idBaseString] = [that.block.id, i, idBaseString].join("-")
+          })
+
+          return inputIds
+        })
+      }
+    },
+    ngAfterViewInit: function() {
+      // If this is a top-level tree in the workspace, ensure that it has an
+      // active descendant. (Note that a timeout is needed here in order to
+      // trigger Angular change detection.)
+      var that = this
+      setTimeout(function() {
+        if (
+          that.level === 0 &&
+          !that.treeService.getActiveDescId(that.tree.id)
+        ) {
+          that.treeService.setActiveDesc(
+            that.componentIds.blockRoot,
+            that.tree.id
+          )
+        }
+      })
+    },
+    addInteriorLink: function(connection) {
+      this.blockConnectionService.markConnection(connection)
+    },
+    getBlockDescription: function() {
+      var blockDescription = this.utilsService.getBlockDescription(this.block)
+
+      var parentBlock = this.block.getSurroundParent()
+      if (parentBlock) {
+        var fullDescription =
+          blockDescription +
+          " inside " +
+          this.utilsService.getBlockDescription(parentBlock)
+        return fullDescription
+      } else {
+        return blockDescription
+      }
+    },
+    getBlockNeededLabel: function(blockInput) {
+      // The input type name, or 'any' if any official input type qualifies.
+      var inputTypeLabel = blockInput.connection.check_
+        ? blockInput.connection.check_.join(", ")
+        : Blockly.Msg.ANY
+      var blockTypeLabel =
+        blockInput.type == Blockly.NEXT_STATEMENT
+          ? Blockly.Msg.BLOCK
+          : Blockly.Msg.VALUE
+      return inputTypeLabel + " " + blockTypeLabel + " needed:"
+    },
+    generateAriaLabelledByAttr: function(mainLabel, secondLabel) {
+      return mainLabel + (secondLabel ? " " + secondLabel : "")
     }
-  },
-  getBlockNeededLabel: function(blockInput) {
-    // The input type name, or 'any' if any official input type qualifies.
-    var inputTypeLabel = (
-        blockInput.connection.check_ ?
-        blockInput.connection.check_.join(', ') : Blockly.Msg.ANY);
-    var blockTypeLabel = (
-        blockInput.type == Blockly.NEXT_STATEMENT ?
-        Blockly.Msg.BLOCK : Blockly.Msg.VALUE);
-    return inputTypeLabel + ' ' + blockTypeLabel + ' needed:';
-  },
-  generateAriaLabelledByAttr: function(mainLabel, secondLabel) {
-    return mainLabel + (secondLabel ? ' ' + secondLabel : '');
-  }
-});
+  })

@@ -16,11 +16,11 @@
  * @fileoverview A test file for testing goog.module.
  */
 
-goog.module('goog.test_module_dep');
-goog.setTestOnly('goog.test_module');
+goog.module("goog.test_module_dep")
+goog.setTestOnly("goog.test_module")
 
 /** @type {number} */
-exports.someValue = 1;
+exports.someValue = 1
 
 /** @type {function()} */
-exports.someFunction = function() {};
+exports.someFunction = function() {}

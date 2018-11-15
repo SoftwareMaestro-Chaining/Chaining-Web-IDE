@@ -26,7 +26,7 @@
  *
  * @author quachtina96 (Tina Quach)
  */
-'use strict';
+"use strict"
 
 /**
  * Block Exporter Tools Class
@@ -34,19 +34,20 @@
  */
 function BlockExporterTools() {
   // Create container for hidden workspace.
-  this.container = document.createElement('div');
-  this.container.id = 'blockExporterTools_hiddenWorkspace';
-  this.container.style.display = 'none';  // Hide the hidden workspace.
-  document.body.appendChild(this.container);
+  this.container = document.createElement("div")
+  this.container.id = "blockExporterTools_hiddenWorkspace"
+  this.container.style.display = "none" // Hide the hidden workspace.
+  document.body.appendChild(this.container)
   /**
    * Hidden workspace for the Block Exporter that holds pieces that make
    * up the block
    * @type {Blockly.Workspace}
    */
-  this.hiddenWorkspace = Blockly.inject(this.container.id,
-      {collapse: false,
-       media: '../../media/'});
-};
+  this.hiddenWorkspace = Blockly.inject(this.container.id, {
+    collapse: false,
+    media: "../../media/"
+  })
+}
 
 /**
  * Get Blockly Block object from XML that encodes the blocks used to design
@@ -59,12 +60,12 @@ function BlockExporterTools() {
  */
 BlockExporterTools.prototype.getRootBlockFromXml_ = function(xml) {
   // Render XML in hidden workspace.
-  this.hiddenWorkspace.clear();
-  Blockly.Xml.domToWorkspace(xml, this.hiddenWorkspace);
+  this.hiddenWorkspace.clear()
+  Blockly.Xml.domToWorkspace(xml, this.hiddenWorkspace)
   // Get root block.
-  var rootBlock = this.hiddenWorkspace.getTopBlocks()[0] || null;
-  return rootBlock;
-};
+  var rootBlock = this.hiddenWorkspace.getTopBlocks()[0] || null
+  return rootBlock
+}
 
 /**
  * Return the given language code of each block type in an array.
@@ -73,42 +74,58 @@ BlockExporterTools.prototype.getRootBlockFromXml_ = function(xml) {
  * @return {string} The concatenation of each block's language code in the
  *    desired format.
  */
-BlockExporterTools.prototype.getBlockDefinitions =
-    function(blockXmlMap, definitionFormat) {
-  var blockCode = [];
+BlockExporterTools.prototype.getBlockDefinitions = function(
+  blockXmlMap,
+  definitionFormat
+) {
+  var blockCode = []
   for (var blockType in blockXmlMap) {
-    var xml = blockXmlMap[blockType];
+    var xml = blockXmlMap[blockType]
     if (xml) {
       // Render and get block from hidden workspace.
-      var rootBlock = this.getRootBlockFromXml_(xml);
+      var rootBlock = this.getRootBlockFromXml_(xml)
       if (rootBlock) {
         // Generate the block's definition.
-        var code = FactoryUtils.getBlockDefinition(blockType, rootBlock,
-            definitionFormat, this.hiddenWorkspace);
+        var code = FactoryUtils.getBlockDefinition(
+          blockType,
+          rootBlock,
+          definitionFormat,
+          this.hiddenWorkspace
+        )
         // Add block's definition to the definitions to return.
       } else {
         // Append warning comment and write to console.
-        var code = '// No block definition generated for ' + blockType +
-          '. Could not find root block in XML stored for this block.';
-        console.log('No block definition generated for ' + blockType +
-          '. Could not find root block in XML stored for this block.');
+        var code =
+          "// No block definition generated for " +
+          blockType +
+          ". Could not find root block in XML stored for this block."
+        console.log(
+          "No block definition generated for " +
+            blockType +
+            ". Could not find root block in XML stored for this block."
+        )
       }
     } else {
       // Append warning comment and write to console.
-      var code = '// No block definition generated for ' + blockType +
-        '. Block was not found in Block Library Storage.';
-      console.log('No block definition generated for ' + blockType +
-        '. Block was not found in Block Library Storage.');
+      var code =
+        "// No block definition generated for " +
+        blockType +
+        ". Block was not found in Block Library Storage."
+      console.log(
+        "No block definition generated for " +
+          blockType +
+          ". Block was not found in Block Library Storage."
+      )
     }
-    blockCode.push(code);
+    blockCode.push(code)
   }
 
   // Surround json with [] and comma separate items.
   if (definitionFormat == "JSON") {
-    return "[" + blockCode.join(",\n") + "]";
+    return "[" + blockCode.join(",\n") + "]"
   }
-  return blockCode.join("\n\n");
-};
+  return blockCode.join("\n\n")
+}
 
 /**
  * Return the generator code of each block type in an array in a given language.
@@ -118,33 +135,44 @@ BlockExporterTools.prototype.getBlockDefinitions =
  * @return {string} The concatenation of each block's generator code in the
  * desired format.
  */
-BlockExporterTools.prototype.getGeneratorCode =
-    function(blockXmlMap, generatorLanguage) {
-  var multiblockCode = [];
+BlockExporterTools.prototype.getGeneratorCode = function(
+  blockXmlMap,
+  generatorLanguage
+) {
+  var multiblockCode = []
   // Define the custom blocks in order to be able to create instances of
   // them in the exporter workspace.
-  this.addBlockDefinitions(blockXmlMap);
+  this.addBlockDefinitions(blockXmlMap)
 
   for (var blockType in blockXmlMap) {
-    var xml = blockXmlMap[blockType];
+    var xml = blockXmlMap[blockType]
     if (xml) {
       // Render the preview block in the hidden workspace.
-      var tempBlock =
-          FactoryUtils.getDefinedBlock(blockType, this.hiddenWorkspace);
+      var tempBlock = FactoryUtils.getDefinedBlock(
+        blockType,
+        this.hiddenWorkspace
+      )
       // Get generator stub for the given block and add to  generator code.
-      var blockGenCode =
-          FactoryUtils.getGeneratorStub(tempBlock, generatorLanguage);
+      var blockGenCode = FactoryUtils.getGeneratorStub(
+        tempBlock,
+        generatorLanguage
+      )
     } else {
       // Append warning comment and write to console.
-      var blockGenCode = '// No generator stub generated for ' + blockType +
-        '. Block was not found in Block Library Storage.';
-      console.log('No block generator stub generated for ' + blockType +
-        '. Block was not found in Block Library Storage.');
+      var blockGenCode =
+        "// No generator stub generated for " +
+        blockType +
+        ". Block was not found in Block Library Storage."
+      console.log(
+        "No block generator stub generated for " +
+          blockType +
+          ". Block was not found in Block Library Storage."
+      )
     }
-    multiblockCode.push(blockGenCode);
+    multiblockCode.push(blockGenCode)
   }
-  return multiblockCode.join("\n\n");
-};
+  return multiblockCode.join("\n\n")
+}
 
 /**
  * Evaluates block definition code of each block in given object mapping
@@ -153,9 +181,9 @@ BlockExporterTools.prototype.getGeneratorCode =
  * @param {!Object} blockXmlMap Map of block type to XML.
  */
 BlockExporterTools.prototype.addBlockDefinitions = function(blockXmlMap) {
-  var blockDefs = this.getBlockDefinitions(blockXmlMap, 'JavaScript');
-  eval(blockDefs);
-};
+  var blockDefs = this.getBlockDefinitions(blockXmlMap, "JavaScript")
+  eval(blockDefs)
+}
 
 /**
  * Generate XML for the workspace factory's category from imported block
@@ -163,25 +191,26 @@ BlockExporterTools.prototype.addBlockDefinitions = function(blockXmlMap) {
  * @param {!BlockLibraryStorage} blockLibStorage Block Library Storage object.
  * @return {!Element} XML representation of a category.
  */
-BlockExporterTools.prototype.generateCategoryFromBlockLib =
-    function(blockLibStorage) {
-  var allBlockTypes = blockLibStorage.getBlockTypes();
+BlockExporterTools.prototype.generateCategoryFromBlockLib = function(
+  blockLibStorage
+) {
+  var allBlockTypes = blockLibStorage.getBlockTypes()
   // Object mapping block type to XML.
-  var blockXmlMap = blockLibStorage.getBlockXmlMap(allBlockTypes);
+  var blockXmlMap = blockLibStorage.getBlockXmlMap(allBlockTypes)
 
   // Define the custom blocks in order to be able to create instances of
   // them in the exporter workspace.
-  this.addBlockDefinitions(blockXmlMap);
+  this.addBlockDefinitions(blockXmlMap)
 
   // Get array of defined blocks.
-  var blocks = [];
+  var blocks = []
   for (var blockType in blockXmlMap) {
-    var block = FactoryUtils.getDefinedBlock(blockType, this.hiddenWorkspace);
-    blocks.push(block);
+    var block = FactoryUtils.getDefinedBlock(blockType, this.hiddenWorkspace)
+    blocks.push(block)
   }
 
-  return FactoryUtils.generateCategoryXml(blocks,'Block Library');
-};
+  return FactoryUtils.generateCategoryXml(blocks, "Block Library")
+}
 
 /**
  * Generate selector dom from block library storage. For each block in the
@@ -192,37 +221,39 @@ BlockExporterTools.prototype.generateCategoryFromBlockLib =
  *    the block options.
  * @return {!Object} Map of block type to Block Option object.
  */
-BlockExporterTools.prototype.createBlockSelectorFromLib =
-    function(blockLibStorage, blockSelectorId) {
+BlockExporterTools.prototype.createBlockSelectorFromLib = function(
+  blockLibStorage,
+  blockSelectorId
+) {
   // Object mapping each stored block type to XML.
-  var allBlockTypes = blockLibStorage.getBlockTypes();
-  var blockXmlMap = blockLibStorage.getBlockXmlMap(allBlockTypes);
+  var allBlockTypes = blockLibStorage.getBlockTypes()
+  var blockXmlMap = blockLibStorage.getBlockXmlMap(allBlockTypes)
 
   // Define the custom blocks in order to be able to create instances of
   // them in the exporter workspace.
-  this.addBlockDefinitions(blockXmlMap);
+  this.addBlockDefinitions(blockXmlMap)
 
-  var blockSelector = document.getElementById(blockSelectorId);
+  var blockSelector = document.getElementById(blockSelectorId)
   // Clear the block selector.
-  var child;
+  var child
   while ((child = blockSelector.firstChild)) {
-    blockSelector.removeChild(child);
+    blockSelector.removeChild(child)
   }
 
   // Append each block option's dom to the selector.
-  var blockOptions = Object.create(null);
+  var blockOptions = Object.create(null)
   for (var blockType in blockXmlMap) {
     // Get preview block's XML.
-    var block = FactoryUtils.getDefinedBlock(blockType, this.hiddenWorkspace);
-    var previewBlockXml = Blockly.Xml.workspaceToDom(this.hiddenWorkspace);
+    var block = FactoryUtils.getDefinedBlock(blockType, this.hiddenWorkspace)
+    var previewBlockXml = Blockly.Xml.workspaceToDom(this.hiddenWorkspace)
 
     // Create block option, inject block into preview workspace, and append
     // option to block selector.
-    var blockOpt = new BlockOption(blockSelector, blockType, previewBlockXml);
-    blockOpt.createDom();
-    blockSelector.appendChild(blockOpt.dom);
-    blockOpt.showPreviewBlock();
-    blockOptions[blockType] = blockOpt;
+    var blockOpt = new BlockOption(blockSelector, blockType, previewBlockXml)
+    blockOpt.createDom()
+    blockSelector.appendChild(blockOpt.dom)
+    blockOpt.showPreviewBlock()
+    blockOptions[blockType] = blockOpt
   }
-  return blockOptions;
-};
+  return blockOptions
+}

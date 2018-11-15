@@ -22,108 +22,133 @@
  * @fileoverview Generating Solidity for logic blocks.
  * @author q.neutron@gmail.com (Quynh Neutron)
  */
-'use strict';
+"use strict"
 
-goog.provide('Blockly.Solidity.logic');
+goog.provide("Blockly.Solidity.logic")
 
-goog.require('Blockly.Solidity');
+goog.require("Blockly.Solidity")
 
-
-Blockly.Solidity['controls_if'] = function(block) {
+Blockly.Solidity["controls_if"] = function(block) {
   // If/elseif/else condition.
-  var n = 0;
-  var code = '', branchCode, conditionCode;
+  var n = 0
+  var code = "",
+    branchCode,
+    conditionCode
   do {
-    conditionCode = Blockly.Solidity.valueToCode(block, 'IF' + n,
-      Blockly.Solidity.ORDER_NONE) || 'false';
-    branchCode = Blockly.Solidity.statementToCode(block, 'DO' + n);
-    code += (n > 0 ? ' else ' : '') +
-        'if (' + conditionCode + ') {\n' + branchCode + '}';
+    conditionCode =
+      Blockly.Solidity.valueToCode(
+        block,
+        "IF" + n,
+        Blockly.Solidity.ORDER_NONE
+      ) || "false"
+    branchCode = Blockly.Solidity.statementToCode(block, "DO" + n)
+    code +=
+      (n > 0 ? " else " : "") +
+      "if (" +
+      conditionCode +
+      ") {\n" +
+      branchCode +
+      "}"
 
-    ++n;
-  } while (block.getInput('IF' + n));
+    ++n
+  } while (block.getInput("IF" + n))
 
-  if (block.getInput('ELSE')) {
-    branchCode = Blockly.Solidity.statementToCode(block, 'ELSE');
-    code += ' else {\n' + branchCode + '}';
+  if (block.getInput("ELSE")) {
+    branchCode = Blockly.Solidity.statementToCode(block, "ELSE")
+    code += " else {\n" + branchCode + "}"
   }
-  return code + '\n';
-};
+  return code + "\n"
+}
 
-Blockly.Solidity['controls_ifelse'] = Blockly.Solidity['controls_if'];
+Blockly.Solidity["controls_ifelse"] = Blockly.Solidity["controls_if"]
 
-Blockly.Solidity['logic_compare'] = function(block) {
+Blockly.Solidity["logic_compare"] = function(block) {
   // Comparison operator.
   var OPERATORS = {
-    'EQ': '==',
-    'NEQ': '!=',
-    'LT': '<',
-    'LTE': '<=',
-    'GT': '>',
-    'GTE': '>='
-  };
-  var operator = OPERATORS[block.getFieldValue('OP')];
-  var order = (operator == '==' || operator == '!=') ?
-      Blockly.Solidity.ORDER_EQUALITY : Blockly.Solidity.ORDER_RELATIONAL;
-  var argument0 = Blockly.Solidity.valueToCode(block, 'A', order) || '0';
-  var argument1 = Blockly.Solidity.valueToCode(block, 'B', order) || '0';
-  var code = argument0 + ' ' + operator + ' ' + argument1;
-  return [code, order];
-};
+    EQ: "==",
+    NEQ: "!=",
+    LT: "<",
+    LTE: "<=",
+    GT: ">",
+    GTE: ">="
+  }
+  var operator = OPERATORS[block.getFieldValue("OP")]
+  var order =
+    operator == "==" || operator == "!="
+      ? Blockly.Solidity.ORDER_EQUALITY
+      : Blockly.Solidity.ORDER_RELATIONAL
+  var argument0 = Blockly.Solidity.valueToCode(block, "A", order) || "0"
+  var argument1 = Blockly.Solidity.valueToCode(block, "B", order) || "0"
+  var code = argument0 + " " + operator + " " + argument1
+  return [code, order]
+}
 
-Blockly.Solidity['logic_operation'] = function(block) {
+Blockly.Solidity["logic_operation"] = function(block) {
   // Operations 'and', 'or'.
-  var operator = (block.getFieldValue('OP') == 'AND') ? '&&' : '||';
-  var order = (operator == '&&') ? Blockly.Solidity.ORDER_LOGICAL_AND :
-      Blockly.Solidity.ORDER_LOGICAL_OR;
-  var argument0 = Blockly.Solidity.valueToCode(block, 'A', order);
-  var argument1 = Blockly.Solidity.valueToCode(block, 'B', order);
+  var operator = block.getFieldValue("OP") == "AND" ? "&&" : "||"
+  var order =
+    operator == "&&"
+      ? Blockly.Solidity.ORDER_LOGICAL_AND
+      : Blockly.Solidity.ORDER_LOGICAL_OR
+  var argument0 = Blockly.Solidity.valueToCode(block, "A", order)
+  var argument1 = Blockly.Solidity.valueToCode(block, "B", order)
   if (!argument0 && !argument1) {
     // If there are no arguments, then the return value is false.
-    argument0 = 'false';
-    argument1 = 'false';
+    argument0 = "false"
+    argument1 = "false"
   } else {
     // Single missing arguments have no effect on the return value.
-    var defaultArgument = (operator == '&&') ? 'true' : 'false';
+    var defaultArgument = operator == "&&" ? "true" : "false"
     if (!argument0) {
-      argument0 = defaultArgument;
+      argument0 = defaultArgument
     }
     if (!argument1) {
-      argument1 = defaultArgument;
+      argument1 = defaultArgument
     }
   }
-  var code = argument0 + ' ' + operator + ' ' + argument1;
-  return [code, order];
-};
+  var code = argument0 + " " + operator + " " + argument1
+  return [code, order]
+}
 
-Blockly.Solidity['logic_negate'] = function(block) {
+Blockly.Solidity["logic_negate"] = function(block) {
   // Negation.
-  var order = Blockly.Solidity.ORDER_LOGICAL_NOT;
-  var argument0 = Blockly.Solidity.valueToCode(block, 'BOOL', order) ||
-      'true';
-  var code = '!' + argument0;
-  return [code, order];
-};
+  var order = Blockly.Solidity.ORDER_LOGICAL_NOT
+  var argument0 = Blockly.Solidity.valueToCode(block, "BOOL", order) || "true"
+  var code = "!" + argument0
+  return [code, order]
+}
 
-Blockly.Solidity['logic_boolean'] = function(block) {
+Blockly.Solidity["logic_boolean"] = function(block) {
   // Boolean values true and false.
-  var code = (block.getFieldValue('BOOL') == 'TRUE') ? 'true' : 'false';
-  return [code, Blockly.Solidity.ORDER_ATOMIC];
-};
+  var code = block.getFieldValue("BOOL") == "TRUE" ? "true" : "false"
+  return [code, Blockly.Solidity.ORDER_ATOMIC]
+}
 
-Blockly.Solidity['logic_null'] = function(block) {
+Blockly.Solidity["logic_null"] = function(block) {
   // Null data type.
-  return ['null', Blockly.Solidity.ORDER_ATOMIC];
-};
+  return ["null", Blockly.Solidity.ORDER_ATOMIC]
+}
 
-Blockly.Solidity['logic_ternary'] = function(block) {
+Blockly.Solidity["logic_ternary"] = function(block) {
   // Ternary operator.
-  var value_if = Blockly.Solidity.valueToCode(block, 'IF',
-      Blockly.Solidity.ORDER_CONDITIONAL) || 'false';
-  var value_then = Blockly.Solidity.valueToCode(block, 'THEN',
-      Blockly.Solidity.ORDER_CONDITIONAL) || 'null';
-  var value_else = Blockly.Solidity.valueToCode(block, 'ELSE',
-      Blockly.Solidity.ORDER_CONDITIONAL) || 'null';
-  var code = value_if + ' ? ' + value_then + ' : ' + value_else;
-  return [code, Blockly.Solidity.ORDER_CONDITIONAL];
-};
+  var value_if =
+    Blockly.Solidity.valueToCode(
+      block,
+      "IF",
+      Blockly.Solidity.ORDER_CONDITIONAL
+    ) || "false"
+  var value_then =
+    Blockly.Solidity.valueToCode(
+      block,
+      "THEN",
+      Blockly.Solidity.ORDER_CONDITIONAL
+    ) || "null"
+  var value_else =
+    Blockly.Solidity.valueToCode(
+      block,
+      "ELSE",
+      Blockly.Solidity.ORDER_CONDITIONAL
+    ) || "null"
+  var code = value_if + " ? " + value_then + " : " + value_else
+  return [code, Blockly.Solidity.ORDER_CONDITIONAL]
+}

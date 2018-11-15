@@ -18,11 +18,9 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.ToolbarMenuButtonRenderer');
+goog.provide("goog.ui.ToolbarMenuButtonRenderer")
 
-goog.require('goog.ui.MenuButtonRenderer');
-
-
+goog.require("goog.ui.MenuButtonRenderer")
 
 /**
  * Toolbar-specific renderer for {@link goog.ui.MenuButton}s, based on {@link
@@ -31,20 +29,19 @@ goog.require('goog.ui.MenuButtonRenderer');
  * @extends {goog.ui.MenuButtonRenderer}
  */
 goog.ui.ToolbarMenuButtonRenderer = function() {
-  goog.ui.MenuButtonRenderer.call(this);
-};
-goog.inherits(goog.ui.ToolbarMenuButtonRenderer, goog.ui.MenuButtonRenderer);
-goog.addSingletonGetter(goog.ui.ToolbarMenuButtonRenderer);
-
+  goog.ui.MenuButtonRenderer.call(this)
+}
+goog.inherits(goog.ui.ToolbarMenuButtonRenderer, goog.ui.MenuButtonRenderer)
+goog.addSingletonGetter(goog.ui.ToolbarMenuButtonRenderer)
 
 /**
  * Default CSS class to be applied to the root element of menu buttons rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS =
-    goog.getCssName('goog-toolbar-menu-button');
-
+goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS = goog.getCssName(
+  "goog-toolbar-menu-button"
+)
 
 /**
  * Returns the CSS class to be applied to the root element of menu buttons
@@ -53,5 +50,5 @@ goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS =
  * @override
  */
 goog.ui.ToolbarMenuButtonRenderer.prototype.getCssClass = function() {
-  return goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS;
-};
+  return goog.ui.ToolbarMenuButtonRenderer.CSS_CLASS
+}

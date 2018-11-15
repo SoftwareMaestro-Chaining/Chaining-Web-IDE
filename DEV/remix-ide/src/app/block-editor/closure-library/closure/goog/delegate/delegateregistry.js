@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.module('goog.delegate.DelegateRegistry');
+goog.module("goog.delegate.DelegateRegistry")
 
-const {ENABLE_ASSERTS, assert} = goog.require('goog.asserts');
-const {binarySelect} = goog.require('goog.array');
-const {freeze} = goog.require('goog.debug');
-
+const { ENABLE_ASSERTS, assert } = goog.require("goog.asserts")
+const { binarySelect } = goog.require("goog.array")
+const { freeze } = goog.require("goog.debug")
 
 /**
  * @record
@@ -30,21 +29,20 @@ class Registration {
      * `ctor` must be provided.
      * @type {T|undefined}
      */
-    this.instance;
+    this.instance
     /**
      * The registered delegate constructor.  Exactly one of `instance` or
      * `ctor` must be provided.
      * @type {function(new: T)|undefined}
      */
-    this.ctor;
+    this.ctor
     /**
      * An optional numeric priority (higher = first).
      * @type {number|undefined}
      */
-    this.priority;
+    this.priority
   }
 }
-
 
 /**
  * Base class for delegate registries.  Does not specify a policy for handling
@@ -54,13 +52,13 @@ class Registration {
 class DelegateRegistryBase {
   constructor() {
     /** @private @const {!Array<!Registration<T>>} */
-    this.registered_ = [];
+    this.registered_ = []
     /** @private {boolean} */
-    this.allowLateRegistration_ = false;
+    this.allowLateRegistration_ = false
     /** @private {boolean} */
-    this.cacheInstantiation_ = false;
+    this.cacheInstantiation_ = false
     /** @private {boolean} */
-    this.delegatesConstructed_ = false;
+    this.delegatesConstructed_ = false
   }
 
   /**
@@ -74,9 +72,9 @@ class DelegateRegistryBase {
    */
   allowLateRegistration() {
     if (ENABLE_ASSERTS) {
-      /** @type {!DelegateRegistryBase} */ (this).allowLateRegistration_ = true;
+      /** @type {!DelegateRegistryBase} */ this.allowLateRegistration_ = true
     }
-    return /** @type {?} */ (this);
+    return /** @type {?} */ (this)
   }
 
   /**
@@ -88,8 +86,8 @@ class DelegateRegistryBase {
    * @template THIS
    */
   cacheInstantiation() {
-    /** @type {!DelegateRegistryBase} */ (this).cacheInstantiation_ = true;
-    return /** @type {?} */ (this);
+    /** @type {!DelegateRegistryBase} */ this.cacheInstantiation_ = true
+    return /** @type {?} */ (this)
   }
 
   /**
@@ -102,11 +100,11 @@ class DelegateRegistryBase {
    */
   delegate(instantiate = undefined) {
     if (ENABLE_ASSERTS) {
-      this.delegatesConstructed_ = true;
+      this.delegatesConstructed_ = true
     }
-    return this.registered_.length ?
-        this.instantiate_(this.registered_[0], instantiate) :
-        undefined;
+    return this.registered_.length
+      ? this.instantiate_(this.registered_[0], instantiate)
+      : undefined
   }
 
   /**
@@ -121,9 +119,9 @@ class DelegateRegistryBase {
    */
   delegates(instantiate = undefined) {
     if (ENABLE_ASSERTS) {
-      this.delegatesConstructed_ = true;
+      this.delegatesConstructed_ = true
     }
-    return freeze(this.registered_.map(r => this.instantiate_(r, instantiate)));
+    return freeze(this.registered_.map(r => this.instantiate_(r, instantiate)))
   }
 
   /**
@@ -132,14 +130,14 @@ class DelegateRegistryBase {
    * @return {T}
    * @private
    */
-  instantiate_(registration, instantiate = (ctor) => new ctor()) {
-    if (!registration.ctor) return registration.instance;
-    const instance = instantiate(registration.ctor);
+  instantiate_(registration, instantiate = ctor => new ctor()) {
+    if (!registration.ctor) return registration.instance
+    const instance = instantiate(registration.ctor)
     if (this.cacheInstantiation_) {
-      delete registration.ctor;
-      registration.instance = instance;
+      delete registration.ctor
+      registration.instance = instance
     }
-    return instance;
+    return instance
   }
 
   /**
@@ -148,11 +146,11 @@ class DelegateRegistryBase {
    */
   checkRegistration_() {
     assert(
-        this.allowLateRegistration_ || !this.delegatesConstructed_,
-        'Cannot register new delegates after instantiation.');
+      this.allowLateRegistration_ || !this.delegatesConstructed_,
+      "Cannot register new delegates after instantiation."
+    )
   }
 }
-
 
 /**
  * Delegates provide a system for hygienic modification of a delegating class's
@@ -280,9 +278,9 @@ class DelegateRegistryBase {
  */
 class DelegateRegistry extends DelegateRegistryBase {
   constructor() {
-    super();
+    super()
     /** @private {boolean} */
-    this.expectAtMostOneDelegate_ = false;
+    this.expectAtMostOneDelegate_ = false
   }
 
   /**
@@ -292,39 +290,43 @@ class DelegateRegistry extends DelegateRegistryBase {
    */
   expectAtMostOneDelegate() {
     if (ENABLE_ASSERTS) {
-      this.expectAtMostOneDelegate_ = true;
+      this.expectAtMostOneDelegate_ = true
     }
-    return this;
+    return this
   }
 
   /**
    * @param {function(new: T)} ctor
    */
   registerClass(ctor) {
-    this.checkRegistration_();
-    this.registered_.push({ctor});
+    this.checkRegistration_()
+    this.registered_.push({ ctor })
   }
 
   /**
    * @param {T} instance
    */
   registerInstance(instance) {
-    this.checkRegistration_();
-    this.registered_.push({instance});
+    this.checkRegistration_()
+    this.registered_.push({ instance })
   }
 
   /** @override @private */
   checkRegistration_() {
-    super.checkRegistration_();
-    if (ENABLE_ASSERTS && this.expectAtMostOneDelegate_ &&
-        this.registered_.length) {
+    super.checkRegistration_()
+    if (
+      ENABLE_ASSERTS &&
+      this.expectAtMostOneDelegate_ &&
+      this.registered_.length
+    ) {
       assert(
-          false, 'delegate already registered: %s',
-          this.registered_[0].ctor || this.registered_[0].instance);
+        false,
+        "delegate already registered: %s",
+        this.registered_[0].ctor || this.registered_[0].instance
+      )
     }
   }
 }
-
 
 /**
  * A delegate registry that allows multiple delegates, which must each have a
@@ -342,7 +344,7 @@ DelegateRegistry.Prioritized = class extends DelegateRegistryBase {
    * @param {number} priority
    */
   registerClass(ctor, priority) {
-    this.add_({ctor, priority});
+    this.add_({ ctor, priority })
   }
 
   /**
@@ -350,7 +352,7 @@ DelegateRegistry.Prioritized = class extends DelegateRegistryBase {
    * @param {number} priority
    */
   registerInstance(instance, priority) {
-    this.add_({instance, priority});
+    this.add_({ instance, priority })
   }
 
   /**
@@ -358,22 +360,25 @@ DelegateRegistry.Prioritized = class extends DelegateRegistryBase {
    * @private
    */
   add_(registration) {
-    this.checkRegistration_();
-    const priority = registration.priority;
+    this.checkRegistration_()
+    const priority = registration.priority
     // Note: index will always be negative since the evaluator never returns 0.
     // This ensures that ties will be broken to the right.  Sort highest-first.
-    const index =
-        ~binarySelect(this.registered_, (r) => r.priority < priority ? -1 : 1);
-    const previous = index > 0 ? this.registered_[index - 1] : null;
+    const index = ~binarySelect(this.registered_, r =>
+      r.priority < priority ? -1 : 1
+    )
+    const previous = index > 0 ? this.registered_[index - 1] : null
     if (ENABLE_ASSERTS && previous && previous.priority <= priority) {
       assert(
-          false, 'two delegates registered with same priority (%s): %s and %s',
-          priority, previous.ctor || previous.instance,
-          registration.ctor || registration.instance);
+        false,
+        "two delegates registered with same priority (%s): %s and %s",
+        priority,
+        previous.ctor || previous.instance,
+        registration.ctor || registration.instance
+      )
     }
-    this.registered_.splice(index, 0, registration);
+    this.registered_.splice(index, 0, registration)
   }
-};
+}
 
-
-exports = DelegateRegistry;
+exports = DelegateRegistry

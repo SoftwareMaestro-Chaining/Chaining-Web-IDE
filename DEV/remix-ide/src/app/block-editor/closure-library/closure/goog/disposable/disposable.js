@@ -18,14 +18,11 @@
  * @author arv@google.com (Erik Arvidsson)
  */
 
+goog.provide("goog.Disposable")
+goog.provide("goog.dispose")
+goog.provide("goog.disposeAll")
 
-goog.provide('goog.Disposable');
-goog.provide('goog.dispose');
-goog.provide('goog.disposeAll');
-
-goog.require('goog.disposable.IDisposable');
-
-
+goog.require("goog.disposable.IDisposable")
 
 /**
  * Class that provides the basic implementation for disposable objects. If your
@@ -41,19 +38,18 @@ goog.Disposable = function() {
    * stack trace of the Disposable instance.
    * @type {string|undefined}
    */
-  this.creationStack;
+  this.creationStack
 
   if (goog.Disposable.MONITORING_MODE != goog.Disposable.MonitoringMode.OFF) {
     if (goog.Disposable.INCLUDE_STACK_ON_CREATION) {
-      this.creationStack = new Error().stack;
+      this.creationStack = new Error().stack
     }
-    goog.Disposable.instances_[goog.getUid(this)] = this;
+    goog.Disposable.instances_[goog.getUid(this)] = this
   }
   // Support sealing
-  this.disposed_ = this.disposed_;
-  this.onDisposeCallbacks_ = this.onDisposeCallbacks_;
-};
-
+  this.disposed_ = this.disposed_
+  this.onDisposeCallbacks_ = this.onDisposeCallbacks_
+}
 
 /**
  * @enum {number} Different monitoring modes for Disposable.
@@ -76,8 +72,7 @@ goog.Disposable.MonitoringMode = {
    * `goog.Disposable` base constructor.
    */
   INTERACTIVE: 2
-};
-
+}
 
 /**
  * @define {number} The monitoring mode of the goog.Disposable
@@ -86,15 +81,13 @@ goog.Disposable.MonitoringMode = {
  *     performance and memory usage. If switched off, the monitoring code
  *     compiles down to 0 bytes.
  */
-goog.define('goog.Disposable.MONITORING_MODE', 0);
-
+goog.define("goog.Disposable.MONITORING_MODE", 0)
 
 /**
  * @define {boolean} Whether to attach creation stack to each created disposable
  *     instance; This is only relevant for when MonitoringMode != OFF.
  */
-goog.define('goog.Disposable.INCLUDE_STACK_ON_CREATION', true);
-
+goog.define("goog.Disposable.INCLUDE_STACK_ON_CREATION", true)
 
 /**
  * Maps the unique ID of every undisposed `goog.Disposable` object to
@@ -102,63 +95,56 @@ goog.define('goog.Disposable.INCLUDE_STACK_ON_CREATION', true);
  * @type {!Object<number, !goog.Disposable>}
  * @private
  */
-goog.Disposable.instances_ = {};
-
+goog.Disposable.instances_ = {}
 
 /**
  * @return {!Array<!goog.Disposable>} All `goog.Disposable` objects that
  *     haven't been disposed of.
  */
 goog.Disposable.getUndisposedObjects = function() {
-  var ret = [];
+  var ret = []
   for (var id in goog.Disposable.instances_) {
     if (goog.Disposable.instances_.hasOwnProperty(id)) {
-      ret.push(goog.Disposable.instances_[Number(id)]);
+      ret.push(goog.Disposable.instances_[Number(id)])
     }
   }
-  return ret;
-};
-
+  return ret
+}
 
 /**
  * Clears the registry of undisposed objects but doesn't dispose of them.
  */
 goog.Disposable.clearUndisposedObjects = function() {
-  goog.Disposable.instances_ = {};
-};
-
+  goog.Disposable.instances_ = {}
+}
 
 /**
  * Whether the object has been disposed of.
  * @type {boolean}
  * @private
  */
-goog.Disposable.prototype.disposed_ = false;
-
+goog.Disposable.prototype.disposed_ = false
 
 /**
  * Callbacks to invoke when this object is disposed.
  * @type {Array<!Function>}
  * @private
  */
-goog.Disposable.prototype.onDisposeCallbacks_;
-
+goog.Disposable.prototype.onDisposeCallbacks_
 
 /**
  * @return {boolean} Whether the object has been disposed of.
  * @override
  */
 goog.Disposable.prototype.isDisposed = function() {
-  return this.disposed_;
-};
-
+  return this.disposed_
+}
 
 /**
  * @return {boolean} Whether the object has been disposed of.
  * @deprecated Use {@link #isDisposed} instead.
  */
-goog.Disposable.prototype.getDisposed = goog.Disposable.prototype.isDisposed;
-
+goog.Disposable.prototype.getDisposed = goog.Disposable.prototype.isDisposed
 
 /**
  * Disposes of the object. If the object hasn't already been disposed of, calls
@@ -173,31 +159,38 @@ goog.Disposable.prototype.dispose = function() {
   if (!this.disposed_) {
     // Set disposed_ to true first, in case during the chain of disposal this
     // gets disposed recursively.
-    this.disposed_ = true;
-    this.disposeInternal();
+    this.disposed_ = true
+    this.disposeInternal()
     if (goog.Disposable.MONITORING_MODE != goog.Disposable.MonitoringMode.OFF) {
-      var uid = goog.getUid(this);
-      if (goog.Disposable.MONITORING_MODE ==
-              goog.Disposable.MonitoringMode.PERMANENT &&
-          !goog.Disposable.instances_.hasOwnProperty(uid)) {
+      var uid = goog.getUid(this)
+      if (
+        goog.Disposable.MONITORING_MODE ==
+          goog.Disposable.MonitoringMode.PERMANENT &&
+        !goog.Disposable.instances_.hasOwnProperty(uid)
+      ) {
         throw new Error(
-            this + ' did not call the goog.Disposable base ' +
-            'constructor or was disposed of after a clearUndisposedObjects ' +
-            'call');
+          this +
+            " did not call the goog.Disposable base " +
+            "constructor or was disposed of after a clearUndisposedObjects " +
+            "call"
+        )
       }
-      if (goog.Disposable.MONITORING_MODE !=
-              goog.Disposable.MonitoringMode.OFF &&
-          this.onDisposeCallbacks_ && this.onDisposeCallbacks_.length > 0) {
+      if (
+        goog.Disposable.MONITORING_MODE != goog.Disposable.MonitoringMode.OFF &&
+        this.onDisposeCallbacks_ &&
+        this.onDisposeCallbacks_.length > 0
+      ) {
         throw new Error(
-            this + ' did not empty its onDisposeCallbacks queue. This ' +
-            'probably means it overrode dispose() or disposeInternal() ' +
-            'without calling the superclass\' method.');
+          this +
+            " did not empty its onDisposeCallbacks queue. This " +
+            "probably means it overrode dispose() or disposeInternal() " +
+            "without calling the superclass' method."
+        )
       }
-      delete goog.Disposable.instances_[uid];
+      delete goog.Disposable.instances_[uid]
     }
   }
-};
-
+}
 
 /**
  * Associates a disposable object with this object so that they will be disposed
@@ -206,9 +199,8 @@ goog.Disposable.prototype.dispose = function() {
  *     this object is disposed.
  */
 goog.Disposable.prototype.registerDisposable = function(disposable) {
-  this.addOnDisposeCallback(goog.partial(goog.dispose, disposable));
-};
-
+  this.addOnDisposeCallback(goog.partial(goog.dispose, disposable))
+}
 
 /**
  * Invokes a callback function when this object is disposed. Callbacks are
@@ -220,17 +212,17 @@ goog.Disposable.prototype.registerDisposable = function(disposable) {
  */
 goog.Disposable.prototype.addOnDisposeCallback = function(callback, opt_scope) {
   if (this.disposed_) {
-    goog.isDef(opt_scope) ? callback.call(opt_scope) : callback();
-    return;
+    goog.isDef(opt_scope) ? callback.call(opt_scope) : callback()
+    return
   }
   if (!this.onDisposeCallbacks_) {
-    this.onDisposeCallbacks_ = [];
+    this.onDisposeCallbacks_ = []
   }
 
   this.onDisposeCallbacks_.push(
-      goog.isDef(opt_scope) ? goog.bind(callback, opt_scope) : callback);
-};
-
+    goog.isDef(opt_scope) ? goog.bind(callback, opt_scope) : callback
+  )
+}
 
 /**
  * Deletes or nulls out any references to COM objects, DOM nodes, or other
@@ -261,11 +253,10 @@ goog.Disposable.prototype.addOnDisposeCallback = function(callback, opt_scope) {
 goog.Disposable.prototype.disposeInternal = function() {
   if (this.onDisposeCallbacks_) {
     while (this.onDisposeCallbacks_.length) {
-      this.onDisposeCallbacks_.shift()();
+      this.onDisposeCallbacks_.shift()()
     }
   }
-};
-
+}
 
 /**
  * Returns True if we can verify the object is disposed.
@@ -275,12 +266,11 @@ goog.Disposable.prototype.disposeInternal = function() {
  * @return {boolean} True if we can verify the object is disposed.
  */
 goog.Disposable.isDisposed = function(obj) {
-  if (obj && typeof obj.isDisposed == 'function') {
-    return obj.isDisposed();
+  if (obj && typeof obj.isDisposed == "function") {
+    return obj.isDisposed()
   }
-  return false;
-};
-
+  return false
+}
 
 /**
  * Calls `dispose` on the argument if it supports it. If obj is not an
@@ -288,11 +278,10 @@ goog.Disposable.isDisposed = function(obj) {
  * @param {*} obj The object to dispose of.
  */
 goog.dispose = function(obj) {
-  if (obj && typeof obj.dispose == 'function') {
-    obj.dispose();
+  if (obj && typeof obj.dispose == "function") {
+    obj.dispose()
   }
-};
-
+}
 
 /**
  * Calls `dispose` on each member of the list that supports it. (If the
@@ -303,11 +292,11 @@ goog.dispose = function(obj) {
  */
 goog.disposeAll = function(var_args) {
   for (var i = 0, len = arguments.length; i < len; ++i) {
-    var disposable = arguments[i];
+    var disposable = arguments[i]
     if (goog.isArrayLike(disposable)) {
-      goog.disposeAll.apply(null, disposable);
+      goog.disposeAll.apply(null, disposable)
     } else {
-      goog.dispose(disposable);
+      goog.dispose(disposable)
     }
   }
-};
+}

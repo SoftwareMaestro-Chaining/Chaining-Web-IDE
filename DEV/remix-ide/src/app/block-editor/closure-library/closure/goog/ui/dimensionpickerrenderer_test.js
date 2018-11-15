@@ -12,45 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-goog.provide('goog.ui.DimensionPickerRendererTest');
-goog.setTestOnly('goog.ui.DimensionPickerRendererTest');
+goog.provide("goog.ui.DimensionPickerRendererTest")
+goog.setTestOnly("goog.ui.DimensionPickerRendererTest")
 
-goog.require('goog.a11y.aria.LivePriority');
-goog.require('goog.array');
-goog.require('goog.testing.jsunit');
-goog.require('goog.testing.recordFunction');
-goog.require('goog.ui.DimensionPicker');
-goog.require('goog.ui.DimensionPickerRenderer');
+goog.require("goog.a11y.aria.LivePriority")
+goog.require("goog.array")
+goog.require("goog.testing.jsunit")
+goog.require("goog.testing.recordFunction")
+goog.require("goog.ui.DimensionPicker")
+goog.require("goog.ui.DimensionPickerRenderer")
 
-
-var renderer;
-var picker;
+var renderer
+var picker
 
 function setUp() {
-  renderer = new goog.ui.DimensionPickerRenderer();
-  picker = new goog.ui.DimensionPicker(renderer);
+  renderer = new goog.ui.DimensionPickerRenderer()
+  picker = new goog.ui.DimensionPicker(renderer)
 }
 
 function tearDown() {
-  picker.dispose();
+  picker.dispose()
 }
-
 
 /**
  * Tests that the right aria label is added when the highlighted
  * size changes.
  */
 function testSetHighlightedSizeUpdatesLiveRegion() {
-  picker.render();
+  picker.render()
 
-  var sayFunction = goog.testing.recordFunction();
-  renderer.announcer_.say = sayFunction;
-  renderer.setHighlightedSize(picker, 3, 7);
+  var sayFunction = goog.testing.recordFunction()
+  renderer.announcer_.say = sayFunction
+  renderer.setHighlightedSize(picker, 3, 7)
 
-  assertEquals(1, sayFunction.getCallCount());
+  assertEquals(1, sayFunction.getCallCount())
 
   assertTrue(
-      goog.array.equals(
-          ['3 by 7', goog.a11y.aria.LivePriority.ASSERTIVE],
-          sayFunction.getLastCall().getArguments()));
+    goog.array.equals(
+      ["3 by 7", goog.a11y.aria.LivePriority.ASSERTIVE],
+      sayFunction.getLastCall().getArguments()
+    )
+  )
 }

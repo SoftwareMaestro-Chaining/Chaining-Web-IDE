@@ -22,15 +22,15 @@
  * @author sll@google.com (Sean Lip)
  */
 
-goog.provide('blocklyApp.TranslatePipe');
+goog.provide("blocklyApp.TranslatePipe")
 
-
-blocklyApp.TranslatePipe = ng.core.Pipe({
-  name: 'translate'
-})
-.Class({
-  constructor: function() {},
-  transform: function(messageId) {
-    return Blockly.Msg[messageId];
-  }
-});
+blocklyApp.TranslatePipe = ng.core
+  .Pipe({
+    name: "translate"
+  })
+  .Class({
+    constructor: function() {},
+    transform: function(messageId) {
+      return Blockly.Msg[messageId]
+    }
+  })

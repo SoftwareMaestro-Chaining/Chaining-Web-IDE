@@ -18,14 +18,12 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.MenuSeparatorRenderer');
+goog.provide("goog.ui.MenuSeparatorRenderer")
 
-goog.require('goog.dom');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.ui.ControlRenderer');
-
-
+goog.require("goog.dom")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.ui.ControlRenderer")
 
 /**
  * Renderer for menu separators.
@@ -33,19 +31,17 @@ goog.require('goog.ui.ControlRenderer');
  * @extends {goog.ui.ControlRenderer}
  */
 goog.ui.MenuSeparatorRenderer = function() {
-  goog.ui.ControlRenderer.call(this);
-};
-goog.inherits(goog.ui.MenuSeparatorRenderer, goog.ui.ControlRenderer);
-goog.addSingletonGetter(goog.ui.MenuSeparatorRenderer);
-
+  goog.ui.ControlRenderer.call(this)
+}
+goog.inherits(goog.ui.MenuSeparatorRenderer, goog.ui.ControlRenderer)
+goog.addSingletonGetter(goog.ui.MenuSeparatorRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.MenuSeparatorRenderer.CSS_CLASS = goog.getCssName('goog-menuseparator');
-
+goog.ui.MenuSeparatorRenderer.CSS_CLASS = goog.getCssName("goog-menuseparator")
 
 /**
  * Returns an empty, styled menu separator DIV.  Overrides {@link
@@ -55,10 +51,10 @@ goog.ui.MenuSeparatorRenderer.CSS_CLASS = goog.getCssName('goog-menuseparator');
  * @override
  */
 goog.ui.MenuSeparatorRenderer.prototype.createDom = function(separator) {
-  return separator.getDomHelper().createDom(
-      goog.dom.TagName.DIV, this.getCssClass());
-};
-
+  return separator
+    .getDomHelper()
+    .createDom(goog.dom.TagName.DIV, this.getCssClass())
+}
 
 /**
  * Takes an existing element, and decorates it with the separator.  Overrides
@@ -70,24 +66,25 @@ goog.ui.MenuSeparatorRenderer.prototype.createDom = function(separator) {
  * @override
  */
 goog.ui.MenuSeparatorRenderer.prototype.decorate = function(
-    separator, element) {
+  separator,
+  element
+) {
   // Normally handled in the superclass. But we don't call the superclass.
   if (element.id) {
-    separator.setId(element.id);
+    separator.setId(element.id)
   }
 
   if (element.tagName == goog.dom.TagName.HR) {
     // Replace HR with separator.
-    var hr = element;
-    element = this.createDom(separator);
-    goog.dom.insertSiblingBefore(element, hr);
-    goog.dom.removeNode(hr);
+    var hr = element
+    element = this.createDom(separator)
+    goog.dom.insertSiblingBefore(element, hr)
+    goog.dom.removeNode(hr)
   } else {
-    goog.dom.classlist.add(element, this.getCssClass());
+    goog.dom.classlist.add(element, this.getCssClass())
   }
-  return element;
-};
-
+  return element
+}
 
 /**
  * Overrides {@link goog.ui.ControlRenderer#setContent} to do nothing, since
@@ -98,10 +95,11 @@ goog.ui.MenuSeparatorRenderer.prototype.decorate = function(
  * @override
  */
 goog.ui.MenuSeparatorRenderer.prototype.setContent = function(
-    separator, content) {
+  separator,
+  content
+) {
   // Do nothing.  Separators are empty.
-};
-
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -110,5 +108,5 @@ goog.ui.MenuSeparatorRenderer.prototype.setContent = function(
  * @override
  */
 goog.ui.MenuSeparatorRenderer.prototype.getCssClass = function() {
-  return goog.ui.MenuSeparatorRenderer.CSS_CLASS;
-};
+  return goog.ui.MenuSeparatorRenderer.CSS_CLASS
+}

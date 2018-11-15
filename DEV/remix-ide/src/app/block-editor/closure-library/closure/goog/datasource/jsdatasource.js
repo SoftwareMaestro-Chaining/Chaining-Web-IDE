@@ -17,17 +17,15 @@
  *
  */
 
+goog.provide("goog.ds.JsDataSource");
+goog.provide("goog.ds.JsPropertyDataSource");
 
-goog.provide('goog.ds.JsDataSource');
-goog.provide('goog.ds.JsPropertyDataSource');
-
-goog.require('goog.ds.BaseDataNode');
-goog.require('goog.ds.BasicNodeList');
-goog.require('goog.ds.DataManager');
-goog.require('goog.ds.DataNode');
-goog.require('goog.ds.EmptyNodeList');
-goog.require('goog.ds.LoadState');
-
+goog.require("goog.ds.BaseDataNode");
+goog.require("goog.ds.BasicNodeList");
+goog.require("goog.ds.DataManager");
+goog.require("goog.ds.DataNode");
+goog.require("goog.ds.EmptyNodeList");
+goog.require("goog.ds.LoadState");
 
 /**
  * Data source whose backing is JavaScript data
@@ -51,7 +49,6 @@ goog.ds.JsDataSource = function(root, dataName, opt_parent) {
   this.setRoot(root);
 };
 
-
 /**
  * The root JS object. Can be null.
  * @type {*}
@@ -59,7 +56,6 @@ goog.ds.JsDataSource = function(root, dataName, opt_parent) {
  * @suppress {underscore|visibility}
  */
 goog.ds.JsDataSource.prototype.root_;
-
 
 /**
  * Sets the root JS object
@@ -71,7 +67,6 @@ goog.ds.JsDataSource.prototype.setRoot = function(root) {
   this.root_ = root;
   this.childNodeList_ = null;
 };
-
 
 /**
  * Set this data source to use list semantics. List data sources:
@@ -85,12 +80,10 @@ goog.ds.JsDataSource.prototype.setIsList_ = function(isList) {
   this.isList_ = isList;
 };
 
-
 /** @override */
 goog.ds.JsDataSource.prototype.get = function() {
   return !goog.isObject(this.root_) ? this.root_ : this.getChildNodes();
 };
-
 
 /**
  * Set the value of the node
@@ -99,7 +92,7 @@ goog.ds.JsDataSource.prototype.get = function() {
  */
 goog.ds.JsDataSource.prototype.set = function(value) {
   if (value && goog.isObject(this.root_)) {
-    throw new Error('Can\'t set group nodes to new values yet');
+    throw new Error("Can't set group nodes to new values yet");
   }
 
   if (this.parent_) {
@@ -110,7 +103,6 @@ goog.ds.JsDataSource.prototype.set = function(value) {
 
   goog.ds.DataManager.getInstance().fireDataChange(this.getDataPath());
 };
-
 
 /**
  * TODO(user) revisit lazy creation.
@@ -131,11 +123,9 @@ goog.ds.JsDataSource.prototype.getChildNodes = function(opt_selector) {
       return new goog.ds.EmptyNodeList();
     }
   } else {
-    throw new Error('Selector not supported yet (' + opt_selector + ')');
+    throw new Error("Selector not supported yet (" + opt_selector + ")");
   }
-
 };
-
 
 /**
  * Creates the DataNodeList with the child nodes for this element.
@@ -164,7 +154,7 @@ goog.ds.JsDataSource.prototype.createChildNodes_ = function(opt_force) {
       // TODO(user) Configurable logic for choosing id node
       var node = this.root_[i];
       var id = node.id;
-      var name = id != null ? String(id) : '[' + i + ']';
+      var name = id != null ? String(id) : "[" + i + "]";
       newNode = new goog.ds.JsDataSource(node, name, this);
       childNodeList.add(newNode);
     }
@@ -183,7 +173,6 @@ goog.ds.JsDataSource.prototype.createChildNodes_ = function(opt_force) {
   this.childNodeList_ = childNodeList;
 };
 
-
 /**
  * Gets a named child node of the current node
  * @param {string} name The node name.
@@ -200,7 +189,7 @@ goog.ds.JsDataSource.prototype.getChildNode = function(name, opt_canCreate) {
   if (!node && opt_canCreate) {
     var newObj = {};
     if (goog.isArray(this.root_)) {
-      newObj['id'] = name;
+      newObj["id"] = name;
       this.root_.push(newObj);
     } else {
       this.root_[name] = newObj;
@@ -212,7 +201,6 @@ goog.ds.JsDataSource.prototype.getChildNode = function(name, opt_canCreate) {
   }
   return node;
 };
-
 
 /**
  * Gets the value of a child node
@@ -231,7 +219,6 @@ goog.ds.JsDataSource.prototype.getChildNodeValue = function(name) {
     return null;
   }
 };
-
 
 /**
  * Sets a named child node of the current node.
@@ -259,7 +246,10 @@ goog.ds.JsDataSource.prototype.setChildNode = function(name, value) {
         node = new goog.ds.JsDataSource(value, name, this);
       } else {
         node = new goog.ds.JsPropertyDataSource(
-            /** @type {goog.ds.DataNode} */ (this.root_), name, this);
+          /** @type {goog.ds.DataNode} */ (this.root_),
+          name,
+          this
+        );
       }
     }
   }
@@ -320,18 +310,17 @@ goog.ds.JsDataSource.prototype.setChildNode = function(name, value) {
     dm.fireDataChange(node.getDataPath());
     if (addedNode && this.isList()) {
       dm.fireDataChange(this.getDataPath());
-      dm.fireDataChange(this.getDataPath() + '/count()');
+      dm.fireDataChange(this.getDataPath() + "/count()");
     }
   } else if (removedPath) {
     dm.fireDataChange(removedPath);
     if (this.isList()) {
       dm.fireDataChange(this.getDataPath());
-      dm.fireDataChange(this.getDataPath() + '/count()');
+      dm.fireDataChange(this.getDataPath() + "/count()");
     }
   }
   return node;
 };
-
 
 /**
  * Get the name of the node relative to the parent node
@@ -342,7 +331,6 @@ goog.ds.JsDataSource.prototype.getDataName = function() {
   return this.dataName_;
 };
 
-
 /**
  * Setthe name of the node relative to the parent node
  * @param {string} dataName The name of the node.
@@ -352,21 +340,19 @@ goog.ds.JsDataSource.prototype.setDataName = function(dataName) {
   this.dataName_ = dataName;
 };
 
-
 /**
  * Gets the a qualified data path to this node
  * @return {string} The data path.
  * @override
  */
 goog.ds.JsDataSource.prototype.getDataPath = function() {
-  var parentPath = '';
+  var parentPath = "";
   if (this.parent_) {
     parentPath = this.parent_.getDataPath() + goog.ds.STR_PATH_SEPARATOR;
   }
 
   return parentPath + this.dataName_;
 };
-
 
 /**
  * Load or reload the backing data for this node
@@ -376,7 +362,6 @@ goog.ds.JsDataSource.prototype.load = function() {
   // Nothing to do
 };
 
-
 /**
  * Gets the state of the backing data for this node
  * TODO(user) Discuss null value handling
@@ -384,10 +369,10 @@ goog.ds.JsDataSource.prototype.load = function() {
  * @override
  */
 goog.ds.JsDataSource.prototype.getLoadState = function() {
-  return (this.root_ == null) ? goog.ds.LoadState.NOT_LOADED :
-                                goog.ds.LoadState.LOADED;
+  return this.root_ == null
+    ? goog.ds.LoadState.NOT_LOADED
+    : goog.ds.LoadState.LOADED;
 };
-
 
 /**
  * Whether the value of this node is a homogeneous list of data
@@ -397,8 +382,6 @@ goog.ds.JsDataSource.prototype.getLoadState = function() {
 goog.ds.JsDataSource.prototype.isList = function() {
   return this.isList_ != null ? this.isList_ : goog.isArray(this.root_);
 };
-
-
 
 /**
  * Data source for JavaScript properties that arent objects. Contains reference
@@ -421,7 +404,6 @@ goog.ds.JsPropertyDataSource = function(parent, dataName, opt_parentDataNode) {
 };
 goog.inherits(goog.ds.JsPropertyDataSource, goog.ds.BaseDataNode);
 
-
 /**
  * Get the value of the node
  * @return {Object} The value of the node, or null if no value.
@@ -429,7 +411,6 @@ goog.inherits(goog.ds.JsPropertyDataSource, goog.ds.BaseDataNode);
 goog.ds.JsPropertyDataSource.prototype.get = function() {
   return this.parent_[this.dataName_];
 };
-
 
 /**
  * Set the value of the node
@@ -445,7 +426,6 @@ goog.ds.JsPropertyDataSource.prototype.set = function(value) {
   }
 };
 
-
 /**
  * Get the name of the node relative to the parent node
  * @return {string} The name of the node.
@@ -454,7 +434,6 @@ goog.ds.JsPropertyDataSource.prototype.set = function(value) {
 goog.ds.JsPropertyDataSource.prototype.getDataName = function() {
   return this.dataName_;
 };
-
 
 /** @override */
 goog.ds.JsPropertyDataSource.prototype.getParent = function() {

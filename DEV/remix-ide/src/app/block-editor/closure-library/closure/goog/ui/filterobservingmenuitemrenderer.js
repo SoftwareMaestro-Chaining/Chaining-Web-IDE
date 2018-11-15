@@ -21,11 +21,9 @@
  * @author eae@google.com (Emil A Eklund)
  */
 
-goog.provide('goog.ui.FilterObservingMenuItemRenderer');
+goog.provide("goog.ui.FilterObservingMenuItemRenderer")
 
-goog.require('goog.ui.MenuItemRenderer');
-
-
+goog.require("goog.ui.MenuItemRenderer")
 
 /**
  * Default renderer for {@link goog.ui.FilterObservingMenuItem}s. Each item has
@@ -38,20 +36,18 @@ goog.require('goog.ui.MenuItemRenderer');
  * @final
  */
 goog.ui.FilterObservingMenuItemRenderer = function() {
-  goog.ui.MenuItemRenderer.call(this);
-};
-goog.inherits(
-    goog.ui.FilterObservingMenuItemRenderer, goog.ui.MenuItemRenderer);
-goog.addSingletonGetter(goog.ui.FilterObservingMenuItemRenderer);
-
+  goog.ui.MenuItemRenderer.call(this)
+}
+goog.inherits(goog.ui.FilterObservingMenuItemRenderer, goog.ui.MenuItemRenderer)
+goog.addSingletonGetter(goog.ui.FilterObservingMenuItemRenderer)
 
 /**
  * CSS class name the renderer applies to menu item elements.
  * @type {string}
  */
-goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS =
-    goog.getCssName('goog-filterobsmenuitem');
-
+goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS = goog.getCssName(
+  "goog-filterobsmenuitem"
+)
 
 /**
  * Returns the CSS class to be applied to menu items rendered using this
@@ -60,5 +56,5 @@ goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS =
  * @override
  */
 goog.ui.FilterObservingMenuItemRenderer.prototype.getCssClass = function() {
-  return goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS;
-};
+  return goog.ui.FilterObservingMenuItemRenderer.CSS_CLASS
+}

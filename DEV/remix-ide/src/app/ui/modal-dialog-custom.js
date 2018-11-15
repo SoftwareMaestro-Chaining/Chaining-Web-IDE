@@ -3,6 +3,12 @@ var yo = require('yo-yo')
 var css = require('./styles/modal-dialog-custom-styles')
 
 module.exports = {
+  alertCustom: function(text) {
+    let test = yo`<p>${text}</p>`
+    let textTest = yo`<div></div>`
+    textTest.appendChild(test)
+    modal('', textTest, null, {label:null})
+  },
   alert: function (text) {
     modal('', yo`<div>${text}</div>`, null, { label: null })
   },

@@ -17,12 +17,9 @@
  *
  */
 
+goog.provide("goog.ui.ac.ArrayMatcher")
 
-goog.provide('goog.ui.ac.ArrayMatcher');
-
-goog.require('goog.string');
-
-
+goog.require("goog.string")
 
 /**
  * Basic class for matching words in an array
@@ -33,19 +30,17 @@ goog.require('goog.string');
  *     input token against the dictionary.
  */
 goog.ui.ac.ArrayMatcher = function(rows, opt_noSimilar) {
-  this.rows_ = rows || [];
-  this.useSimilar_ = !opt_noSimilar;
-};
-
+  this.rows_ = rows || []
+  this.useSimilar_ = !opt_noSimilar
+}
 
 /**
  * Replaces the rows that this object searches over.
  * @param {Array<?>} rows Dictionary of items to match.
  */
 goog.ui.ac.ArrayMatcher.prototype.setRows = function(rows) {
-  this.rows_ = rows || [];
-};
-
+  this.rows_ = rows || []
+}
 
 /**
  * Function used to pass matches to the autocomplete
@@ -55,15 +50,17 @@ goog.ui.ac.ArrayMatcher.prototype.setRows = function(rows) {
  * @param {string=} opt_fullString The full string from the input box.
  */
 goog.ui.ac.ArrayMatcher.prototype.requestMatchingRows = function(
-    token, maxMatches, matchHandler, opt_fullString) {
+  token,
+  maxMatches,
+  matchHandler,
+  opt_fullString
+) {
+  var matches = this.useSimilar_
+    ? goog.ui.ac.ArrayMatcher.getMatchesForRows(token, maxMatches, this.rows_)
+    : this.getPrefixMatches(token, maxMatches)
 
-  var matches = this.useSimilar_ ?
-      goog.ui.ac.ArrayMatcher.getMatchesForRows(token, maxMatches, this.rows_) :
-      this.getPrefixMatches(token, maxMatches);
-
-  matchHandler(token, matches);
-};
-
+  matchHandler(token, matches)
+}
 
 /**
  * Matches the token against the specified rows, first looking for prefix
@@ -76,16 +73,21 @@ goog.ui.ac.ArrayMatcher.prototype.requestMatchingRows = function(
  * @return {!Array<?>} Rows that match.
  */
 goog.ui.ac.ArrayMatcher.getMatchesForRows = function(token, maxMatches, rows) {
-  var matches =
-      goog.ui.ac.ArrayMatcher.getPrefixMatchesForRows(token, maxMatches, rows);
+  var matches = goog.ui.ac.ArrayMatcher.getPrefixMatchesForRows(
+    token,
+    maxMatches,
+    rows
+  )
 
   if (matches.length == 0) {
     matches = goog.ui.ac.ArrayMatcher.getSimilarMatchesForRows(
-        token, maxMatches, rows);
+      token,
+      maxMatches,
+      rows
+    )
   }
-  return matches;
-};
-
+  return matches
+}
 
 /**
  * Matches the token against the start of words in the row.
@@ -94,11 +96,15 @@ goog.ui.ac.ArrayMatcher.getMatchesForRows = function(token, maxMatches, rows) {
  * @return {!Array<?>} Rows that match.
  */
 goog.ui.ac.ArrayMatcher.prototype.getPrefixMatches = function(
-    token, maxMatches) {
+  token,
+  maxMatches
+) {
   return goog.ui.ac.ArrayMatcher.getPrefixMatchesForRows(
-      token, maxMatches, this.rows_);
-};
-
+    token,
+    maxMatches,
+    this.rows_
+  )
+}
 
 /**
  * Matches the token against the start of words in the row.
@@ -110,23 +116,25 @@ goog.ui.ac.ArrayMatcher.prototype.getPrefixMatches = function(
  * @return {!Array<?>} Rows that match.
  */
 goog.ui.ac.ArrayMatcher.getPrefixMatchesForRows = function(
-    token, maxMatches, rows) {
-  var matches = [];
+  token,
+  maxMatches,
+  rows
+) {
+  var matches = []
 
-  if (token != '') {
-    var escapedToken = goog.string.regExpEscape(token);
-    var matcher = new RegExp('(^|\\W+)' + escapedToken, 'i');
+  if (token != "") {
+    var escapedToken = goog.string.regExpEscape(token)
+    var matcher = new RegExp("(^|\\W+)" + escapedToken, "i")
 
     for (var i = 0; i < rows.length && matches.length < maxMatches; i++) {
-      var row = rows[i];
+      var row = rows[i]
       if (String(row).match(matcher)) {
-        matches.push(row);
+        matches.push(row)
       }
     }
   }
-  return matches;
-};
-
+  return matches
+}
 
 /**
  * Matches the token against similar rows, by calculating "distance" between the
@@ -137,9 +145,11 @@ goog.ui.ac.ArrayMatcher.getPrefixMatchesForRows = function(
  */
 goog.ui.ac.ArrayMatcher.prototype.getSimilarRows = function(token, maxMatches) {
   return goog.ui.ac.ArrayMatcher.getSimilarMatchesForRows(
-      token, maxMatches, this.rows_);
-};
-
+    token,
+    maxMatches,
+    this.rows_
+  )
+}
 
 /**
  * Matches the token against similar rows, by calculating "distance" between the
@@ -152,61 +162,63 @@ goog.ui.ac.ArrayMatcher.prototype.getSimilarRows = function(token, maxMatches) {
  * @return {!Array<?>} The best maxMatches rows.
  */
 goog.ui.ac.ArrayMatcher.getSimilarMatchesForRows = function(
-    token, maxMatches, rows) {
-  var results = [];
+  token,
+  maxMatches,
+  rows
+) {
+  var results = []
 
   for (var index = 0; index < rows.length; index++) {
-    var row = rows[index];
-    var str = token.toLowerCase();
-    var txt = String(row).toLowerCase();
-    var score = 0;
+    var row = rows[index]
+    var str = token.toLowerCase()
+    var txt = String(row).toLowerCase()
+    var score = 0
 
     if (txt.indexOf(str) != -1) {
-      score = parseInt((txt.indexOf(str) / 4).toString(), 10);
-
+      score = parseInt((txt.indexOf(str) / 4).toString(), 10)
     } else {
-      var arr = str.split('');
+      var arr = str.split("")
 
-      var lastPos = -1;
-      var penalty = 10;
+      var lastPos = -1
+      var penalty = 10
 
-      for (var i = 0, c; c = arr[i]; i++) {
-        var pos = txt.indexOf(c);
+      for (var i = 0, c; (c = arr[i]); i++) {
+        var pos = txt.indexOf(c)
 
         if (pos > lastPos) {
-          var diff = pos - lastPos - 1;
+          var diff = pos - lastPos - 1
 
           if (diff > penalty - 5) {
-            diff = penalty - 5;
+            diff = penalty - 5
           }
 
-          score += diff;
+          score += diff
 
-          lastPos = pos;
+          lastPos = pos
         } else {
-          score += penalty;
-          penalty += 5;
+          score += penalty
+          penalty += 5
         }
       }
     }
 
     if (score < str.length * 6) {
-      results.push({str: row, score: score, index: index});
+      results.push({ str: row, score: score, index: index })
     }
   }
 
   results.sort(function(a, b) {
-    var diff = a.score - b.score;
+    var diff = a.score - b.score
     if (diff != 0) {
-      return diff;
+      return diff
     }
-    return a.index - b.index;
-  });
+    return a.index - b.index
+  })
 
-  var matches = [];
+  var matches = []
   for (var i = 0; i < maxMatches && i < results.length; i++) {
-    matches.push(results[i].str);
+    matches.push(results[i].str)
   }
 
-  return matches;
-};
+  return matches
+}

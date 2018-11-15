@@ -20,12 +20,9 @@
  *
  */
 
+goog.provide("goog.dom.browserrange.OperaRange")
 
-goog.provide('goog.dom.browserrange.OperaRange');
-
-goog.require('goog.dom.browserrange.W3cRange');
-
-
+goog.require("goog.dom.browserrange.W3cRange")
 
 /**
  * The constructor for Opera specific browser ranges.
@@ -35,10 +32,9 @@ goog.require('goog.dom.browserrange.W3cRange');
  * @final
  */
 goog.dom.browserrange.OperaRange = function(range) {
-  goog.dom.browserrange.W3cRange.call(this, range);
-};
-goog.inherits(goog.dom.browserrange.OperaRange, goog.dom.browserrange.W3cRange);
-
+  goog.dom.browserrange.W3cRange.call(this, range)
+}
+goog.inherits(goog.dom.browserrange.OperaRange, goog.dom.browserrange.W3cRange)
 
 /**
  * Creates a range object that selects the given node's text.
@@ -47,9 +43,9 @@ goog.inherits(goog.dom.browserrange.OperaRange, goog.dom.browserrange.W3cRange);
  */
 goog.dom.browserrange.OperaRange.createFromNodeContents = function(node) {
   return new goog.dom.browserrange.OperaRange(
-      goog.dom.browserrange.W3cRange.getBrowserRangeForNode(node));
-};
-
+    goog.dom.browserrange.W3cRange.getBrowserRangeForNode(node)
+  )
+}
 
 /**
  * Creates a range object that selects between the given nodes.
@@ -60,25 +56,37 @@ goog.dom.browserrange.OperaRange.createFromNodeContents = function(node) {
  * @return {!goog.dom.browserrange.OperaRange} A wrapper object.
  */
 goog.dom.browserrange.OperaRange.createFromNodes = function(
-    startNode, startOffset, endNode, endOffset) {
+  startNode,
+  startOffset,
+  endNode,
+  endOffset
+) {
   return new goog.dom.browserrange.OperaRange(
-      goog.dom.browserrange.W3cRange.getBrowserRangeForNodes(
-          startNode, startOffset, endNode, endOffset));
-};
-
+    goog.dom.browserrange.W3cRange.getBrowserRangeForNodes(
+      startNode,
+      startOffset,
+      endNode,
+      endOffset
+    )
+  )
+}
 
 /** @override */
 goog.dom.browserrange.OperaRange.prototype.selectInternal = function(
-    selection, reversed) {
+  selection,
+  reversed
+) {
   // Avoid using addRange as we have to removeAllRanges first, which
   // blurs editable fields in Opera.
-  selection.collapse(this.getStartNode(), this.getStartOffset());
-  if (this.getEndNode() != this.getStartNode() ||
-      this.getEndOffset() != this.getStartOffset()) {
-    selection.extend(this.getEndNode(), this.getEndOffset());
+  selection.collapse(this.getStartNode(), this.getStartOffset())
+  if (
+    this.getEndNode() != this.getStartNode() ||
+    this.getEndOffset() != this.getStartOffset()
+  ) {
+    selection.extend(this.getEndNode(), this.getEndOffset())
   }
   // This can happen if the range isn't in an editable field.
   if (selection.rangeCount == 0) {
-    selection.addRange(this.range_);
+    selection.addRange(this.range_)
   }
-};
+}

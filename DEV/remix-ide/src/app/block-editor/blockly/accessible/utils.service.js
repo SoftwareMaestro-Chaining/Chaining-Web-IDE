@@ -25,20 +25,19 @@
  * @author madeeha@google.com (Madeeha Ghori)
  */
 
-goog.provide('blocklyApp.UtilsService');
+goog.provide("blocklyApp.UtilsService")
 
-
-blocklyApp.ID_FOR_EMPTY_WORKSPACE_BTN = 'blocklyEmptyWorkspaceBtn';
-blocklyApp.BLOCK_ROOT_ID_SUFFIX = '-blockRoot';
+blocklyApp.ID_FOR_EMPTY_WORKSPACE_BTN = "blocklyEmptyWorkspaceBtn"
+blocklyApp.BLOCK_ROOT_ID_SUFFIX = "-blockRoot"
 
 blocklyApp.UtilsService = ng.core.Class({
   constructor: [function() {}],
   getBlockDescription: function(block) {
     // We use 'BLANK' instead of the default '?' so that the string is read
     // out. (By default, screen readers tend to ignore punctuation.)
-    return block.toString(undefined, 'BLANK');
+    return block.toString(undefined, "BLANK")
   },
   isWorkspaceEmpty: function() {
-    return !blocklyApp.workspace.topBlocks_.length;
+    return !blocklyApp.workspace.topBlocks_.length
   }
-});
+})

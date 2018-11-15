@@ -18,10 +18,7 @@
  * @author nnaze@google.com (Nathan Naze)
  */
 
-
-goog.provide('goog.disposable.IDisposable');
-
-
+goog.provide("goog.disposable.IDisposable")
 
 /**
  * Interface for a disposable object.  If a instance requires cleanup
@@ -29,17 +26,15 @@ goog.provide('goog.disposable.IDisposable');
  * implement this interface (it may subclass goog.Disposable).
  * @record
  */
-goog.disposable.IDisposable = function() {};
-
+goog.disposable.IDisposable = function() {}
 
 /**
  * Disposes of the object and its resources.
  * @return {void} Nothing.
  */
-goog.disposable.IDisposable.prototype.dispose = goog.abstractMethod;
-
+goog.disposable.IDisposable.prototype.dispose = goog.abstractMethod
 
 /**
  * @return {boolean} Whether the object has been disposed of.
  */
-goog.disposable.IDisposable.prototype.isDisposed = goog.abstractMethod;
+goog.disposable.IDisposable.prototype.isDisposed = goog.abstractMethod

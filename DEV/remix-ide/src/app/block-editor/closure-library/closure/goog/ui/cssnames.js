@@ -18,12 +18,11 @@
  * @author mkretzschmar@google.com (Martin Kretzschmar)
  */
 
-goog.provide('goog.ui.INLINE_BLOCK_CLASSNAME');
-
+goog.provide("goog.ui.INLINE_BLOCK_CLASSNAME")
 
 /**
  * CSS class name for applying the "display: inline-block" property in a
  * cross-browser way.
  * @type {string}
  */
-goog.ui.INLINE_BLOCK_CLASSNAME = goog.getCssName('goog-inline-block');
+goog.ui.INLINE_BLOCK_CLASSNAME = goog.getCssName("goog-inline-block")

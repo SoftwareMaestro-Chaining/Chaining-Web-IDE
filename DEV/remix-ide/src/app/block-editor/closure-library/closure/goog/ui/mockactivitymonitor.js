@@ -16,12 +16,10 @@
  * @fileoverview Definition of goog.ui.MockActivityMonitor.
  */
 
-goog.provide('goog.ui.MockActivityMonitor');
+goog.provide("goog.ui.MockActivityMonitor")
 
-goog.require('goog.events.EventType');
-goog.require('goog.ui.ActivityMonitor');
-
-
+goog.require("goog.events.EventType")
+goog.require("goog.ui.ActivityMonitor")
 
 /**
  * A mock implementation of goog.ui.ActivityMonitor for unit testing. Clients
@@ -32,17 +30,16 @@ goog.require('goog.ui.ActivityMonitor');
  * @final
  */
 goog.ui.MockActivityMonitor = function() {
-  goog.ui.MockActivityMonitor.base(this, 'constructor');
+  goog.ui.MockActivityMonitor.base(this, "constructor")
 
   /**
    * Tracks whether an event has been fired. Used by simulateEvent.
    * @type {boolean}
    * @private
    */
-  this.eventFired_ = false;
-};
-goog.inherits(goog.ui.MockActivityMonitor, goog.ui.ActivityMonitor);
-
+  this.eventFired_ = false
+}
+goog.inherits(goog.ui.MockActivityMonitor, goog.ui.ActivityMonitor)
 
 /**
  * Simulates an event that updates the user to being non-idle.
@@ -50,23 +47,22 @@ goog.inherits(goog.ui.MockActivityMonitor, goog.ui.ActivityMonitor);
  *     not idle. If not specified, defaults to MOUSEMOVE.
  */
 goog.ui.MockActivityMonitor.prototype.simulateEvent = function(opt_type) {
-  var eventTime = goog.now();
-  var eventType = opt_type || goog.events.EventType.MOUSEMOVE;
+  var eventTime = goog.now()
+  var eventType = opt_type || goog.events.EventType.MOUSEMOVE
 
-  this.eventFired_ = false;
-  this.updateIdleTime(eventTime, eventType);
+  this.eventFired_ = false
+  this.updateIdleTime(eventTime, eventType)
 
   if (!this.eventFired_) {
-    this.dispatchEvent(goog.ui.ActivityMonitor.Event.ACTIVITY);
+    this.dispatchEvent(goog.ui.ActivityMonitor.Event.ACTIVITY)
   }
-};
-
+}
 
 /**
  * @override
  */
 goog.ui.MockActivityMonitor.prototype.dispatchEvent = function(e) {
-  var rv = goog.ui.MockActivityMonitor.base(this, 'dispatchEvent', e);
-  this.eventFired_ = true;
-  return rv;
-};
+  var rv = goog.ui.MockActivityMonitor.base(this, "dispatchEvent", e)
+  this.eventFired_ = true
+  return rv
+}

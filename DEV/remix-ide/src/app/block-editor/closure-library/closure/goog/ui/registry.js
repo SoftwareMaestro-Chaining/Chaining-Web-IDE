@@ -17,14 +17,13 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.registry');
+goog.provide("goog.ui.registry")
 
-goog.require('goog.asserts');
-goog.require('goog.dom.classlist');
+goog.require("goog.asserts")
+goog.require("goog.dom.classlist")
 
-goog.forwardDeclare('goog.ui.Component');
-goog.forwardDeclare('goog.ui.ControlRenderer');
-
+goog.forwardDeclare("goog.ui.Component")
+goog.forwardDeclare("goog.ui.ControlRenderer")
 
 /**
  * Given a {@link goog.ui.Component} constructor, returns an instance of its
@@ -39,29 +38,28 @@ goog.forwardDeclare('goog.ui.ControlRenderer');
 goog.ui.registry.getDefaultRenderer = function(componentCtor) {
   // Locate the default renderer based on the constructor's unique ID.  If no
   // renderer is registered for this class, walk up the superClass_ chain.
-  var key;
-  /** @type {Function|undefined} */ var rendererCtor;
+  var key
+  /** @type {Function|undefined} */ var rendererCtor
   while (componentCtor) {
-    key = goog.getUid(componentCtor);
+    key = goog.getUid(componentCtor)
     if ((rendererCtor = goog.ui.registry.defaultRenderers_[key])) {
-      break;
+      break
     }
-    componentCtor = componentCtor.superClass_ ?
-        componentCtor.superClass_.constructor :
-        null;
+    componentCtor = componentCtor.superClass_
+      ? componentCtor.superClass_.constructor
+      : null
   }
 
   // If the renderer has a static getInstance method, return the singleton
   // instance; otherwise create and return a new instance.
   if (rendererCtor) {
-    return goog.isFunction(rendererCtor.getInstance) ?
-        rendererCtor.getInstance() :
-        new rendererCtor();
+    return goog.isFunction(rendererCtor.getInstance)
+      ? rendererCtor.getInstance()
+      : new rendererCtor()
   }
 
-  return null;
-};
-
+  return null
+}
 
 /**
  * Sets the default renderer for the given {@link goog.ui.Component}
@@ -76,17 +74,16 @@ goog.ui.registry.setDefaultRenderer = function(componentCtor, rendererCtor) {
   // In this case, explicit validation has negligible overhead (since each
   // renderer is only registered once), and helps catch subtle bugs.
   if (!goog.isFunction(componentCtor)) {
-    throw new Error('Invalid component class ' + componentCtor);
+    throw new Error("Invalid component class " + componentCtor)
   }
   if (!goog.isFunction(rendererCtor)) {
-    throw new Error('Invalid renderer class ' + rendererCtor);
+    throw new Error("Invalid renderer class " + rendererCtor)
   }
 
   // Map the component constructor's unique ID to the renderer constructor.
-  var key = goog.getUid(componentCtor);
-  goog.ui.registry.defaultRenderers_[key] = rendererCtor;
-};
-
+  var key = goog.getUid(componentCtor)
+  goog.ui.registry.defaultRenderers_[key] = rendererCtor
+}
 
 /**
  * Returns the {@link goog.ui.Component} instance created by the decorator
@@ -96,11 +93,10 @@ goog.ui.registry.setDefaultRenderer = function(componentCtor, rendererCtor) {
  * @return {goog.ui.Component?} Component instance.
  */
 goog.ui.registry.getDecoratorByClassName = function(className) {
-  return className in goog.ui.registry.decoratorFunctions_ ?
-      goog.ui.registry.decoratorFunctions_[className]() :
-      null;
-};
-
+  return className in goog.ui.registry.decoratorFunctions_
+    ? goog.ui.registry.decoratorFunctions_[className]()
+    : null
+}
 
 /**
  * Maps a CSS class name to a function that returns a new instance of
@@ -115,15 +111,14 @@ goog.ui.registry.setDecoratorByClassName = function(className, decoratorFn) {
   // In this case, explicit validation has negligible overhead (since each
   // decorator  is only registered once), and helps catch subtle bugs.
   if (!className) {
-    throw new Error('Invalid class name ' + className);
+    throw new Error("Invalid class name " + className)
   }
   if (!goog.isFunction(decoratorFn)) {
-    throw new Error('Invalid decorator function ' + decoratorFn);
+    throw new Error("Invalid decorator function " + decoratorFn)
   }
 
-  goog.ui.registry.decoratorFunctions_[className] = decoratorFn;
-};
-
+  goog.ui.registry.decoratorFunctions_[className] = decoratorFn
+}
 
 /**
  * Returns an instance of {@link goog.ui.Component} or a subclass suitable to
@@ -136,26 +131,24 @@ goog.ui.registry.setDecoratorByClassName = function(className, decoratorFn) {
  *     none).
  */
 goog.ui.registry.getDecorator = function(element) {
-  var decorator;
-  goog.asserts.assert(element);
-  var classNames = goog.dom.classlist.get(element);
+  var decorator
+  goog.asserts.assert(element)
+  var classNames = goog.dom.classlist.get(element)
   for (var i = 0, len = classNames.length; i < len; i++) {
     if ((decorator = goog.ui.registry.getDecoratorByClassName(classNames[i]))) {
-      return decorator;
+      return decorator
     }
   }
-  return null;
-};
-
+  return null
+}
 
 /**
  * Resets the global renderer and decorator registry.
  */
 goog.ui.registry.reset = function() {
-  goog.ui.registry.defaultRenderers_ = {};
-  goog.ui.registry.decoratorFunctions_ = {};
-};
-
+  goog.ui.registry.defaultRenderers_ = {}
+  goog.ui.registry.decoratorFunctions_ = {}
+}
 
 /**
  * Map of {@link goog.ui.Component} constructor unique IDs to the constructors
@@ -163,8 +156,7 @@ goog.ui.registry.reset = function() {
  * @type {Object}
  * @private
  */
-goog.ui.registry.defaultRenderers_ = {};
-
+goog.ui.registry.defaultRenderers_ = {}
 
 /**
  * Map of CSS class names to registry factory functions.  The keys are
@@ -175,4 +167,4 @@ goog.ui.registry.defaultRenderers_ = {};
  * @type {Object}
  * @private
  */
-goog.ui.registry.decoratorFunctions_ = {};
+goog.ui.registry.decoratorFunctions_ = {}

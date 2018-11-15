@@ -23,13 +23,11 @@
  * @author robbyw@google.com (Robby Walker)
  */
 
-goog.provide('goog.ui.LinkButtonRenderer');
+goog.provide("goog.ui.LinkButtonRenderer")
 
-goog.require('goog.ui.Button');
-goog.require('goog.ui.FlatButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Button")
+goog.require("goog.ui.FlatButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * Link renderer for {@link goog.ui.Button}s.  Link buttons can contain
@@ -39,29 +37,28 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.FlatButtonRenderer}
  */
 goog.ui.LinkButtonRenderer = function() {
-  goog.ui.FlatButtonRenderer.call(this);
-};
-goog.inherits(goog.ui.LinkButtonRenderer, goog.ui.FlatButtonRenderer);
-goog.addSingletonGetter(goog.ui.LinkButtonRenderer);
-
+  goog.ui.FlatButtonRenderer.call(this)
+}
+goog.inherits(goog.ui.LinkButtonRenderer, goog.ui.FlatButtonRenderer)
+goog.addSingletonGetter(goog.ui.LinkButtonRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.LinkButtonRenderer.CSS_CLASS = goog.getCssName('goog-link-button');
-
+goog.ui.LinkButtonRenderer.CSS_CLASS = goog.getCssName("goog-link-button")
 
 /** @override */
 goog.ui.LinkButtonRenderer.prototype.getCssClass = function() {
-  return goog.ui.LinkButtonRenderer.CSS_CLASS;
-};
-
+  return goog.ui.LinkButtonRenderer.CSS_CLASS
+}
 
 // Register a decorator factory function for Link Buttons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.LinkButtonRenderer.CSS_CLASS, function() {
-      // Uses goog.ui.Button, but with LinkButtonRenderer.
-      return new goog.ui.Button(null, goog.ui.LinkButtonRenderer.getInstance());
-    });
+  goog.ui.LinkButtonRenderer.CSS_CLASS,
+  function() {
+    // Uses goog.ui.Button, but with LinkButtonRenderer.
+    return new goog.ui.Button(null, goog.ui.LinkButtonRenderer.getInstance())
+  }
+)

@@ -18,13 +18,11 @@
  * @author attila@google.com (Attila Bodis)
  */
 
-goog.provide('goog.ui.CustomButton');
+goog.provide("goog.ui.CustomButton")
 
-goog.require('goog.ui.Button');
-goog.require('goog.ui.CustomButtonRenderer');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.ui.Button")
+goog.require("goog.ui.CustomButtonRenderer")
+goog.require("goog.ui.registry")
 
 /**
  * A custom button control.  Identical to {@link goog.ui.Button}, except it
@@ -45,15 +43,19 @@ goog.require('goog.ui.registry');
  */
 goog.ui.CustomButton = function(content, opt_renderer, opt_domHelper) {
   goog.ui.Button.call(
-      this, content, opt_renderer || goog.ui.CustomButtonRenderer.getInstance(),
-      opt_domHelper);
-};
-goog.inherits(goog.ui.CustomButton, goog.ui.Button);
-
+    this,
+    content,
+    opt_renderer || goog.ui.CustomButtonRenderer.getInstance(),
+    opt_domHelper
+  )
+}
+goog.inherits(goog.ui.CustomButton, goog.ui.Button)
 
 // Register a decorator factory function for goog.ui.CustomButtons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.CustomButtonRenderer.CSS_CLASS, function() {
-      // CustomButton defaults to using CustomButtonRenderer.
-      return new goog.ui.CustomButton(null);
-    });
+  goog.ui.CustomButtonRenderer.CSS_CLASS,
+  function() {
+    // CustomButton defaults to using CustomButtonRenderer.
+    return new goog.ui.CustomButton(null)
+  }
+)

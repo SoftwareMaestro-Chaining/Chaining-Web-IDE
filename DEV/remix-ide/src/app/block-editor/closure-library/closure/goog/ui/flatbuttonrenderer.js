@@ -18,18 +18,16 @@
  *
  */
 
-goog.provide('goog.ui.FlatButtonRenderer');
+goog.provide("goog.ui.FlatButtonRenderer")
 
-goog.require('goog.a11y.aria.Role');
-goog.require('goog.asserts');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.classlist');
-goog.require('goog.ui.Button');
-goog.require('goog.ui.ButtonRenderer');
-goog.require('goog.ui.INLINE_BLOCK_CLASSNAME');
-goog.require('goog.ui.registry');
-
-
+goog.require("goog.a11y.aria.Role")
+goog.require("goog.asserts")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.classlist")
+goog.require("goog.ui.Button")
+goog.require("goog.ui.ButtonRenderer")
+goog.require("goog.ui.INLINE_BLOCK_CLASSNAME")
+goog.require("goog.ui.registry")
 
 /**
  * Flat renderer for {@link goog.ui.Button}s.  Flat buttons can contain
@@ -39,19 +37,17 @@ goog.require('goog.ui.registry');
  * @extends {goog.ui.ButtonRenderer}
  */
 goog.ui.FlatButtonRenderer = function() {
-  goog.ui.ButtonRenderer.call(this);
-};
-goog.inherits(goog.ui.FlatButtonRenderer, goog.ui.ButtonRenderer);
-goog.addSingletonGetter(goog.ui.FlatButtonRenderer);
-
+  goog.ui.ButtonRenderer.call(this)
+}
+goog.inherits(goog.ui.FlatButtonRenderer, goog.ui.ButtonRenderer)
+goog.addSingletonGetter(goog.ui.FlatButtonRenderer)
 
 /**
  * Default CSS class to be applied to the root element of components rendered
  * by this renderer.
  * @type {string}
  */
-goog.ui.FlatButtonRenderer.CSS_CLASS = goog.getCssName('goog-flat-button');
-
+goog.ui.FlatButtonRenderer.CSS_CLASS = goog.getCssName("goog-flat-button")
 
 /**
  * Returns the control's contents wrapped in a div element, with
@@ -63,15 +59,17 @@ goog.ui.FlatButtonRenderer.CSS_CLASS = goog.getCssName('goog-flat-button');
  * @override
  */
 goog.ui.FlatButtonRenderer.prototype.createDom = function(button) {
-  var classNames = this.getClassNames(button);
-  var element = button.getDomHelper().createDom(
+  var classNames = this.getClassNames(button)
+  var element = button
+    .getDomHelper()
+    .createDom(
       goog.dom.TagName.DIV,
-      goog.ui.INLINE_BLOCK_CLASSNAME + ' ' + classNames.join(' '),
-      button.getContent());
-  this.setTooltip(element, button.getTooltip());
-  return element;
-};
-
+      goog.ui.INLINE_BLOCK_CLASSNAME + " " + classNames.join(" "),
+      button.getContent()
+    )
+  this.setTooltip(element, button.getTooltip())
+  return element
+}
 
 /**
  * Returns the ARIA role to be applied to flat buttons.
@@ -79,9 +77,8 @@ goog.ui.FlatButtonRenderer.prototype.createDom = function(button) {
  * @override
  */
 goog.ui.FlatButtonRenderer.prototype.getAriaRole = function() {
-  return goog.a11y.aria.Role.BUTTON;
-};
-
+  return goog.a11y.aria.Role.BUTTON
+}
 
 /**
  * Returns true if this renderer can decorate the element.  Overrides
@@ -92,9 +89,8 @@ goog.ui.FlatButtonRenderer.prototype.getAriaRole = function() {
  * @override
  */
 goog.ui.FlatButtonRenderer.prototype.canDecorate = function(element) {
-  return element.tagName == goog.dom.TagName.DIV;
-};
-
+  return element.tagName == goog.dom.TagName.DIV
+}
 
 /**
  * Takes an existing element and decorates it with the flat button control.
@@ -107,12 +103,14 @@ goog.ui.FlatButtonRenderer.prototype.canDecorate = function(element) {
  * @override
  */
 goog.ui.FlatButtonRenderer.prototype.decorate = function(button, element) {
-  goog.asserts.assert(element);
-  goog.dom.classlist.add(element, goog.ui.INLINE_BLOCK_CLASSNAME);
+  goog.asserts.assert(element)
+  goog.dom.classlist.add(element, goog.ui.INLINE_BLOCK_CLASSNAME)
   return goog.ui.FlatButtonRenderer.superClass_.decorate.call(
-      this, button, element);
-};
-
+    this,
+    button,
+    element
+  )
+}
 
 /**
  * Flat buttons can't use the value attribute since they are div elements.
@@ -124,9 +122,8 @@ goog.ui.FlatButtonRenderer.prototype.decorate = function(button, element) {
  */
 goog.ui.FlatButtonRenderer.prototype.getValue = function(element) {
   // Flat buttons don't store their value in the DOM.
-  return '';
-};
-
+  return ""
+}
 
 /**
  * Returns the CSS class to be applied to the root element of components
@@ -135,13 +132,14 @@ goog.ui.FlatButtonRenderer.prototype.getValue = function(element) {
  * @override
  */
 goog.ui.FlatButtonRenderer.prototype.getCssClass = function() {
-  return goog.ui.FlatButtonRenderer.CSS_CLASS;
-};
-
+  return goog.ui.FlatButtonRenderer.CSS_CLASS
+}
 
 // Register a decorator factory function for Flat Buttons.
 goog.ui.registry.setDecoratorByClassName(
-    goog.ui.FlatButtonRenderer.CSS_CLASS, function() {
-      // Uses goog.ui.Button, but with FlatButtonRenderer.
-      return new goog.ui.Button(null, goog.ui.FlatButtonRenderer.getInstance());
-    });
+  goog.ui.FlatButtonRenderer.CSS_CLASS,
+  function() {
+    // Uses goog.ui.Button, but with FlatButtonRenderer.
+    return new goog.ui.Button(null, goog.ui.FlatButtonRenderer.getInstance())
+  }
+)

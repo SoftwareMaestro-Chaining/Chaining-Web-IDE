@@ -42,13 +42,10 @@
  *
  */
 
+goog.provide("goog.async.ConditionalDelay")
 
-goog.provide('goog.async.ConditionalDelay');
-
-goog.require('goog.Disposable');
-goog.require('goog.async.Delay');
-
-
+goog.require("goog.Disposable")
+goog.require("goog.async.Delay")
 
 /**
  * A ConditionalDelay object invokes the associated function after a specified
@@ -70,7 +67,7 @@ goog.require('goog.async.Delay');
  * @extends {goog.Disposable}
  */
 goog.async.ConditionalDelay = function(listener, opt_handler) {
-  goog.async.ConditionalDelay.base(this, 'constructor');
+  goog.async.ConditionalDelay.base(this, "constructor")
 
   /**
    * The delay interval in milliseconds to between the calls to the callback.
@@ -78,51 +75,52 @@ goog.async.ConditionalDelay = function(listener, opt_handler) {
    * timeout is exceeded.
    * @private {number}
    */
-  this.interval_ = 0;
+  this.interval_ = 0
 
   /**
    * The timeout timestamp until which the delay is to be executed.
    * A negative value means no timeout.
    * @private {number}
    */
-  this.runUntil_ = 0;
+  this.runUntil_ = 0
 
   /**
    * True if the listener has been executed, and it returned `true`.
    * @private {boolean}
    */
-  this.isDone_ = false;
+  this.isDone_ = false
 
   /**
    * The function that will be invoked after a delay.
    * @private {function():boolean}
    */
-  this.listener_ = listener;
+  this.listener_ = listener
 
   /**
    * The object context to invoke the callback in.
    * @private {Object|undefined}
    */
-  this.handler_ = opt_handler;
+  this.handler_ = opt_handler
 
   /**
    * The underlying goog.async.Delay delegate object.
    * @private {goog.async.Delay}
    */
   this.delay_ = new goog.async.Delay(
-      goog.bind(this.onTick_, this), 0 /*interval*/, this /*scope*/);
-};
-goog.inherits(goog.async.ConditionalDelay, goog.Disposable);
-
+    goog.bind(this.onTick_, this),
+    0 /*interval*/,
+    this /*scope*/
+  )
+}
+goog.inherits(goog.async.ConditionalDelay, goog.Disposable)
 
 /** @override */
 goog.async.ConditionalDelay.prototype.disposeInternal = function() {
-  this.delay_.dispose();
-  delete this.listener_;
-  delete this.handler_;
-  goog.async.ConditionalDelay.superClass_.disposeInternal.call(this);
-};
-
+  this.delay_.dispose()
+  delete this.listener_
+  delete this.handler_
+  goog.async.ConditionalDelay.superClass_.disposeInternal.call(this)
+}
 
 /**
  * Starts the delay timer. The provided listener function will be called
@@ -137,43 +135,42 @@ goog.async.ConditionalDelay.prototype.disposeInternal = function() {
  *     timeout is exceeded. A negative value means no timeout. Default is 0.
  */
 goog.async.ConditionalDelay.prototype.start = function(
-    opt_interval, opt_timeout) {
-  this.stop();
-  this.isDone_ = false;
+  opt_interval,
+  opt_timeout
+) {
+  this.stop()
+  this.isDone_ = false
 
-  var timeout = opt_timeout || 0;
-  this.interval_ = Math.max(opt_interval || 0, 0);
-  this.runUntil_ = timeout < 0 ? -1 : (goog.now() + timeout);
+  var timeout = opt_timeout || 0
+  this.interval_ = Math.max(opt_interval || 0, 0)
+  this.runUntil_ = timeout < 0 ? -1 : goog.now() + timeout
   this.delay_.start(
-      timeout < 0 ? this.interval_ : Math.min(this.interval_, timeout));
-};
-
+    timeout < 0 ? this.interval_ : Math.min(this.interval_, timeout)
+  )
+}
 
 /**
  * Stops the delay timer if it is active. No action is taken if the timer is not
  * in use.
  */
 goog.async.ConditionalDelay.prototype.stop = function() {
-  this.delay_.stop();
-};
-
+  this.delay_.stop()
+}
 
 /**
  * @return {boolean} True if the delay is currently active, false otherwise.
  */
 goog.async.ConditionalDelay.prototype.isActive = function() {
-  return this.delay_.isActive();
-};
-
+  return this.delay_.isActive()
+}
 
 /**
  * @return {boolean} True if the listener has been executed and returned
  *     `true` since the last call to {@see #start}.
  */
 goog.async.ConditionalDelay.prototype.isDone = function() {
-  return this.isDone_;
-};
-
+  return this.isDone_
+}
 
 /**
  * Called when the listener has been successfully executed and returned
@@ -183,8 +180,7 @@ goog.async.ConditionalDelay.prototype.isDone = function() {
  */
 goog.async.ConditionalDelay.prototype.onSuccess = function() {
   // Do nothing by default.
-};
-
+}
 
 /**
  * Called when this delayed call is cancelled because the timeout has been
@@ -194,8 +190,7 @@ goog.async.ConditionalDelay.prototype.onSuccess = function() {
  */
 goog.async.ConditionalDelay.prototype.onFailure = function() {
   // Do nothing by default.
-};
-
+}
 
 /**
  * A callback function for the underlying `goog.async.Delay` object. When
@@ -206,22 +201,22 @@ goog.async.ConditionalDelay.prototype.onFailure = function() {
  * @private
  */
 goog.async.ConditionalDelay.prototype.onTick_ = function() {
-  var successful = this.listener_.call(this.handler_);
+  var successful = this.listener_.call(this.handler_)
   if (successful) {
-    this.isDone_ = true;
-    this.onSuccess();
+    this.isDone_ = true
+    this.onSuccess()
   } else {
     // Try to reschedule the task.
     if (this.runUntil_ < 0) {
       // No timeout.
-      this.delay_.start(this.interval_);
+      this.delay_.start(this.interval_)
     } else {
-      var timeLeft = this.runUntil_ - goog.now();
+      var timeLeft = this.runUntil_ - goog.now()
       if (timeLeft <= 0) {
-        this.onFailure();
+        this.onFailure()
       } else {
-        this.delay_.start(Math.min(this.interval_, timeLeft));
+        this.delay_.start(Math.min(this.interval_, timeLeft))
       }
     }
   }
-};
+}

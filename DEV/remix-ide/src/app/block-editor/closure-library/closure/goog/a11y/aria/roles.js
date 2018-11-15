@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 /**
  * @fileoverview The file contains generated enumerations for ARIA roles
  * as defined by W3C ARIA standard: http://www.w3.org/TR/wai-aria/.
@@ -21,8 +20,7 @@
  * about how to edit it via the generator check go/closure-ariagen.
  */
 
-goog.provide('goog.a11y.aria.Role');
-
+goog.provide("goog.a11y.aria.Role")
 
 /**
  * ARIA role values.
@@ -30,190 +28,190 @@ goog.provide('goog.a11y.aria.Role');
  */
 goog.a11y.aria.Role = {
   // ARIA role for an alert element that doesn't need to be explicitly closed.
-  ALERT: 'alert',
+  ALERT: "alert",
 
   // ARIA role for an alert dialog element that takes focus and must be closed.
-  ALERTDIALOG: 'alertdialog',
+  ALERTDIALOG: "alertdialog",
 
   // ARIA role for an application that implements its own keyboard navigation.
-  APPLICATION: 'application',
+  APPLICATION: "application",
 
   // ARIA role for an article.
-  ARTICLE: 'article',
+  ARTICLE: "article",
 
   // ARIA role for a banner containing mostly site content, not page content.
-  BANNER: 'banner',
+  BANNER: "banner",
 
   // ARIA role for a button element.
-  BUTTON: 'button',
+  BUTTON: "button",
 
   // ARIA role for a checkbox button element; use with the CHECKED state.
-  CHECKBOX: 'checkbox',
+  CHECKBOX: "checkbox",
 
   // ARIA role for a column header of a table or grid.
-  COLUMNHEADER: 'columnheader',
+  COLUMNHEADER: "columnheader",
 
   // ARIA role for a combo box element.
-  COMBOBOX: 'combobox',
+  COMBOBOX: "combobox",
 
   // ARIA role for a supporting section of the document.
-  COMPLEMENTARY: 'complementary',
+  COMPLEMENTARY: "complementary",
 
   // ARIA role for a large perceivable region that contains information
   // about the parent document.
-  CONTENTINFO: 'contentinfo',
+  CONTENTINFO: "contentinfo",
 
   // ARIA role for a definition of a term or concept.
-  DEFINITION: 'definition',
+  DEFINITION: "definition",
 
   // ARIA role for a dialog, some descendant must take initial focus.
-  DIALOG: 'dialog',
+  DIALOG: "dialog",
 
   // ARIA role for a directory, like a table of contents.
-  DIRECTORY: 'directory',
+  DIRECTORY: "directory",
 
   // ARIA role for a part of a page that's a document, not a web application.
-  DOCUMENT: 'document',
+  DOCUMENT: "document",
 
   // ARIA role for a landmark region logically considered one form.
-  FORM: 'form',
+  FORM: "form",
 
   // ARIA role for an interactive control of tabular data.
-  GRID: 'grid',
+  GRID: "grid",
 
   // ARIA role for a cell in a grid.
-  GRIDCELL: 'gridcell',
+  GRIDCELL: "gridcell",
 
   // ARIA role for a group of related elements like tree item siblings.
-  GROUP: 'group',
+  GROUP: "group",
 
   // ARIA role for a heading element.
-  HEADING: 'heading',
+  HEADING: "heading",
 
   // ARIA role for a container of elements that together comprise one image.
-  IMG: 'img',
+  IMG: "img",
 
   // ARIA role for a link.
-  LINK: 'link',
+  LINK: "link",
 
   // ARIA role for a list of non-interactive list items.
-  LIST: 'list',
+  LIST: "list",
 
   // ARIA role for a listbox.
-  LISTBOX: 'listbox',
+  LISTBOX: "listbox",
 
   // ARIA role for a list item.
-  LISTITEM: 'listitem',
+  LISTITEM: "listitem",
 
   // ARIA role for a live region where new information is added.
-  LOG: 'log',
+  LOG: "log",
 
   // ARIA landmark role for the main content in a document. Use only once.
-  MAIN: 'main',
+  MAIN: "main",
 
   // ARIA role for a live region of non-essential information that changes.
-  MARQUEE: 'marquee',
+  MARQUEE: "marquee",
 
   // ARIA role for a mathematical expression.
-  MATH: 'math',
+  MATH: "math",
 
   // ARIA role for a popup menu.
-  MENU: 'menu',
+  MENU: "menu",
 
   // ARIA role for a menubar element containing menu elements.
-  MENUBAR: 'menubar',
+  MENUBAR: "menubar",
 
   // ARIA role for menu item elements.
-  MENU_ITEM: 'menuitem',
+  MENU_ITEM: "menuitem",
 
   // ARIA role for a checkbox box element inside a menu.
-  MENU_ITEM_CHECKBOX: 'menuitemcheckbox',
+  MENU_ITEM_CHECKBOX: "menuitemcheckbox",
 
   // ARIA role for a radio button element inside a menu.
-  MENU_ITEM_RADIO: 'menuitemradio',
+  MENU_ITEM_RADIO: "menuitemradio",
 
   // ARIA landmark role for a collection of navigation links.
-  NAVIGATION: 'navigation',
+  NAVIGATION: "navigation",
 
   // ARIA role for a section ancillary to the main content.
-  NOTE: 'note',
+  NOTE: "note",
 
   // ARIA role for option items that are  children of combobox, listbox, menu,
   // radiogroup, or tree elements.
-  OPTION: 'option',
+  OPTION: "option",
 
   // ARIA role for ignorable cosmetic elements with no semantic significance.
-  PRESENTATION: 'presentation',
+  PRESENTATION: "presentation",
 
   // ARIA role for a progress bar element.
-  PROGRESSBAR: 'progressbar',
+  PROGRESSBAR: "progressbar",
 
   // ARIA role for a radio button element.
-  RADIO: 'radio',
+  RADIO: "radio",
 
   // ARIA role for a group of connected radio button elements.
-  RADIOGROUP: 'radiogroup',
+  RADIOGROUP: "radiogroup",
 
   // ARIA role for an important region of the page.
-  REGION: 'region',
+  REGION: "region",
 
   // ARIA role for a row of cells in a grid.
-  ROW: 'row',
+  ROW: "row",
 
   // ARIA role for a group of one or more rows in a grid.
-  ROWGROUP: 'rowgroup',
+  ROWGROUP: "rowgroup",
 
   // ARIA role for a row header of a table or grid.
-  ROWHEADER: 'rowheader',
+  ROWHEADER: "rowheader",
 
   // ARIA role for a scrollbar element.
-  SCROLLBAR: 'scrollbar',
+  SCROLLBAR: "scrollbar",
 
   // ARIA landmark role for a part of the page providing search functionality.
-  SEARCH: 'search',
+  SEARCH: "search",
 
   // ARIA role for a menu separator.
-  SEPARATOR: 'separator',
+  SEPARATOR: "separator",
 
   // ARIA role for a slider.
-  SLIDER: 'slider',
+  SLIDER: "slider",
 
   // ARIA role for a spin button.
-  SPINBUTTON: 'spinbutton',
+  SPINBUTTON: "spinbutton",
 
   // ARIA role for a live region with advisory info less severe than an alert.
-  STATUS: 'status',
+  STATUS: "status",
 
   // ARIA role for a tab button.
-  TAB: 'tab',
+  TAB: "tab",
 
   // ARIA role for a tab bar (i.e. a list of tab buttons).
-  TAB_LIST: 'tablist',
+  TAB_LIST: "tablist",
 
   // ARIA role for a tab page (i.e. the element holding tab contents).
-  TAB_PANEL: 'tabpanel',
+  TAB_PANEL: "tabpanel",
 
   // ARIA role for a textbox element.
-  TEXTBOX: 'textbox',
+  TEXTBOX: "textbox",
 
   // ARIA role for a textinfo element.
-  TEXTINFO: 'textinfo',
+  TEXTINFO: "textinfo",
 
   // ARIA role for an element displaying elapsed time or time remaining.
-  TIMER: 'timer',
+  TIMER: "timer",
 
   // ARIA role for a toolbar element.
-  TOOLBAR: 'toolbar',
+  TOOLBAR: "toolbar",
 
   // ARIA role for a tooltip element.
-  TOOLTIP: 'tooltip',
+  TOOLTIP: "tooltip",
 
   // ARIA role for a tree.
-  TREE: 'tree',
+  TREE: "tree",
 
   // ARIA role for a grid whose rows can be expanded and collapsed like a tree.
-  TREEGRID: 'treegrid',
+  TREEGRID: "treegrid",
 
   // ARIA role for a tree item that sometimes may be expanded or collapsed.
-  TREEITEM: 'treeitem'
-};
+  TREEITEM: "treeitem"
+}

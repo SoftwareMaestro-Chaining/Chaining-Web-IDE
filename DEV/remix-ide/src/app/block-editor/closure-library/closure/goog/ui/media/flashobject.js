@@ -42,28 +42,26 @@
  *
  */
 
-goog.provide('goog.ui.media.FlashObject');
-goog.provide('goog.ui.media.FlashObject.ScriptAccessLevel');
-goog.provide('goog.ui.media.FlashObject.Wmodes');
+goog.provide("goog.ui.media.FlashObject")
+goog.provide("goog.ui.media.FlashObject.ScriptAccessLevel")
+goog.provide("goog.ui.media.FlashObject.Wmodes")
 
-goog.require('goog.asserts');
-goog.require('goog.dom.TagName');
-goog.require('goog.dom.safe');
-goog.require('goog.events.Event');
-goog.require('goog.events.EventHandler');
-goog.require('goog.events.EventType');
-goog.require('goog.html.TrustedResourceUrl');
-goog.require('goog.html.flash');
-goog.require('goog.log');
-goog.require('goog.object');
-goog.require('goog.string');
-goog.require('goog.structs.Map');
-goog.require('goog.style');
-goog.require('goog.ui.Component');
-goog.require('goog.userAgent');
-goog.require('goog.userAgent.flash');
-
-
+goog.require("goog.asserts")
+goog.require("goog.dom.TagName")
+goog.require("goog.dom.safe")
+goog.require("goog.events.Event")
+goog.require("goog.events.EventHandler")
+goog.require("goog.events.EventType")
+goog.require("goog.html.TrustedResourceUrl")
+goog.require("goog.html.flash")
+goog.require("goog.log")
+goog.require("goog.object")
+goog.require("goog.string")
+goog.require("goog.structs.Map")
+goog.require("goog.style")
+goog.require("goog.ui.Component")
+goog.require("goog.userAgent")
+goog.require("goog.userAgent.flash")
 
 /**
  * A very simple flash wrapper, that allows you to create flash object
@@ -77,7 +75,7 @@ goog.require('goog.userAgent.flash');
  * @constructor
  */
 goog.ui.media.FlashObject = function(flashUrl, opt_domHelper) {
-  goog.ui.Component.call(this, opt_domHelper);
+  goog.ui.Component.call(this, opt_domHelper)
 
   /**
    * The URL of the flash movie to be embedded.
@@ -85,14 +83,14 @@ goog.ui.media.FlashObject = function(flashUrl, opt_domHelper) {
    * @type {!goog.html.TrustedResourceUrl}
    * @private
    */
-  this.flashUrl_ = flashUrl;
+  this.flashUrl_ = flashUrl
 
   /**
    * An event handler used to handle events consistently between browsers.
    * @type {goog.events.EventHandler<!goog.ui.media.FlashObject>}
    * @private
    */
-  this.eventHandler_ = new goog.events.EventHandler(this);
+  this.eventHandler_ = new goog.events.EventHandler(this)
 
   /**
    * A map of variables to be passed to the flash movie.
@@ -100,10 +98,9 @@ goog.ui.media.FlashObject = function(flashUrl, opt_domHelper) {
    * @type {goog.structs.Map}
    * @private
    */
-  this.flashVars_ = new goog.structs.Map();
-};
-goog.inherits(goog.ui.media.FlashObject, goog.ui.Component);
-
+  this.flashVars_ = new goog.structs.Map()
+}
+goog.inherits(goog.ui.media.FlashObject, goog.ui.Component)
 
 /**
  * Different states of loaded-ness in which the SWF itself can be
@@ -120,8 +117,7 @@ goog.ui.media.FlashObject.SwfReadyStates_ = {
   LOADED: 2,
   INTERACTIVE: 3,
   COMPLETE: 4
-};
-
+}
 
 /**
  * IE specific ready states.
@@ -131,13 +127,12 @@ goog.ui.media.FlashObject.SwfReadyStates_ = {
  * @private
  */
 goog.ui.media.FlashObject.IeSwfReadyStates_ = {
-  LOADING: 'loading',
-  UNINITIALIZED: 'uninitialized',
-  LOADED: 'loaded',
-  INTERACTIVE: 'interactive',
-  COMPLETE: 'complete'
-};
-
+  LOADING: "loading",
+  UNINITIALIZED: "uninitialized",
+  LOADED: "loaded",
+  INTERACTIVE: "interactive",
+  COMPLETE: "complete"
+}
 
 /**
  * The different modes for displaying a SWF. Note that different wmodes
@@ -150,19 +145,18 @@ goog.ui.media.FlashObject.Wmodes = {
   /**
    * Allows for z-ordering of the SWF.
    */
-  OPAQUE: 'opaque',
+  OPAQUE: "opaque",
 
   /**
    * Allows for z-ordering of the SWF and plays the SWF with a transparent BG.
    */
-  TRANSPARENT: 'transparent',
+  TRANSPARENT: "transparent",
 
   /**
    * The default wmode. Does not allow for z-ordering of the SWF.
    */
-  WINDOW: 'window'
-};
-
+  WINDOW: "window"
+}
 
 /**
  * The different levels of allowScriptAccess.
@@ -176,37 +170,35 @@ goog.ui.media.FlashObject.ScriptAccessLevel = {
   /*
    * The flash object can always communicate with its container page.
    */
-  ALWAYS: 'always',
+  ALWAYS: "always",
 
   /*
    * The flash object can only communicate with its container page if they are
    * hosted in the same domain.
    */
-  SAME_DOMAIN: 'sameDomain',
+  SAME_DOMAIN: "sameDomain",
 
   /*
    * The flash can not communicate with its container page.
    */
-  NEVER: 'never'
-};
-
+  NEVER: "never"
+}
 
 /**
  * The component CSS namespace.
  *
  * @type {string}
  */
-goog.ui.media.FlashObject.CSS_CLASS = goog.getCssName('goog-ui-media-flash');
-
+goog.ui.media.FlashObject.CSS_CLASS = goog.getCssName("goog-ui-media-flash")
 
 /**
  * The flash object CSS class.
  *
  * @type {string}
  */
-goog.ui.media.FlashObject.FLASH_CSS_CLASS =
-    goog.getCssName('goog-ui-media-flash-object');
-
+goog.ui.media.FlashObject.FLASH_CSS_CLASS = goog.getCssName(
+  "goog-ui-media-flash-object"
+)
 
 /**
  * A logger used for debugging.
@@ -214,9 +206,9 @@ goog.ui.media.FlashObject.FLASH_CSS_CLASS =
  * @type {goog.log.Logger}
  * @private
  */
-goog.ui.media.FlashObject.prototype.logger_ =
-    goog.log.getLogger('goog.ui.media.FlashObject');
-
+goog.ui.media.FlashObject.prototype.logger_ = goog.log.getLogger(
+  "goog.ui.media.FlashObject"
+)
 
 /**
  * The wmode for the SWF.
@@ -225,8 +217,7 @@ goog.ui.media.FlashObject.prototype.logger_ =
  * @private
  */
 goog.ui.media.FlashObject.prototype.wmode_ =
-    goog.ui.media.FlashObject.Wmodes.WINDOW;
-
+  goog.ui.media.FlashObject.Wmodes.WINDOW
 
 /**
  * The minimum required flash version.
@@ -234,8 +225,7 @@ goog.ui.media.FlashObject.prototype.wmode_ =
  * @type {?string}
  * @private
  */
-goog.ui.media.FlashObject.prototype.requiredVersion_;
-
+goog.ui.media.FlashObject.prototype.requiredVersion_
 
 /**
  * The flash movie width.
@@ -243,8 +233,7 @@ goog.ui.media.FlashObject.prototype.requiredVersion_;
  * @type {string}
  * @private
  */
-goog.ui.media.FlashObject.prototype.width_;
-
+goog.ui.media.FlashObject.prototype.width_
 
 /**
  * The flash movie height.
@@ -252,8 +241,7 @@ goog.ui.media.FlashObject.prototype.width_;
  * @type {string}
  * @private
  */
-goog.ui.media.FlashObject.prototype.height_;
-
+goog.ui.media.FlashObject.prototype.height_
 
 /**
  * The flash movie background color.
@@ -261,8 +249,7 @@ goog.ui.media.FlashObject.prototype.height_;
  * @type {string}
  * @private
  */
-goog.ui.media.FlashObject.prototype.backgroundColor_ = '#000000';
-
+goog.ui.media.FlashObject.prototype.backgroundColor_ = "#000000"
 
 /**
  * The flash movie allowScriptAccess setting.
@@ -271,8 +258,7 @@ goog.ui.media.FlashObject.prototype.backgroundColor_ = '#000000';
  * @private
  */
 goog.ui.media.FlashObject.prototype.allowScriptAccess_ =
-    goog.ui.media.FlashObject.ScriptAccessLevel.SAME_DOMAIN;
-
+  goog.ui.media.FlashObject.ScriptAccessLevel.SAME_DOMAIN
 
 /**
  * Sets the flash movie Wmode.
@@ -281,18 +267,16 @@ goog.ui.media.FlashObject.prototype.allowScriptAccess_ =
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setWmode = function(wmode) {
-  this.wmode_ = wmode;
-  return this;
-};
-
+  this.wmode_ = wmode
+  return this
+}
 
 /**
  * @return {string} Returns the flash movie wmode.
  */
 goog.ui.media.FlashObject.prototype.getWmode = function() {
-  return this.wmode_;
-};
-
+  return this.wmode_
+}
 
 /**
  * Adds flash variables.
@@ -301,10 +285,9 @@ goog.ui.media.FlashObject.prototype.getWmode = function() {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.addFlashVars = function(map) {
-  this.flashVars_.addAll(map);
-  return this;
-};
-
+  this.flashVars_.addAll(map)
+  return this
+}
 
 /**
  * Sets a flash variable.
@@ -314,10 +297,9 @@ goog.ui.media.FlashObject.prototype.addFlashVars = function(map) {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setFlashVar = function(key, value) {
-  this.flashVars_.set(key, value);
-  return this;
-};
-
+  this.flashVars_.set(key, value)
+  return this
+}
 
 /**
  * Sets flash variables. You can either pass a Map of key->value pairs or you
@@ -333,29 +315,33 @@ goog.ui.media.FlashObject.prototype.setFlashVar = function(key, value) {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setFlashVars = function(
-    flashVar, opt_value) {
-  if (flashVar instanceof goog.structs.Map ||
-      goog.typeOf(flashVar) == 'object') {
-    this.addFlashVars(/**@type {!goog.structs.Map|!Object}*/ (flashVar));
+  flashVar,
+  opt_value
+) {
+  if (
+    flashVar instanceof goog.structs.Map ||
+    goog.typeOf(flashVar) == "object"
+  ) {
+    this.addFlashVars(/**@type {!goog.structs.Map|!Object}*/ (flashVar))
   } else {
     goog.asserts.assert(
-        goog.isString(flashVar) && goog.isDef(opt_value),
-        'Invalid argument(s)');
+      goog.isString(flashVar) && goog.isDef(opt_value),
+      "Invalid argument(s)"
+    )
     this.setFlashVar(
-        /**@type {string}*/ (flashVar),
-        /**@type {string}*/ (opt_value));
+      /**@type {string}*/ (flashVar),
+      /**@type {string}*/ (opt_value)
+    )
   }
-  return this;
-};
-
+  return this
+}
 
 /**
  * @return {goog.structs.Map} The current flash variables.
  */
 goog.ui.media.FlashObject.prototype.getFlashVars = function() {
-  return this.flashVars_;
-};
-
+  return this.flashVars_
+}
 
 /**
  * Sets the background color of the movie.
@@ -364,18 +350,16 @@ goog.ui.media.FlashObject.prototype.getFlashVars = function() {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setBackgroundColor = function(color) {
-  this.backgroundColor_ = color;
-  return this;
-};
-
+  this.backgroundColor_ = color
+  return this
+}
 
 /**
  * @return {string} The background color of the movie.
  */
 goog.ui.media.FlashObject.prototype.getBackgroundColor = function() {
-  return this.backgroundColor_;
-};
-
+  return this.backgroundColor_
+}
 
 /**
  * Sets the allowScriptAccess setting of the movie.
@@ -384,18 +368,16 @@ goog.ui.media.FlashObject.prototype.getBackgroundColor = function() {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setAllowScriptAccess = function(value) {
-  this.allowScriptAccess_ = value;
-  return this;
-};
-
+  this.allowScriptAccess_ = value
+  return this
+}
 
 /**
  * @return {string} The allowScriptAccess setting color of the movie.
  */
 goog.ui.media.FlashObject.prototype.getAllowScriptAccess = function() {
-  return this.allowScriptAccess_;
-};
-
+  return this.allowScriptAccess_
+}
 
 /**
  * Sets the width and height of the movie.
@@ -405,22 +387,20 @@ goog.ui.media.FlashObject.prototype.getAllowScriptAccess = function() {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setSize = function(width, height) {
-  this.width_ = goog.isString(width) ? width : Math.round(width) + 'px';
-  this.height_ = goog.isString(height) ? height : Math.round(height) + 'px';
+  this.width_ = goog.isString(width) ? width : Math.round(width) + "px"
+  this.height_ = goog.isString(height) ? height : Math.round(height) + "px"
   if (this.getElement()) {
-    goog.style.setSize(this.getFlashElement(), this.width_, this.height_);
+    goog.style.setSize(this.getFlashElement(), this.width_, this.height_)
   }
-  return this;
-};
-
+  return this
+}
 
 /**
  * @return {?string} The flash required version.
  */
 goog.ui.media.FlashObject.prototype.getRequiredVersion = function() {
-  return this.requiredVersion_;
-};
-
+  return this.requiredVersion_
+}
 
 /**
  * Sets the minimum flash required version.
@@ -430,10 +410,9 @@ goog.ui.media.FlashObject.prototype.getRequiredVersion = function() {
  * @return {!goog.ui.media.FlashObject} The flash object instance for chaining.
  */
 goog.ui.media.FlashObject.prototype.setRequiredVersion = function(version) {
-  this.requiredVersion_ = version;
-  return this;
-};
-
+  this.requiredVersion_ = version
+  return this
+}
 
 /**
  * Returns whether this SWF has a minimum required flash version.
@@ -441,9 +420,8 @@ goog.ui.media.FlashObject.prototype.setRequiredVersion = function(version) {
  * @return {boolean} Whether a required version was set or not.
  */
 goog.ui.media.FlashObject.prototype.hasRequiredVersion = function() {
-  return this.requiredVersion_ != null;
-};
-
+  return this.requiredVersion_ != null
+}
 
 /**
  * Writes the Flash embedding `HTMLObjectElement` to this components root
@@ -451,14 +429,16 @@ goog.ui.media.FlashObject.prototype.hasRequiredVersion = function() {
  * @override
  */
 goog.ui.media.FlashObject.prototype.enterDocument = function() {
-  goog.ui.media.FlashObject.superClass_.enterDocument.call(this);
+  goog.ui.media.FlashObject.superClass_.enterDocument.call(this)
 
   // The SWF tag must be written after this component's element is appended to
   // the DOM. Otherwise Flash's ExternalInterface is broken in IE.
   goog.dom.safe.setInnerHtml(
-      /** @type {!Element} */ (this.getElement()), this.createSwfTag_());
+    /** @type {!Element} */ (this.getElement()),
+    this.createSwfTag_()
+  )
   if (this.width_ && this.height_) {
-    this.setSize(this.width_, this.height_);
+    this.setSize(this.width_, this.height_)
   }
 
   // Sinks all the events on the bubble phase.
@@ -484,10 +464,11 @@ goog.ui.media.FlashObject.prototype.enterDocument = function() {
   // inexpensive/scalable way to stop events on the capturing phase unless we
   // added an event listener on the document for each flash object.
   this.eventHandler_.listen(
-      this.getElement(), goog.object.getValues(goog.events.EventType),
-      goog.events.Event.stopPropagation);
-};
-
+    this.getElement(),
+    goog.object.getValues(goog.events.EventType),
+    goog.events.Event.stopPropagation
+  )
+}
 
 /**
  * Creates the DOM structure.
@@ -495,20 +476,23 @@ goog.ui.media.FlashObject.prototype.enterDocument = function() {
  * @override
  */
 goog.ui.media.FlashObject.prototype.createDom = function() {
-  if (this.hasRequiredVersion() &&
-      !goog.userAgent.flash.isVersion(
-          /** @type {string} */ (this.getRequiredVersion()))) {
+  if (
+    this.hasRequiredVersion() &&
+    !goog.userAgent.flash.isVersion(
+      /** @type {string} */ (this.getRequiredVersion())
+    )
+  ) {
     goog.log.warning(
-        this.logger_,
-        'Required flash version not found:' + this.getRequiredVersion());
-    throw new Error(goog.ui.Component.Error.NOT_SUPPORTED);
+      this.logger_,
+      "Required flash version not found:" + this.getRequiredVersion()
+    )
+    throw new Error(goog.ui.Component.Error.NOT_SUPPORTED)
   }
 
-  var element = this.getDomHelper().createElement(goog.dom.TagName.DIV);
-  element.className = goog.ui.media.FlashObject.CSS_CLASS;
-  this.setElementInternal(element);
-};
-
+  var element = this.getDomHelper().createElement(goog.dom.TagName.DIV)
+  element.className = goog.ui.media.FlashObject.CSS_CLASS
+  this.setElementInternal(element)
+}
 
 /**
  * Creates the HTML to embed the flash object.
@@ -518,22 +502,21 @@ goog.ui.media.FlashObject.prototype.createDom = function() {
  * @private
  */
 goog.ui.media.FlashObject.prototype.createSwfTag_ = function() {
-  var keys = this.flashVars_.getKeys();
-  var values = this.flashVars_.getValues();
-  var flashVars = [];
+  var keys = this.flashVars_.getKeys()
+  var values = this.flashVars_.getValues()
+  var flashVars = []
   for (var i = 0; i < keys.length; i++) {
-    var key = goog.string.urlEncode(keys[i]);
-    var value = goog.string.urlEncode(values[i]);
-    flashVars.push(key + '=' + value);
+    var key = goog.string.urlEncode(keys[i])
+    var value = goog.string.urlEncode(values[i])
+    flashVars.push(key + "=" + value)
   }
-  var flashVarsString = flashVars.join('&');
+  var flashVarsString = flashVars.join("&")
   if (goog.userAgent.IE && !goog.userAgent.isDocumentModeOrHigher(11)) {
-    return this.createSwfTagOldIe_(flashVarsString);
+    return this.createSwfTagOldIe_(flashVarsString)
   } else {
-    return this.createSwfTagModern_(flashVarsString);
+    return this.createSwfTagModern_(flashVarsString)
   }
-};
-
+}
 
 /**
  * Creates the HTML to embed the flash object for IE>=11 and other browsers.
@@ -545,20 +528,19 @@ goog.ui.media.FlashObject.prototype.createSwfTag_ = function() {
  */
 goog.ui.media.FlashObject.prototype.createSwfTagModern_ = function(flashVars) {
   return goog.html.flash.createEmbed(this.flashUrl_, {
-    'AllowScriptAccess': this.allowScriptAccess_,
-    'allowFullScreen': 'true',
-    'allowNetworking': 'all',
-    'bgcolor': this.backgroundColor_,
-    'class': goog.ui.media.FlashObject.FLASH_CSS_CLASS,
-    'FlashVars': flashVars,
-    'id': this.getId(),
-    'name': this.getId(),
-    'quality': 'high',
-    'SeamlessTabbing': 'false',
-    'wmode': this.wmode_
-  });
-};
-
+    AllowScriptAccess: this.allowScriptAccess_,
+    allowFullScreen: "true",
+    allowNetworking: "all",
+    bgcolor: this.backgroundColor_,
+    class: goog.ui.media.FlashObject.FLASH_CSS_CLASS,
+    FlashVars: flashVars,
+    id: this.getId(),
+    name: this.getId(),
+    quality: "high",
+    SeamlessTabbing: "false",
+    wmode: this.wmode_
+  })
+}
 
 /**
  * Creates the HTML to embed the flash object for IE<11.
@@ -570,72 +552,79 @@ goog.ui.media.FlashObject.prototype.createSwfTagModern_ = function(flashVars) {
  */
 goog.ui.media.FlashObject.prototype.createSwfTagOldIe_ = function(flashVars) {
   return goog.html.flash.createObjectForOldIe(
-      this.flashUrl_, {
-        'allowFullScreen': 'true',
-        'AllowScriptAccess': this.allowScriptAccess_,
-        'allowNetworking': 'all',
-        'bgcolor': this.backgroundColor_,
-        'FlashVars': flashVars,
-        'quality': 'high',
-        'SeamlessTabbing': 'false',
-        'wmode': this.wmode_
-      },
-      {
-        'class': goog.ui.media.FlashObject.FLASH_CSS_CLASS,
-        'id': this.getId(),
-        'name': this.getId()
-      });
-};
-
+    this.flashUrl_,
+    {
+      allowFullScreen: "true",
+      AllowScriptAccess: this.allowScriptAccess_,
+      allowNetworking: "all",
+      bgcolor: this.backgroundColor_,
+      FlashVars: flashVars,
+      quality: "high",
+      SeamlessTabbing: "false",
+      wmode: this.wmode_
+    },
+    {
+      class: goog.ui.media.FlashObject.FLASH_CSS_CLASS,
+      id: this.getId(),
+      name: this.getId()
+    }
+  )
+}
 
 /**
  * @return {HTMLObjectElement} The flash element or null if the element can't
  *     be found.
  */
 goog.ui.media.FlashObject.prototype.getFlashElement = function() {
-  return /** @type {HTMLObjectElement} */ (
-      this.getElement() ? this.getElement().firstChild : null);
-};
-
+  return /** @type {HTMLObjectElement} */ (this.getElement()
+    ? this.getElement().firstChild
+    : null)
+}
 
 /** @override */
 goog.ui.media.FlashObject.prototype.disposeInternal = function() {
-  goog.ui.media.FlashObject.superClass_.disposeInternal.call(this);
-  this.flashVars_ = null;
+  goog.ui.media.FlashObject.superClass_.disposeInternal.call(this)
+  this.flashVars_ = null
 
-  this.eventHandler_.dispose();
-  this.eventHandler_ = null;
-};
-
+  this.eventHandler_.dispose()
+  this.eventHandler_ = null
+}
 
 /**
  * @return {boolean} whether the SWF has finished loading or not.
  */
 goog.ui.media.FlashObject.prototype.isLoaded = function() {
   if (!this.isInDocument() || !this.getElement()) {
-    return false;
+    return false
   }
 
   // IE has different readyState values for elements.
-  if (goog.userAgent.EDGE_OR_IE && this.getFlashElement().readyState &&
-      this.getFlashElement().readyState ==
-          goog.ui.media.FlashObject.IeSwfReadyStates_.COMPLETE) {
-    return true;
+  if (
+    goog.userAgent.EDGE_OR_IE &&
+    this.getFlashElement().readyState &&
+    this.getFlashElement().readyState ==
+      goog.ui.media.FlashObject.IeSwfReadyStates_.COMPLETE
+  ) {
+    return true
   }
 
-  if (this.getFlashElement().readyState &&
-      this.getFlashElement().readyState ==
-          goog.ui.media.FlashObject.SwfReadyStates_.COMPLETE) {
-    return true;
+  if (
+    this.getFlashElement().readyState &&
+    this.getFlashElement().readyState ==
+      goog.ui.media.FlashObject.SwfReadyStates_.COMPLETE
+  ) {
+    return true
   }
 
   // Use "in" operator to check for PercentLoaded because IE8 throws when
   // accessing directly. See:
   // https://github.com/google/closure-library/pull/373.
-  if ('PercentLoaded' in this.getFlashElement() &&
-      this.getFlashElement().PercentLoaded() == 100) {
-    return true;
+  if (
+    "PercentLoaded" in this.getFlashElement() &&
+    this.getFlashElement().PercentLoaded() == 100
+  ) {
+    return true
   }
 
-  return false;
-};
+  return false
+}

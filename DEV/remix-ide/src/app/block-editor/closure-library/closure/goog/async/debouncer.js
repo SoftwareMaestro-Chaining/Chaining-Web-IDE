@@ -18,12 +18,10 @@
  * @see ../demos/timers.html
  */
 
-goog.provide('goog.async.Debouncer');
+goog.provide("goog.async.Debouncer")
 
-goog.require('goog.Disposable');
-goog.require('goog.Timer');
-
-
+goog.require("goog.Disposable")
+goog.require("goog.Timer")
 
 /**
  * Debouncer will perform a specified action exactly once for any sequence of
@@ -43,32 +41,32 @@ goog.require('goog.Timer');
  * @template T
  */
 goog.async.Debouncer = function(listener, interval, opt_handler) {
-  goog.async.Debouncer.base(this, 'constructor');
+  goog.async.Debouncer.base(this, "constructor")
 
   /**
    * Function to callback
    * @const @private {function(this: T, ...?)}
    */
   this.listener_ =
-      opt_handler != null ? goog.bind(listener, opt_handler) : listener;
+    opt_handler != null ? goog.bind(listener, opt_handler) : listener
 
   /**
    * Interval for the debounce time
    * @const @private {number}
    */
-  this.interval_ = interval;
+  this.interval_ = interval
 
   /**
    * Cached callback function invoked after the debounce timeout completes
    * @const @private {!Function}
    */
-  this.callback_ = goog.bind(this.onTimer_, this);
+  this.callback_ = goog.bind(this.onTimer_, this)
 
   /**
    * Indicates that the action is pending and needs to be fired.
    * @private {boolean}
    */
-  this.shouldFire_ = false;
+  this.shouldFire_ = false
 
   /**
    * Indicates the count of nested pauses currently in effect on the debouncer.
@@ -76,29 +74,28 @@ goog.async.Debouncer = function(listener, interval, opt_handler) {
    * debouncer is resumed enough times to drop the pause count to zero.
    * @private {number}
    */
-  this.pauseCount_ = 0;
+  this.pauseCount_ = 0
 
   /**
    * Timer for scheduling the next callback
    * @private {?number}
    */
-  this.timer_ = null;
+  this.timer_ = null
 
   /**
    * When set this is a timestamp. On the onfire we want to reschedule the
    * callback so it ends up at this time.
    * @private {?number}
    */
-  this.refireAt_ = null;
+  this.refireAt_ = null
 
   /**
    * The last arguments passed into `fire`.
    * @private {!IArrayLike}
    */
-  this.args_ = [];
-};
-goog.inherits(goog.async.Debouncer, goog.Disposable);
-
+  this.args_ = []
+}
+goog.inherits(goog.async.Debouncer, goog.Disposable)
 
 /**
  * Notifies the debouncer that the action has happened. It will debounce the
@@ -109,20 +106,19 @@ goog.inherits(goog.async.Debouncer, goog.Disposable);
  * @param {...?} var_args Arguments to pass on to the debounced function.
  */
 goog.async.Debouncer.prototype.fire = function(var_args) {
-  this.args_ = arguments;
+  this.args_ = arguments
   // When this method is called, we need to prevent fire() calls from within the
   // previous interval from calling the callback. The simplest way of doing this
   // is to call this.stop() which calls clearTimeout, and then reschedule the
   // timeout. However clearTimeout and setTimeout are expensive, so we just
   // leave them untouched and when they do happen we potentially reschedule.
-  this.shouldFire_ = false;
+  this.shouldFire_ = false
   if (this.timer_) {
-    this.refireAt_ = goog.now() + this.interval_;
-    return;
+    this.refireAt_ = goog.now() + this.interval_
+    return
   }
-  this.timer_ = goog.Timer.callOnce(this.callback_, this.interval_);
-};
-
+  this.timer_ = goog.Timer.callOnce(this.callback_, this.interval_)
+}
 
 /**
  * Cancels any pending action callback. The debouncer can be restarted by
@@ -130,23 +126,21 @@ goog.async.Debouncer.prototype.fire = function(var_args) {
  */
 goog.async.Debouncer.prototype.stop = function() {
   if (this.timer_) {
-    goog.Timer.clear(this.timer_);
-    this.timer_ = null;
+    goog.Timer.clear(this.timer_)
+    this.timer_ = null
   }
-  this.refireAt_ = null;
-  this.shouldFire_ = false;
-  this.args_ = [];
-};
-
+  this.refireAt_ = null
+  this.shouldFire_ = false
+  this.args_ = []
+}
 
 /**
  * Pauses the debouncer. All pending and future action callbacks will be delayed
  * until the debouncer is resumed. Pauses can be nested.
  */
 goog.async.Debouncer.prototype.pause = function() {
-  ++this.pauseCount_;
-};
-
+  ++this.pauseCount_
+}
 
 /**
  * Resumes the debouncer. If doing so drops the pausing count to zero, pending
@@ -156,22 +150,20 @@ goog.async.Debouncer.prototype.pause = function() {
  */
 goog.async.Debouncer.prototype.resume = function() {
   if (!this.pauseCount_) {
-    return;
+    return
   }
 
-  --this.pauseCount_;
+  --this.pauseCount_
   if (!this.pauseCount_ && this.shouldFire_) {
-    this.doAction_();
+    this.doAction_()
   }
-};
-
+}
 
 /** @override */
 goog.async.Debouncer.prototype.disposeInternal = function() {
-  this.stop();
-  goog.async.Debouncer.base(this, 'disposeInternal');
-};
-
+  this.stop()
+  goog.async.Debouncer.base(this, "disposeInternal")
+}
 
 /**
  * Handler for the timer to fire the debouncer.
@@ -181,26 +173,27 @@ goog.async.Debouncer.prototype.onTimer_ = function() {
   // There is a newer call to fire() within the debounce interval.
   // Reschedule the callback and return.
   if (this.refireAt_) {
-    this.timer_ =
-        goog.Timer.callOnce(this.callback_, this.refireAt_ - goog.now());
-    this.refireAt_ = null;
-    return;
+    this.timer_ = goog.Timer.callOnce(
+      this.callback_,
+      this.refireAt_ - goog.now()
+    )
+    this.refireAt_ = null
+    return
   }
-  this.timer_ = null;
+  this.timer_ = null
 
   if (!this.pauseCount_) {
-    this.doAction_();
+    this.doAction_()
   } else {
-    this.shouldFire_ = true;
+    this.shouldFire_ = true
   }
-};
-
+}
 
 /**
  * Calls the callback.
  * @private
  */
 goog.async.Debouncer.prototype.doAction_ = function() {
-  this.shouldFire_ = false;
-  this.listener_.apply(null, this.args_);
-};
+  this.shouldFire_ = false
+  this.listener_.apply(null, this.args_)
+}

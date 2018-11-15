@@ -16,8 +16,7 @@
  * @fileoverview Definition of goog.dom.NodeType.
  */
 
-goog.provide('goog.dom.NodeType');
-
+goog.provide("goog.dom.NodeType")
 
 /**
  * Constants for the nodeType attribute in the Node interface.
@@ -45,4 +44,4 @@ goog.dom.NodeType = {
   DOCUMENT_TYPE: 10,
   DOCUMENT_FRAGMENT: 11,
   NOTATION: 12
-};
+}

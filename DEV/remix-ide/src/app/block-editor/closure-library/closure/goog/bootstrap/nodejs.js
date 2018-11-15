@@ -39,17 +39,14 @@
  * @nocompile
  */
 
-
-var fs = require('fs');
-var path = require('path');
-var vm = require('vm');
-
+var fs = require("fs")
+var path = require("path")
+var vm = require("vm")
 
 /**
  * The goog namespace in the global scope.
  */
-global.goog = {};
-
+global.goog = {}
 
 /**
  * Imports a script using Node's require() API.
@@ -62,13 +59,12 @@ global.CLOSURE_IMPORT_SCRIPT = function(src, opt_sourceText) {
   // Sources are always expressed relative to closure's base.js, but
   // require() is always relative to the current source.
   if (opt_sourceText === undefined) {
-    require('./../' + src);
+    require("./../" + src)
   } else {
-    eval(opt_sourceText);
+    eval(opt_sourceText)
   }
-  return true;
-};
-
+  return true
+}
 
 /**
  * Loads a file when using Closure's goog.require() API with goog.modules.
@@ -77,22 +73,20 @@ global.CLOSURE_IMPORT_SCRIPT = function(src, opt_sourceText) {
  * @return {string} The file contents.
  */
 global.CLOSURE_LOAD_FILE_SYNC = function(src) {
-  return fs.readFileSync(
-      path.resolve(__dirname, '..', src), {encoding: 'utf-8'});
-};
-
+  return fs.readFileSync(path.resolve(__dirname, "..", src), {
+    encoding: "utf-8"
+  })
+}
 
 // Declared here so it can be used to require base.js
 function nodeGlobalRequire(file) {
-  vm.runInThisContext.call(global, fs.readFileSync(file), file);
+  vm.runInThisContext.call(global, fs.readFileSync(file), file)
 }
-
 
 // Load Closure's base.js into memory.  It is assumed base.js is in the
 // directory above this directory given this script's location in
 // bootstrap/nodejs.js.
-nodeGlobalRequire(path.resolve(__dirname, '..', 'base.js'));
-
+nodeGlobalRequire(path.resolve(__dirname, "..", "base.js"))
 
 /**
  * Bootstraps a file into the global scope.
@@ -104,4 +98,4 @@ nodeGlobalRequire(path.resolve(__dirname, '..', 'base.js'));
  *
  * @param {string} file The path to the file.
  */
-goog.nodeGlobalRequire = nodeGlobalRequire;
+goog.nodeGlobalRequire = nodeGlobalRequire

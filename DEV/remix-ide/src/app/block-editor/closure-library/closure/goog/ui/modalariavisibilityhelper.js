@@ -17,12 +17,10 @@
  * visibility of the rest of the page.
  */
 
-goog.provide('goog.ui.ModalAriaVisibilityHelper');
+goog.provide("goog.ui.ModalAriaVisibilityHelper")
 
-goog.require('goog.a11y.aria');
-goog.require('goog.a11y.aria.State');
-
-
+goog.require("goog.a11y.aria")
+goog.require("goog.a11y.aria.State")
 
 /**
  * Helper object to control aria visibility of the rest of the page (background)
@@ -40,22 +38,20 @@ goog.ui.ModalAriaVisibilityHelper = function(element, domHelper) {
   /**
    * @private {!Element}
    */
-  this.element_ = element;
+  this.element_ = element
 
   /**
    * @private {!goog.dom.DomHelper}
    */
-  this.dom_ = domHelper;
-};
-
+  this.dom_ = domHelper
+}
 
 /**
  * The elements set to aria-hidden when the popup was made visible.
  * @type {Array<!Element>}
  * @private
  */
-goog.ui.ModalAriaVisibilityHelper.prototype.hiddenElements_;
-
+goog.ui.ModalAriaVisibilityHelper.prototype.hiddenElements_
 
 /**
  * Sets aria-hidden on the rest of the page to restrict screen reader focus.
@@ -63,25 +59,30 @@ goog.ui.ModalAriaVisibilityHelper.prototype.hiddenElements_;
  * @param {boolean} hide Whether to hide or show the rest of the page.
  */
 goog.ui.ModalAriaVisibilityHelper.prototype.setBackgroundVisibility = function(
-    hide) {
+  hide
+) {
   if (hide) {
     if (!this.hiddenElements_) {
-      this.hiddenElements_ = [];
+      this.hiddenElements_ = []
     }
-    var topLevelChildren = this.dom_.getChildren(this.dom_.getDocument().body);
+    var topLevelChildren = this.dom_.getChildren(this.dom_.getDocument().body)
     for (var i = 0; i < topLevelChildren.length; i++) {
-      var child = topLevelChildren[i];
-      if (child != this.element_ &&
-          !goog.a11y.aria.getState(child, goog.a11y.aria.State.HIDDEN)) {
-        goog.a11y.aria.setState(child, goog.a11y.aria.State.HIDDEN, true);
-        this.hiddenElements_.push(child);
+      var child = topLevelChildren[i]
+      if (
+        child != this.element_ &&
+        !goog.a11y.aria.getState(child, goog.a11y.aria.State.HIDDEN)
+      ) {
+        goog.a11y.aria.setState(child, goog.a11y.aria.State.HIDDEN, true)
+        this.hiddenElements_.push(child)
       }
     }
   } else if (this.hiddenElements_) {
     for (var i = 0; i < this.hiddenElements_.length; i++) {
       goog.a11y.aria.removeState(
-          this.hiddenElements_[i], goog.a11y.aria.State.HIDDEN);
+        this.hiddenElements_[i],
+        goog.a11y.aria.State.HIDDEN
+      )
     }
-    this.hiddenElements_ = null;
+    this.hiddenElements_ = null
   }
-};
+}
