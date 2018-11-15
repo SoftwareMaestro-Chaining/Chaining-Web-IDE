@@ -33,7 +33,7 @@ contract ${name} ${isIn} {
         return user_address;
     }
 
-    ${custom_code}
+${custom_code}
 }
   `
   return code
@@ -65,7 +65,11 @@ contract ${name} {
         selfdestruct(owner_address);
     }
 
-    ${custom_code}
+    function addBalance() payable onlyOwner {
+        if(msg.sender != owner_address) revert();
+    }
+
+${custom_code}
 }
   `
   return code
@@ -92,6 +96,14 @@ contract ${name} {
         minimumViews = _minimumViews;
         rewardRatio = _rewardRatio;
     }
+
+    function isAvailableReward(uint _views) public view returns(bool){
+        if(_views < minimumViews) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     function getMinimumViews() public view returns(uint) {
         return minimumViews;
@@ -117,7 +129,7 @@ contract ${name} {
         return name;
     }    
 
-    ${custom_code}
+${custom_code}
 }
 
 `
@@ -167,4 +179,135 @@ Blockly.Solidity["contract_mapping"] = function(block) {
   } else {
     return "mapping(" + types[key] + " => " + value + ") public " + name + ";"
   }
+}
+
+Blockly.Solidity["advertise_module_user"] = function(block) {
+  let code = `
+    uint views;
+    
+    constructor(address _address) public {
+        setAddress(_address);
+    }
+    
+    function setViews(uint _views) public {
+        views = _views;
+    }
+    
+    function getView() public view returns(uint) {
+        return views;
+    }
+    
+    function getReward(uint money) public returns (uint) {
+        return money;
+    }
+    `
+  return code
+}
+
+Blockly.Solidity["advertise_module_application"] = function(block) {
+  let user_contract = block.getFieldValue("USER_NAME")
+  let ad_contract = block.getFieldValue("AD_NAME")
+  let logic_name = block.getFieldValue("Name")
+
+  let inheritance = block.getFieldValue("INHERITANCE")
+
+  let isIn = ""
+  if (inheritance == "") {
+    isIn = ""
+  } else {
+    isIn = " is " + inheritance
+  }
+
+  let code = `
+contract ${logic_name} ${isIn} {  
+    mapping(address => ${ad_contract}[]) public advertises;
+    mapping(uint => ${user_contract}[]) public member; // advertise pk -> user
+    
+    function addAdvertise(string _url, string _name, uint _advertiseLength, uint _minimumViews, uint _ratioViews) onlyOwner {
+
+        address adminAddress = getAdminAddress();
+        uint length = advertises[adminAddress].length;
+        
+        ${ad_contract} ad = new ${ad_contract}(length, _url, _name, _advertiseLength, _minimumViews, _ratioViews);
+        advertises[adminAddress].push(ad);
+    }
+    
+    function registerMember(uint advertiseIndex) public {
+        require(!isMember(advertiseIndex));
+        ${user_contract} customer = new ${user_contract}(msg.sender);
+        member[advertiseIndex].push(customer);
+    }
+
+    function getCurrentAddress() public view returns(address) {
+        return msg.sender;
+    }
+
+    // verify that registerd user of ad
+    function isMember(uint advertiseIndex) public view returns(bool) {
+        uint length = member[advertiseIndex].length;
+        bool _isMember = false;
+        for(uint i=0; i< length; i++) {
+            ${user_contract} _customer = member[advertiseIndex][i];
+            if(_customer.getAddress() == msg.sender) {
+                _isMember = true;
+                break;
+            }
+        }
+        return _isMember;
+    }
+    
+    
+    function getAdvertiseCount() public view returns(uint) {
+        return advertises[getAdminAddress()].length;
+    }
+    
+    function getMemberCount(uint advertiseIndex) public view returns(uint) {
+        return member[advertiseIndex].length;
+    }
+    
+    // get member info of advertise
+    function getMember(uint advertiseIndex) public view returns(${user_contract} _customer) {
+        uint length = member[advertiseIndex].length;
+        require(isMember(advertiseIndex));
+        ${user_contract} customer;
+        for(uint i=0; i<length; i++) {
+            customer = member[advertiseIndex][i];
+            if(customer.getAddress() == msg.sender) {
+                break;
+            }
+        }
+        return customer;
+    }
+    
+    function getAdvertiseName (uint advertiseIndex) public view returns(string) {
+        return advertises[getAdminAddress()][advertiseIndex].getName();
+    }
+    
+    function getAdvertise(uint advertiseIndex) public view returns(${ad_contract} _advertise) {
+        return advertises[getAdminAddress()][advertiseIndex];
+    }
+    
+    function getCurrentViews(uint advertiseIndex, uint views) public view returns(uint){
+        ${user_contract} _customer = getMember(advertiseIndex);
+        uint accumulateViews = _customer.getView();
+        return views - accumulateViews;
+    }
+    
+    function getReward(uint advertiseIndex, uint views) {
+        uint currentViews = getCurrentViews(advertiseIndex, views);
+        Advertise _advertise = getAdvertise(advertiseIndex);
+        uint minimumViews = _advertise.getMinimumViews();
+    }
+    
+    function getMemberAddress(uint advertiseIndex, uint userIndex) public view returns(address) {
+        return member[advertiseIndex][userIndex].getAddress();
+    }
+
+    function checkAdvertiseBalance() public view returns(uint){
+        return address(this).balance;
+    }    
+}
+    `
+
+  return code
 }

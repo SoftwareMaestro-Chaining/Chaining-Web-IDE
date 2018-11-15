@@ -473,6 +473,54 @@ Blockly.Blocks["contract_method_call"] = {
 
 Blockly.defineBlocksWithJsonArray([
   {
+    type: "advertise_module_user",
+    message0: "Advertise User Module",
+    previousStatement: null,
+    nextStatement: null
+  },
+  {
+    type: "advertise_module_application",
+    message0: "Advertise Business Logic Contract name %1 is %2",
+    args0: [
+      {
+        type: "field_input",
+        name: "Name",
+        text: "AdvertiseLogic"
+      },
+      {
+        type: "field_input",
+        name: "INHERITANCE",
+        check: "String",
+        text: ""
+      }
+    ],
+    message1: "User Contract %1 Ad Contract %2",
+    args1: [
+      {
+        type: "field_input",
+        name: "USER_NAME",
+        align: "RIGHT",
+        text: ""
+      },
+      {
+        type: "field_input",
+        name: "AD_NAME",
+        align: "RIGHT",
+        text: ""
+      }
+    ],
+    message2: "Custom Code %1",
+    args2: [
+      {
+        type: "input_statement",
+        name: "Code"
+      }
+    ]
+  }
+])
+
+Blockly.defineBlocksWithJsonArray([
+  {
     type: "contract_ctor",
     message0: "constructor",
     message1: "parameters %1",

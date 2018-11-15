@@ -127,6 +127,10 @@ function BlockEditor(opts = {}, localRegistry) {
     toolbox += '<block type="is_in_mapping"></block>'
     toolbox += '<block type="contract_mapping"></block>'
     toolbox += "</category>"
+    toolbox += '<category name="advertise module" colour="180">'
+    toolbox += '<block type="advertise_module_user"></block>'
+    toolbox += '<block type="advertise_module_application"></block>'
+    toolbox += "</category>"
     toolbox += "</xml>"
 
     var workspace = Blockly.inject("blocklyDiv", {
