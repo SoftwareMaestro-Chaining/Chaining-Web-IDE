@@ -37,13 +37,13 @@ function TutorialTab(opts, localRegistry) {
     data,
     source
   ) {
-    getContractNames(success, data)
     if (success) {
-      console.log("success in tutorial tab")
-      console.log(data)
+      console.log("is success")
+      getContractNames(success, data)
     } else {
-      console.log("fail in tutorial")
-      console.log(data)
+      console.log("not success")
+      let instanceContainer = yo`<div></div>`
+      yo.update(self._view.instanceContainer, instanceContainer)
     }
   })
 
@@ -66,6 +66,8 @@ function TutorialTab(opts, localRegistry) {
     }
 
     instanceContainer.appendChild(balanceButton)
+    let br = yo`<br/>`
+    instanceContainer.appendChild(br)
 
     if (success) {
       // selectContractNames.removeAttribute('disabled')
@@ -95,6 +97,7 @@ function TutorialTab(opts, localRegistry) {
           `
 
         instanceContainer.appendChild(instanceButton)
+        instanceContainer.appendChild(br)
 
         for (let i = 0; i < instanceABI.length; i++) {
           let abiName = instanceABI[i].name
@@ -127,7 +130,7 @@ function TutorialTab(opts, localRegistry) {
           }
 
           let code = ``
-          if (isPayable) {
+          if (!isPayable) {
             code +=
               `
               function ` +
@@ -141,7 +144,7 @@ function TutorialTab(opts, localRegistry) {
               inputInstanceValue +
               ` {
                 from : instance._eth.accounts[0],
-                gas : 210000
+                gas : 3000000
               }, \n
               function(err, result) { \n
                 let value = result.c[0] \n
@@ -166,13 +169,24 @@ function TutorialTab(opts, localRegistry) {
           // let message= abiName + " " + inputLength + " " + outputLength
 
           if (abiName) {
-            let abis = yo`
+            if (!isPayable) {
+              let abis = yo`
+              <button class="${
+                css.instanceButtonNonePay
+              }" id="instanceButton" onclick=${() => popup(code)}>
+                ${abiName}
+              </button>`
+              instanceContainer.appendChild(abis)
+            } else {
+              let abis = yo`
               <button class="${
                 css.instanceButton
               }" id="instanceButton" onclick=${() => popup(code)}>
                 ${abiName}
               </button>`
-            instanceContainer.appendChild(abis)
+              instanceContainer.appendChild(abis)
+            }
+            instanceContainer.appendChild(br)
           }
         }
 

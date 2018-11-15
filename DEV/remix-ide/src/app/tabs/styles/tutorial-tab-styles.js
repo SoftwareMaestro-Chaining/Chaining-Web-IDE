@@ -1,5 +1,5 @@
-const csjs = require('csjs-inject')
-const styleGuide = require('../../ui/styles-guide/theme-chooser')
+const csjs = require("csjs-inject")
+const styleGuide = require("../../ui/styles-guide/theme-chooser")
 const styles = styleGuide.chooser()
 
 const css = csjs`
@@ -22,10 +22,25 @@ const css = csjs`
     background-color: #4CAF50; /* Green */
     border: none;
     color: white;
+    width: 100%;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
+    display: flex;
+    font-size: 16px;
+  }
+
+  .instanceButtonNonePay {
+    background-color: #da368c; /* Green */
+    border: none;
+    color: white;
+    width: 100%;
+    padding: 15px 32px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
     font-size: 16px;
   }
 
