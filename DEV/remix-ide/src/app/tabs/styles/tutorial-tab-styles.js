@@ -25,16 +25,16 @@ const css = csjs`
 
     border-radius: 7px;
     box-shadow: 5px 5px 0  #ffb5bb;
-    color: #fff;
+    color: black;
     cursor: pointer;
-    margin: 0;
+    margin: 10px;
     outline: 0;
     border: 0;
     display: inline-block;
     width: 220px;
     height: 40px;
     transition: all .1s linear;
-     font-size: 30px;
+     font-size: 10px;
   }
 
   .instanceButton:active {
@@ -48,16 +48,16 @@ const css = csjs`
 
     border-radius: 7px;
     box-shadow: 5px 5px 0 #8fddb5;
-    color: #fff;
+    color: black;
     cursor: pointer;
-    margin: 0;
+    margin: 10px;
     outline: 0;
     border: 0;
     display: inline-block;
     width: 220px;
     height: 40px;
     transition: all .1s linear;
-    font-size: 30px;
+    font-size: 10px;
   }
 
   .instanceButtonNonePay:active {
