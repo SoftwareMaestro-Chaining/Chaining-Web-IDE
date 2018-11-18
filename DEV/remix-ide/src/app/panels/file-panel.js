@@ -114,7 +114,7 @@ function filepanel (localRegistry) {
             <span class="${css.gist}" title="Update the current [gist] explorer" onclick=${() => updateGist()}>
               <i class="fa fa-github"></i>
             </span>
-            <span onclick=${() => switchBlocklyEditor()} class="${css.blockly}" style="background-color:red;">
+            <span onclick=${() => switchBlocklyEditor()} class="${css.blockly}">
               <i class="fa fa-link" title="Change Block or Text IDE"></i>
             </span>            
             <span class="${css.copyFiles}" title="Copy all files to another instance of Remix IDE" onclick=${copyFiles}>
