@@ -19,7 +19,7 @@ const css = csjs`
   }
 
 
-  .instanceButton {
+  .instanceButtonNonePay {
     background: #fbd6d6; /* pink */
 
 
@@ -37,12 +37,12 @@ const css = csjs`
      font-size: 10px;
   }
 
-  .instanceButton:active {
+  .instanceButtonNonePay:active {
     box-shadow: 0 2px 0 #ffb5bb;
     transform: translateY(3px);    
   }
 
-  .instanceButtonNonePay {
+  .instanceButton {
     background: #dcfae6;/* light green */
 
 
@@ -60,7 +60,7 @@ const css = csjs`
     font-size: 10px;
   }
 
-  .instanceButtonNonePay:active {
+  .instanceButton:active {
     box-shadow: 0 2px 0 #8fddb5;
     transform: translateY(3px);    
   }
@@ -129,6 +129,10 @@ const css = csjs`
     padding: 2px 16px;
     background-color: #5cb85c;
     color: white;
+  }
+
+  .indent {
+    padding-left: 1.8em;
   }
 `
 module.exports = css

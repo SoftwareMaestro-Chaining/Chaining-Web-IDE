@@ -12,6 +12,8 @@ const globalRegistry = require("../../global/registry")
 
 const code = require("./tutorial-code/tutorial-code.js")
 
+const beautify = require("js-beautify").js
+
 function TutorialTab(opts, localRegistry) {
   const self = this
 
@@ -83,11 +85,12 @@ function TutorialTab(opts, localRegistry) {
 
         let instanceMessage = code.init
 
-        instanceMessage =
-          `let abi = ` +
-          JSON.stringify(instanceABI) +
-          `\n let contractAddress = {your contract address} \n` +
-          instanceMessage
+        instanceMessage = yo`
+        <p>
+         let abi = ${JSON.stringify(instanceABI)}
+         <br/> let contractAddress = {your contract address}
+         ${instanceMessage}
+        </p>`
 
         let instanceButton = yo`
             <button class="${
@@ -131,39 +134,23 @@ function TutorialTab(opts, localRegistry) {
 
           let code = ``
           if (!isPayable) {
-            code +=
-              `
-              function ` +
-              abiName +
-              `(` +
-              inputFunctionValue +
-              `) { \n
-              instance.` +
-              abiName +
-              `(` +
-              inputInstanceValue +
-              ` {
-                from : instance._eth.accounts[0],\n
-                gas : 3000000\n
-              }, \n
-              function(err, result) { \n
-                let value = result.c[0] \n
-              }`
+            code = yo`
+              <p>function ${abiName} (${inputFunctionValue}) { <br/>
+              instance.${abiName} (
+              ${inputInstanceValue}
+              { <br/>
+                from : instance._eth.accounts[0], <br/>
+                gas : 3000000 <br/>
+              }, function(err, result) {  <br/>
+                let value = result.c[0]  <br/>
+              })</p>`
           } else {
-            code =
-              `
-              function ` +
-              abiName +
-              `( \n` +
-              inputFunctionValue +
-              `) { \n 
-                instance.` +
-              abiName +
-              `(\n` +
-              inputInstanceValue +
-              ` function(err, result) {\n
-                \n
-              })`
+            code = yo`<p>
+             function ${abiName} (${inputFunctionValue}) { <br/>
+               instance.${abiName}(${inputFunctionValue} function (err, result) { <br/>
+                  <br/>
+               }) <br/>
+             }</p>`
           }
 
           // let message= abiName + " " + inputLength + " " + outputLength
