@@ -11,14 +11,11 @@ let web3Init = yo`
 </p>`
 
 let getBalance = yo`<p>
-    instance._eth.getBalance(instance._eth.accounts[0], function(err, result) { <br/>
-        myBalance = result.c[0]; <br/>
-        myBalance = web3.toWei(myBalance, 'ether'); <br/>
-        var userBalance = document.createElement("div");<br/>
-        userBalance.id = "user_balance"; <br/>
-        userBalance.innerHTML = "My Balance : " + myBalance; <br/>
-        document.body.appendChild(userBalance); <br/>
-    });
+    return new Promise((res, rej) => { <br/>
+      instance._eth.getBalance(instance._eth.accounts[0], function(err, result) { <br/>
+        res(result) <br/>
+      }) <br/>
+    }) <br/>
 </p>`
 
 module.exports = {

@@ -142,16 +142,20 @@ function TutorialTab(opts, localRegistry) {
                 from : instance._eth.accounts[0], <br/>
                 gas : 3000000 <br/>
               }, function(err, result) {  <br/>
-                let value = result.c[0]  <br/>
               })</p>`
           } else {
+            let test = `return new Promise((res, rej) => { `
             code = yo`<p>
              function ${abiName} (${inputFunctionValue}) { <br/>
-               instance.${abiName}(${inputFunctionValue} function (err, result) { <br/>
-                  <br/>
-               }) <br/>
+               ${test} <br/>
+                  instance.${abiName}(${inputFunctionValue}, function (err, result) { <br/>
+                    res(result)
+                }) <br/>
+              }) <br/>
              }</p>`
           }
+
+          console.log(code)
 
           // let message= abiName + " " + inputLength + " " + outputLength
 
