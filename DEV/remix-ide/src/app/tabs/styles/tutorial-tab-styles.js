@@ -18,30 +18,51 @@ const css = csjs`
     padding: 10px 0px 15px 15px;
   }
 
+
   .instanceButton {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    width: 100%;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    font-size: 16px;
+    background: #fbd6d6; /* pink */
+
+
+    border-radius: 7px;
+    box-shadow: 5px 5px 0  #ffb5bb;
+    color: black;
+    cursor: pointer;
+    margin: 10px;
+    outline: 0;
+    border: 0;
+    display: inline-block;
+    width: 220px;
+    height: 40px;
+    transition: all .1s linear;
+     font-size: 10px;
+  }
+
+  .instanceButton:active {
+    box-shadow: 0 2px 0 #ffb5bb;
+    transform: translateY(3px);    
   }
 
   .instanceButtonNonePay {
-    background-color: #da368c; /* Green */
-    border: none;
-    color: white;
-    width: 100%;
-    padding: 15px 32px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    font-size: 16px;
+    background: #dcfae6;/* light green */
+
+
+    border-radius: 7px;
+    box-shadow: 5px 5px 0 #8fddb5;
+    color: black;
+    cursor: pointer;
+    margin: 10px;
+    outline: 0;
+    border: 0;
+    display: inline-block;
+    width: 220px;
+    height: 40px;
+    transition: all .1s linear;
+    font-size: 10px;
+  }
+
+  .instanceButtonNonePay:active {
+    box-shadow: 0 2px 0 #8fddb5;
+    transform: translateY(3px);    
   }
 
   .modal {

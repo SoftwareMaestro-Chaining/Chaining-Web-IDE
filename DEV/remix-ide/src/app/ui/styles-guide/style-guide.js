@@ -36,6 +36,7 @@ function styleGuide () {
       // GREEN
       green: 'hsla(141, 75%, 84%, 1)',
       lightGreen: 'hsla(141, 75%, 84%, .5)',
+      backgroundGreen: 'rgb(217, 237, 216)',
       greenZing: 'hsla(148, 79%, 47%, 1)',
       // PINK
       pink: 'hsla(300, 69%, 76%, 1)',
@@ -82,10 +83,10 @@ function styleGuide () {
                           BACKGROUND COLORS
     ------------------------------------------------------ */
     primary_BackgroundColor: cssProperties.colors.white,
-    secondary_BackgroundColor: cssProperties.colors.backgroundBlue,
-    tertiary_BackgroundColor: cssProperties.colors.backgroundBlue,
-    quaternary_BackgroundColor: cssProperties.colors.backgroundBlue,
-    fifth_BackgroundColor: cssProperties.colors.backgroundBlue,
+    secondary_BackgroundColor: cssProperties.colors.backgroundGreen,
+    tertiary_BackgroundColor: cssProperties.colors.backgroundGreen,
+    quaternary_BackgroundColor: cssProperties.colors.backgroundGreen,
+    fifth_BackgroundColor: cssProperties.colors.backgroundGreen,
     seventh_BackgroundColor: cssProperties.colors.veryLightGrey,
     dark_BackgroundColor: cssProperties.colors.black,
     light_BackgroundColor: cssProperties.colors.white,
@@ -180,8 +181,8 @@ function styleGuide () {
           PRIMARY
     .................. */
     primaryButton_TextColor: cssProperties.colors.black,
-    primaryButton_BackgroundColor: cssProperties.colors.lightBlue,
-    primaryButton_BorderColor: cssProperties.colors.lightBlue,
+    primaryButton_BackgroundColor: cssProperties.colors.lightGreen,
+    primaryButton_BorderColor: cssProperties.colors.lightGreen,
 
     /* .................
           SECONDARY
@@ -255,8 +256,8 @@ function styleGuide () {
 
     // CALL
     callButton_TextColor: cssProperties.colors.black,
-    callButton_BackgroundColor: cssProperties.colors.lightBlue,
-    callButton_BorderColor: cssProperties.colors.lightBlue,
+    callButton_BackgroundColor: cssProperties.colors.lightGreen,
+    callButton_BorderColor: cssProperties.colors.lightGreen,
 
     // TRANSACTION
     transactButton_TextColor: cssProperties.colors.black,
@@ -265,8 +266,8 @@ function styleGuide () {
 
     // CONSTANT
     constantButton_TextColor: cssProperties.colors.black,
-    constantButton_BackgroundColor: cssProperties.colors.lightBlue,
-    constantButton_BorderColor: cssProperties.colors.lightBlue,
+    constantButton_BackgroundColor: cssProperties.colors.lightGreen,
+    constantButton_BorderColor: cssProperties.colors.lightGreen,
 
     // PAYABLE TRANSACTION
     transactPayableButton_TextColor: cssProperties.colors.black,
