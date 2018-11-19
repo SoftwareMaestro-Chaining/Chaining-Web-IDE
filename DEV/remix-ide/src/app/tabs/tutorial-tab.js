@@ -143,8 +143,8 @@ function TutorialTab(opts, localRegistry) {
               `(` +
               inputInstanceValue +
               ` {
-                from : instance._eth.accounts[0],
-                gas : 3000000
+                from : instance._eth.accounts[0],\n
+                gas : 3000000\n
               }, \n
               function(err, result) { \n
                 let value = result.c[0] \n
@@ -154,15 +154,15 @@ function TutorialTab(opts, localRegistry) {
               `
               function ` +
               abiName +
-              `(` +
+              `( \n` +
               inputFunctionValue +
-              `) { 
-                instance. ` +
+              `) { \n 
+                instance.` +
               abiName +
-              `(` +
+              `(\n` +
               inputInstanceValue +
-              ` function(err, result) {
-                
+              ` function(err, result) {\n
+                \n
               })`
           }
 
